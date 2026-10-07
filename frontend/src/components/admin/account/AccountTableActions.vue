@@ -1,17 +1,19 @@
 <template>
   <div class="flex flex-wrap items-center gap-3">
     <slot name="before"></slot>
-    <button @click="$emit('refresh')" :disabled="loading" class="btn btn-secondary">
+    <KumoButton @click="$emit('refresh')" :disabled="loading" class="btn btn-secondary">
       <Icon name="refresh" size="md" :class="[loading ? 'animate-spin' : '']" />
-    </button>
+    </KumoButton>
     <slot name="after"></slot>
     <slot name="beforeCreate"></slot>
-    <button @click="$emit('create')" class="btn btn-primary">{{ t('admin.accounts.createAccount') }}</button>
+    <KumoButton @click="$emit('create')" class="btn btn-primary">{{ t('admin.accounts.createAccount') }}</KumoButton>
     <slot name="afterCreate"></slot>
   </div>
 </template>
 
 <script setup lang="ts">
+import { KumoButton } from '@/components/kumo'
+
 import { useI18n } from 'vue-i18n'
 import Icon from '@/components/icons/Icon.vue'
 

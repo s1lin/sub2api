@@ -4,7 +4,7 @@
     class="px-0.5"
   >
     <div class="flex items-start gap-2">
-      <input
+      <KumoCheckbox
         id="login-agreement-consent"
         type="checkbox"
         :checked="accepted"
@@ -13,12 +13,12 @@
       />
       <div class="min-w-0 flex-1">
         <p class="text-[13px] leading-5 text-gray-600 dark:text-dark-300">
-          <label
+          <KumoLabel
             for="login-agreement-consent"
             class="cursor-pointer text-gray-700 dark:text-dark-200"
           >
             {{ t('legal.loginAgreementPrompt.checkboxPrefix') }}
-          </label>
+          </KumoLabel>
           <template v-for="(doc, index) in documents" :key="doc.id || doc.title">
             <RouterLink
               :to="documentRoute(doc)"
@@ -47,23 +47,18 @@
           {{ t('legal.loginAgreementPrompt.noticeDescription') }}
         </p>
       </div>
-      <button
+      <KumoButton
         type="button"
         class="flex-shrink-0 rounded-md bg-primary-600 px-3 py-1.5 text-xs font-medium text-white transition hover:bg-primary-700"
         @click="emit('open')"
       >
         {{ t('legal.loginAgreementPrompt.viewTerms') }}
-      </button>
+      </KumoButton>
     </div>
   </div>
 
-  <Teleport to="body">
-    <Transition name="agreement-fade">
-      <div
-        v-if="dialogVisible"
-        class="fixed inset-0 z-[140] flex items-center justify-center overflow-y-auto bg-gray-950/60 p-4 backdrop-blur-sm"
-      >
-        <div class="w-full max-w-[600px] overflow-hidden rounded-2xl bg-white shadow-2xl ring-1 ring-black/10 dark:bg-dark-900 dark:ring-white/10">
+  <KumoDialog :show="!!(dialogVisible)" :title="t('legal.loginAgreementPrompt.dialogTitle') ?? ''" custom-layout :close-on-click-outside="false" :close-on-escape="false" :z-index="140" width="normal" @close="emit('reject')">
+<template v-if="dialogVisible"><div class="w-full max-w-[600px] overflow-hidden rounded-2xl bg-white shadow-2xl ring-1 ring-black/10 dark:bg-dark-900 dark:ring-white/10">
           <div class="border-b border-gray-100 bg-white px-6 py-6 dark:border-dark-800 dark:bg-dark-900">
             <div class="flex items-start gap-4">
               <span class="flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-xl bg-primary-50 text-primary-700 ring-1 ring-primary-100 dark:bg-primary-500/10 dark:text-primary-300 dark:ring-primary-500/20">
@@ -120,29 +115,29 @@
 
           <div class="border-t border-gray-100 bg-gray-50/80 px-6 py-4 dark:border-dark-800 dark:bg-dark-950/60">
             <div class="grid grid-cols-2 gap-3">
-              <button
+              <KumoButton
                 type="button"
                 class="rounded-xl border border-gray-200 bg-white px-4 py-3 text-sm font-semibold text-gray-700 transition hover:bg-gray-100 dark:border-dark-700 dark:bg-dark-800 dark:text-dark-200 dark:hover:bg-dark-700"
                 @click="emit('reject')"
               >
                 {{ t('legal.loginAgreementPrompt.reject') }}
-              </button>
-              <button
+              </KumoButton>
+              <KumoButton
                 type="button"
                 class="rounded-xl bg-primary-600 px-4 py-3 text-sm font-semibold text-white shadow-sm shadow-primary-600/20 transition hover:bg-primary-700"
                 @click="emit('accept')"
               >
                 {{ t('legal.loginAgreementPrompt.accept') }}
-              </button>
+              </KumoButton>
             </div>
           </div>
-        </div>
-      </div>
-    </Transition>
-  </Teleport>
+        </div></template>
+</KumoDialog>
 </template>
 
 <script setup lang="ts">
+import { KumoButton, KumoCheckbox, KumoDialog, KumoLabel } from '@/components/kumo'
+
 import { computed } from 'vue'
 import { useI18n } from 'vue-i18n'
 import Icon from '@/components/icons/Icon.vue'

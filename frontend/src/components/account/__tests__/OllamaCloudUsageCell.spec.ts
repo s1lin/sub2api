@@ -1,4 +1,5 @@
-import { flushPromises, mount } from '@vue/test-utils'
+import { mount, flushPromises } from '@/__tests__/render'
+
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 import OllamaCloudUsageCell from '../OllamaCloudUsageCell.vue'
 import UsageProgressBar from '../UsageProgressBar.vue'

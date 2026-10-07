@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
-import { mount } from '@vue/test-utils'
+import { mount, flushPromises } from '@/__tests__/render'
 import AliyunCaptchaWidget from '../AliyunCaptchaWidget.vue'
 
 interface CapturedInitOptions {
@@ -82,7 +82,7 @@ describe('AliyunCaptchaWidget', () => {
 
     const result = initOptions!.captchaVerifyCallback('captcha-param-1')
     expect(result).toEqual({ captchaResult: true })
-    await wrapper.vm.$nextTick()
+    await flushPromises()
 
     expect(wrapper.emitted('verify')).toEqual([['captcha-param-1']])
     expect(wrapper.get('button').text()).toContain('auth.captchaVerified')
@@ -114,7 +114,7 @@ describe('AliyunCaptchaWidget', () => {
     const pending = vm.verify()
     await Promise.resolve()
     await Promise.resolve()
-    await wrapper.vm.$nextTick()
+    await flushPromises()
     expect(wrapper.get('button').text()).toContain('auth.captchaVerifying')
 
     initOptions!.captchaVerifyCallback('captcha-param-3')
@@ -124,7 +124,7 @@ describe('AliyunCaptchaWidget', () => {
   })
 
   it('弹窗未出现前会按 tick 重试触发按钮（SDK 异步绑定兜底）', async () => {
-    vi.useFakeTimers()
+    vi.useFakeTimers({ toFake: ['Date', 'setTimeout', 'clearTimeout', 'setInterval', 'clearInterval'] })
     const wrapper = mountWidget()
     await Promise.resolve()
     await Promise.resolve()
@@ -146,7 +146,7 @@ describe('AliyunCaptchaWidget', () => {
   })
 
   it('弹窗出现后被用户关闭时 resolve null 并回到未验证态', async () => {
-    vi.useFakeTimers()
+    vi.useFakeTimers({ toFake: ['Date', 'setTimeout', 'clearTimeout', 'setInterval', 'clearInterval'] })
     const wrapper = mountWidget()
     await Promise.resolve()
     await Promise.resolve()
@@ -162,6 +162,7 @@ describe('AliyunCaptchaWidget', () => {
     await vi.advanceTimersByTimeAsync(400)
 
     await expect(pending).resolves.toBeNull()
+    await flushPromises()
     expect(wrapper.get('button').text()).toContain('auth.captchaClickToVerify')
 
     wrapper.unmount()
@@ -180,7 +181,7 @@ describe('AliyunCaptchaWidget', () => {
       reset: () => void
     }
     vm.reset()
-    await wrapper.vm.$nextTick()
+    await flushPromises()
     expect(wrapper.get('button').text()).toContain('auth.captchaClickToVerify')
 
     // reset 后缓存失效，verify() 重新走弹窗流程

@@ -42,18 +42,18 @@
         </div>
 
         <div class="flex flex-wrap items-center gap-3">
-          <label class="btn btn-secondary btn-sm cursor-pointer">
-            <input
+          <KumoLabel class="btn btn-secondary btn-sm cursor-pointer">
+            <KumoInput
               data-testid="profile-avatar-file-input"
               type="file"
               accept="image/*"
               class="hidden"
               @change="handleAvatarFileChange"
-            >
+             />
             {{ t('profile.avatar.uploadAction') }}
-          </label>
+          </KumoLabel>
 
-          <button
+          <KumoButton
             data-testid="profile-avatar-save"
             type="button"
             class="btn btn-primary btn-sm"
@@ -61,9 +61,9 @@
             @click="handleAvatarSave"
           >
             {{ t('common.save') }}
-          </button>
+          </KumoButton>
 
-          <button
+          <KumoButton
             data-testid="profile-avatar-delete"
             type="button"
             class="btn btn-secondary btn-sm"
@@ -71,7 +71,7 @@
             @click="handleAvatarDelete"
           >
             {{ t('common.delete') }}
-          </button>
+          </KumoButton>
         </div>
       </div>
     </div>
@@ -79,6 +79,8 @@
 </template>
 
 <script setup lang="ts">
+import { KumoButton, KumoInput, KumoLabel } from '@/components/kumo'
+
 import { computed, ref, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { userAPI } from '@/api'

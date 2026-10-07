@@ -11,7 +11,7 @@
       </p>
 
       <div class="relative">
-        <input
+        <KumoInput
           v-model="search"
           type="text"
           class="input pl-9"
@@ -29,24 +29,24 @@
         {{ t('admin.channelMonitor.form.noActiveKey') }}
       </div>
       <div v-else class="max-h-96 overflow-auto rounded-lg border border-gray-200 dark:border-dark-600">
-        <table class="w-full text-sm">
-          <thead class="bg-gray-50 dark:bg-dark-800 sticky top-0 z-10">
-            <tr class="text-left text-xs font-medium uppercase tracking-wider text-gray-500 dark:text-gray-400">
-              <th class="px-3 py-2">{{ t('common.name') }}</th>
-              <th class="px-3 py-2">{{ t('keys.apiKey') }}</th>
-              <th class="px-3 py-2">{{ t('keys.group') }}</th>
-            </tr>
-          </thead>
-          <tbody class="divide-y divide-gray-200 dark:divide-dark-700">
-            <tr
+        <KumoTable class="w-full text-sm">
+          <KumoTableHeader class="bg-gray-50 dark:bg-dark-800 sticky top-0 z-10">
+            <KumoTableRow class="text-left text-xs font-medium uppercase tracking-wider text-gray-500 dark:text-gray-400">
+              <KumoTableHead class="px-3 py-2">{{ t('common.name') }}</KumoTableHead>
+              <KumoTableHead class="px-3 py-2">{{ t('keys.apiKey') }}</KumoTableHead>
+              <KumoTableHead class="px-3 py-2">{{ t('keys.group') }}</KumoTableHead>
+            </KumoTableRow>
+          </KumoTableHeader>
+          <KumoTableBody class="divide-y divide-gray-200 dark:divide-dark-700">
+            <KumoTableRow
               v-for="k in filteredKeys"
               :key="k.id"
               class="cursor-pointer hover:bg-gray-50 dark:hover:bg-dark-700"
               @click="$emit('pick', k)"
             >
-              <td class="px-3 py-2 font-medium text-gray-900 dark:text-white">{{ k.name }}</td>
-              <td class="px-3 py-2 font-mono text-xs text-gray-500 dark:text-gray-400">{{ maskApiKey(k.key) }}</td>
-              <td class="px-3 py-2">
+              <KumoTableCell class="px-3 py-2 font-medium text-gray-900 dark:text-white">{{ k.name }}</KumoTableCell>
+              <KumoTableCell class="px-3 py-2 font-mono text-xs text-gray-500 dark:text-gray-400">{{ maskApiKey(k.key) }}</KumoTableCell>
+              <KumoTableCell class="px-3 py-2">
                 <GroupBadge
                   v-if="k.group"
                   :name="k.group.name"
@@ -56,23 +56,25 @@
                   :user-rate-multiplier="userGroupRates[k.group.id]"
                 />
                 <span v-else class="text-xs text-gray-400">—</span>
-              </td>
-            </tr>
-          </tbody>
-        </table>
+              </KumoTableCell>
+            </KumoTableRow>
+          </KumoTableBody>
+        </KumoTable>
       </div>
     </div>
     <template #footer>
       <div class="flex justify-end">
-        <button @click="$emit('close')" class="btn btn-secondary">
+        <KumoButton @click="$emit('close')" class="btn btn-secondary">
           {{ t('common.cancel') }}
-        </button>
+        </KumoButton>
       </div>
     </template>
   </BaseDialog>
 </template>
 
 <script setup lang="ts">
+import { KumoButton, KumoInput, KumoTable, KumoTableBody, KumoTableCell, KumoTableHead, KumoTableHeader, KumoTableRow } from '@/components/kumo'
+
 import { computed, ref, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
 import type { ApiKey } from '@/types'

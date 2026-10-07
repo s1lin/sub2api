@@ -1,5 +1,6 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
-import { enableAutoUnmount, flushPromises, mount } from '@vue/test-utils'
+import { mount, flushPromises } from '@/__tests__/render'
+import { enableAutoUnmount } from '@vue/test-utils'
 import type { AdminGroup } from '@/types'
 import GroupRateMultipliersModal from '../GroupRateMultipliersModal.vue'
 
@@ -11,7 +12,7 @@ enableAutoUnmount(afterEach)
 afterEach(() => vi.useRealTimers())
 beforeEach(() => {
   vi.clearAllMocks()
-  vi.useFakeTimers()
+  vi.useFakeTimers({ toFake: ['Date', 'setTimeout', 'clearTimeout', 'setInterval', 'clearInterval'] })
   mocks.getGroupRateMultipliers.mockResolvedValue([])
   mocks.list.mockResolvedValue({ items: [{ id: 7, email: 'user@example.com', status: 'active' }] })
   mocks.batchSetGroupRateMultipliers.mockResolvedValue(undefined)

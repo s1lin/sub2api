@@ -17,7 +17,7 @@
       </div>
 
       <div>
-        <label class="input-label">{{ t('admin.proxies.dataImportFile') }}</label>
+        <KumoLabel class="input-label">{{ t('admin.proxies.dataImportFile') }}</KumoLabel>
         <div
           class="flex items-center justify-between gap-3 rounded-lg border border-dashed border-gray-300 bg-gray-50 px-4 py-3 dark:border-dark-600 dark:bg-dark-800"
         >
@@ -27,11 +27,11 @@
             </div>
             <div class="text-xs text-gray-500 dark:text-dark-400">JSON (.json)</div>
           </div>
-          <button type="button" class="btn btn-secondary shrink-0" @click="openFilePicker">
+          <KumoButton type="button" class="btn btn-secondary shrink-0" @click="openFilePicker">
             {{ t('common.chooseFile') }}
-          </button>
+          </KumoButton>
         </div>
-        <input
+        <KumoInput
           ref="fileInput"
           type="file"
           class="hidden"
@@ -68,23 +68,25 @@
 
     <template #footer>
       <div class="flex justify-end gap-3">
-        <button class="btn btn-secondary" type="button" :disabled="importing" @click="handleClose">
+        <KumoButton class="btn btn-secondary" type="button" :disabled="importing" @click="handleClose">
           {{ t('common.cancel') }}
-        </button>
-        <button
+        </KumoButton>
+        <KumoButton
           class="btn btn-primary"
           type="submit"
           form="import-proxy-data-form"
           :disabled="importing"
         >
           {{ importing ? t('admin.proxies.dataImporting') : t('admin.proxies.dataImportButton') }}
-        </button>
+        </KumoButton>
       </div>
     </template>
   </BaseDialog>
 </template>
 
 <script setup lang="ts">
+import { KumoButton, KumoInput, KumoLabel } from '@/components/kumo'
+
 import { computed, ref, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
 import BaseDialog from '@/components/common/BaseDialog.vue'

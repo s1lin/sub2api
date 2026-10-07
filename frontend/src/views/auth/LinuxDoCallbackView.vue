@@ -36,11 +36,11 @@
                 </p>
               </div>
 
-              <label
+              <KumoLabel
                 v-if="suggestedDisplayName"
                 class="flex items-start gap-3 rounded-lg border border-gray-200 bg-white p-3 text-sm dark:border-dark-600 dark:bg-dark-900/50"
               >
-                <input v-model="adoptDisplayName" type="checkbox" class="mt-1 h-4 w-4" />
+                <KumoCheckbox v-model="adoptDisplayName" type="checkbox" class="mt-1 h-4 w-4" />
                 <span class="space-y-1">
                   <span class="block font-medium text-gray-900 dark:text-white">
                     {{ t('auth.oauthFlow.useDisplayName') }}
@@ -49,13 +49,13 @@
                     {{ suggestedDisplayName }}
                   </span>
                 </span>
-              </label>
+              </KumoLabel>
 
-              <label
+              <KumoLabel
                 v-if="suggestedAvatarUrl"
                 class="flex items-start gap-3 rounded-lg border border-gray-200 bg-white p-3 text-sm dark:border-dark-600 dark:bg-dark-900/50"
               >
-                <input v-model="adoptAvatar" type="checkbox" class="mt-1 h-4 w-4" />
+                <KumoCheckbox v-model="adoptAvatar" type="checkbox" class="mt-1 h-4 w-4" />
                 <img
                   :src="suggestedAvatarUrl"
                   :alt="t('auth.oauthFlow.avatarAlt', { providerName })"
@@ -69,7 +69,7 @@
                     {{ suggestedAvatarUrl }}
                   </span>
                 </span>
-              </label>
+              </KumoLabel>
             </div>
           </div>
 
@@ -78,7 +78,7 @@
               {{ t('auth.linuxdo.invitationRequired') }}
             </p>
             <div>
-              <input
+              <KumoInput
                 v-model="invitationCode"
                 type="text"
                 class="input w-full"
@@ -87,22 +87,22 @@
                 @keyup.enter="handleSubmitInvitation"
               />
             </div>
-            <button
+            <KumoButton
               class="btn btn-primary w-full"
               :disabled="isSubmitting || !invitationCode.trim()"
               @click="handleSubmitInvitation"
             >
               {{ isSubmitting ? t('auth.linuxdo.completing') : t('auth.linuxdo.completeRegistration') }}
-            </button>
+            </KumoButton>
           </template>
 
           <template v-else-if="needsAdoptionConfirmation">
             <p class="text-sm text-gray-700 dark:text-gray-300">
               {{ t('auth.oauthFlow.reviewProfileBeforeContinue', { providerName }) }}
             </p>
-            <button class="btn btn-primary w-full" :disabled="isSubmitting" @click="handleContinueLogin">
+            <KumoButton class="btn btn-primary w-full" :disabled="isSubmitting" @click="handleContinueLogin">
               {{ isSubmitting ? t('common.processing') : t('auth.continue') }}
-            </button>
+            </KumoButton>
           </template>
 
           <template v-else-if="needsChooser">
@@ -122,20 +122,20 @@
                 </div>
 
                 <div class="grid gap-3 sm:grid-cols-2">
-                  <button
+                  <KumoButton
                     class="btn btn-secondary w-full"
                     :disabled="isSubmitting"
                     @click="switchToBindLoginMode()"
                   >
                     {{ t('auth.oauthFlow.bindExistingAccount') }}
-                  </button>
-                  <button
+                  </KumoButton>
+                  <KumoButton
                     class="btn btn-primary w-full"
                     :disabled="isSubmitting"
                     @click="switchToCreateAccountMode"
                   >
                     {{ t('auth.oauthFlow.createNewAccount') }}
-                  </button>
+                  </KumoButton>
                 </div>
               </div>
             </div>
@@ -160,7 +160,7 @@
               {{ t('auth.oauthFlow.bindLoginHint', { providerName }) }}
             </p>
             <div class="space-y-3">
-              <input
+              <KumoInput
                 v-model="bindLoginEmail"
                 data-testid="linuxdo-bind-login-email"
                 type="email"
@@ -169,7 +169,7 @@
                 :disabled="isSubmitting"
                 @keyup.enter="handleBindLogin"
               />
-              <input
+              <KumoInput
                 v-model="bindLoginPassword"
                 data-testid="linuxdo-bind-login-password"
                 type="password"
@@ -178,22 +178,22 @@
                 :disabled="isSubmitting"
                 @keyup.enter="handleBindLogin"
               />
-              <button
+              <KumoButton
                 data-testid="linuxdo-bind-login-submit"
                 class="btn btn-primary w-full"
                 :disabled="isSubmitting || !bindLoginEmail.trim() || !bindLoginPassword"
                 @click="handleBindLogin"
               >
                 {{ isSubmitting ? t('common.processing') : t('auth.oauthFlow.logInAndBind') }}
-              </button>
-              <button
+              </KumoButton>
+              <KumoButton
                 v-if="canReturnToCreateAccount"
                 class="btn btn-secondary w-full"
                 :disabled="isSubmitting"
                 @click="switchToCreateAccountMode"
               >
                 {{ t('auth.oauthFlow.useDifferentEmail') }}
-              </button>
+              </KumoButton>
             </div>
           </template>
 
@@ -207,7 +207,7 @@
               }}
             </p>
             <div class="space-y-3">
-              <input
+              <KumoInput
                 v-model="totpCode"
                 data-testid="linuxdo-bind-login-totp"
                 type="text"
@@ -218,14 +218,14 @@
                 :disabled="isSubmitting"
                 @keyup.enter="handleSubmitTotpChallenge"
               />
-              <button
+              <KumoButton
                 data-testid="linuxdo-bind-login-totp-submit"
                 class="btn btn-primary w-full"
                 :disabled="isSubmitting || totpCode.trim().length !== 6"
                 @click="handleSubmitTotpChallenge"
               >
                 {{ isSubmitting ? t('common.processing') : t('auth.oauthFlow.verifyAndContinue') }}
-              </button>
+              </KumoButton>
             </div>
           </template>
         </div>
@@ -235,6 +235,8 @@
 </template>
 
 <script setup lang="ts">
+import { KumoButton, KumoCheckbox, KumoInput, KumoLabel } from '@/components/kumo'
+
 import { computed, onMounted, ref, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { useI18n } from 'vue-i18n'

@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import { KumoButton, KumoLoader, KumoTable, KumoTableBody, KumoTableCell, KumoTableHead, KumoTableHeader, KumoTableRow } from '@/components/kumo'
+
 import { computed, ref, watch } from 'vue'
 import { useMediaQuery } from '@vueuse/core'
 import { useI18n } from 'vue-i18n'
@@ -169,26 +171,19 @@ const kindBadgeClass = (kind: string) => {
           <div class="text-xs text-gray-500 dark:text-gray-400">
             {{ t('admin.ops.requestDetails.rangeLabel', { range: rangeLabel }) }}
           </div>
-          <button
+          <KumoButton
             type="button"
             class="btn btn-secondary btn-sm"
             @click="fetchData"
           >
             {{ t('common.refresh') }}
-          </button>
+          </KumoButton>
         </div>
 
         <!-- Loading -->
         <div v-if="loading" class="flex flex-1 items-center justify-center py-16">
           <div class="flex flex-col items-center gap-3">
-            <svg class="h-8 w-8 animate-spin text-blue-500" fill="none" viewBox="0 0 24 24">
-              <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-              <path
-                class="opacity-75"
-                fill="currentColor"
-                d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-              ></path>
-            </svg>
+            <KumoLoader class="h-8 w-8 animate-spin text-blue-500" />
             <span class="text-sm font-medium text-gray-500 dark:text-gray-400">{{ t('common.loading') }}</span>
           </div>
         </div>
@@ -220,100 +215,100 @@ const kindBadgeClass = (kind: string) => {
                     <span class="min-w-0 flex-1 truncate font-mono text-[11px] text-gray-700 dark:text-gray-200" :title="row.request_id">
                       {{ row.request_id }}
                     </span>
-                    <button
+                    <KumoButton
                       class="shrink-0 rounded-md bg-gray-100 px-2 py-1 text-[10px] font-bold text-gray-600 hover:bg-gray-200 dark:bg-dark-700 dark:text-gray-300 dark:hover:bg-dark-600"
                       @click="handleCopyRequestId(row.request_id)"
                     >
                       {{ t('admin.ops.requestDetails.copy') }}
-                    </button>
+                    </KumoButton>
                   </div>
-                  <button
+                  <KumoButton
                     v-if="row.kind === 'error' && row.error_id"
                     class="w-full rounded-lg bg-red-50 px-3 py-1.5 text-xs font-bold text-red-600 hover:bg-red-100 dark:bg-red-900/20 dark:text-red-300 dark:hover:bg-red-900/30"
                     @click="openErrorDetail(row.error_id)"
                   >
                     {{ t('admin.ops.requestDetails.viewError') }}
-                  </button>
+                  </KumoButton>
                 </div>
               </div>
-              <table v-else class="min-w-full divide-y divide-gray-200 dark:divide-dark-700">
-                <thead class="sticky top-0 z-10 bg-gray-50 dark:bg-dark-900">
-                <tr>
-                  <th class="px-4 py-3 text-left text-[11px] font-bold uppercase tracking-wider text-gray-500 dark:text-gray-400">
+              <KumoTable v-else class="min-w-full divide-y divide-gray-200 dark:divide-dark-700">
+                <KumoTableHeader class="sticky top-0 z-10 bg-gray-50 dark:bg-dark-900">
+                <KumoTableRow>
+                  <KumoTableHead class="px-4 py-3 text-left text-[11px] font-bold uppercase tracking-wider text-gray-500 dark:text-gray-400">
                     {{ t('admin.ops.requestDetails.table.time') }}
-                  </th>
-                  <th class="px-4 py-3 text-left text-[11px] font-bold uppercase tracking-wider text-gray-500 dark:text-gray-400">
+                  </KumoTableHead>
+                  <KumoTableHead class="px-4 py-3 text-left text-[11px] font-bold uppercase tracking-wider text-gray-500 dark:text-gray-400">
                     {{ t('admin.ops.requestDetails.table.kind') }}
-                  </th>
-                  <th class="px-4 py-3 text-left text-[11px] font-bold uppercase tracking-wider text-gray-500 dark:text-gray-400">
+                  </KumoTableHead>
+                  <KumoTableHead class="px-4 py-3 text-left text-[11px] font-bold uppercase tracking-wider text-gray-500 dark:text-gray-400">
                     {{ t('admin.ops.requestDetails.table.platform') }}
-                  </th>
-                  <th class="px-4 py-3 text-left text-[11px] font-bold uppercase tracking-wider text-gray-500 dark:text-gray-400">
+                  </KumoTableHead>
+                  <KumoTableHead class="px-4 py-3 text-left text-[11px] font-bold uppercase tracking-wider text-gray-500 dark:text-gray-400">
                     {{ t('admin.ops.requestDetails.table.model') }}
-                  </th>
-                  <th class="px-4 py-3 text-left text-[11px] font-bold uppercase tracking-wider text-gray-500 dark:text-gray-400">
+                  </KumoTableHead>
+                  <KumoTableHead class="px-4 py-3 text-left text-[11px] font-bold uppercase tracking-wider text-gray-500 dark:text-gray-400">
                     {{ latencyLabel }}
-                  </th>
-                  <th class="px-4 py-3 text-left text-[11px] font-bold uppercase tracking-wider text-gray-500 dark:text-gray-400">
+                  </KumoTableHead>
+                  <KumoTableHead class="px-4 py-3 text-left text-[11px] font-bold uppercase tracking-wider text-gray-500 dark:text-gray-400">
                     {{ t('admin.ops.requestDetails.table.status') }}
-                  </th>
-                  <th class="px-4 py-3 text-left text-[11px] font-bold uppercase tracking-wider text-gray-500 dark:text-gray-400">
+                  </KumoTableHead>
+                  <KumoTableHead class="px-4 py-3 text-left text-[11px] font-bold uppercase tracking-wider text-gray-500 dark:text-gray-400">
                     {{ t('admin.ops.requestDetails.table.requestId') }}
-                  </th>
-                  <th class="px-4 py-3 text-right text-[11px] font-bold uppercase tracking-wider text-gray-500 dark:text-gray-400">
+                  </KumoTableHead>
+                  <KumoTableHead class="px-4 py-3 text-right text-[11px] font-bold uppercase tracking-wider text-gray-500 dark:text-gray-400">
                     {{ t('admin.ops.requestDetails.table.actions') }}
-                  </th>
-                </tr>
-              </thead>
-              <tbody class="divide-y divide-gray-200 bg-white dark:divide-dark-700 dark:bg-dark-800">
-                <tr v-for="(row, idx) in items" :key="idx" class="hover:bg-gray-50 dark:hover:bg-dark-700/50">
-                  <td class="whitespace-nowrap px-4 py-3 text-xs text-gray-600 dark:text-gray-300">
+                  </KumoTableHead>
+                </KumoTableRow>
+              </KumoTableHeader>
+              <KumoTableBody class="divide-y divide-gray-200 bg-white dark:divide-dark-700 dark:bg-dark-800">
+                <KumoTableRow v-for="(row, idx) in items" :key="idx" class="hover:bg-gray-50 dark:hover:bg-dark-700/50">
+                  <KumoTableCell class="whitespace-nowrap px-4 py-3 text-xs text-gray-600 dark:text-gray-300">
                     {{ formatDateTime(row.created_at) }}
-                  </td>
-                  <td class="whitespace-nowrap px-4 py-3">
+                  </KumoTableCell>
+                  <KumoTableCell class="whitespace-nowrap px-4 py-3">
                     <span class="rounded-full px-2 py-1 text-[10px] font-bold" :class="kindBadgeClass(row.kind)">
                       {{ row.kind === 'error' ? t('admin.ops.requestDetails.kind.error') : t('admin.ops.requestDetails.kind.success') }}
                     </span>
-                  </td>
-                  <td class="whitespace-nowrap px-4 py-3 text-xs font-medium text-gray-700 dark:text-gray-200">
+                  </KumoTableCell>
+                  <KumoTableCell class="whitespace-nowrap px-4 py-3 text-xs font-medium text-gray-700 dark:text-gray-200">
                     {{ (row.platform || 'unknown').toUpperCase() }}
-                  </td>
-                  <td class="max-w-[240px] truncate px-4 py-3 text-xs text-gray-600 dark:text-gray-300" :title="row.model || ''">
+                  </KumoTableCell>
+                  <KumoTableCell class="max-w-[240px] truncate px-4 py-3 text-xs text-gray-600 dark:text-gray-300" :title="row.model || ''">
                     {{ row.model || '-' }}
-                  </td>
-                  <td class="whitespace-nowrap px-4 py-3 text-xs text-gray-600 dark:text-gray-300">
+                  </KumoTableCell>
+                  <KumoTableCell class="whitespace-nowrap px-4 py-3 text-xs text-gray-600 dark:text-gray-300">
                     {{ formatLatency(row) }}
-                  </td>
-                  <td class="whitespace-nowrap px-4 py-3 text-xs text-gray-600 dark:text-gray-300">
+                  </KumoTableCell>
+                  <KumoTableCell class="whitespace-nowrap px-4 py-3 text-xs text-gray-600 dark:text-gray-300">
                     {{ row.status_code ?? '-' }}
-                  </td>
-                  <td class="px-4 py-3">
+                  </KumoTableCell>
+                  <KumoTableCell class="px-4 py-3">
                     <div v-if="row.request_id" class="flex items-center gap-2">
                       <span class="max-w-[220px] truncate font-mono text-[11px] text-gray-700 dark:text-gray-200" :title="row.request_id">
                         {{ row.request_id }}
                       </span>
-                      <button
+                      <KumoButton
                         class="rounded-md bg-gray-100 px-2 py-1 text-[10px] font-bold text-gray-600 hover:bg-gray-200 dark:bg-dark-700 dark:text-gray-300 dark:hover:bg-dark-600"
                         @click="handleCopyRequestId(row.request_id)"
                       >
                         {{ t('admin.ops.requestDetails.copy') }}
-                      </button>
+                      </KumoButton>
                     </div>
                     <span v-else class="text-xs text-gray-400">-</span>
-                  </td>
-                  <td class="whitespace-nowrap px-4 py-3 text-right">
-                    <button
+                  </KumoTableCell>
+                  <KumoTableCell class="whitespace-nowrap px-4 py-3 text-right">
+                    <KumoButton
                       v-if="row.kind === 'error' && row.error_id"
                       class="rounded-lg bg-red-50 px-3 py-1.5 text-xs font-bold text-red-600 hover:bg-red-100 dark:bg-red-900/20 dark:text-red-300 dark:hover:bg-red-900/30"
                       @click="openErrorDetail(row.error_id)"
                     >
                       {{ t('admin.ops.requestDetails.viewError') }}
-                    </button>
+                    </KumoButton>
                     <span v-else class="text-xs text-gray-400">-</span>
-                  </td>
-                </tr>
-              </tbody>
-            </table>
+                  </KumoTableCell>
+                </KumoTableRow>
+              </KumoTableBody>
+            </KumoTable>
             </div>
 
             <Pagination

@@ -1,8 +1,11 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest'
-import { flushPromises, mount } from '@vue/test-utils'
+import { mount, flushPromises, portal } from '@/__tests__/render'
+
 import { defineComponent } from 'vue'
 
 import SubscriptionsView from '../SubscriptionsView.vue'
+
+vi.unmock('react-dom/client')
 
 const { listSubscriptions, assignSubscription, getAllGroups, listUsers, searchUsageUsers, showError } = vi.hoisted(() => ({
   listSubscriptions: vi.fn(),
@@ -94,7 +97,7 @@ describe('admin subscription users', () => {
     ])
   })
 
-  const mountView = () => mount(SubscriptionsView, {
+  const mountView = () => mount(SubscriptionsView, { attachTo: document.body,
     global: {
       stubs: {
         AppLayout: { template: '<div><slot /></div>' },
@@ -111,8 +114,7 @@ describe('admin subscription users', () => {
         Select: true,
         GroupBadge: true,
         GroupOptionItem: true,
-        Icon: true,
-        Teleport: true
+        Icon: true
       }
     }
   })
@@ -135,10 +137,10 @@ describe('admin subscription users', () => {
         search: 'example.com', sort_by: 'email', sort_order: 'asc'
       })
       expect(searchUsageUsers).not.toHaveBeenCalled()
-      const picker = wrapper.get('[data-assign-user-search]')
+      const picker = portal().get('[role=listbox]')
       expect(picker.text()).toContain('reader@example.com')
       expect(picker.text()).not.toContain('deleted@example.com')
-      await picker.get('button').trigger('click')
+      await picker.get('[role=option]').trigger('click')
       expect((search.element as HTMLInputElement).value).toBe('reader@example.com')
     } finally {
       wrapper.unmount()
@@ -161,7 +163,7 @@ describe('admin subscription users', () => {
       await search.setValue('reader')
       await vi.advanceTimersByTimeAsync(300)
       await flushPromises()
-      await wrapper.get('[data-assign-user-search] button').trigger('click')
+      await portal().get('[role=option]').trigger('click')
 
       await search.setValue(keyword)
       await form.trigger('submit')
@@ -176,7 +178,7 @@ describe('admin subscription users', () => {
       await search.setValue('another')
       await vi.advanceTimersByTimeAsync(300)
       await flushPromises()
-      await wrapper.get('[data-assign-user-search] button').trigger('click')
+      await portal().get('[role=option]').trigger('click')
       await form.trigger('submit')
       await flushPromises()
 
@@ -203,9 +205,9 @@ describe('admin subscription users', () => {
 
       expect(searchUsageUsers).toHaveBeenCalledWith('deleted')
       expect(listUsers).not.toHaveBeenCalled()
-      const picker = wrapper.get('[data-filter-user-search]')
+      const picker = portal().get('[role=listbox]')
       expect(picker.text()).toContain('deleted@example.com')
-      await picker.get('button').trigger('click')
+      await picker.get('[role=option]').trigger('click')
       expect(listSubscriptions).toHaveBeenLastCalledWith(
         1, expect.any(Number), expect.objectContaining({ user_id: 14 }), expect.any(Object)
       )

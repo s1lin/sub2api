@@ -50,15 +50,15 @@
       <!-- Deduct Balance -->
       <div>
         <div class="flex items-center gap-2">
-          <input
+          <KumoCheckbox
             id="deduct-balance"
             v-model="form.deduct_balance"
             type="checkbox"
             class="h-4 w-4 rounded border-gray-300 text-primary-600 focus:ring-primary-500"
           />
-          <label for="deduct-balance" class="text-sm text-gray-700 dark:text-gray-300">
+          <KumoLabel for="deduct-balance" class="text-sm text-gray-700 dark:text-gray-300">
             {{ t('payment.admin.deductBalance') }}
-          </label>
+          </KumoLabel>
           <span class="text-xs text-gray-500 dark:text-gray-400">{{ t('payment.admin.deductBalanceHint') }}</span>
         </div>
 
@@ -93,10 +93,10 @@
 
       <!-- Refund Amount -->
       <div>
-        <label class="input-label">{{ t('payment.admin.refundAmount') }}</label>
+        <KumoLabel class="input-label">{{ t('payment.admin.refundAmount') }}</KumoLabel>
         <div class="relative">
           <span class="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500">{{ creditedAmountSymbol }}</span>
-          <input
+          <KumoInput
             v-model.number="form.amount"
             type="number"
             step="0.01"
@@ -113,14 +113,14 @@
 
       <!-- Reason -->
       <div>
-        <label class="input-label">{{ t('payment.admin.refundReason') }}</label>
-        <textarea
+        <KumoLabel class="input-label">{{ t('payment.admin.refundReason') }}</KumoLabel>
+        <KumoTextarea
           v-model="form.reason"
           rows="3"
           class="input"
           :placeholder="t('payment.admin.refundReasonPlaceholder')"
           required
-        ></textarea>
+        ></KumoTextarea>
       </div>
 
       <!-- Warning -->
@@ -133,37 +133,39 @@
 
       <!-- Force Refund -->
       <div v-if="requireForce" class="flex items-center gap-2">
-        <input
+        <KumoCheckbox
           id="force-refund"
           v-model="form.force"
           type="checkbox"
           class="h-4 w-4 rounded border-gray-300 text-red-600 focus:ring-red-500"
         />
-        <label for="force-refund" class="text-sm font-medium text-red-600 dark:text-red-400">
+        <KumoLabel for="force-refund" class="text-sm font-medium text-red-600 dark:text-red-400">
           {{ t('payment.admin.forceRefund') }}
-        </label>
+        </KumoLabel>
       </div>
     </form>
 
     <template #footer>
       <div class="flex justify-end gap-3">
-        <button type="button" @click="emit('cancel')" class="btn btn-secondary">
+        <KumoButton type="button" @click="emit('cancel')" class="btn btn-secondary">
           {{ t('common.cancel') }}
-        </button>
-        <button
+        </KumoButton>
+        <KumoButton
           type="submit"
           form="refund-form"
           :disabled="submitting || form.amount <= 0 || (requireForce && !form.force)"
           class="rounded-md bg-red-600 px-4 py-2 text-sm font-medium text-white hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 disabled:opacity-50 dark:focus:ring-offset-dark-800"
         >
           {{ submitting ? t('common.processing') : t('payment.admin.confirmRefund') }}
-        </button>
+        </KumoButton>
       </div>
     </template>
   </BaseDialog>
 </template>
 
 <script setup lang="ts">
+import { KumoButton, KumoCheckbox, KumoInput, KumoLabel, KumoTextarea } from '@/components/kumo'
+
 import { reactive, computed, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
 import BaseDialog from '@/components/common/BaseDialog.vue'

@@ -1,5 +1,6 @@
 import { defineComponent, nextTick } from 'vue'
-import { flushPromises, mount, type VueWrapper } from '@vue/test-utils'
+import { mount, flushPromises, typeText, pressKey } from '@/__tests__/render'
+import { type VueWrapper } from '@vue/test-utils'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 
 import type { ChannelMonitor } from '@/api/admin/channelMonitor'
@@ -132,25 +133,24 @@ const accountTrigger = (wrapper: VueWrapper) =>
 const openAccountDropdown = async (wrapper: VueWrapper) => {
   await accountTrigger(wrapper).trigger('click')
   await nextTick()
-  const dropdown = document.body.querySelector<HTMLElement>('.select-dropdown-portal')
+  const dropdown = document.body.querySelector<HTMLElement>('.platform-select-popup')
   expect(dropdown).not.toBeNull()
   return dropdown as HTMLElement
 }
 
-const clickOption = (dropdown: HTMLElement, text: string) => {
-  const option = [...dropdown.querySelectorAll('.select-option')].find((el) =>
+const clickOption = async (dropdown: HTMLElement, text: string) => {
+  const option = [...dropdown.querySelectorAll('[role=option]')].find((el) =>
     el.textContent?.includes(text),
   )
   expect(option, `option containing "${text}" not found`).toBeDefined()
-  ;(option as HTMLElement).click()
+  ;(option as HTMLElement).focus()
+  await pressKey("Enter")
 }
 
 const typeAccountSearch = async (dropdown: HTMLElement, query: string) => {
   const input = dropdown.querySelector<HTMLInputElement>('.select-search-input')
   expect(input).not.toBeNull()
-  input!.value = query
-  input!.dispatchEvent(new Event('input'))
-  await nextTick()
+  await typeText(input!, query)
 }
 
 afterEach(() => {
@@ -189,7 +189,7 @@ describe('MonitorFormDialog linked account selector', () => {
   })
 
   it('debounced typing hits server-side search and aborts the previous request', async () => {
-    vi.useFakeTimers()
+    vi.useFakeTimers({ toFake: ['Date', 'setTimeout', 'clearTimeout', 'setInterval', 'clearInterval'] })
     const wrapper = mountDialog()
     await wrapper.get('[data-testid="monitor-check-mode-quota"]').trigger('click')
     await vi.advanceTimersByTimeAsync(0)
@@ -262,7 +262,7 @@ describe('MonitorFormDialog linked account selector', () => {
   })
 
   it('keeps a picked account visible when a later search hides it', async () => {
-    vi.useFakeTimers()
+    vi.useFakeTimers({ toFake: ['Date', 'setTimeout', 'clearTimeout', 'setInterval', 'clearInterval'] })
     accountsList
       .mockResolvedValueOnce({ items: [
         { id: 1, name: 'alpha', platform: 'anthropic' },
@@ -274,7 +274,7 @@ describe('MonitorFormDialog linked account selector', () => {
     await vi.advanceTimersByTimeAsync(0)
 
     const dropdown = await openAccountDropdown(wrapper)
-    clickOption(dropdown, 'alpha (#1)')
+    await clickOption(dropdown, 'alpha (#1)')
     await nextTick()
     expect(accountTrigger(wrapper).text()).toContain('alpha (#1)')
 
@@ -298,7 +298,7 @@ describe('MonitorFormDialog linked account selector', () => {
     await flushPromises()
 
     const dropdown = await openAccountDropdown(wrapper)
-    clickOption(dropdown, 'alpha (#1)')
+    await clickOption(dropdown, 'alpha (#1)')
     await nextTick()
     expect(accountTrigger(wrapper).text()).toContain('alpha (#1)')
 

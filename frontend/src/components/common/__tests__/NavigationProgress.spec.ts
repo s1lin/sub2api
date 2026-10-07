@@ -2,7 +2,7 @@
  * NavigationProgress 组件单元测试
  */
 import { describe, it, expect, vi, beforeEach } from 'vitest'
-import { mount } from '@vue/test-utils'
+import { mount } from '@/__tests__/render'
 import { ref } from 'vue'
 import NavigationProgress from '../../common/NavigationProgress.vue'
 

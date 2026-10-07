@@ -1,0 +1,48 @@
+/* Kumo semantic tokens inherit the approved Copper + Graphite identity. */
+:root, .dark, [data-mode] {
+  --color-kumo-base: var(--brand-surface);
+  --color-kumo-elevated: var(--brand-surface);
+  --color-kumo-recessed: var(--brand-canvas);
+  --color-kumo-tint: var(--brand-inset);
+  --color-kumo-overlay: var(--brand-surface);
+  --color-kumo-line: var(--brand-line);
+  --color-kumo-brand: var(--brand-accent);
+  --color-kumo-brand-hover: var(--brand-accent-hover);
+  --color-kumo-focus: var(--brand-accent);
+  --text-color-kumo-default: var(--brand-ink);
+  --text-color-kumo-strong: var(--brand-ink);
+  --text-color-kumo-subtle: var(--brand-muted);
+  --text-color-kumo-placeholder: var(--brand-muted);
+  --text-color-kumo-link: var(--brand-accent);
+  --font-sans: var(--brand-font);
+  --font-mono: var(--brand-mono);
+}
+[data-kumo-component] { font-family: var(--brand-font); }
+[data-platform-variant="primary"] { color: var(--brand-on-accent) !important; }
+/* Tailwind 3's bare ring is 3px; Kumo uses the Tailwind 4 1px definition. */
+.ring { --tw-ring-shadow: var(--tw-ring-inset,) 0 0 0 calc(1px + var(--tw-ring-offset-width, 0px)) var(--tw-ring-color, currentColor); }
+
+.kumo-dialog-portal { position: relative; }
+.platform-dialog { display: flex; flex-direction: column; max-height: calc(100dvh - 4rem); left: 50%; top: 50%; translate: none; transform: translate(-50%, -50%); }
+.platform-dialog .modal-body { min-height: 0; overflow-y: auto; }
+.platform-dialog .modal-header, .platform-dialog .modal-footer { flex-shrink: 0; }
+.kumo-select { position: relative; min-width: 0; }
+.kumo-select .select-trigger { width: 100%; justify-content: space-between; }
+.kumo-select-clearable .select-trigger { padding-right: 3.75rem; }
+.kumo-select-clear { position: absolute; right: 1.6rem; top: 50%; transform: translateY(-50%); }
+.platform-select-popup { min-width: min(200px, calc(100vw - 16px)); max-width: calc(100vw - 16px); }
+.platform-select-popup [role="option"] { white-space: normal; overflow-wrap: anywhere; }
+.kumo-option-group { padding: .5rem .75rem; font-size: .75rem; color: var(--brand-muted); font-weight: 600; }
+.platform-pagination { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 1rem; padding: 1rem; border-top: 1px solid var(--brand-line); }
+.platform-help { max-width: calc(100vw - 2rem); white-space: normal; overflow-wrap: anywhere; }
+.platform-date-picker { width: min(360px, calc(100vw - 2rem)); max-height: min(680px, calc(100dvh - 2rem)); overflow-y: auto; }
+@media (max-width: 639px) {
+  .platform-pagination { justify-content: center; gap: .75rem; }
+  .platform-pagination-info, .platform-pagination-size { display: none; }
+  .platform-dialog { max-height: calc(100dvh - 4rem); }
+}
+.platform-meter-compact > :first-child { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+.platform-meter-compact { gap: 0; }
+.platform-dialog-custom { padding: 0; overflow-y: auto; }
+.platform-sidebar-dialog { left: 0; top: 0; height: 100dvh; max-height: 100dvh; transform: none; border-radius: 0; }
+.platform-sidebar-dialog .sidebar { position: static; height: 100%; width: 100%; transform: none; }

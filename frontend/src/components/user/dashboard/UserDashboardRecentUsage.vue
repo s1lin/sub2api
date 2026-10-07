@@ -1,8 +1,8 @@
 <template>
-  <div class="card">
+  <KumoSurface class="card">
     <div class="flex items-center justify-between border-b border-gray-100 px-6 py-4 dark:border-dark-700">
       <h2 class="text-lg font-semibold text-gray-900 dark:text-white">{{ t('dashboard.recentUsage') }}</h2>
-      <span class="badge badge-gray">{{ t('dashboard.last7Days') }}</span>
+      <KumoBadge class="badge badge-gray">{{ t('dashboard.last7Days') }}</KumoBadge>
     </div>
     <div class="p-6">
       <div v-if="loading" class="flex items-center justify-center py-12">
@@ -37,10 +37,12 @@
         </router-link>
       </div>
     </div>
-  </div>
+  </KumoSurface>
 </template>
 
 <script setup lang="ts">
+import { KumoBadge, KumoSurface } from '@/components/kumo'
+
 import { useI18n } from 'vue-i18n'
 import LoadingSpinner from '@/components/common/LoadingSpinner.vue'
 import EmptyState from '@/components/common/EmptyState.vue'

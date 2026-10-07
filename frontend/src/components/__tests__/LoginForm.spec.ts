@@ -3,7 +3,8 @@
  * 测试登录表单提交、验证、2FA 等场景
  */
 import { describe, it, expect, vi, beforeEach } from 'vitest'
-import { mount, flushPromises } from '@vue/test-utils'
+import { mount, flushPromises } from '@/__tests__/render'
+
 import { setActivePinia, createPinia } from 'pinia'
 import { defineComponent, reactive, ref } from 'vue'
 import { useAuthStore } from '@/stores/auth'

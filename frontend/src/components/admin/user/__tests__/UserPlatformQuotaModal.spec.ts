@@ -1,5 +1,6 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest'
-import { mount, flushPromises } from '@vue/test-utils'
+import { mount, flushPromises } from '@/__tests__/render'
+
 import { createPinia, setActivePinia } from 'pinia'
 
 const apiMocks = vi.hoisted(() => ({
@@ -243,7 +244,7 @@ describe('UserPlatformQuotaModal', () => {
     expect(resetBtns.length).toBe(33) // 11 平台 × 3 窗口
     for (const b of resetBtns) {
       expect((b.element as HTMLButtonElement).disabled).toBe(true)
-      expect(b.attributes('title')).toBe('admin.users.platformQuota.reset.unavailable')
+      expect(b.attributes('aria-label')).toBe('admin.users.platformQuota.reset.unavailable')
     }
   })
 
@@ -253,7 +254,7 @@ describe('UserPlatformQuotaModal', () => {
     const resetBtns = w.findAll('button').filter((b) => b.text() === '↻')
     const enabled = resetBtns.filter((b) => !(b.element as HTMLButtonElement).disabled)
     expect(enabled.length).toBe(3) // anthropic 的 daily/weekly/monthly
-    expect(enabled[0].attributes('title')).toBe('admin.users.platformQuota.reset.button')
+    expect(enabled[0].attributes('aria-label')).toBe('admin.users.platformQuota.reset.button')
   })
 
   it('重置按钮 confirm 取消则不调用 API', async () => {

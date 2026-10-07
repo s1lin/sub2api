@@ -1,5 +1,6 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
-import { flushPromises, shallowMount } from '@vue/test-utils'
+import { flushPromises, mount, portal } from '@/__tests__/render'
+
 import PaymentView from '../PaymentView.vue'
 import { PAYMENT_RECOVERY_STORAGE_KEY } from '@/components/payment/paymentFlow'
 import { formatPaymentAmount } from '@/components/payment/currency'
@@ -240,7 +241,7 @@ async function mountSubscriptionConfirm(options: Parameters<typeof checkoutInfoW
   window.localStorage.clear()
   ;(window as Window & { WeixinJSBridge?: { invoke: typeof bridgeInvoke } }).WeixinJSBridge = undefined
 
-  const wrapper = shallowMount(PaymentView, {
+  const wrapper = mountWithControls(PaymentView, {
     global: {
       stubs: {
         AppLayout: {
@@ -280,7 +281,7 @@ async function mountSubscriptionPlanList(planCount: number) {
   window.localStorage.clear()
   ;(window as Window & { WeixinJSBridge?: { invoke: typeof bridgeInvoke } }).WeixinJSBridge = undefined
 
-  const wrapper = shallowMount(PaymentView, {
+  const wrapper = mountWithControls(PaymentView, {
     global: {
       stubs: {
         AppLayout: {
@@ -307,7 +308,7 @@ describe('PaymentView help text', () => {
 
   async function mountHelp(help_text: string, help_image_url = '') {
     getCheckoutInfo.mockReset().mockResolvedValue(checkoutInfoFixture({ help_text, help_image_url }))
-    const wrapper = shallowMount(PaymentView, {
+    const wrapper = mountWithControls(PaymentView, {
       global: {
         stubs: {
           AppLayout: { template: '<div><slot /></div>' },
@@ -348,8 +349,8 @@ describe('PaymentView help text', () => {
     expect(help.get('p').text()).toBe('First line\nSecond line')
     expect(help.find('br').exists()).toBe(false)
     await wrapper.get('img').trigger('click')
-    expect(wrapper.findAll('img')).toHaveLength(2)
-    expect(wrapper.findAll('img')[1].attributes('src')).toBe('https://example.com/help.png')
+    expect(portal().get('[role=dialog]').findAll('img')).toHaveLength(1)
+    expect(portal().get('[role=dialog]').get('img').attributes('src')).toBe('https://example.com/help.png')
   })
 
   it('keeps image-only help without an empty Markdown container', async () => {
@@ -389,7 +390,7 @@ describe('PaymentView recharge rate preview', () => {
       },
     }))
 
-    const wrapper = shallowMount(PaymentView, {
+    const wrapper = mountWithControls(PaymentView, {
       global: {
         stubs: {
           AppLayout: { template: '<div><slot /></div>' },
@@ -556,7 +557,7 @@ describe('PaymentView payment recovery', () => {
       createdAt: Date.now(),
     }))
 
-    const wrapper = shallowMount(PaymentView, {
+    const wrapper = mountWithControls(PaymentView, {
       global: {
         stubs: {
           AppLayout: {
@@ -613,7 +614,7 @@ describe('PaymentView WeChat JSAPI flow', () => {
       callback({ err_msg: 'get_brand_wcpay_request:ok' })
     })
 
-    shallowMount(PaymentView, {
+    mountWithControls(PaymentView, {
       global: {
         stubs: {
           Teleport: true,
@@ -642,7 +643,7 @@ describe('PaymentView WeChat JSAPI flow', () => {
       callback({ err_msg: 'get_brand_wcpay_request:cancel' })
     })
 
-    shallowMount(PaymentView, {
+    mountWithControls(PaymentView, {
       global: {
         stubs: {
           Teleport: true,
@@ -663,7 +664,7 @@ describe('PaymentView WeChat JSAPI flow', () => {
     createOrder.mockResolvedValue(jsapiOrderFixture('resume-token-missing-bridge'))
     ;(window as Window & { WeixinJSBridge?: { invoke: typeof bridgeInvoke } }).WeixinJSBridge = undefined
 
-    const wrapper = shallowMount(PaymentView, {
+    const wrapper = mountWithControls(PaymentView, {
       global: {
         stubs: {
           Teleport: true,
@@ -707,7 +708,7 @@ describe('PaymentView WeChat JSAPI flow', () => {
       createdAt: Date.UTC(2099, 0, 1, 0, 0, 0),
     }))
 
-    shallowMount(PaymentView, {
+    mountWithControls(PaymentView, {
       global: {
         stubs: {
           Teleport: true,
@@ -745,7 +746,7 @@ describe('PaymentView WeChat JSAPI flow', () => {
       value: locationState,
     })
 
-    shallowMount(PaymentView, {
+    mountWithControls(PaymentView, {
       global: {
         stubs: {
           Teleport: true,
@@ -793,7 +794,7 @@ describe('PaymentView WeChat JSAPI flow', () => {
         out_trade_no: 'sub2_qr_778',
       })
 
-    shallowMount(PaymentView, {
+    mountWithControls(PaymentView, {
       global: {
         stubs: {
           Teleport: true,
@@ -887,3 +888,12 @@ describe('PaymentView subscription feature flag', () => {
     wrapper.unmount()
   })
 })
+
+// Isolate page dependencies while exercising the shared Kumo controls.
+function mountWithControls(component: Parameters<typeof mount>[0], options: any = {}) {
+  return mount(component, { ...options, global: { ...options.global, stubs: {
+    AppLayout: true, PaymentStatusPanel: true, AmountInput: true, PaymentMethodSelector: true, Icon: true, SubscriptionPlanCard: true,
+    KumoSurface: { template: '<div><slot /></div>' },
+    ...options.global?.stubs,
+  } } })
+}

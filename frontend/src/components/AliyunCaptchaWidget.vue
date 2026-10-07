@@ -1,6 +1,6 @@
 <template>
   <div v-if="sceneId && prefix" class="aliyun-captcha-wrapper">
-    <button
+    <KumoButton
       :id="buttonId"
       type="button"
       class="aliyun-captcha-button"
@@ -34,12 +34,14 @@
         />
       </svg>
       <span>{{ buttonText }}</span>
-    </button>
+    </KumoButton>
     <div :id="elementId"></div>
   </div>
 </template>
 
 <script setup lang="ts">
+import { KumoButton } from '@/components/kumo'
+
 import { computed, onMounted, onUnmounted, ref } from 'vue'
 import { useI18n } from 'vue-i18n'
 

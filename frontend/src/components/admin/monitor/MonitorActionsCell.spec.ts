@@ -1,4 +1,4 @@
-import { mount } from '@vue/test-utils'
+import { mount } from '@/__tests__/render'
 import { describe, expect, it, vi } from 'vitest'
 
 import type { ChannelMonitor } from '@/api/admin/channelMonitor'
@@ -59,7 +59,7 @@ describe('MonitorActionsCell duplicate action', () => {
     const button = wrapper.get('[data-testid="monitor-duplicate"]')
 
     expect(button.attributes('disabled')).toBeDefined()
-    expect(button.attributes('title')).toBe('admin.channelMonitor.duplicating')
+    expect(button.attributes('aria-label')).toBe('admin.channelMonitor.duplicating')
     expect(button.text()).toContain('admin.channelMonitor.duplicating')
   })
 
@@ -74,6 +74,6 @@ describe('MonitorActionsCell duplicate action', () => {
     const button = wrapper.get('[data-testid="monitor-duplicate"]')
 
     expect(button.attributes('disabled')).toBeDefined()
-    expect(button.attributes('title')).toBe('admin.channelMonitor.duplicateKeyUnavailable')
+    expect(button.attributes('aria-label')).toBe('admin.channelMonitor.duplicateKeyUnavailable')
   })
 })

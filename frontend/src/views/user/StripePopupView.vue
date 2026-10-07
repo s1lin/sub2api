@@ -18,34 +18,34 @@
         >
           {{ error }}
         </div>
-        <button
+        <KumoButton
           class="w-full text-sm underline dark:text-blue-400 dark:hover:text-blue-300"
           :style="{ color: methodColor }"
           @click="closeWindow"
         >
           {{ t('common.close') }}
-        </button>
+        </KumoButton>
       </div>
 
       <!-- Success -->
       <div v-else-if="success" class="space-y-3 py-4 text-center">
         <div class="text-5xl text-green-600 dark:text-green-400">✓</div>
         <p class="text-sm text-gray-500 dark:text-slate-400">{{ t('payment.result.success') }}</p>
-        <button
+        <KumoButton
           class="text-sm underline dark:text-blue-400 dark:hover:text-blue-300"
           :style="{ color: methodColor }"
           @click="closeWindow"
         >
           {{ t('common.close') }}
-        </button>
+        </KumoButton>
       </div>
 
       <!-- Loading / Redirecting -->
       <div v-else class="flex items-center justify-center py-8">
-        <div
-          class="h-8 w-8 animate-spin rounded-full border-2 border-t-transparent"
+        <KumoLoader
+          class="h-8 w-8"
           :style="{ borderColor: methodColor, borderTopColor: 'transparent' }"
-        />
+         />
         <span class="ml-3 text-sm text-gray-500 dark:text-slate-400">{{ hint }}</span>
       </div>
     </div>
@@ -53,6 +53,8 @@
 </template>
 
 <script setup lang="ts">
+import { KumoButton, KumoLoader } from '@/components/kumo'
+
 import { getRequestAuthToken } from '@/auth/clerk'
 import { computed, ref, onMounted, onUnmounted } from 'vue'
 import { useI18n } from 'vue-i18n'

@@ -1,6 +1,6 @@
 <template>
   <div class="space-y-6">
-    <section
+    <KumoSurface
       data-testid="profile-overview-hero"
       class="card overflow-hidden"
     >
@@ -96,11 +96,11 @@
           </div>
         </div>
       </div>
-    </section>
+    </KumoSurface>
 
     <div class="space-y-6">
       <div data-testid="profile-main-column" class="space-y-6">
-        <section
+        <KumoSurface
           data-testid="profile-basics-panel"
           class="card p-6"
         >
@@ -130,9 +130,9 @@
               />
             </div>
           </div>
-        </section>
+        </KumoSurface>
 
-        <section
+        <KumoSurface
           data-testid="profile-auth-bindings-panel"
           v-if="!clerkEnabled"
           class="card p-6"
@@ -149,11 +149,11 @@
             embedded
             compact
           />
-        </section>
+        </KumoSurface>
       </div>
 
       <div data-testid="profile-side-column" class="space-y-6">
-        <section
+        <KumoSurface
           v-if="sourceHints.length"
           class="card p-6"
         >
@@ -174,13 +174,15 @@
               <span>{{ hint.text }}</span>
             </div>
           </div>
-        </section>
+        </KumoSurface>
       </div>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
+import { KumoSurface } from '@/components/kumo'
+
 import { clerkEnabled } from '@/auth/clerk'
 import { computed } from 'vue'
 import { useI18n } from 'vue-i18n'

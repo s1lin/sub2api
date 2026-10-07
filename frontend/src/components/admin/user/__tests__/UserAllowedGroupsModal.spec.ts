@@ -1,5 +1,6 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
-import { enableAutoUnmount, flushPromises, mount } from '@vue/test-utils'
+import { mount, flushPromises } from '@/__tests__/render'
+import { enableAutoUnmount } from '@vue/test-utils'
 import type { AdminUser } from '@/types'
 import UserAllowedGroupsModal from '../UserAllowedGroupsModal.vue'
 

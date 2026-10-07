@@ -46,8 +46,8 @@
       class="space-y-5"
     >
       <div>
-        <label class="input-label">{{ t('admin.accounts.accountName') }}</label>
-        <input
+        <KumoLabel class="input-label">{{ t('admin.accounts.accountName') }}</KumoLabel>
+        <KumoInput
           v-model="form.name"
           type="text"
           :required="!isGrokSSOInputMethod"
@@ -57,21 +57,21 @@
         />
       </div>
       <div>
-        <label class="input-label">{{ t('admin.accounts.notes') }}</label>
-        <textarea
+        <KumoLabel class="input-label">{{ t('admin.accounts.notes') }}</KumoLabel>
+        <KumoTextarea
           v-model="form.notes"
           rows="3"
           class="input"
           :placeholder="t('admin.accounts.notesPlaceholder')"
-        ></textarea>
+        ></KumoTextarea>
         <p class="input-hint">{{ t('admin.accounts.notesHint') }}</p>
       </div>
 
       <!-- Platform Selection - Segmented Control Style -->
       <div>
-        <label class="input-label">{{ t('admin.accounts.platform') }}</label>
+        <KumoLabel class="input-label">{{ t('admin.accounts.platform') }}</KumoLabel>
         <div class="mt-2 flex flex-wrap rounded-lg bg-gray-100 p-1 dark:bg-dark-700" data-tour="account-form-platform">
-          <button
+          <KumoButton
             type="button"
             @click="form.platform = 'anthropic'"
             :class="[
@@ -83,8 +83,8 @@
           >
             <Icon name="sparkles" size="sm" />
             Anthropic
-          </button>
-          <button
+          </KumoButton>
+          <KumoButton
             type="button"
             @click="form.platform = 'openai'"
             :class="[
@@ -108,8 +108,8 @@
               />
             </svg>
             OpenAI
-          </button>
-          <button
+          </KumoButton>
+          <KumoButton
             type="button"
             @click="form.platform = 'gemini'"
             :class="[
@@ -133,8 +133,8 @@
               />
             </svg>
             Gemini
-          </button>
-          <button
+          </KumoButton>
+          <KumoButton
             type="button"
             @click="form.platform = 'antigravity'"
             :class="[
@@ -146,8 +146,8 @@
           >
             <Icon name="cloud" size="sm" />
             Antigravity
-          </button>
-          <button
+          </KumoButton>
+          <KumoButton
             type="button"
             @click="form.platform = 'grok'"
             :class="[
@@ -159,11 +159,11 @@
           >
             <PlatformIcon platform="grok" size="sm" />
             Grok
-          </button>
+          </KumoButton>
         </div>
         <!-- Multi-protocol API-key providers: Kimi / Zhipu GLM / DeepSeek / OpenCode -->
         <div class="mt-2 flex flex-wrap rounded-lg bg-gray-100 p-1 dark:bg-dark-700">
-          <button
+          <KumoButton
             type="button"
             @click="selectCNPlatform('kimi')"
             :class="[
@@ -175,8 +175,8 @@
           >
             <PlatformIcon platform="kimi" size="sm" />
             Kimi
-          </button>
-          <button
+          </KumoButton>
+          <KumoButton
             type="button"
             @click="selectCNPlatform('zhipu')"
             :class="[
@@ -188,8 +188,8 @@
           >
             <PlatformIcon platform="zhipu" size="sm" />
             Zhipu GLM
-          </button>
-          <button
+          </KumoButton>
+          <KumoButton
             type="button"
             @click="selectCNPlatform('deepseek')"
             :class="[
@@ -201,8 +201,8 @@
           >
             <PlatformIcon platform="deepseek" size="sm" />
             DeepSeek
-          </button>
-          <button
+          </KumoButton>
+          <KumoButton
             type="button"
             @click="selectCNPlatform('minimax')"
             :class="[
@@ -214,8 +214,8 @@
           >
             <PlatformIcon platform="minimax" size="sm" />
             MiniMax
-          </button>
-          <button
+          </KumoButton>
+          <KumoButton
             type="button"
             @click="selectOpenCodeGoPlatform()"
             :class="[
@@ -227,8 +227,8 @@
           >
             <PlatformIcon platform="opencode_go" size="sm" />
             OpenCode
-          </button>
-          <button
+          </KumoButton>
+          <KumoButton
             type="button"
             @click="selectTypeSafePlatform()"
             :class="[
@@ -240,15 +240,15 @@
           >
             <PlatformIcon platform="typesafe" size="sm" />
             TypeSafe / Jev
-          </button>
+          </KumoButton>
         </div>
       </div>
 
       <!-- Account Type Selection (Anthropic) -->
       <div v-if="form.platform === 'anthropic'">
-        <label class="input-label">{{ t('admin.accounts.accountType') }}</label>
+        <KumoLabel class="input-label">{{ t('admin.accounts.accountType') }}</KumoLabel>
         <div class="mt-2 grid grid-cols-2 gap-3 sm:grid-cols-4" data-tour="account-form-type">
-          <button
+          <KumoButton
             type="button"
             @click="accountCategory = 'oauth-based'"
             :class="[
@@ -276,9 +276,9 @@
                 t('admin.accounts.oauthSetupToken')
               }}</span>
             </div>
-          </button>
+          </KumoButton>
 
-          <button
+          <KumoButton
             type="button"
             @click="accountCategory = 'apikey'"
             :class="[
@@ -306,9 +306,9 @@
                 t('admin.accounts.apiKey')
               }}</span>
             </div>
-          </button>
+          </KumoButton>
 
-          <button
+          <KumoButton
             type="button"
             @click="accountCategory = 'bedrock'"
             :class="[
@@ -336,9 +336,9 @@
                 t('admin.accounts.bedrockDesc')
               }}</span>
             </div>
-          </button>
+          </KumoButton>
 
-          <button
+          <KumoButton
             type="button"
             @click="accountCategory = 'service_account'"
             :class="[
@@ -362,7 +362,7 @@
               <span class="block text-sm font-medium text-gray-900 dark:text-white">Vertex</span>
               <span class="text-xs text-gray-500 dark:text-gray-400">Service Account</span>
             </div>
-          </button>
+          </KumoButton>
 
         </div>
 
@@ -376,9 +376,9 @@
 
       <!-- Account Type Selection (OpenAI) -->
       <div v-if="form.platform === 'openai'">
-        <label class="input-label">{{ t('admin.accounts.accountType') }}</label>
+        <KumoLabel class="input-label">{{ t('admin.accounts.accountType') }}</KumoLabel>
         <div class="mt-2 grid grid-cols-2 gap-3" data-tour="account-form-type">
-          <button
+          <KumoButton
             type="button"
             @click="accountCategory = 'oauth-based'"
             :class="[
@@ -402,9 +402,9 @@
               <span class="block text-sm font-medium text-gray-900 dark:text-white">OAuth</span>
               <span class="text-xs text-gray-500 dark:text-gray-400">{{ t('admin.accounts.types.chatgptOauth') }}</span>
             </div>
-          </button>
+          </KumoButton>
 
-          <button
+          <KumoButton
             type="button"
             @click="accountCategory = 'apikey'"
             :class="[
@@ -428,16 +428,16 @@
               <span class="block text-sm font-medium text-gray-900 dark:text-white">API Key</span>
               <span class="text-xs text-gray-500 dark:text-gray-400">{{ t('admin.accounts.types.responsesApi') }}</span>
             </div>
-          </button>
+          </KumoButton>
 
         </div>
       </div>
 
       <!-- Account Type Selection (Grok) -->
       <div v-if="form.platform === 'grok'">
-        <label class="input-label">{{ t('admin.accounts.accountType') }}</label>
+        <KumoLabel class="input-label">{{ t('admin.accounts.accountType') }}</KumoLabel>
         <div class="mt-2 grid grid-cols-1 gap-3 sm:grid-cols-2" data-tour="account-form-type">
-          <button
+          <KumoButton
             type="button"
             @click="accountCategory = 'oauth-based'"
             :class="[
@@ -461,9 +461,9 @@
               <span class="block text-sm font-medium text-gray-900 dark:text-white">OAuth</span>
               <span class="text-xs text-gray-500 dark:text-gray-400">{{ t('admin.accounts.types.grokOauth') }}</span>
             </div>
-          </button>
+          </KumoButton>
 
-          <button
+          <KumoButton
             type="button"
             data-testid="grok-account-type-api-key"
             @click="accountCategory = 'apikey'"
@@ -488,15 +488,15 @@
               <span class="block text-sm font-medium text-gray-900 dark:text-white">API Key</span>
               <span class="text-xs text-gray-500 dark:text-gray-400">{{ t('admin.accounts.types.responsesApi') }}</span>
             </div>
-          </button>
+          </KumoButton>
         </div>
       </div>
 
       <!-- OpenCode Zen vs Go -->
       <div v-if="isOpenCodeGoPlatform">
-        <label class="input-label">{{ t('admin.accounts.cnProviders.accountMode.title') }}</label>
+        <KumoLabel class="input-label">{{ t('admin.accounts.cnProviders.accountMode.title') }}</KumoLabel>
         <div class="mt-2 grid grid-cols-1 gap-3 sm:grid-cols-2">
-          <button
+          <KumoButton
             type="button"
             @click="openCodeAccountMode = 'zen'"
             :class="[
@@ -518,8 +518,8 @@
               <span class="block text-sm font-medium text-gray-900 dark:text-white">{{ t('admin.accounts.opencodeGo.accountMode.zen') }}</span>
               <span class="text-xs text-gray-500 dark:text-gray-400">{{ t('admin.accounts.opencodeGo.accountMode.zenDesc') }}</span>
             </div>
-          </button>
-          <button
+          </KumoButton>
+          <KumoButton
             type="button"
             @click="openCodeAccountMode = 'go'"
             :class="[
@@ -541,16 +541,16 @@
               <span class="block text-sm font-medium text-gray-900 dark:text-white">{{ t('admin.accounts.opencodeGo.accountMode.go') }}</span>
               <span class="text-xs text-gray-500 dark:text-gray-400">{{ t('admin.accounts.opencodeGo.accountMode.goDesc') }}</span>
             </div>
-          </button>
+          </KumoButton>
         </div>
       </div>
 
       <!-- Account Mode Selection (Kimi / Zhipu / DeepSeek) -->
       <div v-if="isCNPlatform && !isOpenCodeGoPlatform">
-        <label class="input-label">{{ t('admin.accounts.cnProviders.accountMode.title') }}</label>
+        <KumoLabel class="input-label">{{ t('admin.accounts.cnProviders.accountMode.title') }}</KumoLabel>
         <div class="mt-2 grid grid-cols-1 gap-3 sm:grid-cols-2" data-tour="account-form-mode">
           <!-- Pay-as-you-go (token balance) -->
-          <button
+          <KumoButton
             type="button"
             @click="accountMode = 'payg'"
             :class="[
@@ -574,9 +574,9 @@
               <span class="block text-sm font-medium text-gray-900 dark:text-white">{{ t('admin.accounts.cnProviders.accountMode.payg') }}</span>
               <span class="text-xs text-gray-500 dark:text-gray-400">{{ t('admin.accounts.cnProviders.accountMode.paygDesc') }}</span>
             </div>
-          </button>
+          </KumoButton>
           <!-- Coding Plan (kimi / zhipu only — DeepSeek has no coding plan) -->
-          <button
+          <KumoButton
             v-if="form.platform !== 'deepseek'"
             type="button"
             @click="accountMode = 'coding'"
@@ -601,15 +601,15 @@
               <span class="block text-sm font-medium text-gray-900 dark:text-white">{{ t('admin.accounts.cnProviders.accountMode.coding') }}</span>
               <span class="text-xs text-gray-500 dark:text-gray-400">{{ t('admin.accounts.cnProviders.accountMode.codingDesc') }}</span>
             </div>
-          </button>
+          </KumoButton>
         </div>
       </div>
 
       <!-- API Protocol Selection (Kimi / Zhipu / DeepSeek / OpenCode) -->
       <div v-if="isMultiProtocolPlatform" class="mt-4">
-        <label class="input-label">{{ t('admin.accounts.cnProviders.apiProtocol.title') }}</label>
+        <KumoLabel class="input-label">{{ t('admin.accounts.cnProviders.apiProtocol.title') }}</KumoLabel>
         <div class="mt-2 grid grid-cols-1 gap-3 sm:grid-cols-3">
-          <button
+          <KumoButton
             v-for="opt in cnProtocolOptions"
             :key="opt.value"
             type="button"
@@ -635,14 +635,14 @@
               <span class="block text-sm font-medium text-gray-900 dark:text-white">{{ t(`admin.accounts.cnProviders.apiProtocol.${opt.labelKey}`) }}</span>
               <span class="text-xs text-gray-500 dark:text-gray-400">{{ t(`admin.accounts.cnProviders.apiProtocol.${opt.labelKey}Desc`) }}</span>
             </div>
-          </button>
+          </KumoButton>
         </div>
       </div>
 
       <!-- Zhipu 团队版 Coding Plan：组织/项目 ID（可选，填写后额度探测走团队版端点） -->
       <div v-if="form.platform === 'zhipu' && accountMode === 'coding'" class="mt-4">
         <div class="flex items-center">
-          <label class="input-label">{{ t('admin.accounts.cnProviders.zhipuTeam.title') }}</label>
+          <KumoLabel class="input-label">{{ t('admin.accounts.cnProviders.zhipuTeam.title') }}</KumoLabel>
           <HelpTooltip trigger="click" width-class="w-80">
             <p class="mb-1 font-medium">{{ t('admin.accounts.cnProviders.zhipuTeam.help.title') }}</p>
             <ol class="list-decimal space-y-1 pl-4">
@@ -658,12 +658,12 @@
         </div>
         <div class="mt-2 grid gap-4 sm:grid-cols-2">
           <div>
-            <label class="input-label">{{ t('admin.accounts.cnProviders.zhipuTeam.organization') }}</label>
-            <input v-model="zhipuOrganization" type="text" class="input" :placeholder="t('admin.accounts.cnProviders.zhipuTeam.organizationPlaceholder')" />
+            <KumoLabel class="input-label">{{ t('admin.accounts.cnProviders.zhipuTeam.organization') }}</KumoLabel>
+            <KumoInput v-model="zhipuOrganization" type="text" class="input" :placeholder="t('admin.accounts.cnProviders.zhipuTeam.organizationPlaceholder')" />
           </div>
           <div>
-            <label class="input-label">{{ t('admin.accounts.cnProviders.zhipuTeam.project') }}</label>
-            <input v-model="zhipuProject" type="text" class="input" :placeholder="t('admin.accounts.cnProviders.zhipuTeam.projectPlaceholder')" />
+            <KumoLabel class="input-label">{{ t('admin.accounts.cnProviders.zhipuTeam.project') }}</KumoLabel>
+            <KumoInput v-model="zhipuProject" type="text" class="input" :placeholder="t('admin.accounts.cnProviders.zhipuTeam.projectPlaceholder')" />
           </div>
         </div>
         <p class="input-hint mt-2">{{ t('admin.accounts.cnProviders.zhipuTeam.hint') }}</p>
@@ -672,8 +672,8 @@
       <!-- Account Type Selection (Gemini) -->
       <div v-if="form.platform === 'gemini'">
         <div class="flex items-center justify-between">
-          <label class="input-label">{{ t('admin.accounts.accountType') }}</label>
-          <button
+          <KumoLabel class="input-label">{{ t('admin.accounts.accountType') }}</KumoLabel>
+          <KumoButton
             type="button"
             @click="showGeminiHelpDialog = true"
             class="flex items-center gap-1 rounded px-2 py-1 text-xs text-blue-600 hover:bg-blue-50 dark:text-blue-400 dark:hover:bg-blue-900/20"
@@ -682,10 +682,10 @@
               <path stroke-linecap="round" stroke-linejoin="round" d="M9.879 7.519c1.171-1.025 3.071-1.025 4.242 0 1.172 1.025 1.172 2.687 0 3.712-.203.179-.43.326-.67.442-.745.361-1.45.999-1.45 1.827v.75M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9 5.25h.008v.008H12v-.008z" />
             </svg>
             {{ t('admin.accounts.gemini.helpButton') }}
-          </button>
+          </KumoButton>
         </div>
         <div class="mt-2 grid grid-cols-3 gap-3" data-tour="account-form-type">
-          <button
+          <KumoButton
             type="button"
             @click="accountCategory = 'oauth-based'"
             :class="[
@@ -713,9 +713,9 @@
                 {{ t('admin.accounts.gemini.accountType.oauthDesc') }}
               </span>
             </div>
-          </button>
+          </KumoButton>
 
-          <button
+          <KumoButton
             type="button"
             @click="accountCategory = 'apikey'"
             :class="[
@@ -755,9 +755,9 @@
                 {{ t('admin.accounts.gemini.accountType.apiKeyDesc') }}
               </span>
             </div>
-          </button>
+          </KumoButton>
 
-          <button
+          <KumoButton
             type="button"
             @click="accountCategory = 'service_account'"
             :class="[
@@ -785,7 +785,7 @@
                 Service Account
               </span>
             </div>
-          </button>
+          </KumoButton>
         </div>
 
         <div
@@ -814,10 +814,10 @@
 
         <!-- OAuth Type Selection (only show when oauth-based is selected) -->
         <div v-if="accountCategory === 'oauth-based'" class="mt-4">
-          <label class="input-label">{{ t('admin.accounts.oauth.gemini.oauthTypeLabel') }}</label>
+          <KumoLabel class="input-label">{{ t('admin.accounts.oauth.gemini.oauthTypeLabel') }}</KumoLabel>
           <div class="mt-2 grid grid-cols-2 gap-3">
             <!-- Google One OAuth -->
-            <button
+            <KumoButton
               type="button"
               @click="handleSelectGeminiOAuthType('google_one')"
               :class="[
@@ -857,10 +857,10 @@
                   </span>
                 </div>
               </div>
-            </button>
+            </KumoButton>
 
             <!-- GCP Code Assist OAuth -->
-            <button
+            <KumoButton
               type="button"
               @click="handleSelectGeminiOAuthType('code_assist')"
               :class="[
@@ -911,12 +911,12 @@
                   </span>
                 </div>
               </div>
-            </button>
+            </KumoButton>
           </div>
 
           <!-- Advanced Options Toggle -->
           <div class="mt-3">
-            <button
+            <KumoButton
               type="button"
               @click="showAdvancedOAuth = !showAdvancedOAuth"
               class="flex items-center gap-2 text-sm text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-200"
@@ -937,12 +937,11 @@
                     : t('admin.accounts.gemini.oauthType.showAdvanced')
                 }}
               </span>
-            </button>
+            </KumoButton>
           </div>
 
           <!-- Custom OAuth Client (Advanced) -->
-          <div v-if="showAdvancedOAuth" class="mt-3 group relative">
-            <button
+          <KumoButton :title="t('admin.accounts.oauth.gemini.aiStudioNotConfiguredTip')"
               type="button"
               :disabled="!geminiAIStudioOAuthEnabled"
               @click="handleSelectGeminiOAuthType('ai_studio')"
@@ -1005,22 +1004,14 @@
               >
                 {{ t('admin.accounts.oauth.gemini.aiStudioNotConfiguredShort') }}
               </span>
-            </button>
-
-            <div
-              v-if="!geminiAIStudioOAuthEnabled"
-              class="pointer-events-none absolute right-0 top-full z-50 mt-2 w-80 rounded-md border border-amber-200 bg-amber-50 px-3 py-2 text-xs text-amber-800 opacity-0 shadow-lg transition-opacity group-hover:opacity-100 dark:border-amber-700 dark:bg-amber-900/40 dark:text-amber-200"
-            >
-              {{ t('admin.accounts.oauth.gemini.aiStudioNotConfiguredTip') }}
-            </div>
-          </div>
+            </KumoButton>
         </div>
 
         <!-- Tier selection (used as fallback when auto-detection is unavailable/fails) -->
         <div v-if="accountCategory !== 'service_account'" class="mt-4">
-          <label class="input-label">{{ t('admin.accounts.gemini.tier.label') }}</label>
+          <KumoLabel class="input-label">{{ t('admin.accounts.gemini.tier.label') }}</KumoLabel>
           <div class="mt-2">
-            <select
+            <KumoNativeSelect
               v-if="geminiOAuthType === 'google_one'"
               v-model="geminiTierGoogleOne"
               class="input"
@@ -1028,25 +1019,25 @@
               <option value="google_one_free">{{ t('admin.accounts.gemini.tier.googleOne.free') }}</option>
               <option value="google_ai_pro">{{ t('admin.accounts.gemini.tier.googleOne.pro') }}</option>
               <option value="google_ai_ultra">{{ t('admin.accounts.gemini.tier.googleOne.ultra') }}</option>
-            </select>
+            </KumoNativeSelect>
 
-            <select
+            <KumoNativeSelect
               v-else-if="geminiOAuthType === 'code_assist'"
               v-model="geminiTierGcp"
               class="input"
             >
               <option value="gcp_standard">{{ t('admin.accounts.gemini.tier.gcp.standard') }}</option>
               <option value="gcp_enterprise">{{ t('admin.accounts.gemini.tier.gcp.enterprise') }}</option>
-            </select>
+            </KumoNativeSelect>
 
-            <select
+            <KumoNativeSelect
               v-else
               v-model="geminiTierAIStudio"
               class="input"
             >
               <option value="aistudio_free">{{ t('admin.accounts.gemini.tier.aiStudio.free') }}</option>
               <option value="aistudio_paid">{{ t('admin.accounts.gemini.tier.aiStudio.paid') }}</option>
-            </select>
+            </KumoNativeSelect>
           </div>
           <p class="input-hint">{{ t('admin.accounts.gemini.tier.hint') }}</p>
         </div>
@@ -1054,9 +1045,9 @@
 
       <!-- Account Type Selection (Antigravity - OAuth or Upstream) -->
       <div v-if="form.platform === 'antigravity'">
-        <label class="input-label">{{ t('admin.accounts.accountType') }}</label>
+        <KumoLabel class="input-label">{{ t('admin.accounts.accountType') }}</KumoLabel>
         <div class="mt-2 grid grid-cols-2 gap-3">
-          <button
+          <KumoButton
             type="button"
             @click="antigravityAccountType = 'oauth'"
             :class="[
@@ -1080,9 +1071,9 @@
               <span class="block text-sm font-medium text-gray-900 dark:text-white">OAuth</span>
               <span class="text-xs text-gray-500 dark:text-gray-400">{{ t('admin.accounts.types.antigravityOauth') }}</span>
             </div>
-          </button>
+          </KumoButton>
 
-          <button
+          <KumoButton
             type="button"
             @click="antigravityAccountType = 'upstream'"
             :class="[
@@ -1106,13 +1097,13 @@
               <span class="block text-sm font-medium text-gray-900 dark:text-white">API Key</span>
               <span class="text-xs text-gray-500 dark:text-gray-400">{{ t('admin.accounts.types.antigravityApikey') }}</span>
             </div>
-          </button>
+          </KumoButton>
         </div>
       </div>
 
       <div v-if="form.platform === 'antigravity' && antigravityAccountType === 'oauth'">
-        <label class="input-label">{{ t('admin.accounts.antigravityProjectIdLabel') }}</label>
-        <input
+        <KumoLabel class="input-label">{{ t('admin.accounts.antigravityProjectIdLabel') }}</KumoLabel>
+        <KumoInput
           v-model="antigravityProjectId"
           data-testid="antigravity-project-id-input"
           type="text"
@@ -1125,8 +1116,8 @@
       <!-- Upstream config (only for Antigravity upstream type) -->
       <div v-if="form.platform === 'antigravity' && antigravityAccountType === 'upstream'" class="space-y-4">
         <div>
-          <label class="input-label">{{ t('admin.accounts.upstream.baseUrl') }}</label>
-          <input
+          <KumoLabel class="input-label">{{ t('admin.accounts.upstream.baseUrl') }}</KumoLabel>
+          <KumoInput
             v-model="upstreamBaseUrl"
             type="text"
             required
@@ -1136,8 +1127,8 @@
           <p class="input-hint">{{ t('admin.accounts.upstream.baseUrlHint') }}</p>
         </div>
         <div>
-          <label class="input-label">{{ t('admin.accounts.upstream.apiKey') }}</label>
-          <input
+          <KumoLabel class="input-label">{{ t('admin.accounts.upstream.apiKey') }}</KumoLabel>
+          <KumoInput
             v-model="upstreamApiKey"
             type="password"
             required
@@ -1149,7 +1140,7 @@
         <!-- 上游倍率自动探测：antigravity upstream 也是 API-key 账号 -->
         <div class="flex items-center justify-between gap-4 border-t border-gray-200 pt-4 dark:border-dark-600">
           <div>
-            <label class="input-label mb-0">{{ t('admin.accounts.upstreamBilling.autoProbe') }}</label>
+            <KumoLabel class="input-label mb-0">{{ t('admin.accounts.upstreamBilling.autoProbe') }}</KumoLabel>
             <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">
               {{ t('admin.accounts.upstreamBilling.autoProbeHint') }}
             </p>
@@ -1165,8 +1156,8 @@
       <!-- Vertex Service Account -->
       <div v-if="(form.platform === 'gemini' || form.platform === 'anthropic') && accountCategory === 'service_account'" class="space-y-4">
         <div>
-          <label class="input-label">Service Account JSON</label>
-          <input
+          <KumoLabel class="input-label">Service Account JSON</KumoLabel>
+          <KumoInput
             ref="vertexServiceAccountFileInput"
             type="file"
             accept="application/json,.json"
@@ -1195,14 +1186,14 @@
                   {{ vertexClientEmail ? t('admin.accounts.vertexSaJsonKeyHidden') : t('admin.accounts.vertexSaJsonDropHint') }}
                 </p>
               </div>
-              <button
+              <KumoButton
                 type="button"
                 class="btn btn-secondary shrink-0"
                 @click="vertexServiceAccountFileInput?.click()"
               >
                 <Icon name="upload" size="sm" />
                 {{ t('admin.accounts.vertexSaJsonSelectBtn') }}
-              </button>
+              </KumoButton>
             </div>
             <div
               v-if="vertexClientEmail"
@@ -1217,8 +1208,8 @@
 
         <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
           <div>
-            <label class="input-label">Project ID</label>
-            <input
+            <KumoLabel class="input-label">Project ID</KumoLabel>
+            <KumoInput
               v-model="vertexProjectId"
               type="text"
               class="input font-mono"
@@ -1227,8 +1218,8 @@
             />
           </div>
           <div>
-            <label class="input-label">Location</label>
-            <select
+            <KumoLabel class="input-label">Location</KumoLabel>
+            <KumoNativeSelect
               v-model="vertexLocation"
               required
               class="input font-mono"
@@ -1246,7 +1237,7 @@
                   {{ option.label }}
                 </option>
               </optgroup>
-            </select>
+            </KumoNativeSelect>
             <p class="input-hint">{{ t('admin.accounts.vertexLocationHint') }}</p>
           </div>
         </div>
@@ -1255,7 +1246,7 @@
       <!-- Antigravity model restriction (applies to OAuth + Upstream) -->
       <!-- Antigravity 只支持模型映射模式，不支持白名单模式 -->
       <div v-if="form.platform === 'antigravity'" class="border-t border-gray-200 pt-4 dark:border-dark-600">
-        <label class="input-label">{{ t('admin.accounts.modelRestriction') }}</label>
+        <KumoLabel class="input-label">{{ t('admin.accounts.modelRestriction') }}</KumoLabel>
 
         <!-- Mapping Mode Only (no toggle for Antigravity) -->
         <div>
@@ -1272,7 +1263,7 @@
               class="space-y-1"
             >
               <div class="flex items-center gap-2">
-                <input
+                <KumoInput
                   v-model="mapping.from"
                   type="text"
                   :class="[
@@ -1284,7 +1275,7 @@
                 <svg class="h-4 w-4 flex-shrink-0 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
                 </svg>
-                <input
+                <KumoInput
                   v-model="mapping.to"
                   type="text"
                   :class="[
@@ -1293,7 +1284,7 @@
                   ]"
                   :placeholder="t('admin.accounts.actualModel')"
                 />
-                <button
+                <KumoButton
                   type="button"
                   @click="removeAntigravityModelMapping(index)"
                   class="rounded-lg p-2 text-red-500 transition-colors hover:bg-red-50 hover:text-red-600 dark:hover:bg-red-900/20"
@@ -1306,7 +1297,7 @@
                       d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
                     />
                   </svg>
-                </button>
+                </KumoButton>
               </div>
               <!-- 校验错误提示 -->
               <p v-if="!isValidWildcardPattern(mapping.from)" class="text-xs text-red-500">
@@ -1318,7 +1309,7 @@
             </div>
           </div>
 
-          <button
+          <KumoButton
             type="button"
             @click="addAntigravityModelMapping"
             class="mb-3 w-full rounded-lg border-2 border-dashed border-gray-300 px-4 py-2 text-gray-600 transition-colors hover:border-gray-400 hover:text-gray-700 dark:border-dark-500 dark:text-gray-400 dark:hover:border-dark-400 dark:hover:text-gray-300"
@@ -1327,10 +1318,10 @@
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
             </svg>
             {{ t('admin.accounts.addMapping') }}
-          </button>
+          </KumoButton>
 
           <div class="flex flex-wrap gap-2">
-            <button
+            <KumoButton
               v-for="preset in antigravityPresetMappings"
               :key="preset.label"
               type="button"
@@ -1338,43 +1329,35 @@
               :class="['rounded-lg px-3 py-1 text-xs transition-colors', preset.color]"
             >
               + {{ preset.label }}
-            </button>
+            </KumoButton>
           </div>
         </div>
       </div>
 
       <!-- Add Method (only for Anthropic OAuth-based type) -->
       <div v-if="form.platform === 'anthropic' && isOAuthFlow">
-        <label class="input-label">{{ t('admin.accounts.addMethod') }}</label>
-        <div class="mt-2 flex gap-4">
-          <label class="flex cursor-pointer items-center">
-            <input
-              v-model="addMethod"
-              type="radio"
-              value="oauth"
-              class="mr-2 text-primary-600 focus:ring-primary-500"
-            />
+        <KumoLabel class="input-label">{{ t('admin.accounts.addMethod') }}</KumoLabel>
+        <KumoRadioGroup v-model="addMethod" class="contents">
+<div class="mt-2 flex gap-4">
+          <KumoRadio value="oauth" class="flex cursor-pointer items-center">
+
             <span class="text-sm text-gray-700 dark:text-gray-300">{{ t('admin.accounts.types.oauth') }}</span>
-          </label>
-          <label class="flex cursor-pointer items-center">
-            <input
-              v-model="addMethod"
-              type="radio"
-              value="setup-token"
-              class="mr-2 text-primary-600 focus:ring-primary-500"
-            />
+          </KumoRadio>
+          <KumoRadio value="setup-token" class="flex cursor-pointer items-center">
+
             <span class="text-sm text-gray-700 dark:text-gray-300">{{
               t('admin.accounts.setupTokenLongLived')
             }}</span>
-          </label>
+          </KumoRadio>
         </div>
+</KumoRadioGroup>
       </div>
 
       <!-- API Key input (only for apikey type, excluding Antigravity which has its own fields) -->
       <div v-if="form.type === 'apikey' && form.platform !== 'antigravity'" class="space-y-4">
         <div v-if="!isMultiProtocolPlatform || apiProtocol !== 'adaptive'">
-          <label class="input-label">{{ t('admin.accounts.baseUrl') }}</label>
-          <input
+          <KumoLabel class="input-label">{{ t('admin.accounts.baseUrl') }}</KumoLabel>
+          <KumoInput
             v-model="apiKeyBaseUrl"
             type="text"
             class="input"
@@ -1397,13 +1380,13 @@
           />
         </div>
         <div v-else>
-          <label class="input-label">{{ t('admin.accounts.cnProviders.apiProtocol.endpoints') }}</label>
+          <KumoLabel class="input-label">{{ t('admin.accounts.cnProviders.apiProtocol.endpoints') }}</KumoLabel>
           <div class="mt-2 space-y-3">
             <div v-for="item in cnAdaptiveProtocolOptions" :key="item.value">
-              <label class="mb-1 block text-xs font-medium text-gray-600 dark:text-gray-400">
+              <KumoLabel class="mb-1 block text-xs font-medium text-gray-600 dark:text-gray-400">
                 {{ t(`admin.accounts.cnProviders.apiProtocol.${item.labelKey}`) }}
-              </label>
-              <input
+              </KumoLabel>
+              <KumoInput
                 v-model="adaptiveBaseUrls[item.value]"
                 type="text"
                 class="input"
@@ -1421,8 +1404,8 @@
           :plan="openCodeAccountMode"
         />
         <div>
-          <label class="input-label">{{ t('admin.accounts.apiKeyRequired') }}</label>
-          <input
+          <KumoLabel class="input-label">{{ t('admin.accounts.apiKeyRequired') }}</KumoLabel>
+          <KumoInput
             v-model="apiKeyValue"
             type="password"
             required
@@ -1437,7 +1420,7 @@
           class="flex items-center justify-between gap-4 border-t border-gray-200 pt-4 dark:border-dark-600"
         >
           <div>
-            <label class="input-label mb-0">{{ t('admin.accounts.upstreamBilling.autoProbe') }}</label>
+            <KumoLabel class="input-label mb-0">{{ t('admin.accounts.upstreamBilling.autoProbe') }}</KumoLabel>
             <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">
               {{ t('admin.accounts.upstreamBilling.autoProbeHint') }}
             </p>
@@ -1451,17 +1434,17 @@
 
         <!-- Gemini API Key tier selection -->
         <div v-if="form.platform === 'gemini'">
-          <label class="input-label">{{ t('admin.accounts.gemini.tier.label') }}</label>
-          <select v-model="geminiTierAIStudio" class="input">
+          <KumoLabel class="input-label">{{ t('admin.accounts.gemini.tier.label') }}</KumoLabel>
+          <KumoNativeSelect v-model="geminiTierAIStudio" class="input">
             <option value="aistudio_free">{{ t('admin.accounts.gemini.tier.aiStudio.free') }}</option>
             <option value="aistudio_paid">{{ t('admin.accounts.gemini.tier.aiStudio.paid') }}</option>
-          </select>
+          </KumoNativeSelect>
           <p class="input-hint">{{ t('admin.accounts.gemini.tier.aiStudioHint') }}</p>
         </div>
 
         <!-- Model Restriction Section (Antigravity 已在上层条件排除) -->
         <div class="border-t border-gray-200 pt-4 dark:border-dark-600">
-          <label class="input-label">{{ t('admin.accounts.modelRestriction') }}</label>
+          <KumoLabel class="input-label">{{ t('admin.accounts.modelRestriction') }}</KumoLabel>
 
           <div
             v-if="isOpenAIModelRestrictionDisabled"
@@ -1475,7 +1458,7 @@
           <template v-else>
             <!-- Mode Toggle -->
             <div class="mb-4 flex gap-2">
-              <button
+              <KumoButton
                 type="button"
                 @click="modelRestrictionMode = 'whitelist'"
                 :class="[
@@ -1499,8 +1482,8 @@
                   />
                 </svg>
                 {{ t('admin.accounts.modelWhitelist') }}
-              </button>
-              <button
+              </KumoButton>
+              <KumoButton
                 type="button"
                 @click="modelRestrictionMode = 'mapping'"
                 :class="[
@@ -1524,7 +1507,7 @@
                   />
                 </svg>
                 {{ t('admin.accounts.modelMapping') }}
-              </button>
+              </KumoButton>
             </div>
 
             <!-- Whitelist Mode -->
@@ -1572,7 +1555,7 @@
                 :key="getModelMappingKey(mapping)"
                 class="flex items-center gap-2"
               >
-                <input
+                <KumoInput
                   v-model="mapping.from"
                   type="text"
                   class="input flex-1"
@@ -1591,13 +1574,13 @@
                     d="M14 5l7 7m0 0l-7 7m7-7H3"
                   />
                 </svg>
-                <input
+                <KumoInput
                   v-model="mapping.to"
                   type="text"
                   class="input flex-1"
                   :placeholder="t('admin.accounts.actualModel')"
                 />
-                <button
+                <KumoButton
                   type="button"
                   @click="removeModelMapping(index)"
                   class="rounded-lg p-2 text-red-500 transition-colors hover:bg-red-50 hover:text-red-600 dark:hover:bg-red-900/20"
@@ -1610,11 +1593,11 @@
                       d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
                     />
                   </svg>
-                </button>
+                </KumoButton>
               </div>
             </div>
 
-            <button
+            <KumoButton
               type="button"
               @click="addModelMapping"
               class="mb-3 w-full rounded-lg border-2 border-dashed border-gray-300 px-4 py-2 text-gray-600 transition-colors hover:border-gray-400 hover:text-gray-700 dark:border-dark-500 dark:text-gray-400 dark:hover:border-dark-400 dark:hover:text-gray-300"
@@ -1633,11 +1616,11 @@
                 />
               </svg>
               {{ t('admin.accounts.addMapping') }}
-            </button>
+            </KumoButton>
 
               <!-- Quick Add Buttons -->
               <div class="flex flex-wrap gap-2">
-                <button
+                <KumoButton
                   v-for="preset in presetMappings"
                   :key="preset.label"
                   type="button"
@@ -1645,7 +1628,7 @@
                   :class="['rounded-lg px-3 py-1 text-xs transition-colors', preset.color]"
                 >
                   + {{ preset.label }}
-                </button>
+                </KumoButton>
               </div>
             </div>
           </template>
@@ -1655,26 +1638,12 @@
         <div class="border-t border-gray-200 pt-4 dark:border-dark-600">
           <div class="mb-3 flex items-center justify-between">
             <div>
-              <label class="input-label mb-0">{{ t('admin.accounts.poolMode') }}</label>
+              <KumoLabel class="input-label mb-0">{{ t('admin.accounts.poolMode') }}</KumoLabel>
               <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">
                 {{ t('admin.accounts.poolModeHint') }}
               </p>
             </div>
-            <button
-              type="button"
-              @click="poolModeEnabled = !poolModeEnabled"
-              :class="[
-                'relative inline-flex h-6 w-11 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2',
-                poolModeEnabled ? 'bg-primary-600' : 'bg-gray-200 dark:bg-dark-600'
-              ]"
-            >
-              <span
-                :class="[
-                  'pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out',
-                  poolModeEnabled ? 'translate-x-5' : 'translate-x-0'
-                ]"
-              />
-            </button>
+            <KumoSwitch v-model="poolModeEnabled"  />
           </div>
           <div v-if="poolModeEnabled" class="rounded-lg bg-blue-50 p-3 dark:bg-blue-900/20">
             <p class="text-xs text-blue-700 dark:text-blue-400">
@@ -1683,8 +1652,8 @@
             </p>
           </div>
           <div v-if="poolModeEnabled" class="mt-3">
-            <label class="input-label">{{ t('admin.accounts.poolModeRetryCount') }}</label>
-            <input
+            <KumoLabel class="input-label">{{ t('admin.accounts.poolModeRetryCount') }}</KumoLabel>
+            <KumoInput
               v-model.number="poolModeRetryCount"
               type="number"
               min="0"
@@ -1702,8 +1671,8 @@
             </p>
           </div>
           <div v-if="poolModeEnabled" class="mt-3">
-            <label class="input-label">{{ t('admin.accounts.poolModeRetryStatusCodes') }}</label>
-            <input
+            <KumoLabel class="input-label">{{ t('admin.accounts.poolModeRetryStatusCodes') }}</KumoLabel>
+            <KumoInput
               v-model="poolModeRetryStatusCodesInput"
               type="text"
               class="input"
@@ -1719,26 +1688,12 @@
         <div class="border-t border-gray-200 pt-4 dark:border-dark-600">
           <div class="mb-3 flex items-center justify-between">
             <div>
-              <label class="input-label mb-0">{{ t('admin.accounts.customErrorCodes') }}</label>
+              <KumoLabel class="input-label mb-0">{{ t('admin.accounts.customErrorCodes') }}</KumoLabel>
               <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">
                 {{ t('admin.accounts.customErrorCodesHint') }}
               </p>
             </div>
-            <button
-              type="button"
-              @click="customErrorCodesEnabled = !customErrorCodesEnabled"
-              :class="[
-                'relative inline-flex h-6 w-11 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2',
-                customErrorCodesEnabled ? 'bg-primary-600' : 'bg-gray-200 dark:bg-dark-600'
-              ]"
-            >
-              <span
-                :class="[
-                  'pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out',
-                  customErrorCodesEnabled ? 'translate-x-5' : 'translate-x-0'
-                ]"
-              />
-            </button>
+            <KumoSwitch v-model="customErrorCodesEnabled"  />
           </div>
 
           <div v-if="customErrorCodesEnabled" class="space-y-3">
@@ -1751,7 +1706,7 @@
 
             <!-- Error Code Buttons -->
             <div class="flex flex-wrap gap-2">
-              <button
+              <KumoButton
                 v-for="code in commonErrorCodes"
                 :key="code.value"
                 type="button"
@@ -1764,12 +1719,12 @@
                 ]"
               >
                 {{ code.value }} {{ code.label }}
-              </button>
+              </KumoButton>
             </div>
 
             <!-- Manual input -->
             <div class="flex items-center gap-2">
-              <input
+              <KumoInput
                 v-model.number="customErrorCodeInput"
                 type="number"
                 min="100"
@@ -1778,7 +1733,7 @@
                 :placeholder="t('admin.accounts.enterErrorCode')"
                 @keyup.enter="addCustomErrorCode"
               />
-              <button type="button" @click="addCustomErrorCode" class="btn btn-secondary px-3">
+              <KumoButton type="button" @click="addCustomErrorCode" class="btn btn-secondary px-3">
                 <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path
                     stroke-linecap="round"
@@ -1787,7 +1742,7 @@
                     d="M12 4v16m8-8H4"
                   />
                 </svg>
-              </button>
+              </KumoButton>
             </div>
 
             <!-- Selected codes summary -->
@@ -1798,13 +1753,13 @@
                 class="inline-flex items-center gap-1 rounded-full bg-red-100 px-2.5 py-0.5 text-sm font-medium text-red-700 dark:bg-red-900/30 dark:text-red-400"
               >
                 {{ code }}
-                <button
+                <KumoButton
                   type="button"
                   @click="removeErrorCode(code)"
                   class="hover:text-red-900 dark:hover:text-red-300"
                 >
                   <Icon name="x" size="sm" :stroke-width="2" />
-                </button>
+                </KumoButton>
               </span>
               <span v-if="selectedErrorCodes.length === 0" class="text-xs text-gray-400">
                 {{ t('admin.accounts.noneSelectedUsesDefault') }}
@@ -1820,26 +1775,12 @@
         >
           <div class="mb-3 flex items-center justify-between">
             <div>
-              <label class="input-label mb-0">{{ t('admin.accounts.headerOverride.title') }}</label>
+              <KumoLabel class="input-label mb-0">{{ t('admin.accounts.headerOverride.title') }}</KumoLabel>
               <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">
                 {{ t('admin.accounts.headerOverride.hint') }}
               </p>
             </div>
-            <button
-              type="button"
-              @click="headerOverrideEnabled = !headerOverrideEnabled"
-              :class="[
-                'relative inline-flex h-6 w-11 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2',
-                headerOverrideEnabled ? 'bg-primary-600' : 'bg-gray-200 dark:bg-dark-600'
-              ]"
-            >
-              <span
-                :class="[
-                  'pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out',
-                  headerOverrideEnabled ? 'translate-x-5' : 'translate-x-0'
-                ]"
-              />
-            </button>
+            <KumoSwitch v-model="headerOverrideEnabled"  />
           </div>
 
           <div v-if="headerOverrideEnabled" class="space-y-3">
@@ -1863,34 +1804,26 @@
       <div v-if="form.platform === 'anthropic' && accountCategory === 'bedrock'" class="space-y-4">
         <!-- Auth Mode Radio -->
         <div>
-          <label class="input-label">{{ t('admin.accounts.bedrockAuthMode') }}</label>
-          <div class="mt-2 flex gap-4">
-            <label class="flex cursor-pointer items-center">
-              <input
-                v-model="bedrockAuthMode"
-                type="radio"
-                value="sigv4"
-                class="mr-2 text-primary-600 focus:ring-primary-500"
-              />
+          <KumoLabel class="input-label">{{ t('admin.accounts.bedrockAuthMode') }}</KumoLabel>
+          <KumoRadioGroup v-model="bedrockAuthMode" class="contents">
+<div class="mt-2 flex gap-4">
+            <KumoRadio value="sigv4" class="flex cursor-pointer items-center">
+
               <span class="text-sm text-gray-700 dark:text-gray-300">{{ t('admin.accounts.bedrockAuthModeSigv4') }}</span>
-            </label>
-            <label class="flex cursor-pointer items-center">
-              <input
-                v-model="bedrockAuthMode"
-                type="radio"
-                value="apikey"
-                class="mr-2 text-primary-600 focus:ring-primary-500"
-              />
+            </KumoRadio>
+            <KumoRadio value="apikey" class="flex cursor-pointer items-center">
+
               <span class="text-sm text-gray-700 dark:text-gray-300">{{ t('admin.accounts.bedrockAuthModeApikey') }}</span>
-            </label>
+            </KumoRadio>
           </div>
+</KumoRadioGroup>
         </div>
 
         <!-- SigV4 fields -->
         <template v-if="bedrockAuthMode === 'sigv4'">
           <div>
-            <label class="input-label">{{ t('admin.accounts.bedrockAccessKeyId') }}</label>
-            <input
+            <KumoLabel class="input-label">{{ t('admin.accounts.bedrockAccessKeyId') }}</KumoLabel>
+            <KumoInput
               v-model="bedrockAccessKeyId"
               type="text"
               required
@@ -1899,8 +1832,8 @@
             />
           </div>
           <div>
-            <label class="input-label">{{ t('admin.accounts.bedrockSecretAccessKey') }}</label>
-            <input
+            <KumoLabel class="input-label">{{ t('admin.accounts.bedrockSecretAccessKey') }}</KumoLabel>
+            <KumoInput
               v-model="bedrockSecretAccessKey"
               type="password"
               required
@@ -1908,8 +1841,8 @@
             />
           </div>
           <div>
-            <label class="input-label">{{ t('admin.accounts.bedrockSessionToken') }}</label>
-            <input
+            <KumoLabel class="input-label">{{ t('admin.accounts.bedrockSessionToken') }}</KumoLabel>
+            <KumoInput
               v-model="bedrockSessionToken"
               type="password"
               class="input font-mono"
@@ -1920,8 +1853,8 @@
 
         <!-- API Key field -->
         <div v-if="bedrockAuthMode === 'apikey'">
-          <label class="input-label">{{ t('admin.accounts.bedrockApiKeyInput') }}</label>
-          <input
+          <KumoLabel class="input-label">{{ t('admin.accounts.bedrockApiKeyInput') }}</KumoLabel>
+          <KumoInput
             v-model="bedrockApiKeyValue"
             type="password"
             required
@@ -1931,8 +1864,8 @@
 
         <!-- Shared: Region -->
         <div>
-          <label class="input-label">{{ t('admin.accounts.bedrockRegion') }}</label>
-          <select v-model="bedrockRegion" class="input">
+          <KumoLabel class="input-label">{{ t('admin.accounts.bedrockRegion') }}</KumoLabel>
+          <KumoNativeSelect v-model="bedrockRegion" class="input">
             <optgroup label="US">
               <option value="us-east-1">us-east-1 (N. Virginia)</option>
               <option value="us-east-2">us-east-2 (Ohio)</option>
@@ -1966,30 +1899,30 @@
             <optgroup label="South America">
               <option value="sa-east-1">sa-east-1 (São Paulo)</option>
             </optgroup>
-          </select>
+          </KumoNativeSelect>
           <p class="input-hint">{{ t('admin.accounts.bedrockRegionHint') }}</p>
         </div>
 
         <!-- Shared: Force Global -->
         <div>
-          <label class="flex items-center gap-2 cursor-pointer">
-            <input
+          <KumoLabel class="flex items-center gap-2 cursor-pointer">
+            <KumoCheckbox
               v-model="bedrockForceGlobal"
               type="checkbox"
               class="rounded border-gray-300 text-primary-600 focus:ring-primary-500 dark:border-dark-500"
             />
             <span class="text-sm text-gray-700 dark:text-gray-300">{{ t('admin.accounts.bedrockForceGlobal') }}</span>
-          </label>
+          </KumoLabel>
           <p class="input-hint mt-1">{{ t('admin.accounts.bedrockForceGlobalHint') }}</p>
         </div>
 
         <!-- Model Restriction Section for Bedrock -->
         <div class="border-t border-gray-200 pt-4 dark:border-dark-600">
-          <label class="input-label">{{ t('admin.accounts.modelRestriction') }}</label>
+          <KumoLabel class="input-label">{{ t('admin.accounts.modelRestriction') }}</KumoLabel>
 
           <!-- Mode Toggle -->
           <div class="mb-4 flex gap-2">
-            <button
+            <KumoButton
               type="button"
               @click="modelRestrictionMode = 'whitelist'"
               :class="[
@@ -2000,8 +1933,8 @@
               ]"
             >
               {{ t('admin.accounts.modelWhitelist') }}
-            </button>
-            <button
+            </KumoButton>
+            <KumoButton
               type="button"
               @click="modelRestrictionMode = 'mapping'"
               :class="[
@@ -2012,7 +1945,7 @@
               ]"
             >
               {{ t('admin.accounts.modelMapping') }}
-            </button>
+            </KumoButton>
           </div>
 
           <!-- Whitelist Mode -->
@@ -2033,19 +1966,19 @@
           <!-- Mapping Mode -->
           <div v-else class="space-y-3">
             <div v-for="(mapping, index) in modelMappings" :key="index" class="flex items-center gap-2">
-              <input v-model="mapping.from" type="text" class="input flex-1" :placeholder="t('admin.accounts.fromModel')" />
+              <KumoInput v-model="mapping.from" type="text" class="input flex-1" :placeholder="t('admin.accounts.fromModel')" />
               <span class="text-gray-400">→</span>
-              <input v-model="mapping.to" type="text" class="input flex-1" :placeholder="t('admin.accounts.toModel')" />
-              <button type="button" @click="modelMappings.splice(index, 1)" class="text-red-500 hover:text-red-700">
+              <KumoInput v-model="mapping.to" type="text" class="input flex-1" :placeholder="t('admin.accounts.toModel')" />
+              <KumoButton type="button" @click="modelMappings.splice(index, 1)" class="text-red-500 hover:text-red-700">
                 <Icon name="trash" size="sm" />
-              </button>
+              </KumoButton>
             </div>
-            <button type="button" @click="modelMappings.push({ from: '', to: '' })" class="btn btn-secondary text-sm">
+            <KumoButton type="button" @click="modelMappings.push({ from: '', to: '' })" class="btn btn-secondary text-sm">
               + {{ t('admin.accounts.addMapping') }}
-            </button>
+            </KumoButton>
             <!-- Bedrock Preset Mappings -->
             <div class="flex flex-wrap gap-2">
-              <button
+              <KumoButton
                 v-for="preset in bedrockPresets"
                 :key="preset.from"
                 type="button"
@@ -2053,7 +1986,7 @@
                 :class="['rounded-lg px-3 py-1 text-xs transition-colors', preset.color]"
               >
                 + {{ preset.label }}
-              </button>
+              </KumoButton>
             </div>
           </div>
         </div>
@@ -2062,26 +1995,12 @@
         <div class="border-t border-gray-200 pt-4 dark:border-dark-600">
           <div class="mb-3 flex items-center justify-between">
             <div>
-              <label class="input-label mb-0">{{ t('admin.accounts.poolMode') }}</label>
+              <KumoLabel class="input-label mb-0">{{ t('admin.accounts.poolMode') }}</KumoLabel>
               <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">
                 {{ t('admin.accounts.poolModeHint') }}
               </p>
             </div>
-            <button
-              type="button"
-              @click="poolModeEnabled = !poolModeEnabled"
-              :class="[
-                'relative inline-flex h-6 w-11 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2',
-                poolModeEnabled ? 'bg-primary-600' : 'bg-gray-200 dark:bg-dark-600'
-              ]"
-            >
-              <span
-                :class="[
-                  'pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out',
-                  poolModeEnabled ? 'translate-x-5' : 'translate-x-0'
-                ]"
-              />
-            </button>
+            <KumoSwitch v-model="poolModeEnabled"  />
           </div>
           <div v-if="poolModeEnabled" class="rounded-lg bg-blue-50 p-3 dark:bg-blue-900/20">
             <p class="text-xs text-blue-700 dark:text-blue-400">
@@ -2090,8 +2009,8 @@
             </p>
           </div>
           <div v-if="poolModeEnabled" class="mt-3">
-            <label class="input-label">{{ t('admin.accounts.poolModeRetryCount') }}</label>
-            <input
+            <KumoLabel class="input-label">{{ t('admin.accounts.poolModeRetryCount') }}</KumoLabel>
+            <KumoInput
               v-model.number="poolModeRetryCount"
               type="number"
               min="0"
@@ -2109,8 +2028,8 @@
             </p>
           </div>
           <div v-if="poolModeEnabled" class="mt-3">
-            <label class="input-label">{{ t('admin.accounts.poolModeRetryStatusCodes') }}</label>
-            <input
+            <KumoLabel class="input-label">{{ t('admin.accounts.poolModeRetryStatusCodes') }}</KumoLabel>
+            <KumoInput
               v-model="poolModeRetryStatusCodesInput"
               type="text"
               class="input"
@@ -2234,30 +2153,15 @@
       >
         <div class="mb-3 flex items-center justify-between">
           <div>
-            <label class="input-label mb-0">{{ t('admin.accounts.grokCustomBaseUrl.title') }}</label>
+            <KumoLabel class="input-label mb-0">{{ t('admin.accounts.grokCustomBaseUrl.title') }}</KumoLabel>
             <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">
               {{ t('admin.accounts.grokCustomBaseUrl.hint') }}
             </p>
           </div>
-          <button
-            type="button"
-            data-testid="grok-custom-base-url-toggle"
-            @click="grokOAuthCustomBaseUrlEnabled = !grokOAuthCustomBaseUrlEnabled"
-            :class="[
-              'relative inline-flex h-6 w-11 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2',
-              grokOAuthCustomBaseUrlEnabled ? 'bg-primary-600' : 'bg-gray-200 dark:bg-dark-600'
-            ]"
-          >
-            <span
-              :class="[
-                'pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out',
-                grokOAuthCustomBaseUrlEnabled ? 'translate-x-5' : 'translate-x-0'
-              ]"
-            />
-          </button>
+          <KumoSwitch v-model="grokOAuthCustomBaseUrlEnabled" data-testid="grok-custom-base-url-toggle" />
         </div>
         <div v-if="grokOAuthCustomBaseUrlEnabled" class="space-y-2">
-          <input
+          <KumoInput
             v-model="grokOAuthBaseUrl"
             type="text"
             class="input"
@@ -2275,26 +2179,12 @@
       >
         <div class="mb-3 flex items-center justify-between">
           <div>
-            <label class="input-label mb-0">{{ t('admin.accounts.headerOverride.title') }}</label>
+            <KumoLabel class="input-label mb-0">{{ t('admin.accounts.headerOverride.title') }}</KumoLabel>
             <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">
               {{ t('admin.accounts.headerOverride.hint') }}
             </p>
           </div>
-          <button
-            type="button"
-            @click="headerOverrideEnabled = !headerOverrideEnabled"
-            :class="[
-              'relative inline-flex h-6 w-11 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2',
-              headerOverrideEnabled ? 'bg-primary-600' : 'bg-gray-200 dark:bg-dark-600'
-            ]"
-          >
-            <span
-              :class="[
-                'pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out',
-                headerOverrideEnabled ? 'translate-x-5' : 'translate-x-0'
-              ]"
-            />
-          </button>
+          <KumoSwitch v-model="headerOverrideEnabled"  />
         </div>
 
         <div v-if="headerOverrideEnabled" class="space-y-3">
@@ -2317,7 +2207,7 @@
         v-if="(form.platform === 'openai' || form.platform === 'grok') && isOAuthFlow"
         class="border-t border-gray-200 pt-4 dark:border-dark-600"
       >
-        <label class="input-label">{{ t('admin.accounts.modelRestriction') }}</label>
+        <KumoLabel class="input-label">{{ t('admin.accounts.modelRestriction') }}</KumoLabel>
 
         <div
           v-if="isOpenAIModelRestrictionDisabled"
@@ -2331,7 +2221,7 @@
         <template v-else>
           <!-- Mode Toggle -->
           <div class="mb-4 flex gap-2">
-            <button
+            <KumoButton
               type="button"
               @click="modelRestrictionMode = 'whitelist'"
               :class="[
@@ -2342,8 +2232,8 @@
               ]"
             >
               {{ t('admin.accounts.modelWhitelist') }}
-            </button>
-            <button
+            </KumoButton>
+            <KumoButton
               type="button"
               @click="modelRestrictionMode = 'mapping'"
               :class="[
@@ -2354,7 +2244,7 @@
               ]"
             >
               {{ t('admin.accounts.modelMapping') }}
-            </button>
+            </KumoButton>
           </div>
 
           <!-- Whitelist Mode -->
@@ -2388,7 +2278,7 @@
                 :key="'oauth-' + getModelMappingKey(mapping)"
                 class="flex items-center gap-2"
               >
-                <input
+                <KumoInput
                   v-model="mapping.from"
                   type="text"
                   class="input flex-1"
@@ -2407,13 +2297,13 @@
                     d="M14 5l7 7m0 0l-7 7m7-7H3"
                   />
                 </svg>
-                <input
+                <KumoInput
                   v-model="mapping.to"
                   type="text"
                   class="input flex-1"
                   :placeholder="t('admin.accounts.actualModel')"
                 />
-                <button
+                <KumoButton
                   type="button"
                   @click="removeModelMapping(index)"
                   class="rounded-lg p-2 text-red-500 transition-colors hover:bg-red-50 hover:text-red-600 dark:hover:bg-red-900/20"
@@ -2426,21 +2316,21 @@
                       d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
                     />
                   </svg>
-                </button>
+                </KumoButton>
               </div>
             </div>
 
-            <button
+            <KumoButton
               type="button"
               @click="addModelMapping"
               class="mb-3 w-full rounded-lg border-2 border-dashed border-gray-300 px-4 py-2 text-gray-600 transition-colors hover:border-gray-400 hover:text-gray-700 dark:border-dark-500 dark:text-gray-400 dark:hover:border-dark-400 dark:hover:text-gray-300"
             >
               + {{ t('admin.accounts.addMapping') }}
-            </button>
+            </KumoButton>
 
             <!-- Quick Add Buttons -->
             <div class="flex flex-wrap gap-2">
-              <button
+              <KumoButton
                 v-for="preset in presetMappings"
                 :key="'oauth-' + preset.label"
                 type="button"
@@ -2448,7 +2338,7 @@
                 :class="['rounded-lg px-3 py-1 text-xs transition-colors', preset.color]"
               >
                 + {{ preset.label }}
-              </button>
+              </KumoButton>
             </div>
           </div>
         </template>
@@ -2458,26 +2348,12 @@
       <div class="border-t border-gray-200 pt-4 dark:border-dark-600 space-y-4">
         <div class="mb-3 flex items-center justify-between">
           <div>
-            <label class="input-label mb-0">{{ t('admin.accounts.tempUnschedulable.title') }}</label>
+            <KumoLabel class="input-label mb-0">{{ t('admin.accounts.tempUnschedulable.title') }}</KumoLabel>
             <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">
               {{ t('admin.accounts.tempUnschedulable.hint') }}
             </p>
           </div>
-          <button
-            type="button"
-            @click="tempUnschedEnabled = !tempUnschedEnabled"
-            :class="[
-              'relative inline-flex h-6 w-11 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2',
-              tempUnschedEnabled ? 'bg-primary-600' : 'bg-gray-200 dark:bg-dark-600'
-            ]"
-          >
-            <span
-              :class="[
-                'pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out',
-                tempUnschedEnabled ? 'translate-x-5' : 'translate-x-0'
-              ]"
-            />
-          </button>
+          <KumoSwitch v-model="tempUnschedEnabled"  />
         </div>
 
         <div v-if="tempUnschedEnabled" class="space-y-3">
@@ -2489,7 +2365,7 @@
             </div>
 
           <div class="flex flex-wrap gap-2">
-            <button
+            <KumoButton
               v-for="preset in tempUnschedPresets"
               :key="preset.label"
               type="button"
@@ -2497,7 +2373,7 @@
               class="rounded-lg bg-gray-100 px-3 py-1.5 text-xs font-medium text-gray-600 transition-colors hover:bg-gray-200 dark:bg-dark-600 dark:text-gray-300 dark:hover:bg-dark-500"
             >
               + {{ preset.label }}
-            </button>
+            </KumoButton>
           </div>
 
           <div v-if="tempUnschedRules.length > 0" class="space-y-3">
@@ -2511,15 +2387,15 @@
                   {{ t('admin.accounts.tempUnschedulable.ruleIndex', { index: index + 1 }) }}
                 </span>
                 <div class="flex items-center gap-2">
-                  <button
+                  <KumoButton
                     type="button"
                     :disabled="index === 0"
                     @click="moveTempUnschedRule(index, -1)"
                     class="rounded p-1 text-gray-400 transition-colors hover:text-gray-600 disabled:cursor-not-allowed disabled:opacity-40 dark:hover:text-gray-200"
                   >
                     <Icon name="chevronUp" size="sm" :stroke-width="2" />
-                  </button>
-                  <button
+                  </KumoButton>
+                  <KumoButton
                     type="button"
                     :disabled="index === tempUnschedRules.length - 1"
                     @click="moveTempUnschedRule(index, 1)"
@@ -2528,21 +2404,21 @@
                     <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
                     </svg>
-                  </button>
-                  <button
+                  </KumoButton>
+                  <KumoButton
                     type="button"
                     @click="removeTempUnschedRule(index)"
                     class="rounded p-1 text-red-500 transition-colors hover:text-red-600"
                   >
                     <Icon name="x" size="sm" :stroke-width="2" />
-                  </button>
+                  </KumoButton>
                 </div>
               </div>
 
               <div class="grid grid-cols-1 gap-3 sm:grid-cols-2">
                 <div>
-                  <label class="input-label">{{ t('admin.accounts.tempUnschedulable.errorCode') }}</label>
-                  <input
+                  <KumoLabel class="input-label">{{ t('admin.accounts.tempUnschedulable.errorCode') }}</KumoLabel>
+                  <KumoInput
                     v-model.number="rule.error_code"
                     type="number"
                     min="100"
@@ -2552,8 +2428,8 @@
                   />
                 </div>
                 <div>
-                  <label class="input-label">{{ t('admin.accounts.tempUnschedulable.durationMinutes') }}</label>
-                  <input
+                  <KumoLabel class="input-label">{{ t('admin.accounts.tempUnschedulable.durationMinutes') }}</KumoLabel>
+                  <KumoInput
                     v-model.number="rule.duration_minutes"
                     type="number"
                     min="1"
@@ -2562,8 +2438,8 @@
                   />
                 </div>
                 <div class="sm:col-span-2">
-                  <label class="input-label">{{ t('admin.accounts.tempUnschedulable.keywords') }}</label>
-                  <input
+                  <KumoLabel class="input-label">{{ t('admin.accounts.tempUnschedulable.keywords') }}</KumoLabel>
+                  <KumoInput
                     v-model="rule.keywords"
                     type="text"
                     class="input"
@@ -2572,8 +2448,8 @@
                   <p class="input-hint">{{ t('admin.accounts.tempUnschedulable.keywordsHint') }}</p>
                 </div>
                 <div class="sm:col-span-2">
-                  <label class="input-label">{{ t('admin.accounts.tempUnschedulable.description') }}</label>
-                  <input
+                  <KumoLabel class="input-label">{{ t('admin.accounts.tempUnschedulable.description') }}</KumoLabel>
+                  <KumoInput
                     v-model="rule.description"
                     type="text"
                     class="input"
@@ -2584,7 +2460,7 @@
             </div>
           </div>
 
-          <button
+          <KumoButton
             type="button"
             @click="addTempUnschedRule()"
             class="w-full rounded-lg border-2 border-dashed border-gray-300 px-4 py-2 text-sm text-gray-600 transition-colors hover:border-gray-400 hover:text-gray-700 dark:border-dark-500 dark:text-gray-400 dark:hover:border-dark-400 dark:hover:text-gray-300"
@@ -2598,7 +2474,7 @@
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
             </svg>
             {{ t('admin.accounts.tempUnschedulable.addRule') }}
-          </button>
+          </KumoButton>
         </div>
       </div>
 
@@ -2609,28 +2485,14 @@
       >
         <div class="flex items-center justify-between">
           <div>
-            <label class="input-label mb-0">{{
+            <KumoLabel class="input-label mb-0">{{
               t('admin.accounts.interceptWarmupRequests')
-            }}</label>
+            }}</KumoLabel>
             <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">
               {{ t('admin.accounts.interceptWarmupRequestsDesc') }}
             </p>
           </div>
-          <button
-            type="button"
-            @click="interceptWarmupRequests = !interceptWarmupRequests"
-            :class="[
-              'relative inline-flex h-6 w-11 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2',
-              interceptWarmupRequests ? 'bg-primary-600' : 'bg-gray-200 dark:bg-dark-600'
-            ]"
-          >
-            <span
-              :class="[
-                'pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out',
-                interceptWarmupRequests ? 'translate-x-5' : 'translate-x-0'
-              ]"
-            />
-          </button>
+          <KumoSwitch v-model="interceptWarmupRequests"  />
         </div>
       </div>
 
@@ -2650,34 +2512,20 @@
         <div class="rounded-lg border border-gray-200 p-4 dark:border-dark-600">
           <div class="mb-3 flex items-center justify-between">
             <div>
-              <label class="input-label mb-0">{{ t('admin.accounts.quotaControl.windowCost.label') }}</label>
+              <KumoLabel class="input-label mb-0">{{ t('admin.accounts.quotaControl.windowCost.label') }}</KumoLabel>
               <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">
                 {{ t('admin.accounts.quotaControl.windowCost.hint') }}
               </p>
             </div>
-            <button
-              type="button"
-              @click="windowCostEnabled = !windowCostEnabled"
-              :class="[
-                'relative inline-flex h-6 w-11 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2',
-                windowCostEnabled ? 'bg-primary-600' : 'bg-gray-200 dark:bg-dark-600'
-              ]"
-            >
-              <span
-                :class="[
-                  'pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out',
-                  windowCostEnabled ? 'translate-x-5' : 'translate-x-0'
-                ]"
-              />
-            </button>
+            <KumoSwitch v-model="windowCostEnabled"  />
           </div>
 
           <div v-if="windowCostEnabled" class="grid grid-cols-2 gap-4">
             <div>
-              <label class="input-label">{{ t('admin.accounts.quotaControl.windowCost.limit') }}</label>
+              <KumoLabel class="input-label">{{ t('admin.accounts.quotaControl.windowCost.limit') }}</KumoLabel>
               <div class="relative">
                 <span class="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500 dark:text-gray-400">$</span>
-                <input
+                <KumoInput
                   v-model.number="windowCostLimit"
                   type="number"
                   min="0"
@@ -2689,10 +2537,10 @@
               <p class="input-hint">{{ t('admin.accounts.quotaControl.windowCost.limitHint') }}</p>
             </div>
             <div>
-              <label class="input-label">{{ t('admin.accounts.quotaControl.windowCost.stickyReserve') }}</label>
+              <KumoLabel class="input-label">{{ t('admin.accounts.quotaControl.windowCost.stickyReserve') }}</KumoLabel>
               <div class="relative">
                 <span class="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500 dark:text-gray-400">$</span>
-                <input
+                <KumoInput
                   v-model.number="windowCostStickyReserve"
                   type="number"
                   min="0"
@@ -2710,32 +2558,18 @@
         <div class="rounded-lg border border-gray-200 p-4 dark:border-dark-600">
           <div class="mb-3 flex items-center justify-between">
             <div>
-              <label class="input-label mb-0">{{ t('admin.accounts.quotaControl.sessionLimit.label') }}</label>
+              <KumoLabel class="input-label mb-0">{{ t('admin.accounts.quotaControl.sessionLimit.label') }}</KumoLabel>
               <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">
                 {{ t('admin.accounts.quotaControl.sessionLimit.hint') }}
               </p>
             </div>
-            <button
-              type="button"
-              @click="sessionLimitEnabled = !sessionLimitEnabled"
-              :class="[
-                'relative inline-flex h-6 w-11 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2',
-                sessionLimitEnabled ? 'bg-primary-600' : 'bg-gray-200 dark:bg-dark-600'
-              ]"
-            >
-              <span
-                :class="[
-                  'pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out',
-                  sessionLimitEnabled ? 'translate-x-5' : 'translate-x-0'
-                ]"
-              />
-            </button>
+            <KumoSwitch v-model="sessionLimitEnabled"  />
           </div>
 
           <div v-if="sessionLimitEnabled" class="grid grid-cols-2 gap-4">
             <div>
-              <label class="input-label">{{ t('admin.accounts.quotaControl.sessionLimit.maxSessions') }}</label>
-              <input
+              <KumoLabel class="input-label">{{ t('admin.accounts.quotaControl.sessionLimit.maxSessions') }}</KumoLabel>
+              <KumoInput
                 v-model.number="maxSessions"
                 type="number"
                 min="1"
@@ -2746,9 +2580,9 @@
               <p class="input-hint">{{ t('admin.accounts.quotaControl.sessionLimit.maxSessionsHint') }}</p>
             </div>
             <div>
-              <label class="input-label">{{ t('admin.accounts.quotaControl.sessionLimit.idleTimeout') }}</label>
+              <KumoLabel class="input-label">{{ t('admin.accounts.quotaControl.sessionLimit.idleTimeout') }}</KumoLabel>
               <div class="relative">
-                <input
+                <KumoInput
                   v-model.number="sessionIdleTimeout"
                   type="number"
                   min="1"
@@ -2767,32 +2601,18 @@
         <div class="rounded-lg border border-gray-200 p-4 dark:border-dark-600">
           <div class="mb-3 flex items-center justify-between">
             <div>
-              <label class="input-label mb-0">{{ t('admin.accounts.quotaControl.rpmLimit.label') }}</label>
+              <KumoLabel class="input-label mb-0">{{ t('admin.accounts.quotaControl.rpmLimit.label') }}</KumoLabel>
               <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">
                 {{ t('admin.accounts.quotaControl.rpmLimit.hint') }}
               </p>
             </div>
-            <button
-              type="button"
-              @click="rpmLimitEnabled = !rpmLimitEnabled"
-              :class="[
-                'relative inline-flex h-6 w-11 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2',
-                rpmLimitEnabled ? 'bg-primary-600' : 'bg-gray-200 dark:bg-dark-600'
-              ]"
-            >
-              <span
-                :class="[
-                  'pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out',
-                  rpmLimitEnabled ? 'translate-x-5' : 'translate-x-0'
-                ]"
-              />
-            </button>
+            <KumoSwitch v-model="rpmLimitEnabled"  />
           </div>
 
           <div v-if="rpmLimitEnabled" class="space-y-4">
             <div>
-              <label class="input-label">{{ t('admin.accounts.quotaControl.rpmLimit.baseRpm') }}</label>
-              <input
+              <KumoLabel class="input-label">{{ t('admin.accounts.quotaControl.rpmLimit.baseRpm') }}</KumoLabel>
+              <KumoInput
                 v-model.number="baseRpm"
                 type="number"
                 min="1"
@@ -2805,9 +2625,9 @@
             </div>
 
             <div>
-              <label class="input-label">{{ t('admin.accounts.quotaControl.rpmLimit.strategy') }}</label>
+              <KumoLabel class="input-label">{{ t('admin.accounts.quotaControl.rpmLimit.strategy') }}</KumoLabel>
               <div class="flex gap-2">
-                <button
+                <KumoButton
                   type="button"
                   @click="rpmStrategy = 'tiered'"
                   :class="[
@@ -2821,8 +2641,8 @@
                     <div>{{ t('admin.accounts.quotaControl.rpmLimit.strategyTiered') }}</div>
                     <div class="mt-0.5 text-[10px] opacity-70">{{ t('admin.accounts.quotaControl.rpmLimit.strategyTieredHint') }}</div>
                   </div>
-                </button>
-                <button
+                </KumoButton>
+                <KumoButton
                   type="button"
                   @click="rpmStrategy = 'sticky_exempt'"
                   :class="[
@@ -2836,13 +2656,13 @@
                     <div>{{ t('admin.accounts.quotaControl.rpmLimit.strategyStickyExempt') }}</div>
                     <div class="mt-0.5 text-[10px] opacity-70">{{ t('admin.accounts.quotaControl.rpmLimit.strategyStickyExemptHint') }}</div>
                   </div>
-                </button>
+                </KumoButton>
               </div>
             </div>
 
             <div v-if="rpmStrategy === 'tiered'">
-              <label class="input-label">{{ t('admin.accounts.quotaControl.rpmLimit.stickyBuffer') }}</label>
-              <input
+              <KumoLabel class="input-label">{{ t('admin.accounts.quotaControl.rpmLimit.stickyBuffer') }}</KumoLabel>
+              <KumoInput
                 v-model.number="rpmStickyBuffer"
                 type="number"
                 min="1"
@@ -2857,12 +2677,12 @@
 
           <!-- 用户消息限速模式（独立于 RPM 开关，始终可见） -->
           <div class="mt-4">
-            <label class="input-label">{{ t('admin.accounts.quotaControl.rpmLimit.userMsgQueue') }}</label>
+            <KumoLabel class="input-label">{{ t('admin.accounts.quotaControl.rpmLimit.userMsgQueue') }}</KumoLabel>
             <p class="mt-1 text-xs text-gray-500 dark:text-gray-400 mb-2">
               {{ t('admin.accounts.quotaControl.rpmLimit.userMsgQueueHint') }}
             </p>
             <div class="flex space-x-2">
-              <button type="button" v-for="opt in umqModeOptions" :key="opt.value"
+              <KumoButton type="button" v-for="opt in umqModeOptions" :key="opt.value"
                 @click="userMsgQueueMode = opt.value"
                 :class="[
                   'px-3 py-1.5 text-sm rounded-md border transition-colors',
@@ -2871,7 +2691,7 @@
                     : 'bg-white dark:bg-dark-700 text-gray-700 dark:text-gray-300 border-gray-300 dark:border-dark-500 hover:bg-gray-50 dark:hover:bg-dark-600'
                 ]">
                 {{ opt.label }}
-              </button>
+              </KumoButton>
             </div>
           </div>
         </div>
@@ -2880,34 +2700,20 @@
         <div class="rounded-lg border border-gray-200 p-4 dark:border-dark-600">
           <div class="flex items-center justify-between">
             <div>
-              <label class="input-label mb-0">{{ t('admin.accounts.quotaControl.tlsFingerprint.label') }}</label>
+              <KumoLabel class="input-label mb-0">{{ t('admin.accounts.quotaControl.tlsFingerprint.label') }}</KumoLabel>
               <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">
                 {{ t('admin.accounts.quotaControl.tlsFingerprint.hint') }}
               </p>
             </div>
-            <button
-              type="button"
-              @click="tlsFingerprintEnabled = !tlsFingerprintEnabled"
-              :class="[
-                'relative inline-flex h-6 w-11 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2',
-                tlsFingerprintEnabled ? 'bg-primary-600' : 'bg-gray-200 dark:bg-dark-600'
-              ]"
-            >
-              <span
-                :class="[
-                  'pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out',
-                  tlsFingerprintEnabled ? 'translate-x-5' : 'translate-x-0'
-                ]"
-              />
-            </button>
+            <KumoSwitch v-model="tlsFingerprintEnabled"  />
           </div>
           <!-- Profile selector -->
           <div v-if="tlsFingerprintEnabled" class="mt-3">
-            <select v-model="tlsFingerprintProfileId" class="input">
+            <KumoNativeSelect v-model="tlsFingerprintProfileId" class="input">
               <option :value="null">{{ t('admin.accounts.quotaControl.tlsFingerprint.defaultProfile') }}</option>
               <option v-if="tlsFingerprintProfiles.length > 0" :value="-1">{{ t('admin.accounts.quotaControl.tlsFingerprint.randomProfile') }}</option>
               <option v-for="p in tlsFingerprintProfiles" :key="p.id" :value="p.id">{{ p.name }}</option>
-            </select>
+            </KumoNativeSelect>
           </div>
         </div>
 
@@ -2915,26 +2721,12 @@
         <div class="rounded-lg border border-gray-200 p-4 dark:border-dark-600">
           <div class="flex items-center justify-between">
             <div>
-              <label class="input-label mb-0">{{ t('admin.accounts.quotaControl.sessionIdMasking.label') }}</label>
+              <KumoLabel class="input-label mb-0">{{ t('admin.accounts.quotaControl.sessionIdMasking.label') }}</KumoLabel>
               <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">
                 {{ t('admin.accounts.quotaControl.sessionIdMasking.hint') }}
               </p>
             </div>
-            <button
-              type="button"
-              @click="sessionIdMaskingEnabled = !sessionIdMaskingEnabled"
-              :class="[
-                'relative inline-flex h-6 w-11 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2',
-                sessionIdMaskingEnabled ? 'bg-primary-600' : 'bg-gray-200 dark:bg-dark-600'
-              ]"
-            >
-              <span
-                :class="[
-                  'pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out',
-                  sessionIdMaskingEnabled ? 'translate-x-5' : 'translate-x-0'
-                ]"
-              />
-            </button>
+            <KumoSwitch v-model="sessionIdMaskingEnabled"  />
           </div>
         </div>
 
@@ -2942,36 +2734,22 @@
         <div class="rounded-lg border border-gray-200 p-4 dark:border-dark-600">
           <div class="flex items-center justify-between">
             <div>
-              <label class="input-label mb-0">{{ t('admin.accounts.quotaControl.cacheTTLOverride.label') }}</label>
+              <KumoLabel class="input-label mb-0">{{ t('admin.accounts.quotaControl.cacheTTLOverride.label') }}</KumoLabel>
               <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">
                 {{ t('admin.accounts.quotaControl.cacheTTLOverride.hint') }}
               </p>
             </div>
-            <button
-              type="button"
-              @click="cacheTTLOverrideEnabled = !cacheTTLOverrideEnabled"
-              :class="[
-                'relative inline-flex h-6 w-11 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2',
-                cacheTTLOverrideEnabled ? 'bg-primary-600' : 'bg-gray-200 dark:bg-dark-600'
-              ]"
-            >
-              <span
-                :class="[
-                  'pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out',
-                  cacheTTLOverrideEnabled ? 'translate-x-5' : 'translate-x-0'
-                ]"
-              />
-            </button>
+            <KumoSwitch v-model="cacheTTLOverrideEnabled"  />
           </div>
           <div v-if="cacheTTLOverrideEnabled" class="mt-3">
-            <label class="input-label text-xs">{{ t('admin.accounts.quotaControl.cacheTTLOverride.target') }}</label>
-            <select
+            <KumoLabel class="input-label text-xs">{{ t('admin.accounts.quotaControl.cacheTTLOverride.target') }}</KumoLabel>
+            <KumoNativeSelect
               v-model="cacheTTLOverrideTarget"
               class="mt-1 block w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-sm shadow-sm focus:border-primary-500 focus:outline-none focus:ring-1 focus:ring-primary-500 dark:border-dark-500 dark:bg-dark-700 dark:text-white"
             >
               <option value="5m">5m</option>
               <option value="1h">1h</option>
-            </select>
+            </KumoNativeSelect>
             <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">
               {{ t('admin.accounts.quotaControl.cacheTTLOverride.targetHint') }}
             </p>
@@ -2982,29 +2760,15 @@
         <div class="rounded-lg border border-gray-200 p-4 dark:border-dark-600">
           <div class="flex items-center justify-between">
             <div>
-              <label class="input-label mb-0">{{ t('admin.accounts.quotaControl.customBaseUrl.label') }}</label>
+              <KumoLabel class="input-label mb-0">{{ t('admin.accounts.quotaControl.customBaseUrl.label') }}</KumoLabel>
               <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">
                 {{ t('admin.accounts.quotaControl.customBaseUrl.hint') }}
               </p>
             </div>
-            <button
-              type="button"
-              @click="customBaseUrlEnabled = !customBaseUrlEnabled"
-              :class="[
-                'relative inline-flex h-6 w-11 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2',
-                customBaseUrlEnabled ? 'bg-primary-600' : 'bg-gray-200 dark:bg-dark-600'
-              ]"
-            >
-              <span
-                :class="[
-                  'pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out',
-                  customBaseUrlEnabled ? 'translate-x-5' : 'translate-x-0'
-                ]"
-              />
-            </button>
+            <KumoSwitch v-model="customBaseUrlEnabled"  />
           </div>
           <div v-if="customBaseUrlEnabled" class="mt-3">
-            <input
+            <KumoInput
               v-model="customBaseUrl"
               type="text"
               class="input"
@@ -3016,7 +2780,7 @@
 
       <div>
         <div class="mb-1 flex items-center gap-2">
-          <label class="input-label mb-0">{{ t('admin.accounts.proxy') }}</label>
+          <KumoLabel class="input-label mb-0">{{ t('admin.accounts.proxy') }}</KumoLabel>
           <ProxyAdBanner />
         </div>
         <ProxySelector v-model="form.proxy_id" :proxies="proxies" />
@@ -3030,20 +2794,20 @@
 
       <div class="grid grid-cols-2 gap-4 lg:grid-cols-4">
         <div>
-          <label class="input-label">{{ t('admin.accounts.concurrency') }}</label>
-          <input v-model.number="form.concurrency" type="number" min="1" class="input"
+          <KumoLabel class="input-label">{{ t('admin.accounts.concurrency') }}</KumoLabel>
+          <KumoInput v-model.number="form.concurrency" type="number" min="1" class="input"
             @input="form.concurrency = Math.max(1, form.concurrency || 1)" />
         </div>
         <div>
-          <label class="input-label">{{ t('admin.accounts.loadFactor') }}</label>
-          <input v-model.number="form.load_factor" type="number" min="1"
+          <KumoLabel class="input-label">{{ t('admin.accounts.loadFactor') }}</KumoLabel>
+          <KumoInput v-model.number="form.load_factor" type="number" min="1"
             class="input" :placeholder="String(form.concurrency || 1)"
             @input="form.load_factor = (form.load_factor &amp;&amp; form.load_factor >= 1) ? form.load_factor : null" />
           <p class="input-hint">{{ t('admin.accounts.loadFactorHint') }}</p>
         </div>
         <div>
-          <label class="input-label">{{ t('admin.accounts.priority') }}</label>
-          <input
+          <KumoLabel class="input-label">{{ t('admin.accounts.priority') }}</KumoLabel>
+          <KumoInput
             v-model.number="form.priority"
             type="number"
             min="1"
@@ -3053,21 +2817,21 @@
           <p class="input-hint">{{ t('admin.accounts.priorityHint') }}</p>
         </div>
         <div>
-          <label class="input-label">{{ t('admin.accounts.billingRateMultiplier') }}</label>
-          <input v-model.number="form.rate_multiplier" type="number" min="0" step="0.001" class="input" />
+          <KumoLabel class="input-label">{{ t('admin.accounts.billingRateMultiplier') }}</KumoLabel>
+          <KumoInput v-model.number="form.rate_multiplier" type="number" min="0" step="0.001" class="input" />
           <p class="input-hint">{{ t('admin.accounts.billingRateMultiplierHint') }}</p>
         </div>
       </div>
       <div class="border-t border-gray-200 pt-4 dark:border-dark-600">
-        <label class="input-label">{{ t('admin.accounts.expiresAt') }}</label>
-        <input v-model="expiresAtInput" type="datetime-local" class="input" />
+        <KumoLabel class="input-label">{{ t('admin.accounts.expiresAt') }}</KumoLabel>
+        <KumoInput v-model="expiresAtInput" type="datetime-local" class="input" />
         <div class="mt-2 flex gap-2">
-          <button type="button" class="btn btn-secondary btn-sm" @click="form.expires_at = getAccountExpiryTimestamp(1)">
+          <KumoButton type="button" class="btn btn-secondary btn-sm" @click="form.expires_at = getAccountExpiryTimestamp(1)">
             {{ t('payment.oneMonth') }}
-          </button>
-          <button type="button" class="btn btn-secondary btn-sm" @click="form.expires_at = getAccountExpiryTimestamp(12)">
+          </KumoButton>
+          <KumoButton type="button" class="btn btn-secondary btn-sm" @click="form.expires_at = getAccountExpiryTimestamp(12)">
             {{ t('payment.oneYear') }}
-          </button>
+          </KumoButton>
         </div>
         <p class="input-hint">
           {{ t('admin.accounts.expiresAtHint') }}
@@ -3082,26 +2846,12 @@
       >
         <div class="flex items-center justify-between">
           <div>
-            <label class="input-label mb-0">{{ t('admin.accounts.openai.oauthPassthrough') }}</label>
+            <KumoLabel class="input-label mb-0">{{ t('admin.accounts.openai.oauthPassthrough') }}</KumoLabel>
             <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">
               {{ t('admin.accounts.openai.oauthPassthroughDesc') }}
             </p>
           </div>
-          <button
-            type="button"
-            @click="openaiPassthroughEnabled = !openaiPassthroughEnabled"
-            :class="[
-              'relative inline-flex h-6 w-11 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2',
-              openaiPassthroughEnabled ? 'bg-primary-600' : 'bg-gray-200 dark:bg-dark-600'
-            ]"
-          >
-            <span
-              :class="[
-                'pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out',
-                openaiPassthroughEnabled ? 'translate-x-5' : 'translate-x-0'
-              ]"
-            />
-          </button>
+          <KumoSwitch v-model="openaiPassthroughEnabled"  />
         </div>
       </div>
 
@@ -3112,27 +2862,12 @@
       >
         <div class="flex items-center justify-between">
           <div>
-            <label class="input-label mb-0">{{ t('admin.accounts.openai.flattenNamespaces') }}</label>
+            <KumoLabel class="input-label mb-0">{{ t('admin.accounts.openai.flattenNamespaces') }}</KumoLabel>
             <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">
               {{ t('admin.accounts.openai.flattenNamespacesDesc') }}
             </p>
           </div>
-          <button
-            type="button"
-            data-testid="create-openai-flatten-namespaces-toggle"
-            @click="openaiFlattenNamespacesEnabled = !openaiFlattenNamespacesEnabled"
-            :class="[
-              'relative inline-flex h-6 w-11 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2',
-              openaiFlattenNamespacesEnabled ? 'bg-primary-600' : 'bg-gray-200 dark:bg-dark-600'
-            ]"
-          >
-            <span
-              :class="[
-                'pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out',
-                openaiFlattenNamespacesEnabled ? 'translate-x-5' : 'translate-x-0'
-              ]"
-            />
-          </button>
+          <KumoSwitch v-model="openaiFlattenNamespacesEnabled" data-testid="create-openai-flatten-namespaces-toggle" />
         </div>
       </div>
 
@@ -3144,7 +2879,7 @@
       >
         <div class="flex items-center justify-between">
           <div>
-            <label class="input-label mb-0">{{ t('admin.accounts.openai.wsMode') }}</label>
+            <KumoLabel class="input-label mb-0">{{ t('admin.accounts.openai.wsMode') }}</KumoLabel>
             <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">
               {{ t('admin.accounts.openai.wsModeDesc') }}
             </p>
@@ -3165,26 +2900,12 @@
       >
         <div class="flex items-center justify-between">
           <div>
-            <label class="input-label mb-0">{{ t('admin.accounts.anthropic.apiKeyPassthrough') }}</label>
+            <KumoLabel class="input-label mb-0">{{ t('admin.accounts.anthropic.apiKeyPassthrough') }}</KumoLabel>
             <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">
               {{ t('admin.accounts.anthropic.apiKeyPassthroughDesc') }}
             </p>
           </div>
-          <button
-            type="button"
-            @click="anthropicPassthroughEnabled = !anthropicPassthroughEnabled"
-            :class="[
-              'relative inline-flex h-6 w-11 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2',
-              anthropicPassthroughEnabled ? 'bg-primary-600' : 'bg-gray-200 dark:bg-dark-600'
-            ]"
-          >
-            <span
-              :class="[
-                'pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out',
-                anthropicPassthroughEnabled ? 'translate-x-5' : 'translate-x-0'
-              ]"
-            />
-          </button>
+          <KumoSwitch v-model="anthropicPassthroughEnabled"  />
         </div>
       </div>
 
@@ -3194,15 +2915,15 @@
       >
         <div class="flex items-center justify-between gap-4">
           <div>
-            <label class="input-label mb-0">{{ t('admin.accounts.anthropic.apiKeyAuthScheme') }}</label>
+            <KumoLabel class="input-label mb-0">{{ t('admin.accounts.anthropic.apiKeyAuthScheme') }}</KumoLabel>
             <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">
               {{ t('admin.accounts.anthropic.apiKeyAuthSchemeDesc') }}
             </p>
           </div>
-          <select v-model="anthropicAPIKeyAuthScheme" class="input w-52 text-sm">
+          <KumoNativeSelect v-model="anthropicAPIKeyAuthScheme" class="input w-52 text-sm">
             <option value="x_api_key">{{ t('admin.accounts.anthropic.apiKeyAuthSchemeXApiKey') }}</option>
             <option value="authorization_bearer">{{ t('admin.accounts.anthropic.apiKeyAuthSchemeBearer') }}</option>
-          </select>
+          </KumoNativeSelect>
         </div>
       </div>
 
@@ -3213,16 +2934,16 @@
       >
         <div class="flex items-center justify-between">
           <div>
-            <label class="input-label mb-0">{{ t('admin.accounts.anthropic.webSearchEmulation') }}</label>
+            <KumoLabel class="input-label mb-0">{{ t('admin.accounts.anthropic.webSearchEmulation') }}</KumoLabel>
             <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">
               {{ t('admin.accounts.anthropic.webSearchEmulationDesc') }}
             </p>
           </div>
-          <select v-model="webSearchEmulationMode" class="input w-24 text-sm">
+          <KumoNativeSelect v-model="webSearchEmulationMode" class="input w-24 text-sm">
             <option value="default">{{ t('admin.accounts.anthropic.webSearchDefault') }}</option>
             <option value="enabled">{{ t('admin.accounts.anthropic.webSearchEnabled') }}</option>
             <option value="disabled">{{ t('admin.accounts.anthropic.webSearchDisabled') }}</option>
-          </select>
+          </KumoNativeSelect>
         </div>
       </div>
 
@@ -3233,29 +2954,16 @@
       >
         <div class="flex items-center justify-between gap-4">
           <div>
-            <label class="input-label mb-0">{{ t('admin.accounts.openai.longContextBilling') }}</label>
+            <KumoLabel class="input-label mb-0">{{ t('admin.accounts.openai.longContextBilling') }}</KumoLabel>
             <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">
               {{ t('admin.accounts.openai.longContextBillingDesc') }}
             </p>
           </div>
-          <button
-            type="button"
+          <KumoSwitch
             data-testid="openai-long-context-billing-toggle"
-            role="switch"
-            :aria-checked="openAILongContextBillingEnabled"
-            @click="toggleOpenAILongContextBilling"
-            :class="[
-              'relative inline-flex h-6 w-11 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2',
-              openAILongContextBillingEnabled ? 'bg-primary-600' : 'bg-gray-200 dark:bg-dark-600'
-            ]"
-          >
-            <span
-              :class="[
-                'pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out',
-                openAILongContextBillingEnabled ? 'translate-x-5' : 'translate-x-0'
-              ]"
-            />
-          </button>
+            :checked="openAILongContextBillingEnabled"
+            @update:model-value="toggleOpenAILongContextBilling"
+           />
         </div>
       </div>
 
@@ -3265,52 +2973,24 @@
       >
         <div class="flex items-center justify-between">
           <div>
-            <label class="input-label mb-0">{{ t('admin.accounts.openai.codexCLIOnly') }}</label>
+            <KumoLabel class="input-label mb-0">{{ t('admin.accounts.openai.codexCLIOnly') }}</KumoLabel>
             <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">
               {{ t('admin.accounts.openai.codexCLIOnlyDesc') }}
             </p>
           </div>
-          <button
-            type="button"
-            @click="codexCLIOnlyEnabled = !codexCLIOnlyEnabled"
-            :class="[
-              'relative inline-flex h-6 w-11 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2',
-              codexCLIOnlyEnabled ? 'bg-primary-600' : 'bg-gray-200 dark:bg-dark-600'
-            ]"
-          >
-            <span
-              :class="[
-                'pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out',
-                codexCLIOnlyEnabled ? 'translate-x-5' : 'translate-x-0'
-              ]"
-            />
-          </button>
+          <KumoSwitch v-model="codexCLIOnlyEnabled"  />
         </div>
         <div
           v-if="codexCLIOnlyEnabled"
           class="mt-4 flex items-center justify-between border-l-2 border-gray-200 pl-4 dark:border-dark-600"
         >
           <div>
-            <label class="input-label mb-0">{{ t('admin.accounts.openai.codexCLIOnlyAppServer') }}</label>
+            <KumoLabel class="input-label mb-0">{{ t('admin.accounts.openai.codexCLIOnlyAppServer') }}</KumoLabel>
             <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">
               {{ t('admin.accounts.openai.codexCLIOnlyAppServerDesc') }}
             </p>
           </div>
-          <button
-            type="button"
-            @click="codexCLIOnlyAppServerEnabled = !codexCLIOnlyAppServerEnabled"
-            :class="[
-              'relative inline-flex h-6 w-11 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2',
-              codexCLIOnlyAppServerEnabled ? 'bg-primary-600' : 'bg-gray-200 dark:bg-dark-600'
-            ]"
-          >
-            <span
-              :class="[
-                'pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out',
-                codexCLIOnlyAppServerEnabled ? 'translate-x-5' : 'translate-x-0'
-              ]"
-            />
-          </button>
+          <KumoSwitch v-model="codexCLIOnlyAppServerEnabled"  />
         </div>
       </div>
 
@@ -3321,7 +3001,7 @@
       >
         <div class="flex items-center justify-between gap-4">
           <div class="min-w-0">
-            <label class="input-label mb-0">{{ t('admin.accounts.openai.codexFingerprintMode') }}</label>
+            <KumoLabel class="input-label mb-0">{{ t('admin.accounts.openai.codexFingerprintMode') }}</KumoLabel>
             <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">
               {{ t('admin.accounts.openai.codexFingerprintModeDesc') }}
             </p>
@@ -3339,7 +3019,7 @@
       >
         <div class="flex items-center justify-between">
           <div>
-            <label class="input-label mb-0">{{ t('admin.accounts.openai.compactMode') }}</label>
+            <KumoLabel class="input-label mb-0">{{ t('admin.accounts.openai.compactMode') }}</KumoLabel>
             <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">
               {{ t('admin.accounts.openai.compactModeDesc') }}
             </p>
@@ -3349,7 +3029,7 @@
           </div>
         </div>
         <div>
-          <label class="input-label">{{ t('admin.accounts.openai.compactModelMapping') }}</label>
+          <KumoLabel class="input-label">{{ t('admin.accounts.openai.compactModelMapping') }}</KumoLabel>
           <p class="input-hint">{{ t('admin.accounts.openai.compactModelMappingDesc') }}</p>
           <div v-if="openAICompactModelMappings.length > 0" class="mb-3 space-y-2">
             <div
@@ -3357,17 +3037,17 @@
               :key="getOpenAICompactModelMappingKey(mapping)"
               class="flex items-center gap-2"
             >
-              <input v-model="mapping.from" type="text" class="input flex-1" :placeholder="t('admin.accounts.fromModel')" />
+              <KumoInput v-model="mapping.from" type="text" class="input flex-1" :placeholder="t('admin.accounts.fromModel')" />
               <span class="text-gray-400">→</span>
-              <input v-model="mapping.to" type="text" class="input flex-1" :placeholder="t('admin.accounts.toModel')" />
-              <button type="button" @click="removeOpenAICompactModelMapping(index)" class="text-red-500 hover:text-red-700">
+              <KumoInput v-model="mapping.to" type="text" class="input flex-1" :placeholder="t('admin.accounts.toModel')" />
+              <KumoButton type="button" @click="removeOpenAICompactModelMapping(index)" class="text-red-500 hover:text-red-700">
                 <Icon name="trash" size="sm" />
-              </button>
+              </KumoButton>
             </div>
           </div>
-          <button type="button" @click="addOpenAICompactModelMapping" class="btn btn-secondary text-sm">
+          <KumoButton type="button" @click="addOpenAICompactModelMapping" class="btn btn-secondary text-sm">
             + {{ t('admin.accounts.addMapping') }}
-          </button>
+          </KumoButton>
         </div>
       </div>
 
@@ -3378,7 +3058,7 @@
       >
         <div class="flex items-center justify-between gap-4">
           <div>
-            <label class="input-label mb-0">{{ t('admin.accounts.openai.responsesMode') }}</label>
+            <KumoLabel class="input-label mb-0">{{ t('admin.accounts.openai.responsesMode') }}</KumoLabel>
             <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">
               {{ t('admin.accounts.openai.responsesModeDesc') }}
             </p>
@@ -3400,14 +3080,14 @@
           {{ t('admin.accounts.openai.responsesModeTextDisabledHint') }}
         </p>
         <div>
-          <label class="input-label mb-2 block">{{ t('admin.accounts.openai.endpointCapabilities') }}</label>
+          <KumoLabel class="input-label mb-2 block">{{ t('admin.accounts.openai.endpointCapabilities') }}</KumoLabel>
           <div class="grid grid-cols-1 gap-2 sm:grid-cols-2">
-            <label
+            <KumoLabel
               v-for="option in openAIEndpointCapabilityOptions"
               :key="option.value"
               class="flex cursor-pointer items-center gap-2 rounded-lg border border-gray-200 px-3 py-2 text-sm dark:border-dark-600"
             >
-              <input
+              <KumoCheckbox
                 type="checkbox"
                 class="rounded border-gray-300 text-primary-600 focus:ring-primary-500 dark:border-dark-500"
                 :data-testid="`openai-endpoint-capability-${option.value}`"
@@ -3415,7 +3095,7 @@
                 @change="toggleOpenAIEndpointCapability(option.value, $event)"
               />
               <span class="text-gray-700 dark:text-gray-200">{{ option.label }}</span>
-            </label>
+            </KumoLabel>
           </div>
           <p class="input-hint">{{ t('admin.accounts.openai.endpointCapabilitiesDesc') }}</p>
         </div>
@@ -3427,64 +3107,37 @@
         class="flex items-center justify-between gap-4 border-t border-gray-200 pt-4 dark:border-dark-600"
       >
         <div>
-          <label class="input-label mb-0">{{ t('admin.accounts.openai.imagesUrlToB64Json') }}</label>
+          <KumoLabel class="input-label mb-0">{{ t('admin.accounts.openai.imagesUrlToB64Json') }}</KumoLabel>
           <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">
             {{ t('admin.accounts.openai.imagesUrlToB64JsonDesc') }}
           </p>
         </div>
-        <button
-          type="button"
+        <KumoSwitch
           data-testid="openai-images-url-to-b64-json-toggle"
-          role="switch"
-          :aria-checked="openAIImagesUrlToB64JsonEnabled"
-          @click="openAIImagesUrlToB64JsonEnabled = !openAIImagesUrlToB64JsonEnabled"
-          :class="[
-            'relative inline-flex h-6 w-11 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2',
-            openAIImagesUrlToB64JsonEnabled ? 'bg-primary-600' : 'bg-gray-200 dark:bg-dark-600'
-          ]"
-        >
-          <span
-            :class="[
-              'pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out',
-              openAIImagesUrlToB64JsonEnabled ? 'translate-x-5' : 'translate-x-0'
-            ]"
-          />
-        </button>
+          :checked="openAIImagesUrlToB64JsonEnabled"
+          @update:model-value="openAIImagesUrlToB64JsonEnabled = !openAIImagesUrlToB64JsonEnabled"
+         />
       </div>
 
       <div>
         <div class="flex items-center justify-between">
           <div>
-            <label class="input-label mb-0">{{
+            <KumoLabel class="input-label mb-0">{{
               t('admin.accounts.autoPauseOnExpired')
-            }}</label>
+            }}</KumoLabel>
             <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">
               {{ t('admin.accounts.autoPauseOnExpiredDesc') }}
             </p>
           </div>
-          <button
-            type="button"
-            @click="autoPauseOnExpired = !autoPauseOnExpired"
-            :class="[
-              'relative inline-flex h-6 w-11 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2',
-              autoPauseOnExpired ? 'bg-primary-600' : 'bg-gray-200 dark:bg-dark-600'
-            ]"
-          >
-            <span
-              :class="[
-                'pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out',
-                autoPauseOnExpired ? 'translate-x-5' : 'translate-x-0'
-              ]"
-            />
-          </button>
+          <KumoSwitch v-model="autoPauseOnExpired"  />
         </div>
       </div>
 
       <div class="border-t border-gray-200 pt-4 dark:border-dark-600">
         <!-- Mixed Scheduling (only for antigravity accounts) -->
         <div v-if="form.platform === 'antigravity'" class="flex items-center gap-2">
-          <label class="flex cursor-pointer items-center gap-2">
-            <input
+          <KumoLabel class="flex cursor-pointer items-center gap-2">
+            <KumoCheckbox
               type="checkbox"
               v-model="mixedScheduling"
               class="h-4 w-4 rounded border-gray-300 text-primary-500 focus:ring-primary-500 dark:border-dark-500"
@@ -3492,27 +3145,17 @@
             <span class="text-sm font-medium text-gray-700 dark:text-gray-300">
               {{ t('admin.accounts.mixedScheduling') }}
             </span>
-          </label>
-          <div class="group relative">
-            <span
+          </KumoLabel>
+          <KumoTooltip  :label="t('common.help')" class="w-72 text-xs max-w-[calc(100vw-2rem)]" trigger-class="h-auto p-0 "><template #trigger><span
               class="inline-flex h-4 w-4 cursor-help items-center justify-center rounded-full bg-gray-200 text-xs text-gray-500 hover:bg-gray-300 dark:bg-dark-600 dark:text-gray-400 dark:hover:bg-dark-500"
             >
               ?
-            </span>
-            <!-- Tooltip（向下显示避免被弹窗裁剪） -->
-            <div
-              class="pointer-events-none absolute left-0 top-full z-[100] mt-1.5 w-72 rounded bg-gray-900 px-3 py-2 text-xs text-white opacity-0 transition-opacity group-hover:opacity-100 dark:bg-gray-700"
-            >
-              {{ t('admin.accounts.mixedSchedulingTooltip') }}
-              <div
-                class="absolute bottom-full left-3 border-4 border-transparent border-b-gray-900 dark:border-b-gray-700"
-              ></div>
-            </div>
-          </div>
+            </span><!-- Tooltip（向下显示避免被弹窗裁剪） --></template>{{ t('admin.accounts.mixedSchedulingTooltip') }}
+              </KumoTooltip>
         </div>
         <div v-if="form.platform === 'antigravity'" class="mt-3 flex items-center gap-2">
-          <label class="flex cursor-pointer items-center gap-2">
-            <input
+          <KumoLabel class="flex cursor-pointer items-center gap-2">
+            <KumoCheckbox
               type="checkbox"
               v-model="allowOverages"
               class="h-4 w-4 rounded border-gray-300 text-primary-500 focus:ring-primary-500 dark:border-dark-500"
@@ -3520,22 +3163,13 @@
             <span class="text-sm font-medium text-gray-700 dark:text-gray-300">
               {{ t('admin.accounts.allowOverages') }}
             </span>
-          </label>
-          <div class="group relative">
-            <span
+          </KumoLabel>
+          <KumoTooltip  :label="t('common.help')" class="w-72 text-xs max-w-[calc(100vw-2rem)]" trigger-class="h-auto p-0 "><template #trigger><span
               class="inline-flex h-4 w-4 cursor-help items-center justify-center rounded-full bg-gray-200 text-xs text-gray-500 hover:bg-gray-300 dark:bg-dark-600 dark:text-gray-400 dark:hover:bg-dark-500"
             >
               ?
-            </span>
-            <div
-              class="pointer-events-none absolute left-0 top-full z-[100] mt-1.5 w-72 rounded bg-gray-900 px-3 py-2 text-xs text-white opacity-0 transition-opacity group-hover:opacity-100 dark:bg-gray-700"
-            >
-              {{ t('admin.accounts.allowOveragesTooltip') }}
-              <div
-                class="absolute bottom-full left-3 border-4 border-transparent border-b-gray-900 dark:border-b-gray-700"
-              ></div>
-            </div>
-          </div>
+            </span></template>{{ t('admin.accounts.allowOveragesTooltip') }}
+              </KumoTooltip>
         </div>
 
         <!-- Group Selection - 仅标准模式显示 -->
@@ -3591,36 +3225,17 @@
 
     <template #footer>
       <div v-if="step === 1" class="flex justify-end gap-3">
-        <button @click="handleClose" type="button" class="btn btn-secondary">
+        <KumoButton @click="handleClose" type="button" class="btn btn-secondary">
           {{ t('common.cancel') }}
-        </button>
-        <button
+        </KumoButton>
+        <KumoButton
           type="submit"
           form="create-account-form"
           :disabled="submitting"
           class="btn btn-primary"
           data-tour="account-form-submit"
         >
-          <svg
-            v-if="submitting"
-            class="-ml-1 mr-2 h-4 w-4 animate-spin"
-            fill="none"
-            viewBox="0 0 24 24"
-          >
-            <circle
-              class="opacity-25"
-              cx="12"
-              cy="12"
-              r="10"
-              stroke="currentColor"
-              stroke-width="4"
-            ></circle>
-            <path
-              class="opacity-75"
-              fill="currentColor"
-              d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-            ></path>
-          </svg>
+          <KumoLoader v-if="submitting" class="-ml-1 mr-2 h-4 w-4 animate-spin" />
           {{
             isOAuthFlow
               ? t('common.next')
@@ -3628,45 +3243,26 @@
                 ? t('admin.accounts.creating')
                 : t('common.create')
           }}
-        </button>
+        </KumoButton>
       </div>
       <div v-else class="flex justify-between gap-3">
-        <button type="button" class="btn btn-secondary" @click="goBackToBasicInfo">
+        <KumoButton type="button" class="btn btn-secondary" @click="goBackToBasicInfo">
           {{ t('common.back') }}
-        </button>
-        <button
+        </KumoButton>
+        <KumoButton
           v-if="isManualInputMethod"
           type="button"
           :disabled="!canExchangeCode"
           class="btn btn-primary"
           @click="handleExchangeCode"
         >
-          <svg
-            v-if="currentOAuthLoading"
-            class="-ml-1 mr-2 h-4 w-4 animate-spin"
-            fill="none"
-            viewBox="0 0 24 24"
-          >
-            <circle
-              class="opacity-25"
-              cx="12"
-              cy="12"
-              r="10"
-              stroke="currentColor"
-              stroke-width="4"
-            ></circle>
-            <path
-              class="opacity-75"
-              fill="currentColor"
-              d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-            ></path>
-          </svg>
+          <KumoLoader v-if="currentOAuthLoading" class="-ml-1 mr-2 h-4 w-4 animate-spin" />
           {{
             currentOAuthLoading
               ? t('admin.accounts.oauth.verifying')
               : t('admin.accounts.oauth.completeAuth')
           }}
-        </button>
+        </KumoButton>
       </div>
     </template>
   </BaseDialog>
@@ -3752,78 +3348,78 @@
           {{ t('admin.accounts.gemini.quotaPolicy.note') }}
         </p>
         <div class="overflow-x-auto">
-          <table class="w-full text-xs">
-            <thead class="bg-gray-50 dark:bg-dark-600">
-              <tr>
-                <th class="px-3 py-2 text-left font-medium text-gray-700 dark:text-gray-300">
+          <KumoTable class="w-full text-xs">
+            <KumoTableHeader class="bg-gray-50 dark:bg-dark-600">
+              <KumoTableRow>
+                <KumoTableHead class="px-3 py-2 text-left font-medium text-gray-700 dark:text-gray-300">
                   {{ t('admin.accounts.gemini.quotaPolicy.columns.channel') }}
-                </th>
-                <th class="px-3 py-2 text-left font-medium text-gray-700 dark:text-gray-300">
+                </KumoTableHead>
+                <KumoTableHead class="px-3 py-2 text-left font-medium text-gray-700 dark:text-gray-300">
                   {{ t('admin.accounts.gemini.quotaPolicy.columns.account') }}
-                </th>
-                <th class="px-3 py-2 text-left font-medium text-gray-700 dark:text-gray-300">
+                </KumoTableHead>
+                <KumoTableHead class="px-3 py-2 text-left font-medium text-gray-700 dark:text-gray-300">
                   {{ t('admin.accounts.gemini.quotaPolicy.columns.limits') }}
-                </th>
-              </tr>
-            </thead>
-            <tbody class="divide-y divide-gray-200 dark:divide-dark-600">
-              <tr>
-                <td class="px-3 py-2 text-gray-900 dark:text-white">
+                </KumoTableHead>
+              </KumoTableRow>
+            </KumoTableHeader>
+            <KumoTableBody class="divide-y divide-gray-200 dark:divide-dark-600">
+              <KumoTableRow>
+                <KumoTableCell class="px-3 py-2 text-gray-900 dark:text-white">
                   {{ t('admin.accounts.gemini.quotaPolicy.rows.googleOne.channel') }}
-                </td>
-                <td class="px-3 py-2 text-gray-600 dark:text-gray-400">Free</td>
-                <td class="px-3 py-2 text-gray-600 dark:text-gray-400">
+                </KumoTableCell>
+                <KumoTableCell class="px-3 py-2 text-gray-600 dark:text-gray-400">Free</KumoTableCell>
+                <KumoTableCell class="px-3 py-2 text-gray-600 dark:text-gray-400">
                   {{ t('admin.accounts.gemini.quotaPolicy.rows.googleOne.limitsFree') }}
-                </td>
-              </tr>
-              <tr>
-                <td class="px-3 py-2 text-gray-900 dark:text-white"></td>
-                <td class="px-3 py-2 text-gray-600 dark:text-gray-400">Pro</td>
-                <td class="px-3 py-2 text-gray-600 dark:text-gray-400">
+                </KumoTableCell>
+              </KumoTableRow>
+              <KumoTableRow>
+                <KumoTableCell class="px-3 py-2 text-gray-900 dark:text-white"></KumoTableCell>
+                <KumoTableCell class="px-3 py-2 text-gray-600 dark:text-gray-400">Pro</KumoTableCell>
+                <KumoTableCell class="px-3 py-2 text-gray-600 dark:text-gray-400">
                   {{ t('admin.accounts.gemini.quotaPolicy.rows.googleOne.limitsPro') }}
-                </td>
-              </tr>
-              <tr>
-                <td class="px-3 py-2 text-gray-900 dark:text-white"></td>
-                <td class="px-3 py-2 text-gray-600 dark:text-gray-400">Ultra</td>
-                <td class="px-3 py-2 text-gray-600 dark:text-gray-400">
+                </KumoTableCell>
+              </KumoTableRow>
+              <KumoTableRow>
+                <KumoTableCell class="px-3 py-2 text-gray-900 dark:text-white"></KumoTableCell>
+                <KumoTableCell class="px-3 py-2 text-gray-600 dark:text-gray-400">Ultra</KumoTableCell>
+                <KumoTableCell class="px-3 py-2 text-gray-600 dark:text-gray-400">
                   {{ t('admin.accounts.gemini.quotaPolicy.rows.googleOne.limitsUltra') }}
-                </td>
-              </tr>
-              <tr>
-                <td class="px-3 py-2 text-gray-900 dark:text-white">
+                </KumoTableCell>
+              </KumoTableRow>
+              <KumoTableRow>
+                <KumoTableCell class="px-3 py-2 text-gray-900 dark:text-white">
                   {{ t('admin.accounts.gemini.quotaPolicy.rows.gcp.channel') }}
-                </td>
-                <td class="px-3 py-2 text-gray-600 dark:text-gray-400">Standard</td>
-                <td class="px-3 py-2 text-gray-600 dark:text-gray-400">
+                </KumoTableCell>
+                <KumoTableCell class="px-3 py-2 text-gray-600 dark:text-gray-400">Standard</KumoTableCell>
+                <KumoTableCell class="px-3 py-2 text-gray-600 dark:text-gray-400">
                   {{ t('admin.accounts.gemini.quotaPolicy.rows.gcp.limitsStandard') }}
-                </td>
-              </tr>
-              <tr>
-                <td class="px-3 py-2 text-gray-900 dark:text-white"></td>
-                <td class="px-3 py-2 text-gray-600 dark:text-gray-400">Enterprise</td>
-                <td class="px-3 py-2 text-gray-600 dark:text-gray-400">
+                </KumoTableCell>
+              </KumoTableRow>
+              <KumoTableRow>
+                <KumoTableCell class="px-3 py-2 text-gray-900 dark:text-white"></KumoTableCell>
+                <KumoTableCell class="px-3 py-2 text-gray-600 dark:text-gray-400">Enterprise</KumoTableCell>
+                <KumoTableCell class="px-3 py-2 text-gray-600 dark:text-gray-400">
                   {{ t('admin.accounts.gemini.quotaPolicy.rows.gcp.limitsEnterprise') }}
-                </td>
-              </tr>
-              <tr>
-                <td class="px-3 py-2 text-gray-900 dark:text-white">
+                </KumoTableCell>
+              </KumoTableRow>
+              <KumoTableRow>
+                <KumoTableCell class="px-3 py-2 text-gray-900 dark:text-white">
                   {{ t('admin.accounts.gemini.quotaPolicy.rows.aiStudio.channel') }}
-                </td>
-                <td class="px-3 py-2 text-gray-600 dark:text-gray-400">Free</td>
-                <td class="px-3 py-2 text-gray-600 dark:text-gray-400">
+                </KumoTableCell>
+                <KumoTableCell class="px-3 py-2 text-gray-600 dark:text-gray-400">Free</KumoTableCell>
+                <KumoTableCell class="px-3 py-2 text-gray-600 dark:text-gray-400">
                   {{ t('admin.accounts.gemini.quotaPolicy.rows.aiStudio.limitsFree') }}
-                </td>
-              </tr>
-              <tr>
-                <td class="px-3 py-2 text-gray-900 dark:text-white"></td>
-                <td class="px-3 py-2 text-gray-600 dark:text-gray-400">Paid</td>
-                <td class="px-3 py-2 text-gray-600 dark:text-gray-400">
+                </KumoTableCell>
+              </KumoTableRow>
+              <KumoTableRow>
+                <KumoTableCell class="px-3 py-2 text-gray-900 dark:text-white"></KumoTableCell>
+                <KumoTableCell class="px-3 py-2 text-gray-600 dark:text-gray-400">Paid</KumoTableCell>
+                <KumoTableCell class="px-3 py-2 text-gray-600 dark:text-gray-400">
                   {{ t('admin.accounts.gemini.quotaPolicy.rows.aiStudio.limitsPaid') }}
-                </td>
-              </tr>
-            </tbody>
-          </table>
+                </KumoTableCell>
+              </KumoTableRow>
+            </KumoTableBody>
+          </KumoTable>
         </div>
         <div class="mt-4 flex flex-wrap gap-3">
           <a
@@ -3881,9 +3477,9 @@
 
     <template #footer>
       <div class="flex justify-end">
-        <button @click="showGeminiHelpDialog = false" type="button" class="btn btn-primary">
+        <KumoButton @click="showGeminiHelpDialog = false" type="button" class="btn btn-primary">
           {{ t('common.close') }}
-        </button>
+        </KumoButton>
       </div>
     </template>
   </BaseDialog>
@@ -3902,6 +3498,8 @@
 </template>
 
 <script setup lang="ts">
+import { KumoButton, KumoCheckbox, KumoInput, KumoLabel, KumoLoader, KumoNativeSelect, KumoRadio, KumoRadioGroup, KumoSwitch, KumoTable, KumoTableBody, KumoTableCell, KumoTableHead, KumoTableHeader, KumoTableRow, KumoTextarea, KumoTooltip } from '@/components/kumo'
+
 import { ref, reactive, computed, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useAppStore } from '@/stores/app'
@@ -6742,7 +6340,7 @@ const handleAntigravityValidateRT = async (refreshTokenInput: string) => {
 
         const credentials = antigravityOAuth.buildCredentials(tokenInfo, refreshTokens[i])
         applyAntigravityProjectID(credentials, antigravityProjectId.value, 'create')
-        
+
         // Generate account name with index for batch
         const accountName = refreshTokens.length > 1 ? `${form.name} #${i + 1}` : form.name
 

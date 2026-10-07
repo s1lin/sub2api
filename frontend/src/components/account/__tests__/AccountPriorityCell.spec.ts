@@ -1,5 +1,6 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
-import { flushPromises, mount } from '@vue/test-utils'
+import { mount, flushPromises } from '@/__tests__/render'
+
 import AccountPriorityCell from '../AccountPriorityCell.vue'
 import type { Account } from '@/types'
 import { update } from '@/api/admin/accounts'
@@ -15,7 +16,7 @@ const account = (overrides: Partial<Account> = {}) => ({
 const mountCell = (value = account()) => mount(AccountPriorityCell, { props: { account: value } })
 
 beforeEach(() => {
-  vi.useFakeTimers()
+  vi.useFakeTimers({ toFake: ['Date', 'setTimeout', 'clearTimeout', 'setInterval', 'clearInterval'] })
   vi.mocked(update).mockReset().mockImplementation(async (id, req) => account({ id, priority: req.priority }))
 })
 afterEach(() => {

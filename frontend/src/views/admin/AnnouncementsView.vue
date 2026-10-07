@@ -5,7 +5,7 @@
         <div class="flex flex-wrap items-center gap-3">
           <!-- Left: Search + Filters -->
           <div class="flex-1 sm:max-w-64">
-            <input
+            <KumoInput
               v-model="searchQuery"
               type="text"
               :placeholder="t('admin.announcements.searchAnnouncements')"
@@ -22,18 +22,18 @@
 
           <!-- Right: Action buttons -->
           <div class="flex flex-1 flex-wrap items-center justify-end gap-2">
-            <button
+            <KumoButton
               @click="loadAnnouncements"
               :disabled="loading"
               class="btn btn-secondary"
               :title="t('common.refresh')"
             >
               <Icon name="refresh" size="md" :class="loading ? 'animate-spin' : ''" />
-            </button>
-            <button @click="openCreateDialog" class="btn btn-primary">
+            </KumoButton>
+            <KumoButton @click="openCreateDialog" class="btn btn-primary">
               <Icon name="plus" size="md" class="mr-1" />
               {{ t('admin.announcements.createAnnouncement') }}
-            </button>
+            </KumoButton>
           </div>
         </div>
       </template>
@@ -114,34 +114,34 @@
 
           <template #cell-actions="{ row }">
             <div class="flex items-center space-x-1">
-              <button
+              <KumoButton
                 @click="openPreview(row)"
                 class="flex flex-col items-center gap-0.5 rounded-lg p-1.5 text-gray-500 transition-colors hover:bg-blue-50 hover:text-blue-600 dark:hover:bg-blue-900/20 dark:hover:text-blue-400"
                 :title="t('admin.announcements.preview')"
               >
                 <Icon name="eye" size="sm" />
-              </button>
-              <button
+              </KumoButton>
+              <KumoButton
                 @click="openReadStatus(row)"
                 class="flex flex-col items-center gap-0.5 rounded-lg p-1.5 text-gray-500 transition-colors hover:bg-blue-50 hover:text-blue-600 dark:hover:bg-blue-900/20 dark:hover:text-blue-400"
                 :title="t('admin.announcements.readStatus')"
               >
                 <Icon name="chartBar" size="sm" />
-              </button>
-              <button
+              </KumoButton>
+              <KumoButton
                 @click="openEditDialog(row)"
                 class="flex flex-col items-center gap-0.5 rounded-lg p-1.5 text-gray-500 transition-colors hover:bg-gray-100 hover:text-gray-700 dark:hover:bg-dark-600 dark:hover:text-gray-300"
                 :title="t('common.edit')"
               >
                 <Icon name="edit" size="sm" />
-              </button>
-              <button
+              </KumoButton>
+              <KumoButton
                 @click="handleDelete(row)"
                 class="flex flex-col items-center gap-0.5 rounded-lg p-1.5 text-gray-500 transition-colors hover:bg-red-50 hover:text-red-600 dark:hover:bg-red-900/20 dark:hover:text-red-400"
                 :title="t('common.delete')"
               >
                 <Icon name="trash" size="sm" />
-              </button>
+              </KumoButton>
             </div>
           </template>
 
@@ -177,22 +177,22 @@
     >
       <form id="announcement-form" @submit.prevent="handleSave" class="space-y-4">
         <div>
-          <label class="input-label">{{ t('admin.announcements.form.title') }}</label>
-          <input v-model="form.title" type="text" class="input" required />
+          <KumoLabel class="input-label">{{ t('admin.announcements.form.title') }}</KumoLabel>
+          <KumoInput v-model="form.title" type="text" class="input" required />
         </div>
 
         <div>
-          <label class="input-label">{{ t('admin.announcements.form.content') }}</label>
-          <textarea v-model="form.content" rows="6" class="input" required></textarea>
+          <KumoLabel class="input-label">{{ t('admin.announcements.form.content') }}</KumoLabel>
+          <KumoTextarea v-model="form.content" rows="6" class="input" required></KumoTextarea>
         </div>
 
         <div class="grid grid-cols-1 gap-4 md:grid-cols-2">
           <div>
-            <label class="input-label">{{ t('admin.announcements.form.status') }}</label>
+            <KumoLabel class="input-label">{{ t('admin.announcements.form.status') }}</KumoLabel>
             <Select v-model="form.status" :options="statusOptions" />
           </div>
           <div>
-            <label class="input-label">{{ t('admin.announcements.form.notifyMode') }}</label>
+            <KumoLabel class="input-label">{{ t('admin.announcements.form.notifyMode') }}</KumoLabel>
             <Select v-model="form.notify_mode" :options="notifyModeOptions" />
             <p class="input-hint">{{ t('admin.announcements.form.notifyModeHint') }}</p>
           </div>
@@ -200,13 +200,13 @@
 
         <div class="grid grid-cols-1 gap-4 md:grid-cols-2">
           <div>
-            <label class="input-label">{{ t('admin.announcements.form.startsAt') }}</label>
-            <input v-model="form.starts_at_str" type="datetime-local" max="9999-12-31T23:59" class="input" />
+            <KumoLabel class="input-label">{{ t('admin.announcements.form.startsAt') }}</KumoLabel>
+            <KumoInput v-model="form.starts_at_str" type="datetime-local" max="9999-12-31T23:59" class="input" />
             <p class="input-hint">{{ t('admin.announcements.form.startsAtHint') }}</p>
           </div>
           <div>
-            <label class="input-label">{{ t('admin.announcements.form.endsAt') }}</label>
-            <input v-model="form.ends_at_str" type="datetime-local" max="9999-12-31T23:59" class="input" />
+            <KumoLabel class="input-label">{{ t('admin.announcements.form.endsAt') }}</KumoLabel>
+            <KumoInput v-model="form.ends_at_str" type="datetime-local" max="9999-12-31T23:59" class="input" />
             <p class="input-hint">{{ t('admin.announcements.form.endsAtHint') }}</p>
           </div>
         </div>
@@ -219,12 +219,12 @@
 
       <template #footer>
         <div class="flex justify-end gap-3">
-          <button type="button" @click="closeEdit" class="btn btn-secondary">
+          <KumoButton type="button" @click="closeEdit" class="btn btn-secondary">
             {{ t('common.cancel') }}
-          </button>
-          <button type="submit" form="announcement-form" :disabled="saving" class="btn btn-primary">
+          </KumoButton>
+          <KumoButton type="submit" form="announcement-form" :disabled="saving" class="btn btn-primary">
             {{ saving ? t('common.saving') : t('common.save') }}
-          </button>
+          </KumoButton>
         </div>
       </template>
     </BaseDialog>
@@ -257,6 +257,8 @@
 </template>
 
 <script setup lang="ts">
+import { KumoButton, KumoInput, KumoLabel, KumoTextarea } from '@/components/kumo'
+
 import { computed, onMounted, onUnmounted, reactive, ref } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useAppStore } from '@/stores/app'

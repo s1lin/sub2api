@@ -7,7 +7,7 @@
   >
     <form class="space-y-4" @submit.prevent="submit">
       <div>
-        <label class="input-label">{{ t('admin.affiliates.withdraw.user') }}</label>
+        <KumoLabel class="input-label">{{ t('admin.affiliates.withdraw.user') }}</KumoLabel>
         <div
           v-if="selectedUser"
           class="flex items-center justify-between gap-3 rounded-md border border-primary-200 bg-primary-50 px-3 py-2 dark:border-primary-700/50 dark:bg-primary-900/20"
@@ -18,7 +18,7 @@
             <span class="ml-2 font-medium text-gray-900 dark:text-white">{{ selectedUser.email }}</span>
             <span v-if="selectedUser.username" class="ml-1 text-xs text-gray-500 dark:text-dark-400">({{ selectedUser.username }})</span>
           </div>
-          <button
+          <KumoButton
             type="button"
             class="text-lg leading-none text-gray-400 hover:text-red-600 disabled:opacity-50"
             :title="t('admin.affiliates.withdraw.changeUser')"
@@ -27,10 +27,10 @@
             @click="clearUser"
           >
             ×
-          </button>
+          </KumoButton>
         </div>
         <template v-else>
-          <input
+          <KumoInput
             v-model="userQuery"
             type="text"
             class="input"
@@ -42,7 +42,7 @@
             v-if="userResults.length > 0"
             class="mt-1 max-h-40 overflow-y-auto rounded border border-gray-200 dark:border-dark-700"
           >
-            <button
+            <KumoButton
               v-for="user in userResults"
               :key="user.id"
               type="button"
@@ -51,7 +51,7 @@
               @click="selectUser(user)"
             >
               {{ user.email }} <span class="text-xs text-gray-500 dark:text-dark-400">({{ user.username }})</span>
-            </button>
+            </KumoButton>
           </div>
           <p v-else-if="searched" class="input-hint">{{ t('admin.affiliates.withdraw.noUserFound') }}</p>
         </template>
@@ -63,10 +63,10 @@
       >
         <div class="flex items-center justify-between text-sm">
           <span class="text-gray-500 dark:text-dark-400">{{ t('admin.affiliates.withdraw.availableQuota') }}</span>
-          <span
+          <KumoLoader
             v-if="overviewLoading"
-            class="h-4 w-4 animate-spin rounded-full border-2 border-primary-500 border-t-transparent"
-          ></span>
+            class="h-4 w-4"
+           />
           <span v-else class="font-semibold text-gray-900 dark:text-white" data-test="withdraw-available-quota">
             ${{ formatPreciseAmount(availableQuota) }}
           </span>
@@ -75,9 +75,9 @@
       </div>
 
       <div>
-        <label class="input-label">{{ t('admin.affiliates.withdraw.amount') }}</label>
+        <KumoLabel class="input-label">{{ t('admin.affiliates.withdraw.amount') }}</KumoLabel>
         <div class="flex gap-2">
-          <input
+          <KumoInput
             v-model="amount"
             type="number"
             min="0"
@@ -87,7 +87,7 @@
             :disabled="!selectedUser || overviewLoading || submitting || outcomeUncertain"
             data-test="withdraw-amount"
           />
-          <button
+          <KumoButton
             type="button"
             class="btn btn-secondary shrink-0"
             :disabled="!selectedUser || overviewLoading || submitting || outcomeUncertain || availableQuota <= 0"
@@ -95,7 +95,7 @@
             @click="fillAll"
           >
             {{ t('admin.affiliates.withdraw.fillAll') }}
-          </button>
+          </KumoButton>
         </div>
         <p v-if="amountError" class="input-error-text" data-test="withdraw-amount-error">{{ amountError }}</p>
         <p v-else class="input-hint">{{ t('admin.affiliates.withdraw.amountHint') }}</p>
@@ -116,10 +116,10 @@
 
     <template #footer>
       <div class="flex justify-end gap-3">
-        <button type="button" class="btn btn-secondary" :disabled="submitting" @click="handleClose">
+        <KumoButton type="button" class="btn btn-secondary" :disabled="submitting" @click="handleClose">
           {{ t('common.cancel') }}
-        </button>
-        <button
+        </KumoButton>
+        <KumoButton
           type="button"
           class="btn btn-primary"
           :disabled="!canSubmit"
@@ -127,13 +127,15 @@
           @click="submit"
         >
           {{ submitting ? t('admin.affiliates.withdraw.submitting') : t('admin.affiliates.withdraw.submit') }}
-        </button>
+        </KumoButton>
       </div>
     </template>
   </BaseDialog>
 </template>
 
 <script setup lang="ts">
+import { KumoButton, KumoInput, KumoLabel, KumoLoader } from '@/components/kumo'
+
 import { computed, onBeforeUnmount, ref, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
 import BaseDialog from '@/components/common/BaseDialog.vue'

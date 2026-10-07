@@ -11,7 +11,7 @@
     <div class="flex flex-wrap items-center gap-1.5">
       <slot name="pre-actions" />
 
-      <button
+      <KumoButton
         v-if="visible"
         type="button"
         data-testid="claude-reset-count"
@@ -35,9 +35,9 @@
           />
         </svg>
         {{ t('admin.accounts.claudeResetCredits.count') }}<span v-if="status" class="ml-0.5 tabular-nums">{{ totalResets }}</span>
-      </button>
+      </KumoButton>
 
-      <button
+      <KumoButton
         v-if="visible"
         type="button"
         data-testid="claude-reset-redeem"
@@ -61,7 +61,7 @@
           />
         </svg>
         {{ t('admin.accounts.claudeResetCredits.reset') }}
-      </button>
+      </KumoButton>
     </div>
 
     <div v-if="visible && status && (primaryCredit || !status.eligible || cooldownActive)" class="flex flex-wrap items-center gap-1">
@@ -117,6 +117,8 @@
 </template>
 
 <script setup lang="ts">
+import { KumoButton } from '@/components/kumo'
+
 import { computed, ref, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
 import type { Account } from '@/types'

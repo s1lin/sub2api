@@ -1,22 +1,20 @@
 <template>
   <div class="relative">
     <!-- Admin: Full version badge with dropdown -->
-    <template v-if="isAdmin">
-      <button
-        @click="toggleDropdown"
+    <KumoPopoverRoot v-if="isAdmin" v-model="dropdownOpen"><KumoPopoverTrigger
         class="flex items-center gap-1.5 rounded-lg px-2 py-1 text-xs transition-colors"
         :class="[
           hasUpdate
             ? 'bg-amber-100 text-amber-700 hover:bg-amber-200 dark:bg-amber-900/30 dark:text-amber-400 dark:hover:bg-amber-900/50'
             : 'bg-gray-100 text-gray-600 hover:bg-gray-200 dark:bg-dark-800 dark:text-dark-400 dark:hover:bg-dark-700'
         ]"
-        :title="hasUpdate ? t('version.updateAvailable') : t('version.upToDate')"
+        :aria-label="hasUpdate ? t('version.updateAvailable') : t('version.upToDate')"
       >
         <span v-if="currentVersion" class="font-medium">v{{ currentVersion }}</span>
-        <span
+        <KumoSkeleton
           v-else
           class="h-3 w-12 animate-pulse rounded bg-gray-200 font-medium dark:bg-dark-600"
-        ></span>
+        ></KumoSkeleton>
         <!-- Update indicator -->
         <span v-if="hasUpdate" class="relative flex h-2 w-2">
           <span
@@ -24,14 +22,8 @@
           ></span>
           <span class="relative inline-flex h-2 w-2 rounded-full bg-amber-500"></span>
         </span>
-      </button>
-
-      <!-- Dropdown -->
-      <transition name="dropdown">
-        <div
-          v-if="dropdownOpen"
-          ref="dropdownRef"
-          class="absolute left-0 z-50 mt-2 overflow-hidden whitespace-normal rounded-xl border border-gray-200 bg-white shadow-lg transition-all duration-200 dark:border-dark-700 dark:bg-dark-800"
+      </KumoPopoverTrigger><KumoPopoverContent align="start"
+          class="overflow-hidden whitespace-normal rounded-xl border border-gray-200 bg-white shadow-lg transition-all duration-200 dark:border-dark-700 dark:bg-dark-800"
           :class="rollbackPanelOpen && isReleaseBuild ? 'w-80' : 'w-64'"
         >
           <!-- Header with refresh button -->
@@ -41,7 +33,7 @@
             <span class="text-sm font-medium text-gray-700 dark:text-dark-300">{{
               t('version.currentVersion')
             }}</span>
-            <button
+            <KumoButton
               @click="refreshVersion(true)"
               class="rounded-lg p-1.5 text-gray-400 transition-colors hover:bg-gray-100 hover:text-gray-600 dark:hover:bg-dark-700 dark:hover:text-dark-200"
               :disabled="loading"
@@ -53,27 +45,13 @@
                 :stroke-width="2"
                 :class="{ 'animate-spin': loading }"
               />
-            </button>
+            </KumoButton>
           </div>
 
           <div class="p-4">
             <!-- Loading state -->
             <div v-if="loading" class="flex items-center justify-center py-6">
-              <svg class="h-6 w-6 animate-spin text-primary-500" fill="none" viewBox="0 0 24 24">
-                <circle
-                  class="opacity-25"
-                  cx="12"
-                  cy="12"
-                  r="10"
-                  stroke="currentColor"
-                  stroke-width="4"
-                ></circle>
-                <path
-                  class="opacity-75"
-                  fill="currentColor"
-                  d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-                ></path>
-              </svg>
+              <KumoLoader class="h-6 w-6 animate-spin text-primary-500" />
             </div>
 
             <!-- Content -->
@@ -140,13 +118,13 @@
                 </div>
 
                 <!-- Retry button -->
-                <button
+                <KumoButton
                   @click="handleUpdate"
                   :disabled="updating"
                   class="flex w-full items-center justify-center gap-2 rounded-lg bg-red-500 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-red-600 disabled:cursor-not-allowed disabled:opacity-50"
                 >
                   {{ t('version.retry') }}
-                </button>
+                </KumoButton>
               </div>
 
               <!-- Priority 2: Update success - need restart -->
@@ -182,31 +160,12 @@
                 </div>
 
                 <!-- Restart button with countdown -->
-                <button
+                <KumoButton
                   @click="handleRestart"
                   :disabled="restarting"
                   class="flex w-full items-center justify-center gap-2 rounded-lg bg-green-500 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-green-600 disabled:cursor-not-allowed disabled:opacity-50"
                 >
-                  <svg
-                    v-if="restarting"
-                    class="h-4 w-4 animate-spin"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                  >
-                    <circle
-                      class="opacity-25"
-                      cx="12"
-                      cy="12"
-                      r="10"
-                      stroke="currentColor"
-                      stroke-width="4"
-                    ></circle>
-                    <path
-                      class="opacity-75"
-                      fill="currentColor"
-                      d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-                    ></path>
-                  </svg>
+                  <KumoLoader v-if="restarting" class="h-4 w-4 animate-spin" />
                   <svg
                     v-else
                     class="h-4 w-4"
@@ -228,7 +187,7 @@
                     >
                   </template>
                   <span v-else>{{ t('version.restartNow') }}</span>
-                </button>
+                </KumoButton>
               </div>
 
               <!-- Priority 3: Update available for source build - show git pull hint -->
@@ -318,29 +277,15 @@
                 </div>
 
                 <!-- Update button -->
-                <button
+                <KumoButton
                   @click="handleUpdate"
                   :disabled="updating"
                   class="flex w-full items-center justify-center gap-2 rounded-lg bg-primary-500 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-primary-600 disabled:cursor-not-allowed disabled:opacity-50"
                 >
-                  <svg v-if="updating" class="h-4 w-4 animate-spin" fill="none" viewBox="0 0 24 24">
-                    <circle
-                      class="opacity-25"
-                      cx="12"
-                      cy="12"
-                      r="10"
-                      stroke="currentColor"
-                      stroke-width="4"
-                    ></circle>
-                    <path
-                      class="opacity-75"
-                      fill="currentColor"
-                      d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-                    ></path>
-                  </svg>
+                  <KumoLoader v-if="updating" class="h-4 w-4 animate-spin" />
                   <Icon v-else name="download" size="sm" :stroke-width="2" />
                   {{ updating ? t('version.updating') : t('version.updateNow') }}
-                </button>
+                </KumoButton>
 
                 <!-- View release link -->
                 <a
@@ -376,7 +321,7 @@
 
                 <!-- Version rollback entry -->
                 <div class="border-t border-gray-100 pt-2 dark:border-dark-700">
-                  <button
+                  <KumoButton
                     @click="toggleRollbackPanel"
                     class="group flex w-full items-center justify-between rounded-lg px-2 py-1.5 text-xs text-gray-400 transition-colors hover:bg-gray-50 hover:text-gray-600 dark:text-dark-500 dark:hover:bg-dark-700/50 dark:hover:text-dark-300"
                   >
@@ -391,7 +336,7 @@
                       class="transition-transform duration-200"
                       :class="{ 'rotate-180': rollbackPanelOpen }"
                     />
-                  </button>
+                  </KumoButton>
 
                   <transition name="rollback">
                     <div v-if="rollbackPanelOpen" class="mt-2 space-y-2">
@@ -423,25 +368,7 @@
                         v-else-if="rollbackVersionsLoading"
                         class="flex items-center justify-center py-4"
                       >
-                        <svg
-                          class="h-5 w-5 animate-spin text-primary-500"
-                          fill="none"
-                          viewBox="0 0 24 24"
-                        >
-                          <circle
-                            class="opacity-25"
-                            cx="12"
-                            cy="12"
-                            r="10"
-                            stroke="currentColor"
-                            stroke-width="4"
-                          ></circle>
-                          <path
-                            class="opacity-75"
-                            fill="currentColor"
-                            d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-                          ></path>
-                        </svg>
+                        <KumoLoader class="h-5 w-5 animate-spin text-primary-500" />
                       </div>
 
                       <!-- Load error + retry -->
@@ -451,12 +378,12 @@
                         >
                           {{ rollbackVersionsError }}
                         </p>
-                        <button
+                        <KumoButton
                           @click="loadRollbackVersions"
                           class="w-full rounded-lg border border-gray-200 py-1.5 text-xs text-gray-500 transition-colors hover:bg-gray-50 hover:text-gray-700 dark:border-dark-700 dark:text-dark-400 dark:hover:bg-dark-700/50 dark:hover:text-dark-200"
                         >
                           {{ t('version.retry') }}
-                        </button>
+                        </KumoButton>
                       </div>
 
                       <!-- No versions available -->
@@ -473,7 +400,7 @@
                           {{ t('version.rollbackSelectVersion') }}
                         </p>
 
-                        <button
+                        <KumoButton
                           v-for="item in rollbackVersions"
                           :key="item.version"
                           @click="selectRollbackVersion(item.version)"
@@ -512,7 +439,7 @@
                           <span class="text-[11px] tabular-nums text-gray-400 dark:text-dark-500">
                             {{ formatPublishedAt(item.published_at) }}
                           </span>
-                        </button>
+                        </KumoButton>
 
                         <!-- Selected version: manual command (per deploy method) + confirm -->
                         <transition name="rollback">
@@ -531,7 +458,7 @@
                                 <div
                                   class="flex items-center gap-0.5 rounded-md bg-gray-200/70 p-0.5 dark:bg-dark-600/70"
                                 >
-                                  <button
+                                  <KumoButton
                                     v-for="tab in manualTabs"
                                     :key="tab.key"
                                     @click="manualTab = tab.key"
@@ -543,9 +470,9 @@
                                     "
                                   >
                                     {{ tab.label }}
-                                  </button>
+                                  </KumoButton>
                                 </div>
-                                <button
+                                <KumoButton
                                   @click="copyToClipboard(activeManualCommand)"
                                   class="flex items-center gap-1 rounded px-1.5 py-0.5 text-[11px] text-gray-400 transition-colors hover:bg-gray-200 hover:text-gray-600 dark:text-dark-400 dark:hover:bg-dark-600 dark:hover:text-dark-200"
                                 >
@@ -556,7 +483,7 @@
                                     :class="copied ? 'text-green-500' : ''"
                                   />
                                   {{ copied ? t('version.copied') : t('version.copyCommand') }}
-                                </button>
+                                </KumoButton>
                               </div>
                               <code
                                 class="block select-all whitespace-pre-wrap break-all bg-gray-50 p-2.5 font-mono text-[10px] leading-relaxed text-gray-600 dark:bg-dark-900 dark:text-dark-300"
@@ -583,31 +510,12 @@
                               {{ rollbackError }}
                             </p>
 
-                            <button
+                            <KumoButton
                               @click="handleRollback"
                               :disabled="rollingBack"
                               class="flex w-full items-center justify-center gap-2 rounded-lg bg-amber-500 px-4 py-2 text-sm font-medium text-white shadow-sm transition-colors hover:bg-amber-600 disabled:cursor-not-allowed disabled:opacity-50"
                             >
-                              <svg
-                                v-if="rollingBack"
-                                class="h-4 w-4 animate-spin"
-                                fill="none"
-                                viewBox="0 0 24 24"
-                              >
-                                <circle
-                                  class="opacity-25"
-                                  cx="12"
-                                  cy="12"
-                                  r="10"
-                                  stroke="currentColor"
-                                  stroke-width="4"
-                                ></circle>
-                                <path
-                                  class="opacity-75"
-                                  fill="currentColor"
-                                  d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-                                ></path>
-                              </svg>
+                              <KumoLoader v-if="rollingBack" class="h-4 w-4 animate-spin" />
                               <Icon v-else name="clock" size="sm" :stroke-width="2" />
                               <span>{{
                                 rollingBack
@@ -616,7 +524,7 @@
                                       version: 'v' + selectedRollbackVersion
                                     })
                               }}</span>
-                            </button>
+                            </KumoButton>
                           </div>
                         </transition>
                       </template>
@@ -626,9 +534,7 @@
               </div>
             </template>
           </div>
-        </div>
-      </transition>
-    </template>
+        </KumoPopoverContent></KumoPopoverRoot>
 
     <!-- Non-admin: Simple static version text -->
     <span v-else-if="version" class="text-xs text-gray-500 dark:text-dark-400">
@@ -638,7 +544,9 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, onMounted, onBeforeUnmount } from 'vue'
+import { KumoButton, KumoLoader, KumoPopoverContent, KumoPopoverRoot, KumoPopoverTrigger, KumoSkeleton } from '@/components/kumo'
+
+import { ref, computed, onMounted } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useAuthStore, useAppStore } from '@/stores'
 import {
@@ -667,7 +575,6 @@ const appStore = useAppStore()
 const isAdmin = computed(() => authStore.isAdmin)
 
 const dropdownOpen = ref(false)
-const dropdownRef = ref<HTMLElement | null>(null)
 
 // Use store's cached version state
 const loading = computed(() => appStore.versionLoading)
@@ -731,13 +638,7 @@ const activeManualCommand = computed(() =>
 // Only show update check for release builds (binary/docker deployment)
 const isReleaseBuild = computed(() => buildType.value === 'release')
 
-function toggleDropdown() {
-  dropdownOpen.value = !dropdownOpen.value
-}
 
-function closeDropdown() {
-  dropdownOpen.value = false
-}
 
 async function refreshVersion(force = true) {
   if (!isAdmin.value) return
@@ -901,25 +802,16 @@ async function checkServiceAndReload() {
   window.location.reload()
 }
 
-function handleClickOutside(event: MouseEvent) {
-  const target = event.target as Node
-  const button = (event.target as Element).closest('button')
-  if (dropdownRef.value && !dropdownRef.value.contains(target) && !button?.contains(target)) {
-    closeDropdown()
-  }
-}
+
 
 onMounted(() => {
   if (isAdmin.value) {
     // Use cached version if available, otherwise fetch
     appStore.fetchVersion(false)
   }
-  document.addEventListener('click', handleClickOutside)
 })
 
-onBeforeUnmount(() => {
-  document.removeEventListener('click', handleClickOutside)
-})
+
 </script>
 
 <style scoped>

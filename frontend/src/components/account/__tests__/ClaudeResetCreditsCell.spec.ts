@@ -1,4 +1,5 @@
-import { mount, flushPromises } from '@vue/test-utils'
+import { mount, flushPromises } from '@/__tests__/render'
+
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 import ClaudeResetCreditsCell from '../ClaudeResetCreditsCell.vue'
 import type { Account } from '@/types'

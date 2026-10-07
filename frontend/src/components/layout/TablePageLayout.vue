@@ -12,9 +12,9 @@
 
     <!-- 滚动区域：表格 -->
     <div class="layout-section-scrollable">
-      <div class="card table-scroll-container">
+      <KumoSurface class="card table-scroll-container">
         <slot name="table" />
-      </div>
+      </KumoSurface>
     </div>
 
     <!-- 固定区域：分页器 -->
@@ -25,6 +25,8 @@
 </template>
 
 <script setup lang="ts">
+import { KumoSurface } from '@/components/kumo'
+
 import { ref, onMounted, onUnmounted } from 'vue'
 
 const isMobile = ref(false)

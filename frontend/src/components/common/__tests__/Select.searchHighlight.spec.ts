@@ -1,6 +1,5 @@
-import { DOMWrapper, mount } from '@vue/test-utils'
+import { mount, settleControls, typeText, pressKey } from '@/__tests__/render'
 import { afterEach, describe, expect, it, vi } from 'vitest'
-import { nextTick } from 'vue'
 import Select from '../Select.vue'
 
 vi.mock('vue-i18n', () => ({ useI18n: () => ({ t: (key: string) => key }) }))
@@ -21,17 +20,16 @@ async function open(props: Record<string, unknown> = {}) {
     },
   })
   await wrapper.get('button').trigger('click')
-  await nextTick()
+  await settleControls()
 }
 
 async function search(query: string) {
   const input = document.querySelector<HTMLInputElement>('.select-search-input')!
-  await new DOMWrapper(input).setValue(query)
+  await typeText(input, query)
 }
 
 async function enter() {
-  document.activeElement!.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter', bubbles: true }))
-  await nextTick()
+  await pressKey('Enter')
 }
 
 describe('Select highlight after result changes', () => {
@@ -78,7 +76,7 @@ describe('Select highlight after result changes', () => {
     await search('alpha')
     await wrapper.get('button').trigger('click')
     await wrapper.get('button').trigger('click')
-    await nextTick()
+    await settleControls()
     await enter()
     expect(wrapper.emitted('update:modelValue')).toEqual([['gamma']])
   })

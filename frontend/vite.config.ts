@@ -2,6 +2,7 @@ import { defineConfig, loadEnv, Plugin } from 'vite'
 import vue from '@vitejs/plugin-vue'
 import checker from 'vite-plugin-checker'
 import { resolve } from 'path'
+import { kumoStyles } from './tooling/kumoStyles'
 
 function escapeHtml(value: string): string {
   return value.replace(/[&<>"']/g, (character) => ({
@@ -85,6 +86,7 @@ export default defineConfig(({ mode }) => {
 
   return {
     plugins: [
+      kumoStyles(),
       vue(),
       checker({
         vueTsc: true
@@ -92,6 +94,7 @@ export default defineConfig(({ mode }) => {
       injectPublicSettings(backendUrl)
     ],
   resolve: {
+    dedupe: ['react', 'react-dom', 'vue'],
     alias: {
       '@': resolve(__dirname, 'src'),
       // 使用 vue-i18n 运行时版本，避免 CSP unsafe-eval 问题

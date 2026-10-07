@@ -1,45 +1,28 @@
 <template>
-  <div class="empty-state">
-    <!-- Icon -->
-    <div
-      class="mb-5 flex min-h-16 items-center justify-center text-[var(--brand-accent)]"
-    >
+  <KumoEmpty :title="displayTitle" :description="description" class="empty-state">
+    <template #icon>
       <slot name="icon">
         <component v-if="icon" :is="icon" class="empty-state-icon h-10 w-10" aria-hidden="true" />
         <pre v-else class="empty-ascii" aria-hidden="true">{{ emptyArtwork }}</pre>
       </slot>
-    </div>
-
-    <!-- Title -->
-    <h3 class="empty-state-title">
-      {{ displayTitle }}
-    </h3>
-
-    <!-- Description -->
-    <p class="empty-state-description">
-      {{ description }}
-    </p>
-
-    <!-- Action -->
-    <div v-if="actionText || $slots.action" class="mt-6">
-      <slot name="action">
-        <component
-          :is="actionTo ? 'RouterLink' : 'button'"
-          v-if="actionText"
-          :to="actionTo"
-          @click="!actionTo && $emit('action')"
-          class="btn btn-primary"
-        >
-          <Icon v-if="actionIcon" name="plus" size="md" class="mr-2" />
-          {{ actionText }}
-        </component>
-      </slot>
-    </div>
-  </div>
+    </template>
+    <slot v-if="actionText || $slots.action" name="action">
+      <RouterLink v-if="actionTo" :to="actionTo" custom v-slot="{ href, navigate }">
+        <KumoButton :href="href" variant="primary" @click="navigate">
+          <Icon v-if="actionIcon" name="plus" size="md" />{{ actionText }}
+        </KumoButton>
+      </RouterLink>
+      <KumoButton v-else variant="primary" @click="$emit('action')">
+        <Icon v-if="actionIcon" name="plus" size="md" />{{ actionText }}
+      </KumoButton>
+    </slot>
+  </KumoEmpty>
 </template>
 
 <script setup lang="ts">
 import { computed } from 'vue'
+import { RouterLink } from 'vue-router'
+import { KumoButton, KumoEmpty } from '@/components/kumo'
 import { useI18n } from 'vue-i18n'
 import type { Component } from 'vue'
 import Icon from '@/components/icons/Icon.vue'

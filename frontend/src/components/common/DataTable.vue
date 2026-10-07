@@ -4,11 +4,11 @@
       <div v-for="i in 5" :key="i" class="rounded-lg border border-gray-200 bg-[var(--brand-surface)] p-4 dark:border-dark-700 dark:bg-[var(--brand-surface)]">
         <div class="space-y-3">
           <div v-for="column in dataColumns" :key="column.key" class="flex justify-between">
-            <div class="h-4 w-20 animate-pulse rounded bg-gray-200 dark:bg-dark-700"></div>
-            <div class="h-4 w-32 animate-pulse rounded bg-gray-200 dark:bg-dark-700"></div>
+            <KumoSkeleton class="h-4 w-20 animate-pulse rounded bg-gray-200 dark:bg-dark-700"></KumoSkeleton>
+            <KumoSkeleton class="h-4 w-32 animate-pulse rounded bg-gray-200 dark:bg-dark-700"></KumoSkeleton>
           </div>
           <div v-if="hasActionsColumn" class="border-t border-gray-200 pt-3 dark:border-dark-700">
-            <div class="h-8 w-full animate-pulse rounded bg-gray-200 dark:bg-dark-700"></div>
+            <KumoSkeleton class="h-8 w-full animate-pulse rounded bg-gray-200 dark:bg-dark-700"></KumoSkeleton>
           </div>
         </div>
       </div>
@@ -24,8 +24,8 @@
 
     <template v-else>
       <div v-if="selectable" class="flex items-center justify-end gap-2 px-1">
-        <label class="flex items-center gap-2 text-sm font-medium text-gray-600 dark:text-gray-300">
-          <input
+        <KumoLabel class="flex items-center gap-2 text-sm font-medium text-gray-600 dark:text-gray-300">
+          <KumoCheckbox
             type="checkbox"
             class="h-4 w-4 rounded border-gray-300 text-primary-600 focus:ring-primary-500 dark:border-dark-600 dark:bg-dark-800"
             :checked="allVisibleSelected"
@@ -34,7 +34,7 @@
             @change="toggleAllVisible(($event.target as HTMLInputElement).checked)"
           />
           <span>{{ t('common.selectAll') }}</span>
-        </label>
+        </KumoLabel>
       </div>
       <div
         v-for="(row, index) in sortedData"
@@ -48,7 +48,7 @@
       >
         <div class="space-y-3">
           <div v-if="selectable" class="flex justify-end">
-            <input
+            <KumoCheckbox
               type="checkbox"
               class="h-4 w-4 rounded border-gray-300 text-primary-600 focus:ring-primary-500 dark:border-dark-600 dark:bg-dark-800"
               :checked="isRowSelected(row, index)"
@@ -90,15 +90,15 @@
       'is-scrollable': isScrollable
     }"
   >
-    <table class="w-full min-w-max divide-y divide-gray-200 dark:divide-dark-700">
-      <thead class="table-header bg-gray-50 dark:bg-dark-800">
-        <tr>
-          <th
+    <KumoTable class="w-full min-w-max divide-y divide-gray-200 dark:divide-dark-700">
+      <KumoTableHeader class="table-header bg-gray-50 dark:bg-dark-800">
+        <KumoTableRow>
+          <KumoTableHead
             v-if="selectable"
             scope="col"
             class="sticky-header-cell w-11 min-w-11 px-3 py-3 text-center"
           >
-            <input
+            <KumoCheckbox
               type="checkbox"
               class="h-4 w-4 rounded border-gray-300 text-primary-600 focus:ring-primary-500 dark:border-dark-600 dark:bg-dark-800"
               :checked="allVisibleSelected"
@@ -107,8 +107,8 @@
               data-test="select-all"
               @change="toggleAllVisible(($event.target as HTMLInputElement).checked)"
             />
-          </th>
-          <th
+          </KumoTableHead>
+          <KumoTableHead
             v-for="(column, index) in columns"
             :key="column.key"
             scope="col"
@@ -154,42 +154,42 @@
                 </svg>
               </span>
             </div>
-          </th>
-        </tr>
-      </thead>
-      <tbody class="table-body divide-y divide-gray-200 bg-[var(--brand-surface)] dark:divide-dark-700 dark:bg-[var(--brand-surface)]">
+          </KumoTableHead>
+        </KumoTableRow>
+      </KumoTableHeader>
+      <KumoTableBody class="table-body divide-y divide-gray-200 bg-[var(--brand-surface)] dark:divide-dark-700 dark:bg-[var(--brand-surface)]">
         <!-- Loading skeleton -->
-        <tr v-if="loading" v-for="i in 5" :key="i">
-          <td v-if="selectable" class="w-11 min-w-11 px-3 py-4">
-            <div class="mx-auto h-4 w-4 animate-pulse rounded bg-gray-200 dark:bg-dark-700"></div>
-          </td>
-          <td v-for="column in columns" :key="column.key" :class="['whitespace-nowrap py-4', getAdaptivePaddingClass()]">
+        <KumoTableRow v-if="loading" v-for="i in 5" :key="i">
+          <KumoTableCell v-if="selectable" class="w-11 min-w-11 px-3 py-4">
+            <KumoSkeleton class="mx-auto h-4 w-4 animate-pulse rounded bg-gray-200 dark:bg-dark-700"></KumoSkeleton>
+          </KumoTableCell>
+          <KumoTableCell v-for="column in columns" :key="column.key" :class="['whitespace-nowrap py-4', getAdaptivePaddingClass()]">
             <div class="animate-pulse">
               <div class="h-4 w-3/4 rounded bg-gray-200 dark:bg-dark-700"></div>
             </div>
-          </td>
-        </tr>
+          </KumoTableCell>
+        </KumoTableRow>
 
         <!-- Empty state -->
-        <tr v-else-if="!data || data.length === 0">
-          <td
+        <KumoTableRow v-else-if="!data || data.length === 0">
+          <KumoTableCell
             :colspan="tableColumnCount"
             :class="['py-12 text-center text-gray-500 dark:text-dark-400', getAdaptivePaddingClass()]"
           >
             <slot name="empty">
               <EmptyState :title="t('empty.noData')" class="!py-4" />
             </slot>
-          </td>
-        </tr>
+          </KumoTableCell>
+        </KumoTableRow>
 
         <!-- Data rows: windowed when large, fully rendered when small (shared row/cell template) -->
         <template v-else>
-          <tr v-if="virtualPaddingTop > 0" aria-hidden="true">
-            <td :colspan="tableColumnCount"
+          <KumoTableRow v-if="virtualPaddingTop > 0" aria-hidden="true">
+            <KumoTableCell :colspan="tableColumnCount"
                 :style="{ height: virtualPaddingTop + 'px', padding: 0, border: 'none' }">
-            </td>
-          </tr>
-          <tr
+            </KumoTableCell>
+          </KumoTableRow>
+          <KumoTableRow
             v-for="item in renderRows"
             :key="resolveRowKey(item.row, item.index)"
             :data-row-id="resolveRowKey(item.row, item.index)"
@@ -202,8 +202,8 @@
             }"
             @click="clickableRows && emit('rowClick', item.row)"
           >
-            <td v-if="selectable" class="w-11 min-w-11 px-3 py-4 text-center">
-              <input
+            <KumoTableCell v-if="selectable" class="w-11 min-w-11 px-3 py-4 text-center">
+              <KumoCheckbox
                 type="checkbox"
                 class="h-4 w-4 rounded border-gray-300 text-primary-600 focus:ring-primary-500 dark:border-dark-600 dark:bg-dark-800"
                 :checked="isRowSelected(item.row, item.index)"
@@ -212,8 +212,8 @@
                 @click.stop
                 @change="toggleRowSelection(item.row, item.index, ($event.target as HTMLInputElement).checked)"
               />
-            </td>
-            <td
+            </KumoTableCell>
+            <KumoTableCell
               v-for="(column, colIndex) in columns"
               :key="column.key"
               :class="[
@@ -231,20 +231,22 @@
                    ? column.formatter(item.row[column.key], item.row)
                    : item.row[column.key] }}
               </slot>
-            </td>
-          </tr>
-          <tr v-if="virtualPaddingBottom > 0" aria-hidden="true">
-            <td :colspan="tableColumnCount"
+            </KumoTableCell>
+          </KumoTableRow>
+          <KumoTableRow v-if="virtualPaddingBottom > 0" aria-hidden="true">
+            <KumoTableCell :colspan="tableColumnCount"
                 :style="{ height: virtualPaddingBottom + 'px', padding: 0, border: 'none' }">
-            </td>
-          </tr>
+            </KumoTableCell>
+          </KumoTableRow>
         </template>
-      </tbody>
-    </table>
+      </KumoTableBody>
+    </KumoTable>
   </div>
 </template>
 
 <script setup lang="ts">
+import { KumoCheckbox, KumoLabel, KumoSkeleton, KumoTable, KumoTableBody, KumoTableCell, KumoTableHead, KumoTableHeader, KumoTableRow } from '@/components/kumo'
+
 import { computed, ref, onMounted, onUnmounted, watch, nextTick } from 'vue'
 import { useVirtualizer, observeElementRect as observeElementRectDefault } from '@tanstack/vue-virtual'
 import { useI18n } from 'vue-i18n'

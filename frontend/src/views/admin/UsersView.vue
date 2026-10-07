@@ -13,7 +13,7 @@
                 size="md"
                 class="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"
               />
-              <input
+              <KumoInput
                 v-model="searchQuery"
                 type="text"
                 :placeholder="t('admin.users.searchUsers')"
@@ -79,7 +79,7 @@
                 class="relative w-full sm:w-36"
               >
                 <!-- Text/Email/URL/Textarea/Date type: styled input -->
-                <input
+                <KumoInput
                   v-if="['text', 'textarea', 'email', 'url', 'date'].includes(getAttributeDefinition(Number(attrId))?.type || 'text')"
                   :value="value"
                   @input="(e) => updateAttributeFilter(Number(attrId), (e.target as HTMLInputElement).value)"
@@ -88,7 +88,7 @@
                   class="input w-full"
                 />
                 <!-- Number type: number input -->
-                <input
+                <KumoInput
                   v-else-if="getAttributeDefinition(Number(attrId))?.type === 'number'"
                   :value="value"
                   type="number"
@@ -111,7 +111,7 @@
                   </div>
                 </template>
                 <!-- Fallback -->
-                <input
+                <KumoInput
                   v-else
                   :value="value"
                   @input="(e) => updateAttributeFilter(Number(attrId), (e.target as HTMLInputElement).value)"
@@ -128,121 +128,62 @@
             <!-- Mobile: Secondary buttons (icon only) -->
             <div class="flex items-center gap-2 md:contents">
               <!-- Refresh Button -->
-              <button
+              <KumoButton
                 @click="loadUsers"
                 :disabled="loading"
                 class="btn btn-secondary px-2 md:px-3"
                 :title="t('common.refresh')"
               >
                 <Icon name="refresh" size="md" :class="loading ? 'animate-spin' : ''" />
-              </button>
+              </KumoButton>
               <!-- Filter Settings Dropdown -->
-              <div class="relative" ref="filterDropdownRef">
-                <button
-                  @click="showFilterDropdown = !showFilterDropdown"
+              <KumoPopoverRoot v-model="showFilterDropdown"><KumoPopoverTrigger
                   class="btn btn-secondary px-2 md:px-3"
-                  :title="t('admin.users.filterSettings')"
+                  :aria-label="t('admin.users.filterSettings')"
                 >
                   <Icon name="filter" size="sm" class="md:mr-1.5" />
                   <span class="hidden md:inline">{{ t('admin.users.filterSettings') }}</span>
-                </button>
-                <!-- Dropdown menu -->
-                <div
-                  v-if="showFilterDropdown"
-                  class="absolute right-0 top-full z-50 mt-1 w-48 rounded-lg border border-gray-200 bg-white py-1 shadow-lg dark:border-dark-600 dark:bg-dark-800"
+                </KumoPopoverTrigger>
+<KumoPopoverContent
+                  class="w-48 rounded-lg border border-gray-200 bg-white py-1 shadow-lg dark:border-dark-600 dark:bg-dark-800"
                 >
                   <!-- Built-in filters -->
-                  <button
-                    v-for="filter in builtInFilters"
-                    :key="filter.key"
-                    @click="toggleBuiltInFilter(filter.key)"
-                    class="flex w-full items-center justify-between px-4 py-2 text-left text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-dark-700"
-                  >
-                    <span>{{ filter.name }}</span>
-                    <Icon
-                      v-if="visibleFilters.has(filter.key)"
-                      name="check"
-                      size="sm"
-                      class="text-primary-500"
-                      :stroke-width="2"
-                    />
-                  </button>
+                  <KumoLabel v-for="filter in builtInFilters" :key="filter.key" class="flex w-full cursor-pointer items-center gap-2 px-3 py-2 text-sm"><KumoCheckbox :checked="visibleFilters.has(filter.key)"   @change="toggleBuiltInFilter(filter.key)" /><span>{{ filter.name }}</span></KumoLabel>
                   <!-- Divider if custom attributes exist -->
                   <div
                     v-if="filterableAttributes.length > 0"
                     class="my-1 border-t border-gray-100 dark:border-dark-700"
                   ></div>
                   <!-- Custom attribute filters -->
-                  <button
-                    v-for="attr in filterableAttributes"
-                    :key="attr.id"
-                    @click="toggleAttributeFilter(attr)"
-                    class="flex w-full items-center justify-between px-4 py-2 text-left text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-dark-700"
-                  >
-                    <span>{{ attr.name }}</span>
-                    <Icon
-                      v-if="visibleFilters.has(`attr_${attr.id}`)"
-                      name="check"
-                      size="sm"
-                      class="text-primary-500"
-                      :stroke-width="2"
-                    />
-                  </button>
-                </div>
-              </div>
+                  <KumoLabel v-for="attr in filterableAttributes" :key="attr.id" class="flex w-full cursor-pointer items-center gap-2 px-3 py-2 text-sm"><KumoCheckbox :checked="visibleFilters.has(`attr_${attr.id}`)"   @change="toggleAttributeFilter(attr)" /><span>{{ attr.name }}</span></KumoLabel>
+                </KumoPopoverContent></KumoPopoverRoot>
               <!-- Column Settings Dropdown -->
-              <div class="relative" ref="columnDropdownRef">
-                <button
-                  @click="showColumnDropdown = !showColumnDropdown"
+              <KumoPopoverRoot v-model="showColumnDropdown"><KumoPopoverTrigger
                   class="btn btn-secondary px-2 md:px-3"
-                  :title="t('admin.users.columnSettings')"
+                  :aria-label="t('admin.users.columnSettings')"
                 >
                   <svg class="h-4 w-4 md:mr-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M9 4.5v15m6-15v15m-10.875 0h15.75c.621 0 1.125-.504 1.125-1.125V5.625c0-.621-.504-1.125-1.125-1.125H4.125C3.504 4.5 3 5.004 3 5.625v12.75c0 .621.504 1.125 1.125 1.125z" />
                   </svg>
                   <span class="hidden md:inline">{{ t('admin.users.columnSettings') }}</span>
-                </button>
-                <!-- Dropdown menu -->
-                <div
-                  v-if="showColumnDropdown"
-                  class="absolute right-0 top-full z-50 mt-1 max-h-80 w-48 overflow-y-auto rounded-lg border border-gray-200 bg-white py-1 shadow-lg dark:border-dark-600 dark:bg-dark-800"
+                </KumoPopoverTrigger>
+<KumoPopoverContent
+                  class="max-h-80 w-48 overflow-y-auto rounded-lg border border-gray-200 bg-white py-1 shadow-lg dark:border-dark-600 dark:bg-dark-800"
                 >
-                  <button
-                    v-for="col in toggleableColumns"
-                    :key="col.key"
-                    :disabled="isForcedVisibleColumn(col.key)"
-                    @click="toggleColumn(col.key)"
-                    :class="[
-                      'flex w-full items-center justify-between px-4 py-2 text-left text-sm',
-                      isForcedVisibleColumn(col.key)
-                        ? 'cursor-not-allowed text-gray-400 dark:text-gray-500'
-                        : 'text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-dark-700'
-                    ]"
-                    :title="isForcedVisibleColumn(col.key) ? t('admin.users.columnAlwaysVisible') : ''"
-                  >
-                    <span>{{ col.label }}</span>
-                    <Icon
-                      v-if="isColumnVisible(col.key)"
-                      name="check"
-                      size="sm"
-                      :class="isForcedVisibleColumn(col.key) ? 'text-gray-400 dark:text-gray-500' : 'text-primary-500'"
-                      :stroke-width="2"
-                    />
-                  </button>
-                </div>
-              </div>
+                  <KumoLabel v-for="col in toggleableColumns" :key="col.key" class="flex w-full cursor-pointer items-center gap-2 px-3 py-2 text-sm"><KumoCheckbox :checked="isColumnVisible(col.key)" :disabled="isForcedVisibleColumn(col.key)"  @change="toggleColumn(col.key)" /><span>{{ col.label }}</span></KumoLabel>
+                </KumoPopoverContent></KumoPopoverRoot>
               <!-- Attributes Config Button -->
-              <button
+              <KumoButton
                 @click="showAttributesModal = true"
                 class="btn btn-secondary px-2 md:px-3"
                 :title="t('admin.users.attributes.configButton')"
               >
                 <Icon name="cog" size="sm" class="md:mr-1.5" />
                 <span class="hidden md:inline">{{ t('admin.users.attributes.configButton') }}</span>
-              </button>
+              </KumoButton>
             </div>
 
-            <button
+            <KumoButton
               v-if="selectedCount > 0"
               class="btn btn-secondary flex-1 md:flex-initial"
               data-test="bulk-edit-limits"
@@ -250,9 +191,9 @@
             >
               <Icon name="users" size="md" class="mr-2" />
               {{ t('admin.users.bulkLimits.action', { count: selectedCount }) }}
-            </button>
+            </KumoButton>
 
-            <button
+            <KumoButton
               v-if="selectedCount > 0"
               class="btn btn-danger flex-1 md:flex-initial"
               data-test="bulk-delete-users"
@@ -261,13 +202,13 @@
             >
               <Icon name="trash" size="md" class="mr-2" />
               {{ t('admin.users.bulkDelete.action', { count: selectedCount }) }}
-            </button>
+            </KumoButton>
 
             <!-- Create User Button (full width on mobile, auto width on desktop) -->
-            <button @click="showCreateModal = true" class="btn btn-primary flex-1 md:flex-initial">
+            <KumoButton @click="showCreateModal = true" class="btn btn-primary flex-1 md:flex-initial">
               <Icon name="plus" size="md" class="mr-2" />
               {{ t('admin.users.createUser') }}
-            </button>
+            </KumoButton>
           </div>
         </div>
       </template>
@@ -345,33 +286,9 @@
           <template #cell-groups="{ row }">
             <div v-if="allGroups.length > 0" class="flex flex-col gap-1">
               <!-- 专属分组行 -->
-              <span
-                v-if="getUserGroups(row).exclusive.length > 0"
-                class="group/ex relative inline-flex cursor-pointer items-center gap-1 whitespace-nowrap text-xs"
-                @click.stop="toggleExpandedGroup(row.id)"
-              >
-                <Icon name="shield" size="xs" class="h-3.5 w-3.5 text-purple-500 dark:text-purple-400" />
-                <span class="font-medium text-purple-600 dark:text-purple-400">{{ getUserGroups(row).exclusive.length }}</span>
-                <span class="text-gray-500 dark:text-dark-400">{{ t('admin.users.exclusiveLabel') }}</span>
-                <!-- Hover tooltip（操作菜单未打开时显示） -->
-                <div
-                  v-if="expandedGroupUserId !== row.id"
-                  class="pointer-events-none absolute left-0 top-full z-50 mt-1.5 rounded bg-gray-900 px-2.5 py-1.5 text-xs text-white opacity-0 shadow-lg transition-opacity duration-75 group-hover/ex:opacity-100 dark:bg-dark-600"
-                >
-                  <div class="absolute left-4 bottom-full border-4 border-transparent border-b-gray-900 dark:border-b-dark-600"></div>
-                  <div class="flex flex-col gap-0.5 whitespace-nowrap">
-                    <span v-for="g in getUserGroups(row).exclusive" :key="g.id">{{ g.name }}</span>
-                  </div>
-                </div>
-                <!-- 点击展开分组操作菜单 -->
-                <div
-                  v-if="expandedGroupUserId === row.id"
-                  class="absolute left-0 top-full z-50 mt-1.5 min-w-[160px] overflow-hidden rounded-lg border border-gray-200 bg-white py-1 text-xs shadow-xl dark:border-dark-600 dark:bg-dark-700"
-                >
-                  <div class="border-b border-gray-100 px-3 py-1.5 text-[10px] font-medium uppercase tracking-wider text-gray-400 dark:border-dark-600 dark:text-dark-400">
+              <KumoDropdown v-if="getUserGroups(row).exclusive.length > 0" :model-value="expandedGroupUserId === row.id" @update:model-value="expandedGroupUserId = $event ? row.id : null"><KumoDropdownTrigger class="inline-flex h-auto items-center gap-1 p-0 text-xs"><Icon name="shield" size="xs" class="h-3.5 w-3.5 text-purple-500 dark:text-purple-400" /><span class="font-medium text-purple-600 dark:text-purple-400">{{ getUserGroups(row).exclusive.length }}</span><span class="text-gray-500 dark:text-dark-400">{{ t('admin.users.exclusiveLabel') }}</span><!-- Hover tooltip（操作菜单未打开时显示） --><!-- 点击展开分组操作菜单 --></KumoDropdownTrigger><KumoDropdownContent align="start" class="min-w-40"><div class="border-b border-gray-100 px-3 py-1.5 text-[10px] font-medium uppercase tracking-wider text-gray-400 dark:border-dark-600 dark:text-dark-400">
                     {{ t('admin.users.clickToReplace') }}
-                  </div>
-                  <div
+                  </div><KumoDropdownItem
                     v-for="g in getUserGroups(row).exclusive"
                     :key="g.id"
                     class="flex cursor-pointer items-center gap-2 px-3 py-2 text-gray-700 transition-colors hover:bg-primary-50 hover:text-primary-600 dark:text-dark-200 dark:hover:bg-primary-900/30 dark:hover:text-primary-400"
@@ -379,25 +296,11 @@
                   >
                     <Icon name="swap" size="xs" class="h-3.5 w-3.5 flex-shrink-0 opacity-50" />
                     <span class="flex-1">{{ g.name }}</span>
-                  </div>
-                </div>
-              </span>
+                  </KumoDropdownItem></KumoDropdownContent></KumoDropdown>
               <!-- 公开分组行 -->
-              <span
-                v-if="getUserGroups(row).publicGroups.length > 0"
-                class="group/pub relative inline-flex cursor-default items-center gap-1 whitespace-nowrap text-xs"
-              >
-                <Icon name="globe" size="xs" class="h-3.5 w-3.5 text-gray-400 dark:text-dark-500" />
-                <span class="font-medium text-gray-600 dark:text-dark-300">{{ getUserGroups(row).publicGroups.length }}</span>
-                <span class="text-gray-400 dark:text-dark-500">{{ t('admin.users.publicLabel') }}</span>
-                <!-- Tooltip: 向下弹出 -->
-                <div class="pointer-events-none absolute left-0 top-full z-50 mt-1.5 rounded bg-gray-900 px-2.5 py-1.5 text-xs text-white opacity-0 shadow-lg transition-opacity duration-75 group-hover/pub:opacity-100 dark:bg-dark-600">
-                  <div class="absolute left-4 bottom-full border-4 border-transparent border-b-gray-900 dark:border-b-dark-600"></div>
-                  <div class="flex flex-col gap-0.5 whitespace-nowrap">
+              <KumoTooltip v-if="getUserGroups(row).publicGroups.length > 0" :label="t('common.help')" class="text-xs max-w-[calc(100vw-2rem)]" trigger-class="h-auto p-0 inline-flex cursor-default items-center gap-1 whitespace-nowrap text-xs"><template #trigger><Icon name="globe" size="xs" class="h-3.5 w-3.5 text-gray-400 dark:text-dark-500" /><span class="font-medium text-gray-600 dark:text-dark-300">{{ getUserGroups(row).publicGroups.length }}</span><span class="text-gray-400 dark:text-dark-500">{{ t('admin.users.publicLabel') }}</span><!-- Tooltip: 向下弹出 --></template><div class="flex flex-col gap-0.5 whitespace-nowrap">
                     <span v-for="g in getUserGroups(row).publicGroups" :key="g.id">{{ g.name }}</span>
-                  </div>
-                </div>
-              </span>
+                  </div></KumoTooltip>
               <!-- 都没有 -->
               <span
                 v-if="getUserGroups(row).exclusive.length === 0 && getUserGroups(row).publicGroups.length === 0"
@@ -434,38 +337,31 @@
 
           <template #cell-balance="{ value, row }">
             <div class="flex items-center gap-2">
-              <div class="group relative">
-                <button
+              <KumoButton :title="t('admin.users.balanceHistoryTip')"
                   class="font-medium text-gray-900 underline decoration-dashed decoration-gray-300 underline-offset-4 transition-colors hover:text-primary-600 dark:text-white dark:decoration-dark-500 dark:hover:text-primary-400"
                   @click="handleBalanceHistory(row)"
                 >
                   ${{ value.toFixed(2) }}
-                </button>
-                <!-- Instant tooltip -->
-                <div class="pointer-events-none absolute bottom-full left-1/2 z-50 mb-1.5 -translate-x-1/2 whitespace-nowrap rounded bg-gray-900 px-2 py-1 text-xs text-white opacity-0 shadow-lg transition-opacity duration-75 group-hover:opacity-100 dark:bg-dark-600">
-                  {{ t('admin.users.balanceHistoryTip') }}
-                  <div class="absolute left-1/2 top-full -translate-x-1/2 border-4 border-transparent border-t-gray-900 dark:border-t-dark-600"></div>
-                </div>
-              </div>
-              <button
+                </KumoButton>
+              <KumoButton
                 @click.stop="handleDeposit(row)"
                 class="rounded px-2 py-0.5 text-xs font-medium text-emerald-600 transition-colors hover:bg-emerald-50 dark:text-emerald-400 dark:hover:bg-emerald-900/20"
                 :title="t('admin.users.deposit')"
               >
                 {{ t('admin.users.deposit') }}
-              </button>
+              </KumoButton>
             </div>
           </template>
 
           <template #cell-balance_platform_quota="{ row }">
-            <button
+            <KumoButton
               type="button"
               class="block text-left underline decoration-dashed decoration-gray-300 underline-offset-4 transition-colors hover:decoration-primary-400 dark:decoration-dark-500"
               :title="t('admin.users.platformQuota.cellColumnTooltip')"
               @click="handlePlatformQuota(row)"
             >
               <UserPlatformQuotaCell :quotas="platformQuotaStats[row.id]" />
-            </button>
+            </KumoButton>
           </template>
 
           <!-- 用量列自定义表头：列名 + 单个排序图标按钮，点击展开"今日/近30天"菜单。
@@ -478,16 +374,14 @@
           >
             <div class="flex items-center gap-1.5">
               <span>{{ column.label }}</span>
-              <div class="usage-sort-trigger relative">
-                <button
+              <KumoDropdown :model-value="openUsageSortMenu === usageKey" @update:model-value="openUsageSortMenu = $event ? usageKey : null"><KumoDropdownTrigger
                   type="button"
                   class="flex items-center gap-1 rounded px-1 py-0.5 transition-colors hover:bg-gray-200 dark:hover:bg-dark-700"
                   :class="usageSort && usageSort.key === usageKey
                     ? 'text-primary-600 dark:text-primary-400'
                     : 'text-gray-400 dark:text-dark-500'"
-                  :title="t('admin.users.sortBy')"
+                  :aria-label="t('admin.users.sortBy')"
                   :data-test="`usage-sort-trigger-${usageKey}`"
-                  @click.stop="toggleUsageSortMenu(usageKey)"
                 >
                   <span
                     v-if="usageSort && usageSort.key === usageKey"
@@ -509,13 +403,7 @@
                   <svg v-else class="h-3.5 w-3.5" fill="currentColor" viewBox="0 0 20 20">
                     <path d="M10 3l-4 5h8l-4-5zM10 17l4-5H6l4 5z" />
                   </svg>
-                </button>
-                <!-- 弹出菜单：今日 / 近30天，点击进行三态循环切换。 -->
-                <div
-                  v-if="openUsageSortMenu === usageKey"
-                  class="absolute right-0 top-full z-50 mt-1 min-w-[120px] rounded-lg border border-gray-200 bg-white py-1 shadow-lg dark:border-dark-600 dark:bg-dark-800"
-                >
-                  <button
+                </KumoDropdownTrigger><KumoDropdownContent class="min-w-[120px]"><KumoDropdownItem
                     v-for="metric in (['today', 'total'] as const)"
                     :key="metric"
                     type="button"
@@ -540,12 +428,9 @@
                         clip-rule="evenodd"
                       />
                     </svg>
-                  </button>
-                  <div class="mt-1 border-t border-gray-100 px-3 py-1 text-[10px] normal-case tracking-normal text-gray-400 dark:border-dark-700 dark:text-dark-500">
+                  </KumoDropdownItem><div class="mt-1 border-t border-gray-100 px-3 py-1 text-[10px] normal-case tracking-normal text-gray-400 dark:border-dark-700 dark:text-dark-500">
                     {{ t('admin.users.sortCurrentPageOnly') }}
-                  </div>
-                </div>
-              </div>
+                  </div></KumoDropdownContent></KumoDropdown>
             </div>
           </template>
 
@@ -613,16 +498,16 @@
           <template #cell-actions="{ row }">
             <div class="flex items-center gap-1">
               <!-- Edit Button -->
-              <button
+              <KumoButton
                 @click="handleEdit(row)"
                 class="flex flex-col items-center gap-0.5 rounded-lg p-1.5 text-gray-500 transition-colors hover:bg-gray-100 hover:text-primary-600 dark:hover:bg-dark-700 dark:hover:text-primary-400"
               >
                 <Icon name="edit" size="sm" />
                 <span class="text-xs">{{ t('common.edit') }}</span>
-              </button>
+              </KumoButton>
 
               <!-- Toggle Status Button (not for admin) -->
-              <button
+              <KumoButton
                 v-if="row.role !== 'admin'"
                 @click="handleToggleStatus(row)"
                 :class="[
@@ -635,17 +520,61 @@
                 <Icon v-if="row.status === 'active'" name="ban" size="sm" />
                 <Icon v-else name="checkCircle" size="sm" />
                 <span class="text-xs">{{ row.status === 'active' ? t('admin.users.disable') : t('admin.users.enable') }}</span>
-              </button>
+              </KumoButton>
 
               <!-- More Actions Menu Trigger -->
-              <button
-                @click="openActionMenu(row, $event)"
+              <KumoDropdown :model-value="activeMenuId === row.id" @update:model-value="activeMenuId = $event ? row.id : null"><KumoDropdownTrigger
                 class="action-menu-trigger flex flex-col items-center gap-0.5 rounded-lg p-1.5 text-gray-500 transition-colors hover:bg-gray-100 hover:text-gray-900 dark:hover:bg-dark-700 dark:hover:text-white"
                 :class="{ 'bg-gray-100 text-gray-900 dark:bg-dark-700 dark:text-white': activeMenuId === row.id }"
               >
                 <Icon name="more" size="sm" />
                 <span class="text-xs">{{ t('common.more') }}</span>
-              </button>
+              </KumoDropdownTrigger><KumoDropdownContent class="action-menu-content w-48 max-h-[calc(100dvh-2rem)] overflow-y-auto"><!-- View API Keys --><KumoDropdownItem
+                @click="handleViewApiKeys(row)"
+                class="flex w-full items-center gap-2 px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-dark-700"
+              >
+                <Icon name="key" size="sm" class="text-gray-400" :stroke-width="2" />
+                {{ t('admin.users.apiKeys') }}
+              </KumoDropdownItem><!-- Allowed Groups --><KumoDropdownItem
+                @click="handleAllowedGroups(row)"
+                class="flex w-full items-center gap-2 px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-dark-700"
+              >
+                <Icon name="users" size="sm" class="text-gray-400" :stroke-width="2" />
+                {{ t('admin.users.groups') }}
+              </KumoDropdownItem><div class="my-1 border-t border-gray-100 dark:border-dark-700"></div><!-- Deposit --><KumoDropdownItem
+                @click="handleDeposit(row)"
+                class="flex w-full items-center gap-2 px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-dark-700"
+              >
+                <Icon name="plus" size="sm" class="text-emerald-500" :stroke-width="2" />
+                {{ t('admin.users.deposit') }}
+              </KumoDropdownItem><!-- Withdraw --><KumoDropdownItem
+                @click="handleWithdraw(row)"
+                class="flex w-full items-center gap-2 px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-dark-700"
+              >
+                <svg class="h-4 w-4 text-amber-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 12H4" />
+                </svg>
+                {{ t('admin.users.withdraw') }}
+              </KumoDropdownItem><!-- Platform Quotas --><KumoDropdownItem
+                @click="handlePlatformQuota(row)"
+                class="flex w-full items-center gap-2 px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-dark-700"
+              >
+                <Icon name="chartBar" size="sm" class="text-gray-400" :stroke-width="2" />
+                {{ t('admin.users.platformQuota.menuItem') }}
+              </KumoDropdownItem><!-- Balance History --><KumoDropdownItem
+                @click="handleBalanceHistory(row)"
+                class="flex w-full items-center gap-2 px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-dark-700"
+              >
+                <Icon name="dollar" size="sm" class="text-gray-400" :stroke-width="2" />
+                {{ t('admin.users.balanceHistory') }}
+              </KumoDropdownItem><div class="my-1 border-t border-gray-100 dark:border-dark-700"></div><!-- Delete (not for admin) --><KumoDropdownItem
+                v-if="row.role !== 'admin'"
+                @click="handleDelete(row)"
+                class="flex w-full items-center gap-2 px-4 py-2 text-sm text-red-600 hover:bg-red-50 dark:text-red-400 dark:hover:bg-red-900/20"
+              >
+                <Icon name="trash" size="sm" :stroke-width="2" />
+                {{ t('common.delete') }}
+              </KumoDropdownItem></KumoDropdownContent></KumoDropdown>
             </div>
           </template>
 
@@ -674,89 +603,7 @@
     </TablePageLayout>
 
     <!-- Action Menu (Teleported) -->
-    <Teleport to="body">
-      <div
-        v-if="activeMenuId !== null && menuPosition"
-        class="action-menu-content fixed z-[9999] w-48 overflow-hidden rounded-xl bg-white shadow-lg ring-1 ring-black/5 dark:bg-dark-800 dark:ring-white/10"
-        :style="{ top: menuPosition.top + 'px', left: menuPosition.left + 'px' }"
-      >
-        <div class="py-1">
-          <template v-for="user in users" :key="user.id">
-            <template v-if="user.id === activeMenuId">
-              <!-- View API Keys -->
-              <button
-                @click="handleViewApiKeys(user); closeActionMenu()"
-                class="flex w-full items-center gap-2 px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-dark-700"
-              >
-                <Icon name="key" size="sm" class="text-gray-400" :stroke-width="2" />
-                {{ t('admin.users.apiKeys') }}
-              </button>
 
-              <!-- Allowed Groups -->
-              <button
-                @click="handleAllowedGroups(user); closeActionMenu()"
-                class="flex w-full items-center gap-2 px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-dark-700"
-              >
-                <Icon name="users" size="sm" class="text-gray-400" :stroke-width="2" />
-                {{ t('admin.users.groups') }}
-              </button>
-
-              <div class="my-1 border-t border-gray-100 dark:border-dark-700"></div>
-
-              <!-- Deposit -->
-              <button
-                @click="handleDeposit(user); closeActionMenu()"
-                class="flex w-full items-center gap-2 px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-dark-700"
-              >
-                <Icon name="plus" size="sm" class="text-emerald-500" :stroke-width="2" />
-                {{ t('admin.users.deposit') }}
-              </button>
-
-              <!-- Withdraw -->
-              <button
-                @click="handleWithdraw(user); closeActionMenu()"
-                class="flex w-full items-center gap-2 px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-dark-700"
-              >
-                <svg class="h-4 w-4 text-amber-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 12H4" />
-                </svg>
-                {{ t('admin.users.withdraw') }}
-              </button>
-
-              <!-- Platform Quotas -->
-              <button
-                @click="handlePlatformQuota(user); closeActionMenu()"
-                class="flex w-full items-center gap-2 px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-dark-700"
-              >
-                <Icon name="chartBar" size="sm" class="text-gray-400" :stroke-width="2" />
-                {{ t('admin.users.platformQuota.menuItem') }}
-              </button>
-
-              <!-- Balance History -->
-              <button
-                @click="handleBalanceHistory(user); closeActionMenu()"
-                class="flex w-full items-center gap-2 px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-dark-700"
-              >
-                <Icon name="dollar" size="sm" class="text-gray-400" :stroke-width="2" />
-                {{ t('admin.users.balanceHistory') }}
-              </button>
-
-              <div class="my-1 border-t border-gray-100 dark:border-dark-700"></div>
-
-              <!-- Delete (not for admin) -->
-              <button
-                v-if="user.role !== 'admin'"
-                @click="handleDelete(user); closeActionMenu()"
-                class="flex w-full items-center gap-2 px-4 py-2 text-sm text-red-600 hover:bg-red-50 dark:text-red-400 dark:hover:bg-red-900/20"
-              >
-                <Icon name="trash" size="sm" :stroke-width="2" />
-                {{ t('common.delete') }}
-              </button>
-            </template>
-          </template>
-        </div>
-      </div>
-    </Teleport>
 
     <ConfirmDialog :show="showDeleteDialog" :title="t('admin.users.deleteUser')" :message="t('admin.users.deleteConfirm', { email: deletingUser?.email })" :danger="true" @confirm="confirmDelete" @cancel="showDeleteDialog = false" />
     <ConfirmDialog
@@ -792,6 +639,8 @@
 </template>
 
 <script setup lang="ts">
+import { KumoButton, KumoCheckbox, KumoDropdown, KumoDropdownContent, KumoDropdownItem, KumoDropdownTrigger, KumoInput, KumoLabel, KumoPopoverContent, KumoPopoverRoot, KumoPopoverTrigger, KumoTooltip } from '@/components/kumo'
+
 import { ref, reactive, computed, onMounted, onUnmounted } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useAppStore } from '@/stores/app'
@@ -1143,8 +992,6 @@ const showFilterDropdown = ref(false)
 const showColumnDropdown = ref(false)
 
 // Dropdown refs for click outside detection
-const filterDropdownRef = ref<HTMLElement | null>(null)
-const columnDropdownRef = ref<HTMLElement | null>(null)
 
 // localStorage keys
 const FILTER_VALUES_KEY = 'user-filter-values'
@@ -1279,9 +1126,6 @@ const toggleUsageSort = (key: string, metric: UsageMetric) => {
 }
 
 // 点击图标本身不触发排序，仅开关菜单；首次排序由用户在菜单内选择 metric 触发（默认 desc，详见 toggleUsageSort）。
-const toggleUsageSortMenu = (key: string) => {
-  openUsageSortMenu.value = openUsageSortMenu.value === key ? null : key
-}
 
 const getUsageValue = (userId: number, key: string, metric: UsageMetric): number => {
   const stats = usageStats.value[userId]
@@ -1451,89 +1295,13 @@ const refreshCurrentPageSecondaryData = () => {
 
 // Action Menu State
 const activeMenuId = ref<number | null>(null)
-const menuPosition = ref<{ top: number; left: number } | null>(null)
 
-const openActionMenu = (user: AdminUser, e: MouseEvent) => {
-  if (activeMenuId.value === user.id) {
-    closeActionMenu()
-  } else {
-    const target = e.currentTarget as HTMLElement
-    if (!target) {
-      closeActionMenu()
-      return
-    }
-
-    const rect = target.getBoundingClientRect()
-    const menuWidth = 200
-    const menuHeight = 240
-    const padding = 8
-    const viewportWidth = window.innerWidth
-    const viewportHeight = window.innerHeight
-
-    let left, top
-
-    if (viewportWidth < 768) {
-      // 居中显示,水平位置
-      left = Math.max(padding, Math.min(
-        rect.left + rect.width / 2 - menuWidth / 2,
-        viewportWidth - menuWidth - padding
-      ))
-
-      // 优先显示在按钮下方
-      top = rect.bottom + 4
-
-      // 如果下方空间不够,显示在上方
-      if (top + menuHeight > viewportHeight - padding) {
-        top = rect.top - menuHeight - 4
-        // 如果上方也不够,就贴在视口顶部
-        if (top < padding) {
-          top = padding
-        }
-      }
-    } else {
-      left = Math.max(padding, Math.min(
-        e.clientX - menuWidth,
-        viewportWidth - menuWidth - padding
-      ))
-      top = e.clientY
-      if (top + menuHeight > viewportHeight - padding) {
-        top = viewportHeight - menuHeight - padding
-      }
-    }
-
-    menuPosition.value = { top, left }
-    activeMenuId.value = user.id
-  }
-}
 
 const closeActionMenu = () => {
   activeMenuId.value = null
-  menuPosition.value = null
 }
 
 // Close menu when clicking outside
-const handleClickOutside = (event: MouseEvent) => {
-  const target = event.target as HTMLElement
-  if (!target.closest('.action-menu-trigger') && !target.closest('.action-menu-content')) {
-    closeActionMenu()
-  }
-  // Close filter dropdown when clicking outside
-  if (filterDropdownRef.value && !filterDropdownRef.value.contains(target)) {
-    showFilterDropdown.value = false
-  }
-  // Close column dropdown when clicking outside
-  if (columnDropdownRef.value && !columnDropdownRef.value.contains(target)) {
-    showColumnDropdown.value = false
-  }
-  // Close usage sort dropdown when clicking outside any usage-sort-trigger
-  if (openUsageSortMenu.value !== null && !target.closest('.usage-sort-trigger')) {
-    openUsageSortMenu.value = null
-  }
-  // Close expanded group dropdown when clicking outside
-  if (expandedGroupUserId.value !== null) {
-    expandedGroupUserId.value = null
-  }
-}
 
 // Allowed groups modal state
 const showAllowedGroupsModal = ref(false)
@@ -1541,9 +1309,6 @@ const allowedGroupsUser = ref<AdminUser | null>(null)
 
 // Expanded group dropdown state (click to show exclusive groups list)
 const expandedGroupUserId = ref<number | null>(null)
-const toggleExpandedGroup = (userId: number) => {
-  expandedGroupUserId.value = expandedGroupUserId.value === userId ? null : userId
-}
 
 // Group replace modal state
 const showGroupReplaceModal = ref(false)
@@ -1899,12 +1664,10 @@ onMounted(async () => {
   if (visibleFilters.has('apiKeyGroup')) {
     loadAllGroupsForApiKeyFilter()
   }
-  document.addEventListener('click', handleClickOutside)
   window.addEventListener('scroll', handleScroll, true)
 })
 
 onUnmounted(() => {
-  document.removeEventListener('click', handleClickOutside)
   window.removeEventListener('scroll', handleScroll, true)
   clearTimeout(searchTimeout)
   abortController?.abort()

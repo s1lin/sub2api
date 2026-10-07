@@ -1,7 +1,7 @@
 <template>
   <div class="min-h-screen bg-gray-50 px-4 py-10 dark:bg-dark-900">
     <div class="mx-auto max-w-2xl">
-      <div class="card p-6">
+      <KumoSurface class="card p-6">
         <h1 class="text-lg font-semibold text-gray-900 dark:text-white">
           {{ callbackTitleText }}
         </h1>
@@ -13,9 +13,9 @@
           v-if="!errorMessage"
           class="mt-6 flex items-center justify-center py-10"
         >
-          <div
-            class="h-8 w-8 animate-spin rounded-full border-4 border-primary-500 border-t-transparent"
-          ></div>
+          <KumoLoader
+            class="h-8 w-8"
+           />
         </div>
 
         <div
@@ -25,20 +25,22 @@
           <p class="text-sm text-gray-700 dark:text-gray-300">
             {{ errorMessage }}
           </p>
-          <button
+          <KumoButton
             class="btn btn-primary mt-4"
             type="button"
             @click="goBackToPayment"
           >
             {{ backToPaymentText }}
-          </button>
+          </KumoButton>
         </div>
-      </div>
+      </KumoSurface>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
+import { KumoButton, KumoLoader, KumoSurface } from '@/components/kumo'
+
 import { computed, onMounted, ref, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useRoute, useRouter } from 'vue-router'

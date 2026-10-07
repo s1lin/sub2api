@@ -5,7 +5,7 @@
         <div class="flex flex-wrap items-center gap-3">
           <!-- Left: Search + Filters -->
           <div class="flex-1 sm:max-w-64">
-            <input
+            <KumoInput
               v-model="searchQuery"
               type="text"
               :placeholder="t('admin.promo.searchCodes')"
@@ -22,18 +22,18 @@
 
           <!-- Right: Action buttons -->
           <div class="flex flex-1 flex-wrap items-center justify-end gap-2">
-            <button
+            <KumoButton
               @click="loadCodes"
               :disabled="loading"
               class="btn btn-secondary"
               :title="t('common.refresh')"
             >
               <Icon name="refresh" size="md" :class="loading ? 'animate-spin' : ''" />
-            </button>
-            <button @click="showCreateDialog = true" class="btn btn-primary">
+            </KumoButton>
+            <KumoButton @click="showCreateDialog = true" class="btn btn-primary">
               <Icon name="plus" size="md" class="mr-1" />
               {{ t('admin.promo.createCode') }}
-            </button>
+            </KumoButton>
           </div>
         </div>
       </template>
@@ -51,7 +51,7 @@
           <template #cell-code="{ value }">
             <div class="flex items-center space-x-2">
               <code class="font-mono text-sm text-gray-900 dark:text-gray-100">{{ value }}</code>
-              <button
+              <KumoButton
                 @click="copyToClipboard(value)"
                 :class="[
                   'flex items-center transition-colors',
@@ -70,7 +70,7 @@
                     d="M5 13l4 4L19 7"
                   />
                 </svg>
-              </button>
+              </KumoButton>
             </div>
           </template>
 
@@ -111,34 +111,34 @@
 
           <template #cell-actions="{ row }">
             <div class="flex items-center space-x-1">
-              <button
+              <KumoButton
                 @click="copyRegisterLink(row)"
                 class="flex flex-col items-center gap-0.5 rounded-lg p-1.5 text-gray-500 transition-colors hover:bg-green-50 hover:text-green-600 dark:hover:bg-green-900/20 dark:hover:text-green-400"
                 :title="t('admin.promo.copyRegisterLink')"
               >
                 <Icon name="link" size="sm" />
-              </button>
-              <button
+              </KumoButton>
+              <KumoButton
                 @click="handleViewUsages(row)"
                 class="flex flex-col items-center gap-0.5 rounded-lg p-1.5 text-gray-500 transition-colors hover:bg-blue-50 hover:text-blue-600 dark:hover:bg-blue-900/20 dark:hover:text-blue-400"
                 :title="t('admin.promo.viewUsages')"
               >
                 <Icon name="eye" size="sm" />
-              </button>
-              <button
+              </KumoButton>
+              <KumoButton
                 @click="handleEdit(row)"
                 class="flex flex-col items-center gap-0.5 rounded-lg p-1.5 text-gray-500 transition-colors hover:bg-gray-100 hover:text-gray-700 dark:hover:bg-dark-600 dark:hover:text-gray-300"
                 :title="t('common.edit')"
               >
                 <Icon name="edit" size="sm" />
-              </button>
-              <button
+              </KumoButton>
+              <KumoButton
                 @click="handleDelete(row)"
                 class="flex flex-col items-center gap-0.5 rounded-lg p-1.5 text-gray-500 transition-colors hover:bg-red-50 hover:text-red-600 dark:hover:bg-red-900/20 dark:hover:text-red-400"
                 :title="t('common.delete')"
               >
                 <Icon name="trash" size="sm" />
-              </button>
+              </KumoButton>
             </div>
           </template>
         </DataTable>
@@ -165,11 +165,11 @@
     >
       <form id="create-promo-form" @submit.prevent="handleCreate" class="space-y-4">
         <div>
-          <label class="input-label">
+          <KumoLabel class="input-label">
             {{ t('admin.promo.code') }}
             <span class="ml-1 text-xs font-normal text-gray-400">({{ t('admin.promo.autoGenerate') }})</span>
-          </label>
-          <input
+          </KumoLabel>
+          <KumoInput
             v-model="createForm.code"
             type="text"
             class="input font-mono uppercase"
@@ -177,8 +177,8 @@
           />
         </div>
         <div>
-          <label class="input-label">{{ t('admin.promo.bonusAmount') }}</label>
-          <input
+          <KumoLabel class="input-label">{{ t('admin.promo.bonusAmount') }}</KumoLabel>
+          <KumoInput
             v-model.number="createForm.bonus_amount"
             type="number"
             step="0.01"
@@ -188,11 +188,11 @@
           />
         </div>
         <div>
-          <label class="input-label">
+          <KumoLabel class="input-label">
             {{ t('admin.promo.maxUses') }}
             <span class="ml-1 text-xs font-normal text-gray-400">({{ t('admin.promo.zeroUnlimited') }})</span>
-          </label>
-          <input
+          </KumoLabel>
+          <KumoInput
             v-model.number="createForm.max_uses"
             type="number"
             min="0"
@@ -200,37 +200,37 @@
           />
         </div>
         <div>
-          <label class="input-label">
+          <KumoLabel class="input-label">
             {{ t('admin.promo.expiresAt') }}
             <span class="ml-1 text-xs font-normal text-gray-400">({{ t('common.optional') }})</span>
-          </label>
-          <input
+          </KumoLabel>
+          <KumoInput
             v-model="createForm.expires_at_str"
             type="datetime-local"
             class="input"
           />
         </div>
         <div>
-          <label class="input-label">
+          <KumoLabel class="input-label">
             {{ t('admin.promo.notes') }}
             <span class="ml-1 text-xs font-normal text-gray-400">({{ t('common.optional') }})</span>
-          </label>
-          <textarea
+          </KumoLabel>
+          <KumoTextarea
             v-model="createForm.notes"
             rows="2"
             class="input"
             :placeholder="t('admin.promo.notesPlaceholder')"
-          ></textarea>
+          ></KumoTextarea>
         </div>
       </form>
       <template #footer>
         <div class="flex justify-end gap-3">
-          <button type="button" @click="showCreateDialog = false" class="btn btn-secondary">
+          <KumoButton type="button" @click="showCreateDialog = false" class="btn btn-secondary">
             {{ t('common.cancel') }}
-          </button>
-          <button type="submit" form="create-promo-form" :disabled="creating" class="btn btn-primary">
+          </KumoButton>
+          <KumoButton type="submit" form="create-promo-form" :disabled="creating" class="btn btn-primary">
             {{ creating ? t('common.creating') : t('common.create') }}
-          </button>
+          </KumoButton>
         </div>
       </template>
     </BaseDialog>
@@ -244,16 +244,16 @@
     >
       <form id="edit-promo-form" @submit.prevent="handleUpdate" class="space-y-4">
         <div>
-          <label class="input-label">{{ t('admin.promo.code') }}</label>
-          <input
+          <KumoLabel class="input-label">{{ t('admin.promo.code') }}</KumoLabel>
+          <KumoInput
             v-model="editForm.code"
             type="text"
             class="input font-mono uppercase"
           />
         </div>
         <div>
-          <label class="input-label">{{ t('admin.promo.bonusAmount') }}</label>
-          <input
+          <KumoLabel class="input-label">{{ t('admin.promo.bonusAmount') }}</KumoLabel>
+          <KumoInput
             v-model.number="editForm.bonus_amount"
             type="number"
             step="0.01"
@@ -263,11 +263,11 @@
           />
         </div>
         <div>
-          <label class="input-label">
+          <KumoLabel class="input-label">
             {{ t('admin.promo.maxUses') }}
             <span class="ml-1 text-xs font-normal text-gray-400">({{ t('admin.promo.zeroUnlimited') }})</span>
-          </label>
-          <input
+          </KumoLabel>
+          <KumoInput
             v-model.number="editForm.max_uses"
             type="number"
             min="0"
@@ -275,40 +275,40 @@
           />
         </div>
         <div>
-          <label class="input-label">{{ t('admin.promo.status') }}</label>
+          <KumoLabel class="input-label">{{ t('admin.promo.status') }}</KumoLabel>
           <Select v-model="editForm.status" :options="statusOptions" />
         </div>
         <div>
-          <label class="input-label">
+          <KumoLabel class="input-label">
             {{ t('admin.promo.expiresAt') }}
             <span class="ml-1 text-xs font-normal text-gray-400">({{ t('common.optional') }})</span>
-          </label>
-          <input
+          </KumoLabel>
+          <KumoInput
             v-model="editForm.expires_at_str"
             type="datetime-local"
             class="input"
           />
         </div>
         <div>
-          <label class="input-label">
+          <KumoLabel class="input-label">
             {{ t('admin.promo.notes') }}
             <span class="ml-1 text-xs font-normal text-gray-400">({{ t('common.optional') }})</span>
-          </label>
-          <textarea
+          </KumoLabel>
+          <KumoTextarea
             v-model="editForm.notes"
             rows="2"
             class="input"
-          ></textarea>
+          ></KumoTextarea>
         </div>
       </form>
       <template #footer>
         <div class="flex justify-end gap-3">
-          <button type="button" @click="closeEditDialog" class="btn btn-secondary">
+          <KumoButton type="button" @click="closeEditDialog" class="btn btn-secondary">
             {{ t('common.cancel') }}
-          </button>
-          <button type="submit" form="edit-promo-form" :disabled="updating" class="btn btn-primary">
+          </KumoButton>
+          <KumoButton type="submit" form="edit-promo-form" :disabled="updating" class="btn btn-primary">
             {{ updating ? t('common.saving') : t('common.save') }}
-          </button>
+          </KumoButton>
         </div>
       </template>
     </BaseDialog>
@@ -364,9 +364,9 @@
       </div>
       <template #footer>
         <div class="flex justify-end">
-          <button type="button" @click="showUsagesDialog = false" class="btn btn-secondary">
+          <KumoButton type="button" @click="showUsagesDialog = false" class="btn btn-secondary">
             {{ t('common.close') }}
-          </button>
+          </KumoButton>
         </div>
       </template>
     </BaseDialog>
@@ -386,6 +386,8 @@
 </template>
 
 <script setup lang="ts">
+import { KumoButton, KumoInput, KumoLabel, KumoTextarea } from '@/components/kumo'
+
 import { ref, reactive, computed, onMounted, onUnmounted } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useAppStore } from '@/stores/app'

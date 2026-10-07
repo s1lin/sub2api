@@ -1,17 +1,18 @@
-import { enableAutoUnmount, flushPromises, mount } from '@vue/test-utils'
+import { mount, flushPromises } from '@/__tests__/render'
+import { enableAutoUnmount } from '@vue/test-utils'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import UserApiKeysModal from '../UserApiKeysModal.vue'
 import type { AdminUser } from '@/types'
 
-const { getKeys } = vi.hoisted(() => ({ getKeys: vi.fn() }))
+const { getKeys, getGroups } = vi.hoisted(() => ({ getKeys: vi.fn(), getGroups: vi.fn() }))
 vi.mock('@/api/admin', () => ({ adminAPI: {
-  users: { getUserApiKeys: getKeys }, groups: { getAll: vi.fn().mockResolvedValue([]) },
+  users: { getUserApiKeys: getKeys }, groups: { getAll: getGroups },
 } }))
 vi.mock('@/stores/app', () => ({ useAppStore: () => ({ showError: vi.fn(), showSuccess: vi.fn() }) }))
 vi.mock('@/utils/format', () => ({ formatDateTime: (value: string) => value }))
 vi.mock('vue-i18n', () => ({ useI18n: () => ({ t: (key: string) => key }) }))
 enableAutoUnmount(afterEach)
-beforeEach(() => { getKeys.mockReset(); vi.spyOn(console, 'error').mockImplementation(() => {}) })
+beforeEach(() => { getKeys.mockReset(); getGroups.mockResolvedValue([]); vi.spyOn(console, 'error').mockImplementation(() => {}) })
 afterEach(() => vi.restoreAllMocks())
 function deferred() {
   let resolve!: (value: unknown) => void

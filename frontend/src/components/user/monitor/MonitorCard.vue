@@ -1,5 +1,5 @@
 <template>
-  <button
+  <KumoButton
     type="button"
     class="group text-left p-5 rounded-2xl min-h-[280px] w-full bg-[var(--brand-surface)] border border-[var(--brand-line)] hover:border-[var(--brand-accent)] transition-colors duration-300 ease-out flex flex-col"
     @click="emit('click')"
@@ -73,10 +73,12 @@
       :buckets="item.timeline"
       :countdown-seconds="countdownSeconds"
     />
-  </button>
+  </KumoButton>
 </template>
 
 <script setup lang="ts">
+import { KumoButton } from '@/components/kumo'
+
 import { computed } from 'vue'
 import { useI18n } from 'vue-i18n'
 import type { UserMonitorView } from '@/api/channelMonitor'

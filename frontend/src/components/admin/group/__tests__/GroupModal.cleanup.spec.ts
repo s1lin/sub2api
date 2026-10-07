@@ -1,4 +1,5 @@
-import { flushPromises, mount } from '@vue/test-utils'
+import { mount, flushPromises } from '@/__tests__/render'
+
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import GroupRPMOverridesModal from '../GroupRPMOverridesModal.vue'
 import GroupRateMultipliersModal from '../GroupRateMultipliersModal.vue'
@@ -7,7 +8,7 @@ const mocks = vi.hoisted(() => ({ list: vi.fn().mockResolvedValue({ items: [] })
 vi.mock('@/api/admin', () => ({ adminAPI: { users: mocks, groups: mocks } }))
 vi.mock('@/stores/app', () => ({ useAppStore: () => ({ showError: vi.fn() }) }))
 vi.mock('vue-i18n', () => ({ useI18n: () => ({ t: (key: string) => key }) }))
-beforeEach(() => { vi.clearAllMocks(); vi.useFakeTimers() })
+beforeEach(() => { vi.clearAllMocks(); vi.useFakeTimers({ toFake: ['Date', 'setTimeout', 'clearTimeout', 'setInterval', 'clearInterval'] }) })
 afterEach(() => { vi.restoreAllMocks(); vi.useRealTimers() })
 describe.each([GroupRPMOverridesModal, GroupRateMultipliersModal])('group modal lifecycle', (component) => {
   function open() {

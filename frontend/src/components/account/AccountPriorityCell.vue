@@ -8,7 +8,7 @@
     ]"
     data-testid="account-priority-cell"
   >
-    <button
+    <KumoButton
       type="button"
       class="flex h-full w-6 items-center justify-center rounded-l-lg text-gray-500 opacity-0 transition hover:bg-gray-200/70 hover:text-primary-600 focus:opacity-100 focus:outline-none focus-visible:ring-2 focus-visible:ring-primary-500 disabled:cursor-not-allowed disabled:text-gray-300 disabled:hover:bg-transparent disabled:hover:text-gray-300 dark:disabled:text-dark-600 dark:disabled:hover:text-dark-600 group-hover/priority:opacity-100 group-focus-within/priority:opacity-100 dark:text-gray-400 dark:hover:bg-dark-600 dark:hover:text-primary-400 [@media(hover:none)]:opacity-100"
       :class="{ '!opacity-100': editing || dirty }"
@@ -21,9 +21,9 @@
       <svg class="h-3 w-3" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round">
         <path d="M2.5 6h7" />
       </svg>
-    </button>
+    </KumoButton>
 
-    <input
+    <KumoInput
       v-if="editing"
       ref="inputRef"
       v-model="inputValue"
@@ -38,7 +38,7 @@
       @keydown.down.prevent="nudgeInput(-1)"
       @blur="commitInput"
     />
-    <button
+    <KumoButton
       v-else
       type="button"
       class="relative flex h-full min-w-[2rem] items-center justify-center px-1 font-mono text-sm tabular-nums transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-primary-500"
@@ -49,14 +49,14 @@
       @click="startEditing"
     >
       {{ draft }}
-      <span
+      <KumoSkeleton
         v-if="saving"
         class="absolute -right-0.5 top-1 h-1.5 w-1.5 animate-pulse rounded-full bg-primary-500"
         data-testid="account-priority-saving"
       />
-    </button>
+    </KumoButton>
 
-    <button
+    <KumoButton
       type="button"
       class="flex h-full w-6 items-center justify-center rounded-r-lg text-gray-500 opacity-0 transition hover:bg-gray-200/70 hover:text-primary-600 focus:opacity-100 focus:outline-none focus-visible:ring-2 focus-visible:ring-primary-500 disabled:cursor-not-allowed disabled:text-gray-300 disabled:hover:bg-transparent disabled:hover:text-gray-300 dark:disabled:text-dark-600 dark:disabled:hover:text-dark-600 group-hover/priority:opacity-100 group-focus-within/priority:opacity-100 dark:text-gray-400 dark:hover:bg-dark-600 dark:hover:text-primary-400 [@media(hover:none)]:opacity-100"
       :class="{ '!opacity-100': editing || dirty }"
@@ -69,11 +69,13 @@
       <svg class="h-3 w-3" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round">
         <path d="M2.5 6h7M6 2.5v7" />
       </svg>
-    </button>
+    </KumoButton>
   </div>
 </template>
 
 <script setup lang="ts">
+import { KumoButton, KumoInput, KumoSkeleton } from '@/components/kumo'
+
 import { computed, nextTick, onBeforeUnmount, ref, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { update as updateAccount } from '@/api/admin/accounts'

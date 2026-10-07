@@ -1,5 +1,6 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
-import { flushPromises, mount } from '@vue/test-utils'
+import { mount, flushPromises, portal } from '@/__tests__/render'
+
 
 import type { AdminUser } from '@/types'
 import UsersView from '../UsersView.vue'
@@ -403,7 +404,7 @@ describe('admin UsersView', () => {
   })
 
   it('clears usage current-page sort when switching to last_used_at server sort', async () => {
-    vi.useFakeTimers()
+    vi.useFakeTimers({ toFake: ['Date', 'setTimeout', 'clearTimeout', 'setInterval', 'clearInterval'] })
     localStorage.setItem('user-column-settings-version', '3')
     localStorage.setItem(
       'user-hidden-columns',
@@ -475,7 +476,7 @@ describe('admin UsersView', () => {
 
     await wrapper.get('[data-test="usage-sort-trigger-usage"]').trigger('click')
     await flushPromises()
-    await wrapper.get('[data-test="usage-sort-usage-today"]').trigger('click')
+    await portal().get('[data-test="usage-sort-usage-today"]').trigger('click')
     await flushPromises()
 
     expect(wrapper.get('[data-test="row-order"]').text()).toBe('usage-first@example.com,last-used-first@example.com')

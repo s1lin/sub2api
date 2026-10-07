@@ -2,11 +2,11 @@
   <div class="space-y-4">
     <!-- Quick Amount Buttons -->
     <div>
-      <label class="mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300">
+      <KumoLabel class="mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300">
         {{ t('payment.quickAmounts') }}
-      </label>
+      </KumoLabel>
       <div class="grid grid-cols-3 gap-x-4 gap-y-4 pt-2">
-        <button
+        <KumoButton
           v-for="amt in filteredAmounts"
           :key="amt"
           type="button"
@@ -44,20 +44,20 @@
             ]"
             data-testid="quick-amount-credited"
           >{{ secondLine(amt) }}</span>
-        </button>
+        </KumoButton>
       </div>
     </div>
 
     <!-- Custom Amount Input -->
     <div>
-      <label for="recharge-custom-amount" class="mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300">
+      <KumoLabel for="recharge-custom-amount" class="mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300">
         {{ t('payment.customAmount') }}
-      </label>
+      </KumoLabel>
       <div class="relative">
         <span class="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500 dark:text-dark-400">
           $
         </span>
-        <input
+        <KumoInput
           id="recharge-custom-amount"
           type="text"
           inputmode="decimal"
@@ -72,6 +72,8 @@
 </template>
 
 <script setup lang="ts">
+import { KumoButton, KumoInput, KumoLabel } from '@/components/kumo'
+
 import { ref, computed, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
 import type { RechargeBonusTier } from '@/types/payment'

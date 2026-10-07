@@ -2,7 +2,7 @@
   <AppLayout>
     <div class="space-y-6">
       <div v-if="loading" class="flex items-center justify-center py-16">
-        <div class="h-8 w-8 animate-spin rounded-full border-b-2 border-primary-600"></div>
+        <KumoLoader class="h-8 w-8" />
       </div>
 
       <template v-else>
@@ -12,14 +12,14 @@
             <p class="mt-1 text-sm text-gray-500 dark:text-gray-400">{{ t('admin.riskControl.description') }}</p>
           </div>
           <div class="flex flex-wrap items-center gap-2">
-            <button type="button" class="btn btn-secondary inline-flex items-center gap-2" :disabled="statusLoading" @click="loadStatus(false)">
+            <KumoButton type="button" class="btn btn-secondary inline-flex items-center gap-2" :disabled="statusLoading" @click="loadStatus(false)">
               <Icon name="refresh" size="sm" :class="statusLoading ? 'animate-spin' : ''" />
               {{ t('admin.riskControl.refreshStatus') }}
-            </button>
-            <button type="button" class="btn btn-primary inline-flex items-center gap-2" @click="openSettings">
+            </KumoButton>
+            <KumoButton type="button" class="btn btn-primary inline-flex items-center gap-2" @click="openSettings">
               <Icon name="cog" size="sm" />
               {{ t('admin.riskControl.openSettings') }}
-            </button>
+            </KumoButton>
           </div>
         </div>
 
@@ -65,7 +65,7 @@
           data-test="pre-block-runtime-cards"
           class="grid grid-cols-1 gap-6 xl:grid-cols-[minmax(0,520px)_minmax(0,1fr)]"
         >
-          <div data-test="pre-block-sync-card" class="card">
+          <KumoSurface data-test="pre-block-sync-card" class="card">
             <div class="flex flex-col gap-4 border-b border-gray-100 px-6 py-4 dark:border-dark-700 lg:flex-row lg:items-center lg:justify-between">
               <div>
                 <h2 class="text-lg font-semibold text-gray-900 dark:text-white">{{ t('admin.riskControl.preBlockSyncStatus') }}</h2>
@@ -90,9 +90,9 @@
                 </div>
               </div>
             </div>
-          </div>
+          </KumoSurface>
 
-          <div data-test="pre-block-api-key-load-card" class="card">
+          <KumoSurface data-test="pre-block-api-key-load-card" class="card">
             <div class="flex flex-col gap-4 border-b border-gray-100 px-6 py-4 dark:border-dark-700 lg:flex-row lg:items-center lg:justify-between">
               <div>
                 <h2 class="text-lg font-semibold text-gray-900 dark:text-white">{{ t('admin.riskControl.preBlockAPIKeyLoad') }}</h2>
@@ -155,10 +155,10 @@
                 {{ t('admin.riskControl.preBlockAPIKeyLoadEmpty') }}
               </p>
             </div>
-          </div>
+          </KumoSurface>
         </div>
 
-        <div v-if="showWorkerRuntimeCard" class="card">
+        <KumoSurface v-if="showWorkerRuntimeCard" class="card">
           <div class="flex flex-col gap-4 border-b border-gray-100 px-6 py-4 dark:border-dark-700 lg:flex-row lg:items-center lg:justify-between">
             <div>
               <h2 class="text-lg font-semibold text-gray-900 dark:text-white">{{ t('admin.riskControl.workerStatus') }}</h2>
@@ -235,19 +235,19 @@
               </div>
             </div>
           </div>
-        </div>
+        </KumoSurface>
 
-        <div class="card">
+        <KumoSurface class="card">
           <div class="flex flex-col gap-4 border-b border-gray-100 px-6 py-4 dark:border-dark-700">
             <div class="flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between">
               <div>
                 <h2 class="text-lg font-semibold text-gray-900 dark:text-white">{{ t('admin.riskControl.records') }}</h2>
                 <p class="mt-1 text-sm text-gray-500 dark:text-gray-400">{{ t('admin.riskControl.recordsHint') }}</p>
               </div>
-              <button type="button" class="btn btn-secondary inline-flex items-center gap-2" :disabled="logsLoading" @click="loadLogs">
+              <KumoButton type="button" class="btn btn-secondary inline-flex items-center gap-2" :disabled="logsLoading" @click="loadLogs">
                 <Icon name="refresh" size="sm" :class="logsLoading ? 'animate-spin' : ''" />
                 {{ t('admin.riskControl.refresh') }}
-              </button>
+              </KumoButton>
             </div>
 
             <div class="flex flex-col gap-2 rounded-lg border border-gray-100 bg-gray-50 px-3 py-2 dark:border-dark-700 dark:bg-dark-900/30 sm:flex-row sm:items-center sm:justify-between">
@@ -274,67 +274,67 @@
               <Select v-model="filters.result" :options="resultOptions" @change="reloadLogsFromFirstPage" />
               <Select v-model="filters.group_id" :options="groupFilterOptions" @change="reloadLogsFromFirstPage" />
               <Select v-model="filters.endpoint" :options="endpointOptions" @change="reloadLogsFromFirstPage" />
-              <input v-model.trim="filters.search" type="search" class="input" :placeholder="t('admin.riskControl.filters.search')" @keyup.enter="reloadLogsFromFirstPage" />
-              <input v-model="filters.from" type="datetime-local" class="input" :title="t('admin.riskControl.filters.from')" @change="reloadLogsFromFirstPage" />
-              <input v-model="filters.to" type="datetime-local" class="input" :title="t('admin.riskControl.filters.to')" @change="reloadLogsFromFirstPage" />
+              <KumoInput v-model.trim="filters.search" type="search" class="input" :placeholder="t('admin.riskControl.filters.search')" @keyup.enter="reloadLogsFromFirstPage" />
+              <KumoInput v-model="filters.from" type="datetime-local" class="input" :title="t('admin.riskControl.filters.from')" @change="reloadLogsFromFirstPage" />
+              <KumoInput v-model="filters.to" type="datetime-local" class="input" :title="t('admin.riskControl.filters.to')" @change="reloadLogsFromFirstPage" />
             </div>
           </div>
 
           <div class="overflow-x-auto">
-            <table class="min-w-full divide-y divide-gray-200 dark:divide-dark-700">
-              <thead class="bg-gray-50 dark:bg-dark-800">
-                <tr>
-                  <th class="px-5 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500 dark:text-gray-400">{{ t('admin.riskControl.table.time') }}</th>
-                  <th class="px-5 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500 dark:text-gray-400">{{ t('admin.riskControl.table.group') }}</th>
-                  <th class="px-5 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500 dark:text-gray-400">{{ t('admin.riskControl.table.user') }}</th>
-                  <th class="px-5 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500 dark:text-gray-400">{{ t('admin.riskControl.table.apiKey') }}</th>
-                  <th class="px-5 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500 dark:text-gray-400">{{ t('admin.riskControl.table.endpoint') }}</th>
-                  <th class="px-5 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500 dark:text-gray-400">{{ t('admin.riskControl.table.result') }}</th>
-                  <th class="px-5 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500 dark:text-gray-400">{{ t('admin.riskControl.table.highest') }}</th>
-                  <th class="px-5 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500 dark:text-gray-400">{{ t('admin.riskControl.table.actionMeta') }}</th>
-                  <th class="px-5 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500 dark:text-gray-400">{{ t('admin.riskControl.table.latency') }}</th>
-                  <th class="px-5 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500 dark:text-gray-400">{{ t('admin.riskControl.table.input') }}</th>
-                </tr>
-              </thead>
-              <tbody class="divide-y divide-gray-100 bg-white dark:divide-dark-800 dark:bg-dark-800">
-                <tr v-if="logsLoading">
-                  <td colspan="10" class="px-5 py-12 text-center text-sm text-gray-500 dark:text-gray-400">{{ t('common.loading') }}</td>
-                </tr>
-                <tr v-else-if="logs.length === 0">
-                  <td colspan="10" class="px-5 py-12 text-center text-sm text-gray-500 dark:text-gray-400">{{ t('admin.riskControl.emptyLogs') }}</td>
-                </tr>
+            <KumoTable class="min-w-full divide-y divide-gray-200 dark:divide-dark-700">
+              <KumoTableHeader class="bg-gray-50 dark:bg-dark-800">
+                <KumoTableRow>
+                  <KumoTableHead class="px-5 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500 dark:text-gray-400">{{ t('admin.riskControl.table.time') }}</KumoTableHead>
+                  <KumoTableHead class="px-5 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500 dark:text-gray-400">{{ t('admin.riskControl.table.group') }}</KumoTableHead>
+                  <KumoTableHead class="px-5 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500 dark:text-gray-400">{{ t('admin.riskControl.table.user') }}</KumoTableHead>
+                  <KumoTableHead class="px-5 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500 dark:text-gray-400">{{ t('admin.riskControl.table.apiKey') }}</KumoTableHead>
+                  <KumoTableHead class="px-5 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500 dark:text-gray-400">{{ t('admin.riskControl.table.endpoint') }}</KumoTableHead>
+                  <KumoTableHead class="px-5 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500 dark:text-gray-400">{{ t('admin.riskControl.table.result') }}</KumoTableHead>
+                  <KumoTableHead class="px-5 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500 dark:text-gray-400">{{ t('admin.riskControl.table.highest') }}</KumoTableHead>
+                  <KumoTableHead class="px-5 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500 dark:text-gray-400">{{ t('admin.riskControl.table.actionMeta') }}</KumoTableHead>
+                  <KumoTableHead class="px-5 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500 dark:text-gray-400">{{ t('admin.riskControl.table.latency') }}</KumoTableHead>
+                  <KumoTableHead class="px-5 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500 dark:text-gray-400">{{ t('admin.riskControl.table.input') }}</KumoTableHead>
+                </KumoTableRow>
+              </KumoTableHeader>
+              <KumoTableBody class="divide-y divide-gray-100 bg-white dark:divide-dark-800 dark:bg-dark-800">
+                <KumoTableRow v-if="logsLoading">
+                  <KumoTableCell colspan="10" class="px-5 py-12 text-center text-sm text-gray-500 dark:text-gray-400">{{ t('common.loading') }}</KumoTableCell>
+                </KumoTableRow>
+                <KumoTableRow v-else-if="logs.length === 0">
+                  <KumoTableCell colspan="10" class="px-5 py-12 text-center text-sm text-gray-500 dark:text-gray-400">{{ t('admin.riskControl.emptyLogs') }}</KumoTableCell>
+                </KumoTableRow>
                 <template v-else>
-                  <tr v-for="row in logs" :key="row.id" class="hover:bg-gray-50 dark:hover:bg-dark-700/60">
-                    <td class="whitespace-nowrap px-5 py-4 text-sm text-gray-700 dark:text-gray-300">{{ formatDateTime(row.created_at) }}</td>
-                    <td class="whitespace-nowrap px-5 py-4 text-sm text-gray-700 dark:text-gray-300">{{ row.group_name || '-' }}</td>
-                    <td class="whitespace-nowrap px-5 py-4 text-sm text-gray-700 dark:text-gray-300">
+                  <KumoTableRow v-for="row in logs" :key="row.id" class="hover:bg-gray-50 dark:hover:bg-dark-700/60">
+                    <KumoTableCell class="whitespace-nowrap px-5 py-4 text-sm text-gray-700 dark:text-gray-300">{{ formatDateTime(row.created_at) }}</KumoTableCell>
+                    <KumoTableCell class="whitespace-nowrap px-5 py-4 text-sm text-gray-700 dark:text-gray-300">{{ row.group_name || '-' }}</KumoTableCell>
+                    <KumoTableCell class="whitespace-nowrap px-5 py-4 text-sm text-gray-700 dark:text-gray-300">
                       <div>{{ row.user_email || '-' }}</div>
                       <div v-if="row.user_id" class="text-xs text-gray-400">UID {{ row.user_id }}</div>
-                    </td>
-                    <td class="whitespace-nowrap px-5 py-4 text-sm text-gray-700 dark:text-gray-300">{{ row.api_key_name || '-' }}</td>
-                    <td class="whitespace-nowrap px-5 py-4 text-sm text-gray-700 dark:text-gray-300">
+                    </KumoTableCell>
+                    <KumoTableCell class="whitespace-nowrap px-5 py-4 text-sm text-gray-700 dark:text-gray-300">{{ row.api_key_name || '-' }}</KumoTableCell>
+                    <KumoTableCell class="whitespace-nowrap px-5 py-4 text-sm text-gray-700 dark:text-gray-300">
                       <div>{{ row.endpoint || '-' }}</div>
                       <div class="text-xs text-gray-400">{{ row.provider || '-' }} / {{ row.model || '-' }}</div>
-                    </td>
-                    <td class="whitespace-nowrap px-5 py-4">
+                    </KumoTableCell>
+                    <KumoTableCell class="whitespace-nowrap px-5 py-4">
                       <span class="inline-flex rounded-md px-2 py-1 text-xs font-medium" :class="resultBadgeClass(row)">
                         {{ resultLabel(row) }}
                       </span>
-                    </td>
-                    <td class="whitespace-nowrap px-5 py-4 text-sm text-gray-700 dark:text-gray-300">
+                    </KumoTableCell>
+                    <KumoTableCell class="whitespace-nowrap px-5 py-4 text-sm text-gray-700 dark:text-gray-300">
                       <div>{{ row.highest_category || '-' }}</div>
                       <div class="text-xs text-gray-400">{{ percent(row.highest_score) }}</div>
                       <div v-if="row.matched_keyword" class="mt-0.5 text-xs font-medium text-red-600 dark:text-red-300" :title="t('admin.riskControl.matchedKeyword') + ': ' + row.matched_keyword">
                         {{ t('admin.riskControl.matchedKeyword') }}: {{ row.matched_keyword }}
                       </div>
-                    </td>
-                    <td class="whitespace-nowrap px-5 py-4 text-sm text-gray-700 dark:text-gray-300">
+                    </KumoTableCell>
+                    <KumoTableCell class="whitespace-nowrap px-5 py-4 text-sm text-gray-700 dark:text-gray-300">
                       <div>{{ violationCountText(row) }}</div>
                       <div class="text-xs text-gray-400">
                         {{ row.email_sent ? t('admin.riskControl.emailSent') : t('admin.riskControl.emailNotSent') }}
                         <span v-if="row.auto_banned"> / {{ t('admin.riskControl.autoBanned') }}</span>
                       </div>
-                      <button
+                      <KumoButton
                         v-if="canUnbanRow(row)"
                         type="button"
                         class="mt-2 inline-flex items-center gap-1 rounded-md border border-emerald-200 bg-emerald-50 px-2 py-1 text-xs font-medium text-emerald-700 transition-colors hover:bg-emerald-100 disabled:cursor-not-allowed disabled:opacity-60 dark:border-emerald-900/60 dark:bg-emerald-900/20 dark:text-emerald-300 dark:hover:bg-emerald-900/30"
@@ -343,16 +343,16 @@
                       >
                         <Icon name="checkCircle" size="xs" :class="unbanningUserID === row.user_id ? 'animate-spin' : ''" />
                         {{ unbanningUserID === row.user_id ? t('common.processing') : t('admin.riskControl.unbanUser') }}
-                      </button>
-                    </td>
-                    <td class="whitespace-nowrap px-5 py-4 text-sm text-gray-700 dark:text-gray-300">
+                      </KumoButton>
+                    </KumoTableCell>
+                    <KumoTableCell class="whitespace-nowrap px-5 py-4 text-sm text-gray-700 dark:text-gray-300">
                       <div>{{ latencyText(row.upstream_latency_ms) }}</div>
                       <div v-if="row.queue_delay_ms !== null && row.queue_delay_ms !== undefined" class="text-xs text-gray-400">
                         {{ t('admin.riskControl.queueDelay', { ms: row.queue_delay_ms }) }}
                       </div>
-                    </td>
-                    <td class="w-[320px] max-w-sm px-5 py-4 text-sm text-gray-700 dark:text-gray-300">
-                      <button
+                    </KumoTableCell>
+                    <KumoTableCell class="w-[320px] max-w-sm px-5 py-4 text-sm text-gray-700 dark:text-gray-300">
+                      <KumoButton
                         type="button"
                         class="group flex w-full min-w-0 items-center gap-2 rounded-lg px-2 py-1.5 text-left transition-colors hover:bg-gray-100 dark:hover:bg-dark-700"
                         :title="inputSummaryText(row)"
@@ -360,12 +360,12 @@
                       >
                         <span class="min-w-0 flex-1 truncate">{{ inputSummaryText(row) }}</span>
                         <Icon name="eye" size="xs" class="flex-shrink-0 text-gray-300 transition-colors group-hover:text-primary-500 dark:text-gray-500" />
-                      </button>
-                    </td>
-                  </tr>
+                      </KumoButton>
+                    </KumoTableCell>
+                  </KumoTableRow>
                 </template>
-              </tbody>
-            </table>
+              </KumoTableBody>
+            </KumoTable>
           </div>
 
           <Pagination
@@ -376,13 +376,13 @@
             @update:page="onPageChange"
             @update:pageSize="onPageSizeChange"
           />
-        </div>
+        </KumoSurface>
       </template>
 
       <BaseDialog :show="settingsOpen" :title="t('admin.riskControl.settingsTitle')" width="extra-wide" @close="settingsOpen = false">
         <div class="space-y-6">
           <div class="flex gap-2 overflow-x-auto border-b border-gray-100 pb-3 dark:border-dark-700">
-            <button
+            <KumoButton
               v-for="tab in settingsTabs"
               :key="tab.id"
               type="button"
@@ -391,7 +391,7 @@
               @click="activeSettingsTab = tab.id"
             >
               {{ tab.label }}
-            </button>
+            </KumoButton>
           </div>
 
           <div v-if="activeSettingsTab === 'basic'" class="space-y-5">
@@ -404,42 +404,42 @@
                 <Toggle v-model="configForm.enabled" />
               </div>
               <div>
-                <label class="input-label">{{ t('admin.riskControl.mode') }}</label>
+                <KumoLabel class="input-label">{{ t('admin.riskControl.mode') }}</KumoLabel>
                 <Select v-model="configForm.mode" :options="modeOptions" />
                 <p class="mt-2 text-xs leading-5 text-gray-500 dark:text-gray-400">{{ modeDescription(configForm.mode) }}</p>
               </div>
               <div>
-                <label class="input-label">{{ t('admin.riskControl.engine') }}</label>
+                <KumoLabel class="input-label">{{ t('admin.riskControl.engine') }}</KumoLabel>
                 <Select data-test="audit-engine-select" :model-value="configForm.engine" :options="engineOptions" :disabled="apiKeyTesting || saving" @update:model-value="switchEngine" />
               </div>
               <div v-if="configForm.engine === 'typesafe'" class="lg:col-span-2 text-sm text-amber-700 dark:text-amber-300" role="status">
                 {{ t('admin.riskControl.typeSafeNotice') }}
               </div>
               <div>
-                <label class="input-label">{{ t('admin.riskControl.baseUrl') }}</label>
-                <input v-model.trim="configForm.base_url" data-test="audit-base-url" type="url" class="input" :placeholder="configForm.engine === 'typesafe' ? 'https://api.typesafe.ai' : 'https://api.openai.com'" />
+                <KumoLabel class="input-label">{{ t('admin.riskControl.baseUrl') }}</KumoLabel>
+                <KumoInput v-model.trim="configForm.base_url" data-test="audit-base-url" type="url" class="input" :placeholder="configForm.engine === 'typesafe' ? 'https://api.typesafe.ai' : 'https://api.openai.com'" />
               </div>
               <div>
-                <label class="input-label">{{ t('admin.riskControl.model') }}</label>
-                <input v-model.trim="configForm.model" data-test="audit-model" type="text" class="input" :placeholder="configForm.engine === 'typesafe' ? 'jev-latest' : 'omni-moderation-latest'" />
+                <KumoLabel class="input-label">{{ t('admin.riskControl.model') }}</KumoLabel>
+                <KumoInput v-model.trim="configForm.model" data-test="audit-model" type="text" class="input" :placeholder="configForm.engine === 'typesafe' ? 'jev-latest' : 'omni-moderation-latest'" />
               </div>
               <div>
-                <label class="input-label">{{ t('admin.riskControl.timeoutMs') }}</label>
-                <input v-model.number="configForm.timeout_ms" type="number" min="500" max="30000" class="input" />
+                <KumoLabel class="input-label">{{ t('admin.riskControl.timeoutMs') }}</KumoLabel>
+                <KumoInput v-model.number="configForm.timeout_ms" type="number" min="500" max="30000" class="input" />
               </div>
               <div>
-                <label class="input-label">{{ t('admin.riskControl.retryCount') }}</label>
-                <input v-model.number="configForm.retry_count" type="number" min="0" max="5" class="input" />
+                <KumoLabel class="input-label">{{ t('admin.riskControl.retryCount') }}</KumoLabel>
+                <KumoInput v-model.number="configForm.retry_count" type="number" min="0" max="5" class="input" />
               </div>
               <div>
-                <label class="input-label">{{ t('admin.riskControl.sampleRate') }}</label>
+                <KumoLabel class="input-label">{{ t('admin.riskControl.sampleRate') }}</KumoLabel>
                 <div class="relative">
-                  <input v-model.number="configForm.sample_rate" type="number" min="0" max="100" step="1" class="input pr-8" />
+                  <KumoInput v-model.number="configForm.sample_rate" type="number" min="0" max="100" step="1" class="input pr-8" />
                   <span class="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-gray-400">%</span>
                 </div>
               </div>
               <div>
-                <label class="input-label">{{ t('admin.riskControl.proxy') }}</label>
+                <KumoLabel class="input-label">{{ t('admin.riskControl.proxy') }}</KumoLabel>
                 <ProxySelector v-model="configForm.proxy_id" :proxies="proxies" />
                 <p class="mt-2 text-xs leading-5 text-gray-500 dark:text-gray-400">{{ t('admin.riskControl.proxyHint') }}</p>
               </div>
@@ -452,14 +452,14 @@
                     <Icon name="key" size="md" />
                   </span>
                   <div>
-                    <label class="text-sm font-semibold text-gray-900 dark:text-white">{{ t('admin.riskControl.apiKeys') }}</label>
+                    <KumoLabel class="text-sm font-semibold text-gray-900 dark:text-white">{{ t('admin.riskControl.apiKeys') }}</KumoLabel>
                     <p class="mt-1 max-w-3xl text-xs leading-5 text-gray-500 dark:text-gray-400">
                       {{ t('admin.riskControl.apiKeysHint', { count: configForm.api_key_count }) }}
                     </p>
                   </div>
                 </div>
                 <div class="flex flex-wrap items-center gap-2">
-                  <button
+                  <KumoButton
                     type="button"
                     class="btn btn-secondary inline-flex items-center gap-2"
                     :disabled="apiKeyTesting || inputApiKeyCount === 0 || configForm.clear_api_key"
@@ -467,8 +467,8 @@
                   >
                     <Icon name="beaker" size="sm" :class="apiKeyTesting ? 'animate-pulse' : ''" />
                     {{ apiKeyTesting ? t('admin.riskControl.testingApiKeys') : t('admin.riskControl.testInputApiKeys') }}
-                  </button>
-                  <button
+                  </KumoButton>
+                  <KumoButton
                     type="button"
                     class="btn btn-secondary inline-flex items-center gap-2"
                     :disabled="apiKeyTesting || effectiveStoredApiKeyCount === 0 || pendingDeletedApiKeyCount > 0 || configForm.clear_api_key || configForm.api_keys_mode === 'replace'"
@@ -476,8 +476,8 @@
                   >
                     <Icon name="shield" size="sm" />
                     {{ storedApiKeyTestButtonText }}
-                  </button>
-                  <button
+                  </KumoButton>
+                  <KumoButton
                     v-if="configForm.api_key_configured"
                     type="button"
                     class="btn btn-secondary inline-flex items-center gap-2"
@@ -485,7 +485,7 @@
                   >
                     <Icon :name="configForm.clear_api_key ? 'x' : 'trash'" size="sm" />
                     {{ configForm.clear_api_key ? t('admin.riskControl.keepApiKey') : t('admin.riskControl.clearApiKey') }}
-                  </button>
+                  </KumoButton>
                 </div>
               </div>
 
@@ -497,7 +497,7 @@
                       <span class="ml-2">{{ apiKeysModeHint }}</span>
                     </div>
                     <div class="inline-flex rounded-lg bg-white p-1 shadow-sm dark:bg-dark-800">
-                      <button
+                      <KumoButton
                         type="button"
                         class="rounded-md px-3 py-1.5 text-xs font-medium transition-colors"
                         :class="configForm.api_keys_mode === 'append' ? 'bg-primary-500 text-white shadow-sm' : 'text-gray-600 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-dark-700'"
@@ -505,8 +505,8 @@
                         @click="setAPIKeysMode('append')"
                       >
                         {{ t('admin.riskControl.apiKeysModeAppend') }}
-                      </button>
-                      <button
+                      </KumoButton>
+                      <KumoButton
                         type="button"
                         class="rounded-md px-3 py-1.5 text-xs font-medium transition-colors"
                         :class="configForm.api_keys_mode === 'replace' ? 'bg-amber-500 text-white shadow-sm' : 'text-gray-600 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-dark-700'"
@@ -514,16 +514,16 @@
                         @click="setAPIKeysMode('replace')"
                       >
                         {{ t('admin.riskControl.apiKeysModeReplace') }}
-                      </button>
+                      </KumoButton>
                     </div>
                   </div>
-                  <textarea
+                  <KumoTextarea
                     v-model="configForm.api_keys_text"
                     class="input min-h-44 resize-y font-mono text-sm"
                     :placeholder="apiKeysPlaceholder"
                     autocomplete="new-password"
                     :disabled="configForm.clear_api_key"
-                  ></textarea>
+                  ></KumoTextarea>
                   <div class="flex flex-wrap items-center gap-2 text-xs text-gray-500 dark:text-gray-400">
                     <span class="inline-flex rounded-md bg-gray-100 px-2 py-1 dark:bg-dark-700">
                       {{ t('admin.riskControl.inputApiKeyCount', { count: inputApiKeyCount }) }}
@@ -548,7 +548,7 @@
                         <p class="text-sm font-semibold text-gray-900 dark:text-white">{{ t('admin.riskControl.auditTestInput') }}</p>
                         <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">{{ t('admin.riskControl.auditTestInputHint') }}</p>
                       </div>
-                      <button
+                      <KumoButton
                         v-if="moderationTestPrompt || moderationTestImages.length > 0 || moderationTestResult"
                         type="button"
                         class="inline-flex items-center gap-1 rounded-md px-2 py-1 text-xs font-medium text-gray-500 hover:bg-white hover:text-gray-900 dark:text-gray-400 dark:hover:bg-dark-800 dark:hover:text-white"
@@ -556,13 +556,13 @@
                       >
                         <Icon name="x" size="xs" />
                         {{ t('admin.riskControl.clearAuditTest') }}
-                      </button>
+                      </KumoButton>
                     </div>
-                    <textarea
+                    <KumoTextarea
                       v-model="moderationTestPrompt"
                       class="input min-h-24 resize-y text-sm"
                       :placeholder="t('admin.riskControl.auditTestPromptPlaceholder')"
-                    ></textarea>
+                    ></KumoTextarea>
                     <div
                       class="mt-3 rounded-lg border border-dashed border-gray-200 bg-white p-3 dark:border-dark-700 dark:bg-dark-800"
                       @dragover.prevent
@@ -576,11 +576,11 @@
                             <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">{{ t('admin.riskControl.auditTestImagesHint') }}</p>
                           </div>
                         </div>
-                        <label class="btn btn-secondary inline-flex cursor-pointer items-center gap-2">
+                        <KumoLabel class="btn btn-secondary inline-flex cursor-pointer items-center gap-2">
                           <Icon name="plus" size="sm" />
                           {{ t('admin.riskControl.addAuditTestImage') }}
-                          <input type="file" accept="image/*" multiple class="sr-only" @change="handleModerationImageUpload" />
-                        </label>
+                          <KumoInput type="file" accept="image/*" multiple class="sr-only" @change="handleModerationImageUpload" />
+                        </KumoLabel>
                       </div>
                       <div v-if="moderationTestImages.length > 0" class="mt-3 grid grid-cols-2 gap-2 sm:grid-cols-4">
                         <div
@@ -589,13 +589,13 @@
                           class="group relative aspect-square overflow-hidden rounded-lg border border-gray-100 bg-gray-100 dark:border-dark-700 dark:bg-dark-700"
                         >
                           <img :src="image" alt="" class="h-full w-full object-cover" />
-                          <button
+                          <KumoButton
                             type="button"
                             class="absolute right-1.5 top-1.5 flex h-7 w-7 items-center justify-center rounded-full bg-black/60 text-white opacity-0 transition-opacity group-hover:opacity-100"
                             @click="removeModerationTestImage(index)"
                           >
                             <Icon name="x" size="xs" :stroke-width="2" />
-                          </button>
+                          </KumoButton>
                         </div>
                       </div>
                     </div>
@@ -644,7 +644,7 @@
                               <span class="h-1.5 w-1.5 rounded-full" :class="apiKeyStatusDotClass(row.status)"></span>
                               {{ apiKeyStatusLabel(row.status) }}
                             </span>
-                            <button
+                            <KumoButton
                               v-if="row.configured && !configForm.clear_api_key"
                               type="button"
                               class="inline-flex h-7 w-7 items-center justify-center rounded-md text-gray-400 transition-colors hover:bg-gray-100 hover:text-gray-700 dark:hover:bg-dark-700 dark:hover:text-gray-200"
@@ -652,7 +652,7 @@
                               @click="toggleDeleteStoredApiKey(row)"
                             >
                               <Icon :name="isStoredApiKeyPendingDelete(row) ? 'refresh' : 'trash'" size="xs" />
-                            </button>
+                            </KumoButton>
                           </div>
                         </div>
                         <p v-if="row.last_error" class="mt-1.5 rounded-md bg-amber-50 px-2 py-1.5 text-xs leading-5 text-amber-700 dark:bg-amber-900/20 dark:text-amber-300">
@@ -665,14 +665,14 @@
                       <span class="min-w-0 truncate">
                         {{ apiKeyRowsExpanded ? t('admin.riskControl.apiKeyRowsExpanded', { count: apiKeyRows.length }) : t('admin.riskControl.apiKeyRowsCollapsed', { count: hiddenApiKeyRowCount }) }}
                       </span>
-                      <button
+                      <KumoButton
                         type="button"
                         class="inline-flex shrink-0 items-center gap-1 rounded-md px-2 py-1 font-medium text-primary-600 transition-colors hover:bg-primary-50 hover:text-primary-700 dark:text-primary-300 dark:hover:bg-primary-900/20"
                         @click="apiKeyRowsExpanded = !apiKeyRowsExpanded"
                       >
                         <Icon :name="apiKeyRowsExpanded ? 'chevronUp' : 'chevronDown'" size="xs" />
                         {{ apiKeyRowsExpanded ? t('admin.riskControl.collapseApiKeyRows') : t('admin.riskControl.expandApiKeyRows') }}
-                      </button>
+                      </KumoButton>
                     </div>
                   </div>
 
@@ -725,32 +725,32 @@
                 <p class="mt-1 text-sm text-gray-500 dark:text-gray-400">{{ t('admin.riskControl.groupScopeHint') }}</p>
               </div>
               <div class="inline-flex rounded-lg bg-gray-100 p-1 dark:bg-dark-700">
-                <button
+                <KumoButton
                   type="button"
                   class="rounded-md px-3 py-1.5 text-sm font-medium transition-colors"
                   :class="configForm.all_groups ? 'bg-white text-gray-900 shadow-sm dark:bg-dark-800 dark:text-white' : 'text-gray-500 dark:text-gray-400'"
                   @click="configForm.all_groups = true"
                 >
                   {{ t('admin.riskControl.allGroups') }}
-                </button>
-                <button
+                </KumoButton>
+                <KumoButton
                   type="button"
                   class="rounded-md px-3 py-1.5 text-sm font-medium transition-colors"
                   :class="!configForm.all_groups ? 'bg-white text-gray-900 shadow-sm dark:bg-dark-800 dark:text-white' : 'text-gray-500 dark:text-gray-400'"
                   @click="configForm.all_groups = false"
                 >
                   {{ t('admin.riskControl.selectedGroups') }}
-                </button>
+                </KumoButton>
               </div>
             </div>
 
             <div v-if="!configForm.all_groups" class="space-y-4">
               <div class="relative">
                 <Icon name="search" size="sm" class="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
-                <input v-model.trim="groupSearch" type="search" class="input pl-9" :placeholder="t('admin.riskControl.searchGroups')" />
+                <KumoInput v-model.trim="groupSearch" type="search" class="input pl-9" :placeholder="t('admin.riskControl.searchGroups')" />
               </div>
               <div class="grid max-h-[420px] grid-cols-1 gap-3 overflow-y-auto pr-1 md:grid-cols-2 xl:grid-cols-3">
-                <button
+                <KumoButton
                   v-for="group in filteredGroups"
                   :key="group.id"
                   type="button"
@@ -768,7 +768,7 @@
                   >
                     <Icon name="check" size="xs" :stroke-width="2" />
                   </span>
-                </button>
+                </KumoButton>
                 <p v-if="filteredGroups.length === 0" class="text-sm text-gray-500 dark:text-gray-400">{{ t('admin.riskControl.noGroups') }}</p>
               </div>
             </div>
@@ -785,7 +785,7 @@
               </div>
 
               <div class="grid grid-cols-1 gap-2 md:grid-cols-3">
-                <button
+                <KumoButton
                   v-for="option in modelFilterOptions"
                   :key="option.value"
                   type="button"
@@ -807,11 +807,11 @@
                     </span>
                   </div>
                   <p class="mt-1 text-xs leading-5 text-gray-500 dark:text-gray-400">{{ option.description }}</p>
-                </button>
+                </KumoButton>
               </div>
 
               <div v-if="configForm.model_filter_type !== 'all'" class="space-y-2">
-                <label class="input-label">{{ t('admin.riskControl.modelFilterModels') }}</label>
+                <KumoLabel class="input-label">{{ t('admin.riskControl.modelFilterModels') }}</KumoLabel>
                 <ModelWhitelistSelector v-model="configForm.model_filter_models" />
                 <p class="text-xs text-gray-500 dark:text-gray-400">
                   {{ t('admin.riskControl.modelFilterModelCount', { count: modelFilterModelCount }) }}
@@ -822,12 +822,12 @@
 
           <div v-else-if="activeSettingsTab === 'runtime'" class="grid grid-cols-1 gap-5 lg:grid-cols-2">
             <div>
-              <label class="input-label">{{ t('admin.riskControl.workerCount') }}</label>
-              <input v-model.number="configForm.worker_count" type="number" min="1" max="32" class="input" />
+              <KumoLabel class="input-label">{{ t('admin.riskControl.workerCount') }}</KumoLabel>
+              <KumoInput v-model.number="configForm.worker_count" type="number" min="1" max="32" class="input" />
             </div>
             <div>
-              <label class="input-label">{{ t('admin.riskControl.queueSize') }}</label>
-              <input v-model.number="configForm.queue_size" type="number" min="100" max="100000" class="input" />
+              <KumoLabel class="input-label">{{ t('admin.riskControl.queueSize') }}</KumoLabel>
+              <KumoInput v-model.number="configForm.queue_size" type="number" min="100" max="100000" class="input" />
             </div>
             <div class="flex items-center justify-between rounded-lg border border-gray-100 p-4 dark:border-dark-700 lg:col-span-2">
               <div>
@@ -852,7 +852,7 @@
                     </p>
                     <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">{{ t('admin.riskControl.flaggedHashHint') }}</p>
                   </div>
-                  <button
+                  <KumoButton
                     type="button"
                     class="btn btn-secondary inline-flex items-center justify-center gap-2 text-red-600 hover:text-red-700 dark:text-red-300"
                     :disabled="hashActionLoading || (status?.flagged_hash_count ?? 0) === 0"
@@ -860,16 +860,16 @@
                   >
                     <Icon name="trash" size="sm" :class="hashActionLoading ? 'animate-pulse' : ''" />
                     {{ t('admin.riskControl.clearFlaggedHashes') }}
-                  </button>
+                  </KumoButton>
                 </div>
                 <div class="mt-3 flex flex-col gap-2 sm:flex-row">
-                  <input
+                  <KumoInput
                     v-model.trim="flaggedHashInput"
                     type="text"
                     class="input font-mono text-sm"
                     :placeholder="t('admin.riskControl.flaggedHashPlaceholder')"
                   />
-                  <button
+                  <KumoButton
                     type="button"
                     class="btn btn-secondary inline-flex items-center justify-center gap-2"
                     :disabled="hashActionLoading || !isFlaggedHashInputValid"
@@ -877,7 +877,7 @@
                   >
                     <Icon name="trash" size="sm" />
                     {{ t('admin.riskControl.deleteFlaggedHash') }}
-                  </button>
+                  </KumoButton>
                 </div>
               </div>
             </div>
@@ -886,12 +886,12 @@
           <div v-else-if="activeSettingsTab === 'response'" class="space-y-5">
             <div class="grid grid-cols-1 gap-5 lg:grid-cols-2">
               <div>
-                <label class="input-label">{{ t('admin.riskControl.blockStatus') }}</label>
-                <input v-model.number="configForm.block_status" type="number" min="400" max="599" class="input" />
+                <KumoLabel class="input-label">{{ t('admin.riskControl.blockStatus') }}</KumoLabel>
+                <KumoInput v-model.number="configForm.block_status" type="number" min="400" max="599" class="input" />
               </div>
               <div>
-                <label class="input-label">{{ t('admin.riskControl.blockMessage') }}</label>
-                <input v-model.trim="configForm.block_message" type="text" class="input" />
+                <KumoLabel class="input-label">{{ t('admin.riskControl.blockMessage') }}</KumoLabel>
+                <KumoInput v-model.trim="configForm.block_message" type="text" class="input" />
               </div>
               <div class="flex items-center justify-between rounded-lg border border-gray-100 p-4 dark:border-dark-700">
                 <div>
@@ -915,12 +915,12 @@
                 <Toggle v-model="configForm.cyber_policy_exclude_from_ban_count" />
               </div>
               <div>
-                <label class="input-label">{{ t('admin.riskControl.banThreshold') }}</label>
-                <input v-model.number="configForm.ban_threshold" type="number" min="1" max="1000" class="input" />
+                <KumoLabel class="input-label">{{ t('admin.riskControl.banThreshold') }}</KumoLabel>
+                <KumoInput v-model.number="configForm.ban_threshold" type="number" min="1" max="1000" class="input" />
               </div>
               <div>
-                <label class="input-label">{{ t('admin.riskControl.violationWindowHours') }}</label>
-                <input v-model.number="configForm.violation_window_hours" type="number" min="1" max="8760" class="input" />
+                <KumoLabel class="input-label">{{ t('admin.riskControl.violationWindowHours') }}</KumoLabel>
+                <KumoInput v-model.number="configForm.violation_window_hours" type="number" min="1" max="8760" class="input" />
               </div>
             </div>
           </div>
@@ -933,14 +933,14 @@
                 <h3 class="text-base font-semibold text-gray-900 dark:text-white">{{ t('admin.riskControl.riskThresholds') }}</h3>
                 <p class="mt-1 text-sm text-gray-500 dark:text-gray-400">{{ t('admin.riskControl.riskThresholdsHint') }}</p>
               </div>
-              <button
+              <KumoButton
                 type="button"
                 class="btn btn-secondary inline-flex items-center justify-center gap-2"
                 @click="resetRiskThresholds"
               >
                 <Icon name="refresh" size="sm" />
                 {{ t('admin.riskControl.riskThresholdReset') }}
-              </button>
+              </KumoButton>
             </div>
 
             <div class="grid grid-cols-1 gap-3 md:grid-cols-2 xl:grid-cols-3">
@@ -951,9 +951,9 @@
               >
                 <div class="flex items-start justify-between gap-3">
                   <div class="min-w-0">
-                    <label class="block truncate text-sm font-semibold text-gray-900 dark:text-white" :for="`risk-threshold-${row.category}`">
+                    <KumoLabel class="block truncate text-sm font-semibold text-gray-900 dark:text-white" :for="`risk-threshold-${row.category}`">
                       {{ row.category }}
-                    </label>
+                    </KumoLabel>
                     <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">
                       {{ t('admin.riskControl.riskThresholdDefault', { value: formatThresholdPercent(row.defaultValue) }) }}
                     </p>
@@ -963,11 +963,11 @@
                   </span>
                 </div>
                 <div class="mt-3">
-                  <label class="sr-only" :for="`risk-threshold-${row.category}`">
+                  <KumoLabel class="sr-only" :for="`risk-threshold-${row.category}`">
                     {{ t('admin.riskControl.riskThresholdPercent') }}
-                  </label>
+                  </KumoLabel>
                   <div class="relative">
-                    <input
+                    <KumoInput
                       :id="`risk-threshold-${row.category}`"
                       v-model.number="configForm.thresholds[row.category]"
                       :data-test="`risk-threshold-${row.category}`"
@@ -1001,9 +1001,9 @@
             </div>
 
             <div class="space-y-2">
-              <label class="input-label">{{ t('admin.riskControl.keywordBlockingMode') }}</label>
+              <KumoLabel class="input-label">{{ t('admin.riskControl.keywordBlockingMode') }}</KumoLabel>
               <div class="grid grid-cols-1 gap-2 sm:grid-cols-3">
-                <button
+                <KumoButton
                   v-for="option in keywordBlockingModeOptions"
                   :key="option.value"
                   type="button"
@@ -1025,23 +1025,23 @@
                     </span>
                   </div>
                   <p class="mt-1 text-xs leading-5 text-gray-500 dark:text-gray-400">{{ option.description }}</p>
-                </button>
+                </KumoButton>
               </div>
             </div>
 
             <div>
               <div class="mb-2 flex items-center justify-between">
-                <label class="input-label mb-0">{{ t('admin.riskControl.blockedKeywords') }}</label>
+                <KumoLabel class="input-label mb-0">{{ t('admin.riskControl.blockedKeywords') }}</KumoLabel>
                 <span class="inline-flex rounded-md bg-gray-100 px-2 py-1 text-xs text-gray-500 dark:bg-dark-700 dark:text-gray-300">
                   {{ t('admin.riskControl.blockedKeywordCount', { count: blockedKeywordCount }) }}
                 </span>
               </div>
-              <textarea
+              <KumoTextarea
                 v-model="configForm.blocked_keywords_text"
                 class="input min-h-52 resize-y font-mono text-sm"
                 :placeholder="t('admin.riskControl.blockedKeywordsPlaceholder')"
                 :disabled="configForm.keyword_blocking_mode === 'api_only'"
-              ></textarea>
+              ></KumoTextarea>
               <p class="mt-2 text-xs text-gray-500 dark:text-gray-400">
                 {{ t('admin.riskControl.blockedKeywordsLimit', { max: blockedKeywordMax }) }}
               </p>
@@ -1050,12 +1050,12 @@
 
           <div v-else class="grid grid-cols-1 gap-5 lg:grid-cols-2">
             <div>
-              <label class="input-label">{{ t('admin.riskControl.hitRetentionDays') }}</label>
-              <input v-model.number="configForm.hit_retention_days" type="number" min="1" max="3650" class="input" />
+              <KumoLabel class="input-label">{{ t('admin.riskControl.hitRetentionDays') }}</KumoLabel>
+              <KumoInput v-model.number="configForm.hit_retention_days" type="number" min="1" max="3650" class="input" />
             </div>
             <div>
-              <label class="input-label">{{ t('admin.riskControl.nonHitRetentionDays') }}</label>
-              <input v-model.number="configForm.non_hit_retention_days" type="number" min="1" max="3" class="input" />
+              <KumoLabel class="input-label">{{ t('admin.riskControl.nonHitRetentionDays') }}</KumoLabel>
+              <KumoInput v-model.number="configForm.non_hit_retention_days" type="number" min="1" max="3" class="input" />
             </div>
             <div class="rounded-lg border border-gray-100 p-4 text-sm text-gray-500 dark:border-dark-700 dark:text-gray-400 lg:col-span-2">
               <div class="flex flex-wrap items-center gap-3">
@@ -1068,12 +1068,12 @@
 
         <template #footer>
           <div class="flex justify-end gap-2">
-            <button type="button" class="btn btn-secondary" @click="settingsOpen = false">{{ t('common.cancel') }}</button>
-            <button type="button" class="btn btn-primary inline-flex items-center gap-2" :disabled="saving" @click="saveConfig">
+            <KumoButton type="button" class="btn btn-secondary" @click="settingsOpen = false">{{ t('common.cancel') }}</KumoButton>
+            <KumoButton type="button" class="btn btn-primary inline-flex items-center gap-2" :disabled="saving" @click="saveConfig">
               <Icon v-if="saving" name="refresh" size="sm" class="animate-spin" />
               <Icon v-else name="check" size="sm" />
               {{ saving ? t('common.saving') : t('admin.riskControl.saveConfig') }}
-            </button>
+            </KumoButton>
           </div>
         </template>
       </BaseDialog>
@@ -1138,7 +1138,7 @@
 
         <template #footer>
           <div class="flex justify-end">
-            <button type="button" class="btn btn-secondary" @click="closeInputDetail">{{ t('common.close') }}</button>
+            <KumoButton type="button" class="btn btn-secondary" @click="closeInputDetail">{{ t('common.close') }}</KumoButton>
           </div>
         </template>
       </BaseDialog>
@@ -1147,6 +1147,8 @@
 </template>
 
 <script setup lang="ts">
+import { KumoButton, KumoInput, KumoLabel, KumoLoader, KumoSurface, KumoTable, KumoTableBody, KumoTableCell, KumoTableHead, KumoTableHeader, KumoTableRow, KumoTextarea } from '@/components/kumo'
+
 import { computed, onMounted, onUnmounted, reactive, ref, toRaw } from 'vue'
 import { useI18n } from 'vue-i18n'
 import AppLayout from '@/components/layout/AppLayout.vue'

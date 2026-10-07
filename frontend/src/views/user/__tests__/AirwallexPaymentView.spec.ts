@@ -1,5 +1,6 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest'
-import { flushPromises, shallowMount } from '@vue/test-utils'
+import { flushPromises, mount } from '@/__tests__/render'
+
 import AirwallexPaymentView from '../AirwallexPaymentView.vue'
 import {
   PAYMENT_RECOVERY_STORAGE_KEY,
@@ -61,7 +62,7 @@ function airwallexSnapshot(overrides: Partial<PaymentRecoverySnapshot> = {}): Pa
 }
 
 function mountView() {
-  return shallowMount(AirwallexPaymentView, {
+  return mountWithControls(AirwallexPaymentView, {
     global: {
       stubs: {
         AppLayout: { template: '<div><slot /></div>' },
@@ -132,3 +133,12 @@ describe('AirwallexPaymentView', () => {
     expect(wrapper.text()).toContain('payment.airwallexMissingParams')
   })
 })
+
+// Isolate page dependencies while exercising the shared Kumo controls.
+function mountWithControls(component: Parameters<typeof mount>[0], options: any = {}) {
+  return mount(component, { ...options, global: { ...options.global, stubs: {
+    AppLayout: true, Icon: true,
+    KumoSurface: { template: '<div><slot /></div>' },
+    ...options.global?.stubs,
+  } } })
+}

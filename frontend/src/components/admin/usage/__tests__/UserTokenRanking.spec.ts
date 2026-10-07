@@ -1,5 +1,6 @@
 import { describe, expect, it, vi, beforeEach } from 'vitest'
-import { mount, flushPromises } from '@vue/test-utils'
+import { mount, flushPromises } from '@/__tests__/render'
+
 
 import UserTokenRanking from '../UserTokenRanking.vue'
 

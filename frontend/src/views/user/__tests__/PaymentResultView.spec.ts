@@ -1,5 +1,6 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
-import { flushPromises, mount } from '@vue/test-utils'
+import { mount, flushPromises } from '@/__tests__/render'
+
 
 const routeState = vi.hoisted(() => ({
   query: {} as Record<string, unknown>,
@@ -207,7 +208,7 @@ describe('PaymentResultView', () => {
   })
 
   it('waits for completed fulfillment before refreshing the user balance', async () => {
-    vi.useFakeTimers()
+    vi.useFakeTimers({ toFake: ['Date', 'setTimeout', 'clearTimeout', 'setInterval', 'clearInterval'] })
     routeState.query = {
       resume_token: 'resume-77',
     }

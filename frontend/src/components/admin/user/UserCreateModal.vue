@@ -7,44 +7,44 @@
   >
     <form id="create-user-form" @submit.prevent="submit" class="space-y-5">
       <div>
-        <label class="input-label">{{ t('admin.users.email') }}</label>
-        <input v-model="form.email" type="email" required class="input" :placeholder="t('admin.users.enterEmail')" />
+        <KumoLabel class="input-label">{{ t('admin.users.email') }}</KumoLabel>
+        <KumoInput v-model="form.email" type="email" required class="input" :placeholder="t('admin.users.enterEmail')" />
       </div>
       <div>
-        <label class="input-label">{{ t('admin.users.password') }}</label>
+        <KumoLabel class="input-label">{{ t('admin.users.password') }}</KumoLabel>
         <div class="flex gap-2">
           <div class="relative flex-1">
-            <input v-model="form.password" type="text" required class="input pr-10" :placeholder="t('admin.users.enterPassword')" />
+            <KumoInput v-model="form.password" type="text" required class="input pr-10" :placeholder="t('admin.users.enterPassword')" />
           </div>
-          <button type="button" @click="generateRandomPassword" class="btn btn-secondary px-3">
+          <KumoButton type="button" @click="generateRandomPassword" class="btn btn-secondary px-3">
             <Icon name="refresh" size="md" />
-          </button>
+          </KumoButton>
         </div>
       </div>
       <div>
-        <label class="input-label">{{ t('admin.users.username') }}</label>
-        <input v-model="form.username" type="text" class="input" :placeholder="t('admin.users.enterUsername')" />
+        <KumoLabel class="input-label">{{ t('admin.users.username') }}</KumoLabel>
+        <KumoInput v-model="form.username" type="text" class="input" :placeholder="t('admin.users.enterUsername')" />
       </div>
       <div>
-        <label class="input-label">{{ t('admin.users.form.roleLabel') }}</label>
-        <select v-model="form.role" class="input">
+        <KumoLabel class="input-label">{{ t('admin.users.form.roleLabel') }}</KumoLabel>
+        <KumoNativeSelect v-model="form.role" class="input">
           <option value="user">{{ t('admin.users.roles.user') }}</option>
           <option value="admin">{{ t('admin.users.roles.admin') }}</option>
-        </select>
+        </KumoNativeSelect>
       </div>
       <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
         <div>
-          <label class="input-label">{{ t('admin.users.columns.balance') }}</label>
-          <input v-model="form.balance" type="number" step="any" class="input" />
+          <KumoLabel class="input-label">{{ t('admin.users.columns.balance') }}</KumoLabel>
+          <KumoInput v-model="form.balance" type="number" step="any" class="input" />
         </div>
         <div>
-          <label class="input-label">{{ t('admin.users.columns.concurrency') }}</label>
-          <input v-model.number="form.concurrency" type="number" class="input" />
+          <KumoLabel class="input-label">{{ t('admin.users.columns.concurrency') }}</KumoLabel>
+          <KumoInput v-model.number="form.concurrency" type="number" class="input" />
         </div>
       </div>
       <div>
-        <label class="input-label">{{ t('admin.users.form.rpmLimit') }}</label>
-        <input
+        <KumoLabel class="input-label">{{ t('admin.users.form.rpmLimit') }}</KumoLabel>
+        <KumoInput
           v-model.number="form.rpm_limit"
           type="number"
           min="0"
@@ -57,10 +57,10 @@
     </form>
     <template #footer>
       <div class="flex justify-end gap-3">
-        <button @click="$emit('close')" type="button" class="btn btn-secondary">{{ t('common.cancel') }}</button>
-        <button type="submit" form="create-user-form" :disabled="loading" class="btn btn-primary">
+        <KumoButton @click="$emit('close')" type="button" class="btn btn-secondary">{{ t('common.cancel') }}</KumoButton>
+        <KumoButton type="submit" form="create-user-form" :disabled="loading" class="btn btn-primary">
           {{ loading ? t('admin.users.creating') : t('common.create') }}
-        </button>
+        </KumoButton>
       </div>
     </template>
   </BaseDialog>
@@ -70,6 +70,8 @@
 </template>
 
 <script setup lang="ts">
+import { KumoButton, KumoInput, KumoLabel, KumoNativeSelect } from '@/components/kumo'
+
 import { reactive, ref, watch } from 'vue'
 import { useI18n } from 'vue-i18n'; import { adminAPI } from '@/api/admin'
 import { useAppStore } from '@/stores/app'

@@ -1,5 +1,8 @@
-import { flushPromises, mount } from "@vue/test-utils";
+import { flushPromises, mount, portal, clickOutside } from '@/__tests__/render'
+
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
+import { enableAutoUnmount } from '@vue/test-utils';
+enableAutoUnmount(afterEach);
 import { defineComponent, h, ref } from "vue";
 
 import CodexManifestAccountsField from "../CodexManifestAccountsField.vue";
@@ -50,7 +53,7 @@ const mountInteractive = (initial: CodexModelsManifestConfig, accountNames?: Rec
         });
     },
   });
-  return mount(host, {
+  return mount(host, { attachTo: document.body,
     global: {
       stubs: {
         Icon: { props: ["name"], template: '<i :data-icon="name" />' },
@@ -60,7 +63,7 @@ const mountInteractive = (initial: CodexModelsManifestConfig, accountNames?: Rec
 };
 
 const mountField = (modelValue: CodexModelsManifestConfig, accountNames?: Record<number, string>) =>
-  mount(CodexManifestAccountsField, {
+  mount(CodexManifestAccountsField, { attachTo: document.body,
     props: {
       groupId: 7,
       modelValue,
@@ -85,6 +88,7 @@ describe("CodexManifestAccountsField", () => {
 
   it("hides account controls while disabled and reveals them after enabling", async () => {
     const wrapper = mountField(disabledConfig());
+    await flushPromises();
 
     expect(wrapper.find('[data-testid="codex-manifest-search"]').exists()).toBe(false);
     expect(wrapper.find('[data-testid="codex-manifest-fallback-toggle"]').exists()).toBe(false);
@@ -97,6 +101,7 @@ describe("CodexManifestAccountsField", () => {
     expect(emitted?.[0]?.[0]).toMatchObject({ enabled: true });
 
     const enabled = mountField(enabledConfig());
+    await flushPromises();
     expect(enabled.find('[data-testid="codex-manifest-search"]').exists()).toBe(true);
     expect(enabled.find('[data-testid="codex-manifest-fallback-toggle"]').exists()).toBe(true);
     expect(enabled.text()).toContain("admin.groups.codexModelsManifest.enabledHint");
@@ -118,7 +123,8 @@ describe("CodexManifestAccountsField", () => {
     expect(initialTags.text()).toContain("oauth-five");
 
     const search = wrapper.find('[data-testid="codex-manifest-search"]');
-    await search.trigger("focus");
+    ;(search.element as HTMLElement).blur(); (search.element as HTMLElement).focus();
+    await flushPromises();
     await search.setValue("oauth");
     vi.advanceTimersByTime(300);
     await flushPromises();
@@ -130,12 +136,12 @@ describe("CodexManifestAccountsField", () => {
       expect.anything(),
     );
 
-    const dropdown = wrapper.find('[data-testid="codex-manifest-dropdown"]');
+    const dropdown = portal().find('[role=listbox]');
     expect(dropdown.exists()).toBe(true);
     expect(dropdown.text()).toContain("apikey-six");
 
     // 账号 6 未选中：点击加入。
-    const option = dropdown.findAll("button").find((b) => b.text().includes("apikey-six"));
+    const option = dropdown.findAll("[role=option]").find((b) => b.text().includes("apikey-six"));
     await option!.trigger("click");
     await flushPromises();
 
@@ -186,27 +192,29 @@ describe("CodexManifestAccountsField", () => {
     const wrapper = mountField(enabledConfig());
 
     const search = wrapper.find('[data-testid="codex-manifest-search"]');
-    await search.trigger("focus");
+    ;(search.element as HTMLElement).blur(); (search.element as HTMLElement).focus();
+    await flushPromises();
     await search.setValue("nonexistent");
     vi.advanceTimersByTime(300);
     await flushPromises();
 
     // 有关键词但无结果：展示空状态提示而非静默无反应。
-    const dropdown = wrapper.find('[data-testid="codex-manifest-dropdown"]');
+    const dropdown = portal().find('[role=listbox]');
     expect(dropdown.exists()).toBe(true);
-    expect(wrapper.find('[data-testid="codex-manifest-search-empty"]').text()).toBe(
+    expect(portal().find('[role=status]').text()).toBe(
       "admin.groups.codexModelsManifest.searchEmpty",
     );
 
     // 点击组件外部：收起下拉。
-    document.body.dispatchEvent(new MouseEvent("click", { bubbles: true }));
+    await clickOutside();
     await flushPromises();
-    expect(wrapper.find('[data-testid="codex-manifest-dropdown"]').exists()).toBe(false);
+    expect(portal().find('[role=listbox]').exists()).toBe(false);
 
     // 点击输入框内部：不收起。
     await search.trigger("click");
-    await search.trigger("focus");
-    expect(wrapper.find('[data-testid="codex-manifest-dropdown"]').exists()).toBe(true);
+    ;(search.element as HTMLElement).blur(); (search.element as HTMLElement).focus();
+    await flushPromises();
+    expect(portal().find('[role=listbox]').exists()).toBe(true);
     wrapper.unmount();
   });
 });

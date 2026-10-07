@@ -11,10 +11,10 @@
         <p class="text-sm text-gray-500 dark:text-gray-400">
           {{ t('admin.errorPassthrough.description') }}
         </p>
-        <button @click="showCreateModal = true" class="btn btn-primary btn-sm">
+        <KumoButton @click="showCreateModal = true" class="btn btn-primary btn-sm">
           <Icon name="plus" size="sm" class="mr-1" />
           {{ t('admin.errorPassthrough.createRule') }}
-        </button>
+        </KumoButton>
       </div>
 
       <!-- Rules Table -->
@@ -35,67 +35,67 @@
       </div>
 
       <div v-else class="max-h-96 overflow-auto rounded-lg border border-gray-200 dark:border-dark-600">
-        <table class="min-w-full divide-y divide-gray-200 dark:divide-dark-700">
-          <thead class="sticky top-0 bg-gray-50 dark:bg-dark-700">
-            <tr>
-              <th class="px-3 py-2 text-left text-xs font-medium uppercase text-gray-500 dark:text-gray-400">
+        <KumoTable class="min-w-full divide-y divide-gray-200 dark:divide-dark-700">
+          <KumoTableHeader class="sticky top-0 bg-gray-50 dark:bg-dark-700">
+            <KumoTableRow>
+              <KumoTableHead class="px-3 py-2 text-left text-xs font-medium uppercase text-gray-500 dark:text-gray-400">
                 {{ t('admin.errorPassthrough.columns.priority') }}
-              </th>
-              <th class="px-3 py-2 text-left text-xs font-medium uppercase text-gray-500 dark:text-gray-400">
+              </KumoTableHead>
+              <KumoTableHead class="px-3 py-2 text-left text-xs font-medium uppercase text-gray-500 dark:text-gray-400">
                 {{ t('admin.errorPassthrough.columns.name') }}
-              </th>
-              <th class="px-3 py-2 text-left text-xs font-medium uppercase text-gray-500 dark:text-gray-400">
+              </KumoTableHead>
+              <KumoTableHead class="px-3 py-2 text-left text-xs font-medium uppercase text-gray-500 dark:text-gray-400">
                 {{ t('admin.errorPassthrough.columns.conditions') }}
-              </th>
-              <th class="px-3 py-2 text-left text-xs font-medium uppercase text-gray-500 dark:text-gray-400">
+              </KumoTableHead>
+              <KumoTableHead class="px-3 py-2 text-left text-xs font-medium uppercase text-gray-500 dark:text-gray-400">
                 {{ t('admin.errorPassthrough.columns.platforms') }}
-              </th>
-              <th class="px-3 py-2 text-left text-xs font-medium uppercase text-gray-500 dark:text-gray-400">
+              </KumoTableHead>
+              <KumoTableHead class="px-3 py-2 text-left text-xs font-medium uppercase text-gray-500 dark:text-gray-400">
                 {{ t('admin.errorPassthrough.columns.behavior') }}
-              </th>
-              <th class="px-3 py-2 text-left text-xs font-medium uppercase text-gray-500 dark:text-gray-400">
+              </KumoTableHead>
+              <KumoTableHead class="px-3 py-2 text-left text-xs font-medium uppercase text-gray-500 dark:text-gray-400">
                 {{ t('admin.errorPassthrough.columns.status') }}
-              </th>
-              <th class="px-3 py-2 text-left text-xs font-medium uppercase text-gray-500 dark:text-gray-400">
+              </KumoTableHead>
+              <KumoTableHead class="px-3 py-2 text-left text-xs font-medium uppercase text-gray-500 dark:text-gray-400">
                 {{ t('admin.errorPassthrough.columns.actions') }}
-              </th>
-            </tr>
-          </thead>
-          <tbody class="divide-y divide-gray-200 bg-white dark:divide-dark-700 dark:bg-dark-800">
-            <tr v-for="rule in rules" :key="rule.id" class="hover:bg-gray-50 dark:hover:bg-dark-700">
-              <td class="whitespace-nowrap px-3 py-2">
+              </KumoTableHead>
+            </KumoTableRow>
+          </KumoTableHeader>
+          <KumoTableBody class="divide-y divide-gray-200 bg-white dark:divide-dark-700 dark:bg-dark-800">
+            <KumoTableRow v-for="rule in rules" :key="rule.id" class="hover:bg-gray-50 dark:hover:bg-dark-700">
+              <KumoTableCell class="whitespace-nowrap px-3 py-2">
                 <span class="inline-flex h-5 w-5 items-center justify-center rounded bg-gray-100 text-xs font-medium text-gray-700 dark:bg-dark-600 dark:text-gray-300">
                   {{ rule.priority }}
                 </span>
-              </td>
-              <td class="px-3 py-2">
+              </KumoTableCell>
+              <KumoTableCell class="px-3 py-2">
                 <div class="font-medium text-gray-900 dark:text-white text-sm">{{ rule.name }}</div>
                 <div v-if="rule.description" class="mt-0.5 text-xs text-gray-500 dark:text-gray-400 max-w-xs truncate">
                   {{ rule.description }}
                 </div>
-              </td>
-              <td class="px-3 py-2">
+              </KumoTableCell>
+              <KumoTableCell class="px-3 py-2">
                 <div class="flex flex-wrap gap-1 max-w-48">
-                  <span
+                  <KumoBadge
                     v-for="code in rule.error_codes.slice(0, 3)"
                     :key="code"
                     class="badge badge-danger text-xs"
                   >
                     {{ code }}
-                  </span>
+                  </KumoBadge>
                   <span
                     v-if="rule.error_codes.length > 3"
                     class="text-xs text-gray-500"
                   >
                     +{{ rule.error_codes.length - 3 }}
                   </span>
-                  <span
+                  <KumoBadge
                     v-for="keyword in rule.keywords.slice(0, 1)"
                     :key="keyword"
                     class="badge badge-gray text-xs"
                   >
                     "{{ keyword.length > 10 ? keyword.substring(0, 10) + '...' : keyword }}"
-                  </span>
+                  </KumoBadge>
                   <span
                     v-if="rule.keywords.length > 1"
                     class="text-xs text-gray-500"
@@ -106,25 +106,25 @@
                 <div class="mt-0.5 text-xs text-gray-500 dark:text-gray-400">
                   {{ t('admin.errorPassthrough.matchMode.' + rule.match_mode) }}
                 </div>
-              </td>
-              <td class="px-3 py-2">
+              </KumoTableCell>
+              <KumoTableCell class="px-3 py-2">
                 <div v-if="rule.platforms.length === 0" class="text-xs text-gray-500 dark:text-gray-400">
                   {{ t('admin.errorPassthrough.allPlatforms') }}
                 </div>
                 <div v-else class="flex flex-wrap gap-1">
-                  <span
+                  <KumoBadge
                     v-for="platform in rule.platforms.slice(0, 2)"
                     :key="platform"
                     class="badge badge-primary text-xs"
                   >
                     {{ platform }}
-                  </span>
+                  </KumoBadge>
                   <span v-if="rule.platforms.length > 2" class="text-xs text-gray-500">
                     +{{ rule.platforms.length - 2 }}
                   </span>
                 </div>
-              </td>
-              <td class="px-3 py-2">
+              </KumoTableCell>
+              <KumoTableCell class="px-3 py-2">
                 <div class="text-xs space-y-0.5">
                   <div class="flex items-center gap-1">
                     <Icon
@@ -159,52 +159,39 @@
                     </span>
                   </div>
                 </div>
-              </td>
-              <td class="px-3 py-2">
-                <button
-                  @click="toggleEnabled(rule)"
-                  :class="[
-                    'relative inline-flex h-4 w-7 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2',
-                    rule.enabled ? 'bg-primary-600' : 'bg-gray-200 dark:bg-dark-600'
-                  ]"
-                >
-                  <span
-                    :class="[
-                      'pointer-events-none inline-block h-3 w-3 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out',
-                      rule.enabled ? 'translate-x-3' : 'translate-x-0'
-                    ]"
-                  />
-                </button>
-              </td>
-              <td class="px-3 py-2">
+              </KumoTableCell>
+              <KumoTableCell class="px-3 py-2">
+                <KumoSwitch :checked="rule.enabled" @update:model-value="toggleEnabled(rule)"  />
+              </KumoTableCell>
+              <KumoTableCell class="px-3 py-2">
                 <div class="flex items-center gap-1">
-                  <button
+                  <KumoButton
                     @click="handleEdit(rule)"
                     class="p-1 text-gray-500 hover:text-primary-600 dark:hover:text-primary-400"
                     :title="t('common.edit')"
                   >
                     <Icon name="edit" size="sm" />
-                  </button>
-                  <button
+                  </KumoButton>
+                  <KumoButton
                     @click="handleDelete(rule)"
                     class="p-1 text-gray-500 hover:text-red-600 dark:hover:text-red-400"
                     :title="t('common.delete')"
                   >
                     <Icon name="trash" size="sm" />
-                  </button>
+                  </KumoButton>
                 </div>
-              </td>
-            </tr>
-          </tbody>
-        </table>
+              </KumoTableCell>
+            </KumoTableRow>
+          </KumoTableBody>
+        </KumoTable>
       </div>
     </div>
 
     <template #footer>
       <div class="flex justify-end">
-        <button @click="$emit('close')" class="btn btn-secondary">
+        <KumoButton @click="$emit('close')" class="btn btn-secondary">
           {{ t('common.close') }}
-        </button>
+        </KumoButton>
       </div>
     </template>
 
@@ -219,8 +206,8 @@
         <!-- Basic Info -->
         <div class="grid grid-cols-2 gap-4">
           <div>
-            <label class="input-label">{{ t('admin.errorPassthrough.form.name') }}</label>
-            <input
+            <KumoLabel class="input-label">{{ t('admin.errorPassthrough.form.name') }}</KumoLabel>
+            <KumoInput
               v-model="form.name"
               type="text"
               required
@@ -229,8 +216,8 @@
             />
           </div>
           <div>
-            <label class="input-label">{{ t('admin.errorPassthrough.form.priority') }}</label>
-            <input
+            <KumoLabel class="input-label">{{ t('admin.errorPassthrough.form.priority') }}</KumoLabel>
+            <KumoInput
               v-model.number="form.priority"
               type="number"
               min="0"
@@ -241,8 +228,8 @@
         </div>
 
         <div>
-          <label class="input-label">{{ t('admin.errorPassthrough.form.description') }}</label>
-          <input
+          <KumoLabel class="input-label">{{ t('admin.errorPassthrough.form.description') }}</KumoLabel>
+          <KumoInput
             v-model="form.description"
             type="text"
             class="input"
@@ -258,8 +245,8 @@
 
           <div class="grid grid-cols-2 gap-3">
             <div>
-              <label class="input-label text-xs">{{ t('admin.errorPassthrough.form.errorCodes') }}</label>
-              <input
+              <KumoLabel class="input-label text-xs">{{ t('admin.errorPassthrough.form.errorCodes') }}</KumoLabel>
+              <KumoInput
                 v-model="errorCodesInput"
                 type="text"
                 class="input text-sm"
@@ -268,8 +255,8 @@
               <p class="input-hint text-xs">{{ t('admin.errorPassthrough.form.errorCodesHint') }}</p>
             </div>
             <div>
-              <label class="input-label text-xs">{{ t('admin.errorPassthrough.form.keywords') }}</label>
-              <textarea
+              <KumoLabel class="input-label text-xs">{{ t('admin.errorPassthrough.form.keywords') }}</KumoLabel>
+              <KumoTextarea
                 v-model="keywordsInput"
                 rows="2"
                 class="input font-mono text-xs"
@@ -280,43 +267,40 @@
           </div>
 
           <div class="mt-3">
-            <label class="input-label text-xs">{{ t('admin.errorPassthrough.form.matchMode') }}</label>
-            <div class="mt-1 space-y-2">
-              <label
+            <KumoLabel class="input-label text-xs">{{ t('admin.errorPassthrough.form.matchMode') }}</KumoLabel>
+            <KumoRadioGroup v-model="form.match_mode" class="contents">
+<div class="mt-1 space-y-2">
+              <KumoRadio :value="option.value"
                 v-for="option in matchModeOptions"
                 :key="option.value"
                 class="flex items-start gap-2 cursor-pointer"
               >
-                <input
-                  type="radio"
-                  :value="option.value"
-                  v-model="form.match_mode"
-                  class="mt-0.5 h-3.5 w-3.5 border-gray-300 text-primary-600 focus:ring-primary-500"
-                />
+
                 <div class="flex-1">
                   <span class="text-xs font-medium text-gray-700 dark:text-gray-300">{{ option.label }}</span>
                   <p class="text-xs text-gray-500 dark:text-gray-400">{{ option.description }}</p>
                 </div>
-              </label>
+              </KumoRadio>
             </div>
+</KumoRadioGroup>
           </div>
 
           <div class="mt-3">
-            <label class="input-label text-xs">{{ t('admin.errorPassthrough.form.platforms') }}</label>
+            <KumoLabel class="input-label text-xs">{{ t('admin.errorPassthrough.form.platforms') }}</KumoLabel>
             <div class="flex flex-wrap gap-3">
-              <label
+              <KumoLabel
                 v-for="platform in platformOptions"
                 :key="platform.value"
                 class="inline-flex items-center gap-1.5"
               >
-                <input
+                <KumoCheckbox
                   type="checkbox"
                   :value="platform.value"
                   v-model="form.platforms"
                   class="h-3.5 w-3.5 rounded border-gray-300 text-primary-600 focus:ring-primary-500"
                 />
                 <span class="text-xs text-gray-700 dark:text-gray-300">{{ platform.label }}</span>
-              </label>
+              </KumoLabel>
             </div>
             <p class="input-hint text-xs mt-1">{{ t('admin.errorPassthrough.form.platformsHint') }}</p>
           </div>
@@ -330,8 +314,8 @@
 
           <div class="grid grid-cols-2 gap-3">
             <div>
-              <label class="flex items-center gap-1.5">
-                <input
+              <KumoLabel class="flex items-center gap-1.5">
+                <KumoCheckbox
                   type="checkbox"
                   v-model="form.passthrough_code"
                   class="h-3.5 w-3.5 rounded border-gray-300 text-primary-600 focus:ring-primary-500"
@@ -339,10 +323,10 @@
                 <span class="text-xs font-medium text-gray-700 dark:text-gray-300">
                   {{ t('admin.errorPassthrough.form.passthroughCode') }}
                 </span>
-              </label>
+              </KumoLabel>
               <div v-if="!form.passthrough_code" class="mt-2">
-                <label class="input-label text-xs">{{ t('admin.errorPassthrough.form.responseCode') }}</label>
-                <input
+                <KumoLabel class="input-label text-xs">{{ t('admin.errorPassthrough.form.responseCode') }}</KumoLabel>
+                <KumoInput
                   v-model.number="form.response_code"
                   type="number"
                   min="100"
@@ -353,8 +337,8 @@
               </div>
             </div>
             <div>
-              <label class="flex items-center gap-1.5">
-                <input
+              <KumoLabel class="flex items-center gap-1.5">
+                <KumoCheckbox
                   type="checkbox"
                   v-model="form.passthrough_body"
                   class="h-3.5 w-3.5 rounded border-gray-300 text-primary-600 focus:ring-primary-500"
@@ -362,10 +346,10 @@
                 <span class="text-xs font-medium text-gray-700 dark:text-gray-300">
                   {{ t('admin.errorPassthrough.form.passthroughBody') }}
                 </span>
-              </label>
+              </KumoLabel>
               <div v-if="!form.passthrough_body" class="mt-2">
-                <label class="input-label text-xs">{{ t('admin.errorPassthrough.form.customMessage') }}</label>
-                <input
+                <KumoLabel class="input-label text-xs">{{ t('admin.errorPassthrough.form.customMessage') }}</KumoLabel>
+                <KumoInput
                   v-model="form.custom_message"
                   type="text"
                   class="input text-sm"
@@ -378,7 +362,7 @@
 
         <!-- Skip Monitoring -->
         <div class="flex items-center gap-1.5">
-          <input
+          <KumoCheckbox
             type="checkbox"
             v-model="form.skip_monitoring"
             class="h-3.5 w-3.5 rounded border-gray-300 text-yellow-600 focus:ring-yellow-500"
@@ -391,7 +375,7 @@
 
         <!-- Enabled -->
         <div class="flex items-center gap-1.5">
-          <input
+          <KumoCheckbox
             type="checkbox"
             v-model="form.enabled"
             class="h-3.5 w-3.5 rounded border-gray-300 text-primary-600 focus:ring-primary-500"
@@ -404,13 +388,13 @@
 
       <template #footer>
         <div class="flex justify-end gap-3">
-          <button @click="closeFormModal" type="button" class="btn btn-secondary">
+          <KumoButton @click="closeFormModal" type="button" class="btn btn-secondary">
             {{ t('common.cancel') }}
-          </button>
-          <button @click="handleSubmit" :disabled="submitting" class="btn btn-primary">
+          </KumoButton>
+          <KumoButton @click="handleSubmit" :disabled="submitting" class="btn btn-primary">
             <Icon v-if="submitting" name="refresh" size="sm" class="mr-1 animate-spin" />
             {{ showEditModal ? t('common.update') : t('common.create') }}
-          </button>
+          </KumoButton>
         </div>
       </template>
     </BaseDialog>
@@ -430,6 +414,8 @@
 </template>
 
 <script setup lang="ts">
+import { KumoBadge, KumoButton, KumoCheckbox, KumoInput, KumoLabel, KumoRadio, KumoRadioGroup, KumoSwitch, KumoTable, KumoTableBody, KumoTableCell, KumoTableHead, KumoTableHeader, KumoTableRow, KumoTextarea } from '@/components/kumo'
+
 import { ref, reactive, computed, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useAppStore } from '@/stores/app'

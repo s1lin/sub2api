@@ -29,29 +29,29 @@
           <div class="text-[11px] font-semibold uppercase tracking-wide text-gray-400">
             {{ t('monitorCommon.extraModelsHeader') }}
           </div>
-          <table class="w-full text-left text-[11px]">
-            <thead>
-              <tr class="text-gray-400">
-                <th class="py-0.5 pr-2 font-medium">{{ t('admin.channelMonitor.columns.primaryModel') }}</th>
-                <th class="py-0.5 pr-2 font-medium">{{ t('admin.channelMonitor.columns.actions') }}</th>
-                <th class="py-0.5 font-medium">{{ t('admin.channelMonitor.columns.latency') }}</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr v-for="m in (row.extra_models_status || [])" :key="m.model">
-                <td class="py-0.5 pr-2 text-gray-100">{{ m.model }}</td>
-                <td class="py-0.5 pr-2">
+          <KumoTable class="w-full text-left text-[11px]">
+            <KumoTableHeader>
+              <KumoTableRow class="text-gray-400">
+                <KumoTableHead class="py-0.5 pr-2 font-medium">{{ t('admin.channelMonitor.columns.primaryModel') }}</KumoTableHead>
+                <KumoTableHead class="py-0.5 pr-2 font-medium">{{ t('admin.channelMonitor.columns.actions') }}</KumoTableHead>
+                <KumoTableHead class="py-0.5 font-medium">{{ t('admin.channelMonitor.columns.latency') }}</KumoTableHead>
+              </KumoTableRow>
+            </KumoTableHeader>
+            <KumoTableBody>
+              <KumoTableRow v-for="m in (row.extra_models_status || [])" :key="m.model">
+                <KumoTableCell class="py-0.5 pr-2 text-gray-100">{{ m.model }}</KumoTableCell>
+                <KumoTableCell class="py-0.5 pr-2">
                   <span
                     class="inline-flex items-center rounded-full px-1.5 py-0.5 text-[10px]"
                     :class="statusBadgeClass(m.status)"
                   >
                     {{ statusLabel(m.status) }}
                   </span>
-                </td>
-                <td class="py-0.5 text-gray-100">{{ formatLatency(m.latency_ms) }}</td>
-              </tr>
-            </tbody>
-          </table>
+                </KumoTableCell>
+                <KumoTableCell class="py-0.5 text-gray-100">{{ formatLatency(m.latency_ms) }}</KumoTableCell>
+              </KumoTableRow>
+            </KumoTableBody>
+          </KumoTable>
         </div>
       </div>
       </HelpTooltip>
@@ -62,6 +62,8 @@
 </template>
 
 <script setup lang="ts">
+import { KumoTable, KumoTableBody, KumoTableCell, KumoTableHead, KumoTableHeader, KumoTableRow } from '@/components/kumo'
+
 import { useI18n } from 'vue-i18n'
 import type { ChannelMonitor } from '@/api/admin/channelMonitor'
 import HelpTooltip from '@/components/common/HelpTooltip.vue'

@@ -6,7 +6,7 @@
         {{ t('modelPlaza.filters.platformLabel') }}
       </span>
       <div class="flex flex-wrap items-center gap-2">
-        <button
+        <KumoButton
           v-for="p in ['all', ...platforms]"
           :key="`platform-${p}`"
           type="button"
@@ -18,7 +18,7 @@
         >
           <PlatformIcon v-if="p !== 'all'" :platform="p as GroupPlatform" size="xs" />
           {{ p === 'all' ? t('modelPlaza.filters.all') : p }}
-        </button>
+        </KumoButton>
       </div>
     </div>
 
@@ -28,15 +28,15 @@
         {{ t('modelPlaza.filters.groupLabel') }}
       </span>
       <div class="flex flex-wrap items-center gap-2">
-        <button
+        <KumoButton
           type="button"
           class="rounded-lg px-3 py-1.5 text-sm font-medium transition"
           :class="chipClass(groupId === 'all')"
           @click="$emit('update:groupId', 'all')"
         >
           {{ t('modelPlaza.filters.all') }}
-        </button>
-        <button
+        </KumoButton>
+        <KumoButton
           v-for="g in groups"
           :key="`group-${g.id}`"
           type="button"
@@ -47,7 +47,7 @@
           @click="$emit('update:groupId', g.id)"
         >
           {{ g.name }}
-        </button>
+        </KumoButton>
       </div>
     </div>
 
@@ -57,15 +57,15 @@
         {{ t('modelPlaza.filters.rateLabel') }}
       </span>
       <div class="flex flex-wrap items-center gap-2">
-        <button
+        <KumoButton
           type="button"
           class="rounded-lg px-3 py-1.5 text-sm font-medium transition"
           :class="chipClass(rate === 'all')"
           @click="$emit('update:rate', 'all')"
         >
           {{ t('modelPlaza.filters.all') }}
-        </button>
-        <button
+        </KumoButton>
+        <KumoButton
           v-for="r in rates"
           :key="`rate-${r}`"
           type="button"
@@ -75,7 +75,7 @@
           @click="$emit('update:rate', r)"
         >
           {{ r }}x
-        </button>
+        </KumoButton>
       </div>
     </div>
 
@@ -90,27 +90,29 @@
           size="sm"
           class="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 dark:text-dark-500"
         />
-        <input
+        <KumoInput
           :value="search"
           type="text"
           :placeholder="t('modelPlaza.filters.searchPlaceholder')"
           class="input rounded-lg py-1.5 pl-9 pr-9"
           @input="$emit('update:search', ($event.target as HTMLInputElement).value)"
         />
-        <button
+        <KumoButton
           v-if="search"
           type="button"
           class="absolute right-2.5 top-1/2 -translate-y-1/2 text-gray-400 transition-colors hover:text-gray-600 dark:text-dark-500 dark:hover:text-gray-300"
           @click="$emit('update:search', '')"
         >
           <Icon name="x" size="xs" class="h-3.5 w-3.5" />
-        </button>
+        </KumoButton>
       </div>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
+import { KumoButton, KumoInput } from '@/components/kumo'
+
 import { useI18n } from 'vue-i18n'
 import Icon from '@/components/icons/Icon.vue'
 import PlatformIcon from '@/components/common/PlatformIcon.vue'

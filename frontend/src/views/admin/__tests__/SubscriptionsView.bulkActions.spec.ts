@@ -1,6 +1,9 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
-import { flushPromises, mount } from '@vue/test-utils'
+import { mount, flushPromises, portal } from '@/__tests__/render'
+
 import SubscriptionsView from '../SubscriptionsView.vue'
+
+vi.unmock('react-dom/client')
 
 const { list, bulkAction, bulkAssign, listUsers, showError } = vi.hoisted(() => ({
   list: vi.fn(), bulkAction: vi.fn(), bulkAssign: vi.fn(), listUsers: vi.fn(), showError: vi.fn()
@@ -26,7 +29,7 @@ const rows = [
 ]
 
 function mountView() {
-  return mount(SubscriptionsView, {
+  return mount(SubscriptionsView, { attachTo: document.body,
     global: {
       stubs: {
         AppLayout: { template: '<div><slot /></div>' },
@@ -34,7 +37,7 @@ function mountView() {
         DataTable: { name: 'DataTable', props: ['data', 'selectedKeys'], emits: ['update:selectedKeys', 'sort'], template: '<div />' },
         BaseDialog: { props: ['show'], template: '<div v-if="show"><slot /><slot name="footer" /></div>' },
         Pagination: true, Select: true, ConfirmDialog: true, Icon: true,
-        GroupBadge: true, GroupOptionItem: true, EmptyState: true, Teleport: true, RouterLink: true
+        GroupBadge: true, GroupOptionItem: true, EmptyState: true, RouterLink: true
       }
     }
   })
@@ -119,7 +122,7 @@ describe('subscription bulk operations', () => {
       await search.setValue(`user${id}`)
       await vi.advanceTimersByTimeAsync(300)
       await flushPromises()
-      await form.get('[data-assign-user-search] button').trigger('click')
+      await portal().get('[role=option]').trigger('click')
     }
     expect(form.get('[data-test="assign-users"]').text()).toContain('user11@example.com')
     expect(form.get('[data-test="assign-users"]').text()).toContain('user22@example.com')

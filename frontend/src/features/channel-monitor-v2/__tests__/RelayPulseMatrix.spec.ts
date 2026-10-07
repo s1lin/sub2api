@@ -45,7 +45,7 @@ vi.mock('vue-i18n', async (importOriginal) => {
   }
 })
 
-import { mount } from '@vue/test-utils'
+import { mount, showTooltip } from '@/__tests__/render'
 import { describe, expect, it } from 'vitest'
 import RelayPulseMatrix from '../RelayPulseMatrix.vue'
 import type { MonitorHealth, MonitorMetric } from '@/api/channelMonitorV2'
@@ -83,7 +83,7 @@ function metrics(requestCount: number): MonitorMetric {
 
 describe('RelayPulseMatrix', () => {
   it('shows privacy-safe hover tooltips and multi-band colors without click modal', async () => {
-    const wrapper = mount(RelayPulseMatrix, {
+    const wrapper = mount(RelayPulseMatrix, { attachTo: document.body,
       props: {
         rows: [{
           platform: 'openai',
@@ -114,7 +114,7 @@ describe('RelayPulseMatrix', () => {
     const cells = wrapper.findAll('.pulse-cell')
     expect(cells).toHaveLength(3)
     // Hover tooltip content (privacy-safe: no absolute request/error counts)
-    const tip = cells[0].text()
+    const tip = (await showTooltip(cells[0])).text()
     expect(tip).toContain('成功率')
     expect(tip).toContain('90.0%')
     expect(tip).toContain('首 Token')
@@ -143,7 +143,7 @@ describe('RelayPulseMatrix', () => {
 })
 
 describe('RelayPulseMatrix axis range', () => {
-  it('uses selected requested range for the X axis even with partial coverage', () => {
+  it('uses selected requested range for the X axis even with partial coverage', async () => {
     const wrapper = mount(RelayPulseMatrix, {
       props: {
         rows: [{

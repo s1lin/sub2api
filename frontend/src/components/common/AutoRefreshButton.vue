@@ -1,7 +1,6 @@
 <template>
-  <div class="relative" ref="dropdownRef">
-    <button
-      @click="showDropdown = !showDropdown"
+  <KumoDropdown v-model="showDropdown">
+    <KumoDropdownTrigger
       class="inline-flex items-center gap-1.5 rounded-lg border border-gray-200 bg-white px-2.5 py-1.5 text-xs font-medium text-gray-700 shadow-sm transition-colors hover:bg-gray-50 dark:border-dark-600 dark:bg-dark-800 dark:text-gray-300 dark:hover:bg-dark-700"
       :title="t('common.autoRefresh.title')"
     >
@@ -18,14 +17,13 @@
           : t('common.autoRefresh.title')
         }}
       </span>
-    </button>
+    </KumoDropdownTrigger>
 
-    <div
-      v-if="showDropdown"
-      class="absolute right-0 z-20 mt-1 w-44 rounded-lg border border-gray-200 bg-white shadow-lg dark:border-dark-600 dark:bg-dark-800"
+    <KumoDropdownContent
+      class="    w-44 rounded-lg border border-gray-200 bg-white shadow-lg dark:border-dark-600 dark:bg-dark-800"
     >
       <div class="p-1.5">
-        <button
+        <KumoDropdownItem
           @click="$emit('update:enabled', !enabled)"
           class="flex w-full items-center justify-between rounded-md px-3 py-1.5 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-200 dark:hover:bg-dark-700"
         >
@@ -33,9 +31,9 @@
           <svg v-if="enabled" class="h-4 w-4 text-primary-500" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
             <path fill-rule="evenodd" d="M16.704 4.153a.75.75 0 01.143 1.052l-8 10.5a.75.75 0 01-1.127.075l-4.5-4.5a.75.75 0 011.06-1.06l3.894 3.893 7.48-9.817a.75.75 0 011.05-.143z" clip-rule="evenodd" />
           </svg>
-        </button>
+        </KumoDropdownItem>
         <div class="my-1 border-t border-gray-100 dark:border-dark-700"></div>
-        <button
+        <KumoDropdownItem
           v-for="sec in intervals"
           :key="sec"
           @click="$emit('update:interval', sec)"
@@ -45,14 +43,16 @@
           <svg v-if="intervalSeconds === sec" class="h-4 w-4 text-primary-500" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
             <path fill-rule="evenodd" d="M16.704 4.153a.75.75 0 01.143 1.052l-8 10.5a.75.75 0 01-1.127.075l-4.5-4.5a.75.75 0 011.06-1.06l3.894 3.893 7.48-9.817a.75.75 0 011.05-.143z" clip-rule="evenodd" />
           </svg>
-        </button>
+        </KumoDropdownItem>
       </div>
-    </div>
-  </div>
+    </KumoDropdownContent>
+  </KumoDropdown>
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, onBeforeUnmount } from 'vue'
+import { KumoDropdown, KumoDropdownContent, KumoDropdownItem, KumoDropdownTrigger } from '@/components/kumo'
+
+import { ref } from 'vue'
 import { useI18n } from 'vue-i18n'
 
 defineProps<{
@@ -69,14 +69,5 @@ defineEmits<{
 
 const { t } = useI18n()
 const showDropdown = ref(false)
-const dropdownRef = ref<HTMLElement | null>(null)
 
-function handleClickOutside(event: MouseEvent) {
-  if (dropdownRef.value && !dropdownRef.value.contains(event.target as Node)) {
-    showDropdown.value = false
-  }
-}
-
-onMounted(() => document.addEventListener('click', handleClickOutside))
-onBeforeUnmount(() => document.removeEventListener('click', handleClickOutside))
 </script>

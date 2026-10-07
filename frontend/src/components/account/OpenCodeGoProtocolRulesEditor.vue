@@ -1,14 +1,14 @@
 <template>
   <div>
     <div class="mb-2 flex items-center justify-between gap-2">
-      <label class="input-label mb-0">{{ t('admin.accounts.opencodeGo.protocolRules.title') }}</label>
-      <button
+      <KumoLabel class="input-label mb-0">{{ t('admin.accounts.opencodeGo.protocolRules.title') }}</KumoLabel>
+      <KumoButton
         type="button"
         class="text-xs text-primary-600 hover:text-primary-700 dark:text-primary-400"
         @click="restoreDefaults"
       >
         {{ t('admin.accounts.opencodeGo.protocolRules.restoreDefaults') }}
-      </button>
+      </KumoButton>
     </div>
     <p class="input-hint mb-2">{{ t('admin.accounts.opencodeGo.protocolRules.hint') }}</p>
     <div v-if="rows.length > 0" class="mb-2 space-y-2">
@@ -17,14 +17,14 @@
         :key="getRowKey(row)"
         class="flex items-center gap-2"
       >
-        <input
+        <KumoInput
           v-model="row.pattern"
           type="text"
           class="input flex-1 font-mono text-sm"
           :placeholder="t('admin.accounts.opencodeGo.protocolRules.patternPlaceholder')"
           :data-testid="`opencode-go-protocol-pattern-${index}`"
         />
-        <select
+        <KumoNativeSelect
           v-model="row.protocol"
           class="input w-44 shrink-0"
           :data-testid="`opencode-go-protocol-select-${index}`"
@@ -38,15 +38,15 @@
           <option value="anthropic">
             {{ t('admin.accounts.cnProviders.apiProtocol.anthropic') }}
           </option>
-        </select>
-        <button
+        </KumoNativeSelect>
+        <KumoButton
           type="button"
           class="rounded-lg p-2 text-red-500 transition-colors hover:bg-red-50 hover:text-red-600 dark:hover:bg-red-900/20"
           :aria-label="t('admin.accounts.opencodeGo.protocolRules.remove')"
           @click="removeRow(index)"
         >
           <Icon name="trash" size="sm" />
-        </button>
+        </KumoButton>
       </div>
     </div>
     <div
@@ -56,18 +56,20 @@
       <span class="flex-1 font-mono">*</span>
       <span>{{ t('admin.accounts.opencodeGo.protocolRules.fallback') }}</span>
     </div>
-    <button
+    <KumoButton
       type="button"
       class="w-full rounded-lg border-2 border-dashed border-gray-300 px-4 py-2 text-gray-600 transition-colors hover:border-gray-400 hover:text-gray-700 dark:border-dark-500 dark:text-gray-400 dark:hover:border-dark-400 dark:hover:text-gray-300"
       data-testid="opencode-go-protocol-add-rule"
       @click="addRow"
     >
       {{ t('admin.accounts.opencodeGo.protocolRules.add') }}
-    </button>
+    </KumoButton>
   </div>
 </template>
 
 <script setup lang="ts">
+import { KumoButton, KumoInput, KumoLabel, KumoNativeSelect } from '@/components/kumo'
+
 import { useI18n } from 'vue-i18n'
 import Icon from '@/components/icons/Icon.vue'
 import { createStableObjectKeyResolver } from '@/utils/stableObjectKey'

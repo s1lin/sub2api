@@ -1,6 +1,9 @@
 import { describe, expect, it, vi } from 'vitest'
-import { mount } from '@vue/test-utils'
+import { mount, showTooltip, portal } from '@/__tests__/render'
 
+import { enableAutoUnmount } from '@vue/test-utils'
+import { afterEach } from 'vitest'
+enableAutoUnmount(afterEach)
 import UsageStatsCards from '../UsageStatsCards.vue'
 
 const messages: Record<string, string> = {
@@ -44,8 +47,8 @@ const stats = {
 }
 
 describe('UsageStatsCards', () => {
-  it('shows cache token breakdown values', () => {
-    const wrapper = mount(UsageStatsCards, {
+  it('shows cache token breakdown values', async () => {
+    const wrapper = mount(UsageStatsCards, { attachTo: document.body,
       props: {
         stats,
       },
@@ -56,7 +59,8 @@ describe('UsageStatsCards', () => {
       },
     })
 
-    const text = wrapper.text()
+    await showTooltip(wrapper.get('button[aria-label="common.help"]'))
+    const text = portal().text()
     expect(text).toContain('Cache: 34')
     expect(text).toContain('Cache Token Breakdown')
     expect(text).toContain('Cache Creation')
@@ -77,13 +81,7 @@ describe('UsageStatsCards', () => {
       },
     })
 
-    const tooltip = wrapper.findAll('span').find((el) => el.classes().includes('group-hover:block'))
-
-    expect(tooltip).toBeDefined()
-    // `opacity-0` hides the tooltip visually but keeps it in the layout, so its
-    // fixed width still widens the document and causes horizontal scrolling on
-    // narrow screens. `hidden` (display: none) takes it out of the flow.
-    expect(tooltip?.classes()).toContain('hidden')
-    expect(tooltip?.classes()).not.toContain('opacity-0')
+    expect(wrapper.find('[role=tooltip]').exists()).toBe(false)
+    expect(portal().find('[role=tooltip]').exists()).toBe(false)
   })
 })

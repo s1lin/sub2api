@@ -1,7 +1,10 @@
 import { describe, expect, it, vi, beforeEach, afterEach } from 'vitest'
-import { mount, flushPromises } from '@vue/test-utils'
+import { mount, portal, flushPromises } from '@/__tests__/render'
+import { enableAutoUnmount } from '@vue/test-utils'
+
 
 import UsageFilters from '../UsageFilters.vue'
+enableAutoUnmount(afterEach)
 
 // --- i18n messages (only what UsageFilters needs) ---
 const messages: Record<string, string> = {
@@ -91,6 +94,7 @@ const defaultFilters = () => ({
 
 function mountFilters(filters = defaultFilters()) {
   return mount(UsageFilters, {
+    attachTo: document.body,
     props: {
       modelValue: filters,
       exporting: false,
@@ -121,7 +125,7 @@ function deferred<T>() {
 
 describe('UsageFilters — user search dropdown', () => {
   beforeEach(() => {
-    vi.useFakeTimers()
+    vi.useFakeTimers({ toFake: ['Date', 'setTimeout', 'clearTimeout', 'setInterval', 'clearInterval'] })
     mockSearchUsers.mockReset()
     mockSearchApiKeys.mockResolvedValue([])
   })
@@ -151,7 +155,7 @@ describe('UsageFilters — user search dropdown', () => {
 
     // --- (b) Sort: active user should appear BEFORE deleted user ---
     // Check the underlying component state via rendered DOM order
-    const buttons = wrapper.findAll('.usage-filter-dropdown button[type="button"]')
+    const buttons = portal().findAll('[role="option"]')
     const emailTexts = buttons.map((b) => b.text())
 
     // active@test.com should be listed first
@@ -205,12 +209,12 @@ describe('UsageFilters — user search dropdown', () => {
 
     secondSearch.resolve([{ id: 2, email: 'ab@test.com', deleted: false }])
     await flushPromises()
-    expect(wrapper.text()).toContain('ab@test.com')
+    expect(portal().text()).toContain('ab@test.com')
 
     firstSearch.resolve([{ id: 1, email: 'a@test.com', deleted: false }])
     await flushPromises()
-    expect(wrapper.text()).toContain('ab@test.com')
-    expect(wrapper.text()).not.toContain('a@test.com')
+    expect(portal().text()).toContain('ab@test.com')
+    expect(portal().text()).not.toContain('a@test.com')
   })
 
   it('does not restore stale user results after the search is cleared', async () => {
@@ -231,13 +235,13 @@ describe('UsageFilters — user search dropdown', () => {
 
     pendingSearch.resolve([{ id: 3, email: 'stale@test.com', deleted: false }])
     await flushPromises()
-    expect(wrapper.text()).not.toContain('stale@test.com')
+    expect(portal().text()).not.toContain('stale@test.com')
   })
 })
 
 describe('UsageFilters — model options come from prop (no dup request)', () => {
   beforeEach(() => {
-    vi.useFakeTimers()
+    vi.useFakeTimers({ toFake: ['Date', 'setTimeout', 'clearTimeout', 'setInterval', 'clearInterval'] })
     mockGetModelStats.mockClear()
     mockGroupsList.mockClear()
   })

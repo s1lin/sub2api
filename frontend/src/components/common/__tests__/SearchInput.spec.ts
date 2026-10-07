@@ -1,9 +1,10 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
-import { enableAutoUnmount, mount } from '@vue/test-utils'
+import { enableAutoUnmount } from '@vue/test-utils'
+import { mount, settleControls } from '@/__tests__/render'
 import SearchInput from '../SearchInput.vue'
 
 enableAutoUnmount(afterEach)
-beforeEach(() => vi.useFakeTimers())
+beforeEach(() => vi.useFakeTimers({ toFake: ['Date', 'setTimeout', 'clearTimeout', 'setInterval', 'clearInterval'] }))
 afterEach(() => vi.useRealTimers())
 function mountInput() {
   return mount(SearchInput, { props: { modelValue: '', debounceMs: 300 }, global: { stubs: { Icon: true } } })
@@ -42,6 +43,7 @@ describe('SearchInput composition', () => {
   it('reflects external value changes without issuing a search', async () => {
     const wrapper = mountInput()
     await wrapper.setProps({ modelValue: 'restored' })
+    await settleControls()
     expect(wrapper.get('input').element.value).toBe('restored')
     await vi.advanceTimersByTimeAsync(500)
     expect(wrapper.emitted('search')).toBeUndefined()

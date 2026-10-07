@@ -6,18 +6,15 @@
         <p class="text-sm text-gray-500 dark:text-dark-400">
           {{ t('admin.users.attributes.description') }}
         </p>
-        <button @click="openCreateModal" class="btn btn-primary btn-sm">
+        <KumoButton @click="openCreateModal" class="btn btn-primary btn-sm">
           <Icon name="plus" size="sm" class="mr-1.5" :stroke-width="2" />
           {{ t('admin.users.attributes.addAttribute') }}
-        </button>
+        </KumoButton>
       </div>
 
       <!-- Loading State -->
       <div v-if="loading" class="flex justify-center py-12">
-        <svg class="h-8 w-8 animate-spin text-primary-500" fill="none" viewBox="0 0 24 24">
-          <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4" />
-          <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
-        </svg>
+        <KumoLoader class="h-8 w-8 animate-spin text-primary-500" />
       </div>
 
       <!-- Empty State -->
@@ -53,35 +50,35 @@
               <span class="rounded bg-gray-100 px-1.5 py-0.5 font-mono text-xs text-gray-500 dark:bg-dark-700 dark:text-dark-400">
                 {{ attr.key }}
               </span>
-              <span v-if="attr.required" class="badge badge-danger text-xs">
+              <KumoBadge v-if="attr.required" class="badge badge-danger text-xs">
                 {{ t('admin.users.attributes.required') }}
-              </span>
-              <span v-if="!attr.enabled" class="badge badge-gray text-xs">
+              </KumoBadge>
+              <KumoBadge v-if="!attr.enabled" class="badge badge-gray text-xs">
                 {{ t('common.disabled') }}
-              </span>
+              </KumoBadge>
             </div>
             <div class="mt-0.5 flex items-center gap-2 text-xs text-gray-500 dark:text-dark-400">
-              <span class="badge badge-gray">{{ t(`admin.users.attributes.types.${attr.type}`) }}</span>
+              <KumoBadge class="badge badge-gray">{{ t(`admin.users.attributes.types.${attr.type}`) }}</KumoBadge>
               <span v-if="attr.description" class="truncate">{{ attr.description }}</span>
             </div>
           </div>
 
           <!-- Actions -->
           <div class="flex items-center gap-1">
-            <button
+            <KumoButton
               @click="openEditModal(attr)"
               class="rounded-lg p-1.5 text-gray-500 hover:bg-gray-100 hover:text-primary-600 dark:hover:bg-dark-700 dark:hover:text-primary-400"
               :title="t('common.edit')"
             >
               <Icon name="edit" size="sm" />
-            </button>
-            <button
+            </KumoButton>
+            <KumoButton
               @click="confirmDelete(attr)"
               class="rounded-lg p-1.5 text-gray-500 hover:bg-red-50 hover:text-red-600 dark:hover:bg-red-900/20 dark:hover:text-red-400"
               :title="t('common.delete')"
             >
               <Icon name="trash" size="sm" />
-            </button>
+            </KumoButton>
           </div>
         </div>
       </div>
@@ -89,9 +86,9 @@
 
     <template #footer>
       <div class="flex justify-end">
-        <button @click="emit('close')" class="btn btn-secondary">
+        <KumoButton @click="emit('close')" class="btn btn-secondary">
           {{ t('common.close') }}
-        </button>
+        </KumoButton>
       </div>
     </template>
   </BaseDialog>
@@ -106,8 +103,8 @@
     <form id="attribute-form" @submit.prevent="handleSave" class="space-y-4">
       <!-- Key -->
       <div>
-        <label class="input-label">{{ t('admin.users.attributes.key') }}</label>
-        <input
+        <KumoLabel class="input-label">{{ t('admin.users.attributes.key') }}</KumoLabel>
+        <KumoInput
           v-model="form.key"
           type="text"
           required
@@ -121,8 +118,8 @@
 
       <!-- Name -->
       <div>
-        <label class="input-label">{{ t('admin.users.attributes.name') }}</label>
-        <input
+        <KumoLabel class="input-label">{{ t('admin.users.attributes.name') }}</KumoLabel>
+        <KumoInput
           v-model="form.name"
           type="text"
           required
@@ -133,7 +130,7 @@
 
       <!-- Type -->
       <div>
-        <label class="input-label">{{ t('admin.users.attributes.type') }}</label>
+        <KumoLabel class="input-label">{{ t('admin.users.attributes.type') }}</KumoLabel>
         <Select
           v-model="form.type"
           :options="attributeTypes.map(type => ({ value: type, label: t(`admin.users.attributes.types.${type}`) }))"
@@ -142,40 +139,40 @@
 
       <!-- Options (for select/multi_select) -->
       <div v-if="form.type === 'select' || form.type === 'multi_select'" class="space-y-2">
-        <label class="input-label">{{ t('admin.users.attributes.options') }}</label>
+        <KumoLabel class="input-label">{{ t('admin.users.attributes.options') }}</KumoLabel>
         <div v-for="(option, index) in form.options" :key="getOptionKey(option)" class="flex items-center gap-2">
-          <input
+          <KumoInput
             v-model="option.value"
             type="text"
             class="input flex-1 font-mono text-sm"
             :placeholder="t('admin.users.attributes.optionValue')"
             required
           />
-          <input
+          <KumoInput
             v-model="option.label"
             type="text"
             class="input flex-1 text-sm"
             :placeholder="t('admin.users.attributes.optionLabel')"
             required
           />
-          <button
+          <KumoButton
             type="button"
             @click="removeOption(index)"
             class="rounded-lg p-1.5 text-gray-500 hover:bg-red-50 hover:text-red-600"
           >
             <Icon name="x" size="sm" :stroke-width="2" />
-          </button>
+          </KumoButton>
         </div>
-        <button type="button" @click="addOption" class="btn btn-secondary btn-sm">
+        <KumoButton type="button" @click="addOption" class="btn btn-secondary btn-sm">
           <Icon name="plus" size="sm" class="mr-1" :stroke-width="2" />
           {{ t('admin.users.attributes.addOption') }}
-        </button>
+        </KumoButton>
       </div>
 
       <!-- Description -->
       <div>
-        <label class="input-label">{{ t('admin.users.attributes.fieldDescription') }}</label>
-        <input
+        <KumoLabel class="input-label">{{ t('admin.users.attributes.fieldDescription') }}</KumoLabel>
+        <KumoInput
           v-model="form.description"
           type="text"
           class="input"
@@ -185,8 +182,8 @@
 
       <!-- Placeholder -->
       <div>
-        <label class="input-label">{{ t('admin.users.attributes.placeholder') }}</label>
-        <input
+        <KumoLabel class="input-label">{{ t('admin.users.attributes.placeholder') }}</KumoLabel>
+        <KumoInput
           v-model="form.placeholder"
           type="text"
           class="input"
@@ -196,29 +193,26 @@
 
       <!-- Required & Enabled -->
       <div class="flex items-center gap-6">
-        <label class="flex items-center gap-2">
-          <input v-model="form.required" type="checkbox" class="h-4 w-4 rounded border-gray-300 text-primary-600" />
+        <KumoLabel class="flex items-center gap-2">
+          <KumoCheckbox v-model="form.required" type="checkbox" class="h-4 w-4 rounded border-gray-300 text-primary-600" />
           <span class="text-sm text-gray-700 dark:text-gray-300">{{ t('admin.users.attributes.required') }}</span>
-        </label>
-        <label class="flex items-center gap-2">
-          <input v-model="form.enabled" type="checkbox" class="h-4 w-4 rounded border-gray-300 text-primary-600" />
+        </KumoLabel>
+        <KumoLabel class="flex items-center gap-2">
+          <KumoCheckbox v-model="form.enabled" type="checkbox" class="h-4 w-4 rounded border-gray-300 text-primary-600" />
           <span class="text-sm text-gray-700 dark:text-gray-300">{{ t('admin.users.attributes.enabled') }}</span>
-        </label>
+        </KumoLabel>
       </div>
     </form>
 
     <template #footer>
       <div class="flex justify-end gap-3">
-        <button @click="closeEditModal" type="button" class="btn btn-secondary">
+        <KumoButton @click="closeEditModal" type="button" class="btn btn-secondary">
           {{ t('common.cancel') }}
-        </button>
-        <button type="submit" form="attribute-form" :disabled="saving" class="btn btn-primary">
-          <svg v-if="saving" class="-ml-1 mr-2 h-4 w-4 animate-spin" fill="none" viewBox="0 0 24 24">
-            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4" />
-            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
-          </svg>
+        </KumoButton>
+        <KumoButton type="submit" form="attribute-form" :disabled="saving" class="btn btn-primary">
+          <KumoLoader v-if="saving" class="-ml-1 mr-2 h-4 w-4 animate-spin" />
           {{ saving ? t('common.saving') : (editingAttribute ? t('common.update') : t('common.create')) }}
-        </button>
+        </KumoButton>
       </div>
     </template>
   </BaseDialog>
@@ -237,6 +231,8 @@
 </template>
 
 <script setup lang="ts">
+import { KumoBadge, KumoButton, KumoCheckbox, KumoInput, KumoLabel, KumoLoader } from '@/components/kumo'
+
 import { ref, reactive, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useAppStore } from '@/stores/app'

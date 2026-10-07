@@ -5,7 +5,7 @@
         <div class="flex flex-wrap items-center gap-3">
           <!-- Left: Search + Filters -->
           <div class="flex-1 sm:max-w-64">
-            <input
+            <KumoInput
               v-model="searchQuery"
               type="text"
               :placeholder="t('admin.redeem.searchCodes')"
@@ -28,18 +28,18 @@
 
           <!-- Right: Action buttons -->
           <div class="flex flex-1 flex-wrap items-center justify-end gap-2">
-            <button
+            <KumoButton
               @click="loadCodes"
               :disabled="loading"
               class="btn btn-secondary"
               :title="t('common.refresh')"
             >
               <Icon name="refresh" size="md" :class="loading ? 'animate-spin' : ''" />
-            </button>
-            <button @click="handleExportCodes" class="btn btn-secondary">
+            </KumoButton>
+            <KumoButton @click="handleExportCodes" class="btn btn-secondary">
               {{ t('admin.redeem.exportCsv') }}
-            </button>
-            <button
+            </KumoButton>
+            <KumoButton
               data-test="batch-update-open"
               @click="openBatchUpdateDialog"
               :disabled="selectedCount === 0 || batchUpdating"
@@ -47,10 +47,10 @@
             >
               <Icon name="edit" size="md" class="mr-2" />
               {{ t('admin.redeem.batchUpdate') }}
-            </button>
-            <button @click="showGenerateDialog = true" class="btn btn-primary">
+            </KumoButton>
+            <KumoButton @click="showGenerateDialog = true" class="btn btn-primary">
               {{ t('admin.redeem.generateCodes') }}
-            </button>
+            </KumoButton>
           </div>
         </div>
       </template>
@@ -66,7 +66,7 @@
           @sort="handleSort"
         >
           <template #header-select>
-            <input
+            <KumoCheckbox
               data-test="select-all-codes"
               type="checkbox"
               class="h-4 w-4 cursor-pointer rounded border-gray-300 text-primary-600 focus:ring-primary-500"
@@ -77,7 +77,7 @@
           </template>
 
           <template #cell-select="{ row }">
-            <input
+            <KumoCheckbox
               data-test="select-code"
               type="checkbox"
               class="h-4 w-4 cursor-pointer rounded border-gray-300 text-primary-600 focus:ring-primary-500"
@@ -90,7 +90,7 @@
           <template #cell-code="{ value }">
             <div class="flex items-center space-x-2">
               <code class="font-mono text-sm text-gray-900 dark:text-gray-100">{{ value }}</code>
-              <button
+              <KumoButton
                 @click="copyToClipboard(value)"
                 :class="[
                   'flex items-center transition-colors',
@@ -109,7 +109,7 @@
                     d="M5 13l4 4L19 7"
                   />
                 </svg>
-              </button>
+              </KumoButton>
             </div>
           </template>
 
@@ -183,7 +183,7 @@
 
           <template #cell-actions="{ row }">
             <div class="flex items-center space-x-2">
-              <button
+              <KumoButton
                 v-if="row.status === 'unused'"
                 @click="handleDelete(row)"
                 class="flex flex-col items-center gap-0.5 rounded-lg p-1.5 text-gray-500 transition-colors hover:bg-red-50 hover:text-red-600 dark:hover:bg-red-900/20 dark:hover:text-red-400"
@@ -197,7 +197,7 @@
                   />
                 </svg>
                 <span class="text-xs">{{ t('common.delete') }}</span>
-              </button>
+              </KumoButton>
               <span v-else class="text-gray-400 dark:text-dark-500">-</span>
             </div>
           </template>
@@ -213,20 +213,20 @@
             {{ t('admin.redeem.selectedCount', { count: selectedCount }) }}
           </span>
           <div class="flex flex-wrap items-center gap-2">
-            <button
+            <KumoButton
               type="button"
               class="text-xs font-medium text-primary-700 hover:text-primary-800 dark:text-primary-300 dark:hover:text-primary-200"
               @click="clearSelectedCodes"
             >
               {{ t('admin.redeem.clearSelection') }}
-            </button>
-            <button
+            </KumoButton>
+            <KumoButton
               type="button"
               class="btn btn-primary btn-sm"
               @click="openBatchUpdateDialog"
             >
               {{ t('admin.redeem.batchUpdate') }}
-            </button>
+            </KumoButton>
           </div>
         </div>
 
@@ -241,9 +241,9 @@
 
         <!-- Batch Actions -->
         <div v-if="filters.status === 'unused'" class="flex justify-end">
-          <button @click="showDeleteUnusedDialog = true" class="btn btn-danger">
+          <KumoButton @click="showDeleteUnusedDialog = true" class="btn btn-danger">
             {{ t('admin.redeem.deleteAllUnused') }}
-          </button>
+          </KumoButton>
         </div>
       </template>
     </TablePageLayout>
@@ -273,10 +273,8 @@
     />
 
     <!-- Generate Codes Dialog -->
-    <Teleport to="body">
-      <div v-if="showGenerateDialog" class="fixed inset-0 z-50 flex items-center justify-center">
-        <div class="fixed inset-0 bg-black/50" @click="showGenerateDialog = false"></div>
-        <div
+    <KumoDialog :show="!!(showGenerateDialog)" :title="t('admin.redeem.generateCodesTitle') ?? ''" custom-layout :close-on-click-outside="true" :close-on-escape="true" :z-index="50" width="normal" @close="showGenerateDialog = false">
+<template v-if="showGenerateDialog"><div
           class="relative z-10 w-full max-w-md rounded-xl bg-white p-6 shadow-xl dark:bg-dark-800"
         >
           <h2 class="mb-4 text-lg font-semibold text-gray-900 dark:text-white">
@@ -284,19 +282,19 @@
           </h2>
           <form @submit.prevent="handleGenerateCodes" class="space-y-4">
             <div>
-              <label class="input-label">{{ t('admin.redeem.codeType') }}</label>
+              <KumoLabel class="input-label">{{ t('admin.redeem.codeType') }}</KumoLabel>
               <Select v-model="generateForm.type" :options="typeOptions" />
             </div>
             <!-- 余额/并发类型：显示数值输入 -->
             <div v-if="generateForm.type !== 'subscription' && generateForm.type !== 'invitation'">
-              <label class="input-label">
+              <KumoLabel class="input-label">
                 {{
                   generateForm.type === 'balance'
                     ? t('admin.redeem.amount')
                     : t('admin.redeem.columns.value')
                 }}
-              </label>
-              <input
+              </KumoLabel>
+              <KumoInput
                 v-model.number="generateForm.value"
                 type="number"
                 :step="generateForm.type === 'balance' ? '0.01' : '1'"
@@ -314,7 +312,7 @@
             <!-- 订阅类型：显示分组选择和有效天数 -->
             <template v-if="generateForm.type === 'subscription'">
               <div>
-                <label class="input-label">{{ t('admin.redeem.selectGroup') }}</label>
+                <KumoLabel class="input-label">{{ t('admin.redeem.selectGroup') }}</KumoLabel>
                 <Select
                   v-model="generateForm.group_id"
                   :options="subscriptionGroupOptions"
@@ -345,8 +343,8 @@
                 </Select>
               </div>
               <div>
-                <label class="input-label">{{ t('admin.redeem.validityDays') }}</label>
-                <input
+                <KumoLabel class="input-label">{{ t('admin.redeem.validityDays') }}</KumoLabel>
+                <KumoInput
                   v-model.number="generateForm.validity_days"
                   type="number"
                   min="1"
@@ -357,9 +355,9 @@
               </div>
             </template>
             <div>
-              <label class="input-label">{{ t('admin.redeem.codeExpiry') }}</label>
+              <KumoLabel class="input-label">{{ t('admin.redeem.codeExpiry') }}</KumoLabel>
               <div class="grid grid-cols-2 gap-2 sm:grid-cols-5">
-                <button
+                <KumoButton
                   v-for="option in redeemCodeExpiryOptions"
                   :key="option.value"
                   type="button"
@@ -372,9 +370,9 @@
                   ]"
                 >
                   {{ option.label }}
-                </button>
+                </KumoButton>
               </div>
-              <input
+              <KumoInput
                 v-if="generateForm.expiry_option === 'custom'"
                 v-model.number="generateForm.custom_expiry_days"
                 type="number"
@@ -386,8 +384,8 @@
               />
             </div>
             <div>
-              <label class="input-label">{{ t('admin.redeem.count') }}</label>
-              <input
+              <KumoLabel class="input-label">{{ t('admin.redeem.count') }}</KumoLabel>
+              <KumoInput
                 v-model.number="generateForm.count"
                 type="number"
                 min="1"
@@ -397,26 +395,20 @@
               />
             </div>
             <div class="flex justify-end gap-3 pt-2">
-              <button type="button" @click="showGenerateDialog = false" class="btn btn-secondary">
+              <KumoButton type="button" @click="showGenerateDialog = false" class="btn btn-secondary">
                 {{ t('common.cancel') }}
-              </button>
-              <button type="submit" :disabled="generating" class="btn btn-primary">
+              </KumoButton>
+              <KumoButton type="submit" :disabled="generating" class="btn btn-primary">
                 {{ generating ? t('admin.redeem.generating') : t('admin.redeem.generate') }}
-              </button>
+              </KumoButton>
             </div>
           </form>
-        </div>
-      </div>
-    </Teleport>
+        </div></template>
+</KumoDialog>
 
     <!-- Batch Update Dialog -->
-    <Teleport to="body">
-      <div
-        v-if="showBatchUpdateDialog"
-        class="fixed inset-0 z-50 flex items-center justify-center p-4"
-      >
-        <div class="fixed inset-0 bg-black/50" @click="closeBatchUpdateDialog"></div>
-        <div
+    <KumoDialog :show="!!(showBatchUpdateDialog)" :title="t('admin.redeem.batchUpdateTitle') ?? ''" custom-layout :close-on-click-outside="true" :close-on-escape="true" :z-index="50" width="normal" @close="closeBatchUpdateDialog">
+<template v-if="showBatchUpdateDialog"><div
           class="relative z-10 w-full max-w-lg rounded-xl bg-white p-6 shadow-xl dark:bg-dark-800"
         >
           <h2 class="mb-1 text-lg font-semibold text-gray-900 dark:text-white">
@@ -428,15 +420,15 @@
 
           <form data-test="batch-update-form" class="space-y-4" @submit.prevent="handleBatchUpdate">
             <div class="space-y-2">
-              <label class="flex items-center gap-2 text-sm font-medium text-gray-700 dark:text-gray-300">
-                <input
+              <KumoLabel class="flex items-center gap-2 text-sm font-medium text-gray-700 dark:text-gray-300">
+                <KumoCheckbox
                   data-test="batch-field-status"
                   v-model="batchUpdateForm.update_status"
                   type="checkbox"
                   class="h-4 w-4 rounded border-gray-300 text-primary-600 focus:ring-primary-500"
                 />
                 {{ t('admin.redeem.batchFields.status') }}
-              </label>
+              </KumoLabel>
               <Select
                 v-if="batchUpdateForm.update_status"
                 v-model="batchUpdateForm.status"
@@ -446,17 +438,17 @@
             </div>
 
             <div class="space-y-2">
-              <label class="flex items-center gap-2 text-sm font-medium text-gray-700 dark:text-gray-300">
-                <input
+              <KumoLabel class="flex items-center gap-2 text-sm font-medium text-gray-700 dark:text-gray-300">
+                <KumoCheckbox
                   v-model="batchUpdateForm.update_expires_at"
                   type="checkbox"
                   class="h-4 w-4 rounded border-gray-300 text-primary-600 focus:ring-primary-500"
                 />
                 {{ t('admin.redeem.batchFields.expiresAt') }}
-              </label>
+              </KumoLabel>
               <template v-if="batchUpdateForm.update_expires_at">
                 <Select v-model="batchUpdateForm.expires_mode" :options="batchExpiryModeOptions" />
-                <input
+                <KumoInput
                   v-if="batchUpdateForm.expires_mode === 'custom'"
                   v-model="batchUpdateForm.expires_at_local"
                   type="datetime-local"
@@ -469,34 +461,34 @@
             </div>
 
             <div class="space-y-2">
-              <label class="flex items-center gap-2 text-sm font-medium text-gray-700 dark:text-gray-300">
-                <input
+              <KumoLabel class="flex items-center gap-2 text-sm font-medium text-gray-700 dark:text-gray-300">
+                <KumoCheckbox
                   data-test="batch-field-notes"
                   v-model="batchUpdateForm.update_notes"
                   type="checkbox"
                   class="h-4 w-4 rounded border-gray-300 text-primary-600 focus:ring-primary-500"
                 />
                 {{ t('admin.redeem.batchFields.notes') }}
-              </label>
-              <textarea
+              </KumoLabel>
+              <KumoTextarea
                 v-if="batchUpdateForm.update_notes"
                 data-test="batch-notes-input"
                 v-model="batchUpdateForm.notes"
                 rows="3"
                 class="input"
                 :placeholder="t('admin.redeem.batchNotesPlaceholder')"
-              ></textarea>
+              ></KumoTextarea>
             </div>
 
             <div class="space-y-2">
-              <label class="flex items-center gap-2 text-sm font-medium text-gray-700 dark:text-gray-300">
-                <input
+              <KumoLabel class="flex items-center gap-2 text-sm font-medium text-gray-700 dark:text-gray-300">
+                <KumoCheckbox
                   v-model="batchUpdateForm.update_group_id"
                   type="checkbox"
                   class="h-4 w-4 rounded border-gray-300 text-primary-600 focus:ring-primary-500"
                 />
                 {{ t('admin.redeem.batchFields.group') }}
-              </label>
+              </KumoLabel>
               <Select
                 v-if="batchUpdateForm.update_group_id"
                 v-model="batchUpdateForm.group_id"
@@ -506,28 +498,25 @@
             </div>
 
             <div class="flex justify-end gap-3 pt-2">
-              <button type="button" @click="closeBatchUpdateDialog" class="btn btn-secondary">
+              <KumoButton type="button" @click="closeBatchUpdateDialog" class="btn btn-secondary">
                 {{ t('common.cancel') }}
-              </button>
-              <button
+              </KumoButton>
+              <KumoButton
                 data-test="batch-update-submit"
                 type="submit"
                 :disabled="batchUpdating"
                 class="btn btn-primary"
               >
                 {{ batchUpdating ? t('common.submitting') : t('admin.redeem.batchUpdate') }}
-              </button>
+              </KumoButton>
             </div>
           </form>
-        </div>
-      </div>
-    </Teleport>
+        </div></template>
+</KumoDialog>
 
     <!-- Generated Codes Result Dialog -->
-    <Teleport to="body">
-      <div v-if="showResultDialog" class="fixed inset-0 z-50 flex items-center justify-center p-4">
-        <div class="fixed inset-0 bg-black/50" @click="closeResultDialog"></div>
-        <div class="relative z-10 w-full max-w-lg rounded-xl bg-white shadow-xl dark:bg-dark-800">
+    <KumoDialog :show="!!(showResultDialog)" :title="t('admin.redeem.generateCodesTitle') ?? ''" custom-layout :close-on-click-outside="true" :close-on-escape="true" :z-index="50" width="normal" @close="closeResultDialog">
+<template v-if="showResultDialog"><div class="relative z-10 w-full max-w-lg rounded-xl bg-white shadow-xl dark:bg-dark-800">
           <!-- Header -->
           <div
             class="flex items-center justify-between border-b border-gray-200 px-5 py-4 dark:border-dark-600"
@@ -559,29 +548,29 @@
                 </p>
               </div>
             </div>
-            <button
+            <KumoButton
               @click="closeResultDialog"
               class="rounded-lg p-1.5 text-gray-400 transition-colors hover:bg-gray-100 hover:text-gray-600 dark:hover:bg-dark-700 dark:hover:text-gray-300"
             >
               <Icon name="x" size="md" :stroke-width="2" />
-            </button>
+            </KumoButton>
           </div>
           <!-- Content -->
           <div class="p-5">
             <div class="relative">
-              <textarea
+              <KumoTextarea
                 readonly
                 :value="generatedCodesText"
                 :style="{ height: textareaHeight }"
                 class="w-full resize-none rounded-lg border border-gray-200 bg-gray-50 p-3 font-mono text-sm text-gray-800 focus:outline-none dark:border-dark-600 dark:bg-dark-700 dark:text-gray-200"
-              ></textarea>
+              ></KumoTextarea>
             </div>
           </div>
           <!-- Footer -->
           <div
             class="flex justify-end gap-2 rounded-b-xl border-t border-gray-200 bg-gray-50 px-5 py-4 dark:border-dark-600 dark:bg-dark-700/50"
           >
-            <button
+            <KumoButton
               @click="copyGeneratedCodes"
               :class="[
                 'btn flex items-center gap-2 transition-all',
@@ -598,19 +587,20 @@
                 />
               </svg>
               {{ copiedAll ? t('admin.redeem.copied') : t('admin.redeem.copyAll') }}
-            </button>
-            <button @click="downloadGeneratedCodes" class="btn btn-primary flex items-center gap-2">
+            </KumoButton>
+            <KumoButton @click="downloadGeneratedCodes" class="btn btn-primary flex items-center gap-2">
               <Icon name="download" size="sm" :stroke-width="2" />
               {{ t('admin.redeem.download') }}
-            </button>
+            </KumoButton>
           </div>
-        </div>
-      </div>
-    </Teleport>
+        </div></template>
+</KumoDialog>
   </AppLayout>
 </template>
 
 <script setup lang="ts">
+import { KumoButton, KumoCheckbox, KumoDialog, KumoInput, KumoLabel, KumoTextarea } from '@/components/kumo'
+
 import { ref, reactive, computed, onMounted, onUnmounted, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useAppStore } from '@/stores/app'

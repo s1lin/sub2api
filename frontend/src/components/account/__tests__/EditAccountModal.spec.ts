@@ -1,6 +1,9 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
+import { enableAutoUnmount } from '@vue/test-utils'
 import { defineComponent } from 'vue'
-import { mount } from '@vue/test-utils'
+import { mount } from '@/__tests__/render'
+
+enableAutoUnmount(afterEach)
 
 const { updateAccountMock, checkMixedChannelRiskMock, authIsSimpleMode } = vi.hoisted(() => ({
   updateAccountMock: vi.fn(),

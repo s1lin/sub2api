@@ -1,7 +1,6 @@
 <template>
-  <div class="relative" ref="dropdownRef">
-    <button
-      @click="toggleDropdown"
+  <KumoDropdown v-model="isOpen">
+    <KumoDropdownTrigger
       :disabled="switching"
       :aria-expanded="isOpen"
       aria-haspopup="true"
@@ -18,15 +17,14 @@
         class="text-gray-400 transition-transform duration-200"
         :class="{ 'rotate-180': isOpen }"
       />
-    </button>
+    </KumoDropdownTrigger>
 
-    <transition name="dropdown">
-      <div
-        v-if="isOpen"
+
+      <KumoDropdownContent
         @keydown.esc="isOpen = false"
-        class="absolute right-0 z-50 mt-1 w-32 overflow-hidden rounded-lg border border-gray-200 bg-white shadow-lg dark:border-dark-700 dark:bg-dark-800"
+        class="    w-32 overflow-hidden rounded-lg border border-gray-200 bg-white shadow-lg dark:border-dark-700 dark:bg-dark-800"
       >
-        <button
+        <KumoDropdownItem
           v-for="locale in availableLocales"
           :key="locale.code"
           :disabled="switching"
@@ -40,14 +38,16 @@
           <span v-if="!textOnly" class="text-base">{{ locale.flag }}</span>
           <span>{{ locale.name }}</span>
           <Icon v-if="locale.code === currentLocaleCode" name="check" size="sm" class="ml-auto text-primary-500" />
-        </button>
-      </div>
-    </transition>
-  </div>
+        </KumoDropdownItem>
+      </KumoDropdownContent>
+
+  </KumoDropdown>
 </template>
 
 <script setup lang="ts">
-import { ref, computed, onMounted, onBeforeUnmount } from 'vue'
+import { KumoDropdown, KumoDropdownContent, KumoDropdownItem, KumoDropdownTrigger } from '@/components/kumo'
+
+import { ref, computed } from 'vue'
 import { useI18n } from 'vue-i18n'
 import Icon from '@/components/icons/Icon.vue'
 import { setLocale, availableLocales } from '@/i18n'
@@ -57,15 +57,11 @@ withDefaults(defineProps<{ textOnly?: boolean }>(), { textOnly: false })
 const { locale } = useI18n()
 
 const isOpen = ref(false)
-const dropdownRef = ref<HTMLElement | null>(null)
 const switching = ref(false)
 
 const currentLocaleCode = computed(() => locale.value)
 const currentLocale = computed(() => availableLocales.find((l) => l.code === locale.value))
 
-function toggleDropdown() {
-  isOpen.value = !isOpen.value
-}
 
 async function selectLocale(code: string) {
   if (switching.value || code === currentLocaleCode.value) {
@@ -81,19 +77,6 @@ async function selectLocale(code: string) {
   }
 }
 
-function handleClickOutside(event: MouseEvent) {
-  if (dropdownRef.value && !dropdownRef.value.contains(event.target as Node)) {
-    isOpen.value = false
-  }
-}
-
-onMounted(() => {
-  document.addEventListener('click', handleClickOutside)
-})
-
-onBeforeUnmount(() => {
-  document.removeEventListener('click', handleClickOutside)
-})
 </script>
 
 <style scoped>

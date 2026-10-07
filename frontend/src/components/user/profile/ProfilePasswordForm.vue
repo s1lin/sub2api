@@ -16,10 +16,10 @@
           </p>
         </div>
         <div>
-          <label for="old_password" class="input-label">
+          <KumoLabel for="old_password" class="input-label">
             {{ t('profile.currentPassword') }}
-          </label>
-          <input
+          </KumoLabel>
+          <KumoInput
             id="old_password"
             v-model="form.old_password"
             type="password"
@@ -30,10 +30,10 @@
         </div>
 
         <div>
-          <label for="new_password" class="input-label">
+          <KumoLabel for="new_password" class="input-label">
             {{ t('profile.newPassword') }}
-          </label>
-          <input
+          </KumoLabel>
+          <KumoInput
             id="new_password"
             v-model="form.new_password"
             type="password"
@@ -47,10 +47,10 @@
         </div>
 
         <div>
-          <label for="confirm_password" class="input-label">
+          <KumoLabel for="confirm_password" class="input-label">
             {{ t('profile.confirmNewPassword') }}
-          </label>
-          <input
+          </KumoLabel>
+          <KumoInput
             id="confirm_password"
             v-model="form.confirm_password"
             type="password"
@@ -61,9 +61,9 @@
         </div>
 
         <div class="flex justify-end pt-4">
-          <button type="submit" :disabled="loading" class="btn btn-primary">
+          <KumoButton type="submit" :disabled="loading" class="btn btn-primary">
             {{ loading ? t('profile.changingPassword') : t('profile.changePasswordButton') }}
-          </button>
+          </KumoButton>
         </div>
       </form>
     </div>
@@ -71,6 +71,8 @@
 </template>
 
 <script setup lang="ts">
+import { KumoButton, KumoInput, KumoLabel } from '@/components/kumo'
+
 import { ref } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useAppStore } from '@/stores/app'

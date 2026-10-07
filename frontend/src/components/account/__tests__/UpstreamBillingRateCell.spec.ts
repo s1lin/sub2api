@@ -1,6 +1,9 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
-import { flushPromises, mount } from '@vue/test-utils'
+import { mount, flushPromises, showTooltip, portal } from '@/__tests__/render'
+
 import UpstreamBillingRateCell from '../UpstreamBillingRateCell.vue'
+import { enableAutoUnmount } from '@vue/test-utils'
+enableAutoUnmount(afterEach)
 import HelpTooltip from '@/components/common/HelpTooltip.vue'
 import type { Account } from '@/types'
 
@@ -60,7 +63,7 @@ const billingData = {
 
 describe('UpstreamBillingRateCell', () => {
   beforeEach(() => {
-    vi.useFakeTimers()
+    vi.useFakeTimers({ toFake: ['Date', 'setTimeout', 'clearTimeout', 'setInterval', 'clearInterval'] })
     vi.setSystemTime(new Date('2026-07-13T00:30:00Z'))
   })
 
@@ -69,7 +72,7 @@ describe('UpstreamBillingRateCell', () => {
   })
 
   it('recomputes the current effective rate and keeps the icon-only probe action', async () => {
-    const wrapper = mount(UpstreamBillingRateCell, {
+    const wrapper = mount(UpstreamBillingRateCell, { attachTo: document.body,
       props: {
         account: makeAccount({
           extra: {
@@ -185,7 +188,7 @@ describe('UpstreamBillingRateCell', () => {
     })
 
     expect(wrapper.getComponent(HelpTooltip).props('widthClass')).toBe('w-max max-w-[calc(100vw-2rem)]')
-    await wrapper.get('[data-testid="upstream-billing-details"]').trigger('mouseenter')
+    await showTooltip(wrapper.get('[data-testid="upstream-billing-details"]'))
     await flushPromises()
 
     const tooltips = document.body.querySelectorAll('[role="tooltip"]')
@@ -233,7 +236,7 @@ describe('UpstreamBillingRateCell', () => {
       }
     })
 
-    await wrapper.get('[data-testid="upstream-billing-details"]').trigger('mouseenter')
+    await showTooltip(wrapper.get('[data-testid="upstream-billing-details"]'))
     await flushPromises()
 
     const tooltips = document.body.querySelectorAll('[role="tooltip"]')

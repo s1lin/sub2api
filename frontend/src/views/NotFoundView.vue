@@ -6,15 +6,17 @@
       <p class="font-mono text-sm text-[var(--brand-muted)]">404</p>
       <h1>{{ t('errors.pageNotFound') }}</h1>
       <p class="not-found-description">{{ t('errors.notFoundDescription') }}</p>
-      <router-link to="/" class="brand-button">
+      <KumoLink to="/" class="brand-button">
         <Icon name="arrowLeft" size="md" />
         {{ t('errors.backHome') }}
-      </router-link>
+      </KumoLink>
     </main>
   </div>
 </template>
 
 <script setup lang="ts">
+import { KumoLink } from '@/components/kumo'
+
 import { useI18n } from 'vue-i18n'
 import PublicHeader from '@/components/layout/PublicHeader.vue'
 import Icon from '@/components/icons/Icon.vue'

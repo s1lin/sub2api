@@ -7,35 +7,18 @@
   >
     <!-- provider tabs -->
     <div class="mb-4 border-b border-gray-200 dark:border-dark-700">
-      <div role="tablist" class="flex flex-wrap gap-1">
-        <button
-          v-for="tab in providerTabs"
-          :key="tab.value"
-          type="button"
-          role="tab"
-          :aria-selected="activeProvider === tab.value"
-          class="px-4 py-2 text-sm font-medium transition-colors"
-          :class="tabClass(tab.value)"
-          @click="activeProvider = tab.value"
-        >
-          {{ tab.label }}
-          <span
-            v-if="countByProvider[tab.value] > 0"
-            class="ml-1.5 rounded-full bg-gray-100 px-2 py-0.5 text-xs dark:bg-dark-700"
-          >
-            {{ countByProvider[tab.value] }}
-          </span>
-        </button>
-      </div>
+      <KumoTabs v-model="activeProvider" variant="underline" :tabs="providerTabs">
+      <template #tab="{ tab }"><span>{{ tab.label }}</span><KumoBadge v-if="countByProvider[tab.value as Provider] > 0">{{ countByProvider[tab.value as Provider] }}</KumoBadge></template>
+    </KumoTabs>
     </div>
 
     <!-- active provider list -->
     <div v-if="!editing" class="space-y-2">
       <div class="flex justify-end">
-        <button class="btn btn-primary btn-sm" @click="openCreateForm">
+        <KumoButton class="btn btn-primary btn-sm" @click="openCreateForm">
           <Icon name="plus" size="sm" class="mr-1" />
           {{ t('admin.channelMonitor.template.createButton') }}
-        </button>
+        </KumoButton>
       </div>
 
       <div v-if="loading" class="py-8 text-center text-sm text-gray-400">
@@ -89,7 +72,7 @@
             </p>
           </div>
           <div class="flex flex-shrink-0 gap-2">
-            <button
+            <KumoButton
               class="btn btn-secondary btn-sm"
               :disabled="tpl.associated_monitors === 0"
               :title="t('admin.channelMonitor.template.applyTooltip')"
@@ -97,13 +80,13 @@
             >
               <Icon name="refresh" size="sm" class="mr-1" />
               {{ t('admin.channelMonitor.template.applyButton') }}
-            </button>
-            <button class="btn btn-secondary btn-sm" @click="openEditForm(tpl)">
+            </KumoButton>
+            <KumoButton class="btn btn-secondary btn-sm" @click="openEditForm(tpl)">
               {{ t('common.edit') }}
-            </button>
-            <button class="btn btn-secondary btn-sm text-red-600" @click="handleDelete(tpl)">
+            </KumoButton>
+            <KumoButton class="btn btn-secondary btn-sm text-red-600" @click="handleDelete(tpl)">
               {{ t('common.delete') }}
-            </button>
+            </KumoButton>
           </div>
         </div>
       </div>
@@ -112,11 +95,11 @@
     <!-- edit / create form -->
     <div v-else class="space-y-4">
       <div>
-        <label class="input-label">
+        <KumoLabel class="input-label">
           {{ t('admin.channelMonitor.template.form.name') }}
           <span class="text-red-500">*</span>
-        </label>
-        <input
+        </KumoLabel>
+        <KumoInput
           v-model="form.name"
           type="text"
           required
@@ -126,12 +109,12 @@
       </div>
 
       <div v-if="editing === 'new'">
-        <label class="input-label">
+        <KumoLabel class="input-label">
           {{ t('admin.channelMonitor.form.provider') }}
           <span class="text-red-500">*</span>
-        </label>
+        </KumoLabel>
         <div class="grid grid-cols-2 gap-3 sm:grid-cols-4">
-          <button
+          <KumoButton
             v-for="opt in providerTabs"
             :key="opt.value"
             type="button"
@@ -140,14 +123,14 @@
             @click="form.provider = opt.value"
           >
             {{ opt.label }}
-          </button>
+          </KumoButton>
         </div>
       </div>
 
       <div v-if="form.provider === PROVIDER_OPENAI" class="rounded-lg border border-blue-100 bg-blue-50/50 p-3 dark:border-blue-500/20 dark:bg-blue-500/10">
-        <label class="input-label">{{ t('admin.channelMonitor.form.apiMode') }}</label>
+        <KumoLabel class="input-label">{{ t('admin.channelMonitor.form.apiMode') }}</KumoLabel>
         <div class="grid gap-3 sm:grid-cols-2">
-          <button
+          <KumoButton
             v-for="opt in apiModeOptions"
             :key="opt.value"
             type="button"
@@ -157,15 +140,15 @@
           >
             <span class="block text-sm font-semibold">{{ opt.label }}</span>
             <span class="mt-0.5 block text-xs opacity-80">{{ opt.hint }}</span>
-          </button>
+          </KumoButton>
         </div>
       </div>
 
       <div>
-        <label class="input-label">
+        <KumoLabel class="input-label">
           {{ t('admin.channelMonitor.template.form.description') }}
-        </label>
-        <input
+        </KumoLabel>
+        <KumoInput
           v-model="form.description"
           type="text"
           class="input"
@@ -189,18 +172,18 @@
       <div class="flex w-full items-center justify-between">
         <!-- Left: back to list / nothing -->
         <div>
-          <button v-if="editing" class="btn btn-secondary" @click="backToList">
+          <KumoButton v-if="editing" class="btn btn-secondary" @click="backToList">
             {{ t('common.back') }}
-          </button>
+          </KumoButton>
         </div>
         <!-- Right: save or close -->
         <div class="flex gap-2">
-          <button class="btn btn-secondary" @click="$emit('close')">
+          <KumoButton class="btn btn-secondary" @click="$emit('close')">
             {{ t('common.close') }}
-          </button>
-          <button v-if="editing" class="btn btn-primary" :disabled="submitting" @click="handleSubmit">
+          </KumoButton>
+          <KumoButton v-if="editing" class="btn btn-primary" :disabled="submitting" @click="handleSubmit">
             {{ submitting ? t('common.submitting') : editing === 'new' ? t('common.create') : t('common.update') }}
-          </button>
+          </KumoButton>
         </div>
       </div>
     </template>
@@ -227,6 +210,8 @@
 </template>
 
 <script setup lang="ts">
+import { KumoBadge, KumoButton, KumoInput, KumoLabel, KumoTabs } from '@/components/kumo'
+
 import { computed, reactive, ref, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useAppStore } from '@/stores/app'
@@ -469,11 +454,7 @@ async function doDelete() {
 }
 
 // --- misc ---
-function tabClass(value: Provider): string {
-  return activeProvider.value === value
-    ? 'border-b-2 border-primary-500 text-primary-600 dark:text-primary-400'
-    : 'border-b-2 border-transparent text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200'
-}
+
 
 function modeBadgeClass(mode: BodyOverrideMode): string {
   switch (mode) {

@@ -16,15 +16,13 @@
                 size="md"
                 class="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"
               />
-              <input
+              <KumoSearchSelect
                 v-model="filterUserKeyword"
-                type="text"
                 :placeholder="t('admin.users.searchUsers')"
                 class="input pl-10 pr-8"
-                @input="debounceSearchFilterUsers"
-                @focus="showFilterUserDropdown = true"
-              />
-              <button
+                @search="debounceSearchFilterUsers"
+                @focus="showFilterUserDropdown = true" :options="filterUserResults ?? []" label-key="email" v-model:open="showFilterUserDropdown" @select="user => selectFilterUser(user)"  :loading="filterUserLoading" :loading-label="t('common.loading')" :empty-text="t('common.noOptionsFound')"><template #option="{ option: user }"><span class="font-medium text-gray-900 dark:text-white">{{ user.email }}</span><span class="ml-2 text-gray-500 dark:text-gray-400">#{{ user.id }}</span></template></KumoSearchSelect>
+              <KumoButton
                 v-if="selectedFilterUser"
                 @click="clearFilterUser"
                 type="button"
@@ -32,36 +30,10 @@
                 :title="t('common.clear')"
               >
                 <Icon name="x" size="sm" :stroke-width="2" />
-              </button>
+              </KumoButton>
 
               <!-- User Dropdown -->
-              <div
-                v-if="showFilterUserDropdown && (filterUserResults.length > 0 || filterUserKeyword)"
-                class="absolute z-50 mt-1 max-h-60 w-full overflow-auto rounded-lg border border-gray-200 bg-white shadow-lg dark:border-dark-700 dark:bg-dark-800"
-              >
-                <div
-                  v-if="filterUserLoading"
-                  class="px-4 py-3 text-sm text-gray-500 dark:text-gray-400"
-                >
-                  {{ t('common.loading') }}
-                </div>
-                <div
-                  v-else-if="filterUserResults.length === 0 && filterUserKeyword"
-                  class="px-4 py-3 text-sm text-gray-500 dark:text-gray-400"
-                >
-                  {{ t('common.noOptionsFound') }}
-                </div>
-                <button
-                  v-for="user in filterUserResults"
-                  :key="user.id"
-                  type="button"
-                  @click="selectFilterUser(user)"
-                  class="w-full px-4 py-2 text-left text-sm hover:bg-gray-100 dark:hover:bg-dark-700"
-                >
-                  <span class="font-medium text-gray-900 dark:text-white">{{ user.email }}</span>
-                  <span class="ml-2 text-gray-500 dark:text-gray-400">#{{ user.id }}</span>
-                </button>
-              </div>
+
             </div>
 
             <!-- Filters -->
@@ -93,30 +65,26 @@
 
           <!-- Right: Actions -->
           <div class="ml-auto flex flex-wrap items-center justify-end gap-3">
-            <button
+            <KumoButton
               @click="loadSubscriptions"
               :disabled="loading"
               class="btn btn-secondary"
               :title="t('common.refresh')"
             >
               <Icon name="refresh" size="md" :class="loading ? 'animate-spin' : ''" />
-            </button>
+            </KumoButton>
             <!-- Column Settings Dropdown -->
-            <div class="relative" ref="columnDropdownRef">
-              <button
-                @click="showColumnDropdown = !showColumnDropdown"
+            <KumoPopoverRoot v-model="showColumnDropdown"><KumoPopoverTrigger
                 class="btn btn-secondary px-2 md:px-3"
-                :title="t('admin.users.columnSettings')"
+                :aria-label="t('admin.users.columnSettings')"
               >
                 <svg class="h-4 w-4 md:mr-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5">
                   <path stroke-linecap="round" stroke-linejoin="round" d="M9 4.5v15m6-15v15m-10.875 0h15.75c.621 0 1.125-.504 1.125-1.125V5.625c0-.621-.504-1.125-1.125-1.125H4.125C3.504 4.5 3 5.004 3 5.625v12.75c0 .621.504 1.125 1.125 1.125z" />
                 </svg>
                 <span class="hidden md:inline">{{ t('admin.users.columnSettings') }}</span>
-              </button>
-              <!-- Dropdown menu -->
-              <div
-                v-if="showColumnDropdown"
-                class="absolute right-0 z-50 mt-2 w-48 origin-top-right rounded-lg border border-gray-200 bg-white shadow-lg dark:border-dark-700 dark:bg-dark-800"
+              </KumoPopoverTrigger>
+<KumoPopoverContent
+                class="w-48 rounded-lg border border-gray-200 bg-white shadow-lg dark:border-dark-700 dark:bg-dark-800"
               >
                 <div class="p-2">
                   <!-- User column mode selection -->
@@ -124,45 +92,36 @@
                     <div class="px-3 py-1 text-xs font-medium text-gray-500 dark:text-gray-400">
                       {{ t('admin.subscriptions.columns.user') }}
                     </div>
-                    <button
+                    <KumoButton :aria-pressed="userColumnMode === 'email'"
                       @click="setUserColumnMode('email')"
                       class="flex w-full items-center justify-between rounded-md px-3 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-200 dark:hover:bg-dark-700"
                     >
                       <span>{{ t('admin.users.columns.email') }}</span>
                       <Icon v-if="userColumnMode === 'email'" name="check" size="sm" class="text-primary-500" />
-                    </button>
-                    <button
+                    </KumoButton>
+                    <KumoButton :aria-pressed="userColumnMode === 'username'"
                       @click="setUserColumnMode('username')"
                       class="flex w-full items-center justify-between rounded-md px-3 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-200 dark:hover:bg-dark-700"
                     >
                       <span>{{ t('admin.users.columns.username') }}</span>
                       <Icon v-if="userColumnMode === 'username'" name="check" size="sm" class="text-primary-500" />
-                    </button>
+                    </KumoButton>
                   </div>
                   <!-- Other columns toggle -->
-                  <button
-                    v-for="col in toggleableColumns"
-                    :key="col.key"
-                    @click="toggleColumn(col.key)"
-                    class="flex w-full items-center justify-between rounded-md px-3 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-200 dark:hover:bg-dark-700"
-                  >
-                    <span>{{ col.label }}</span>
-                    <Icon v-if="isColumnVisible(col.key)" name="check" size="sm" class="text-primary-500" />
-                  </button>
+                  <KumoLabel v-for="col in toggleableColumns" :key="col.key" class="flex w-full cursor-pointer items-center gap-2 px-3 py-2 text-sm"><KumoCheckbox :checked="isColumnVisible(col.key)"   @change="toggleColumn(col.key)" /><span>{{ col.label }}</span></KumoLabel>
                 </div>
-              </div>
-            </div>
-            <button
+              </KumoPopoverContent></KumoPopoverRoot>
+            <KumoButton
               @click="showGuideModal = true"
               class="btn btn-secondary"
               :title="t('admin.subscriptions.guide.showGuide')"
             >
               <Icon name="questionCircle" size="md" />
-            </button>
-            <button @click="showAssignModal = true" class="btn btn-primary">
+            </KumoButton>
+            <KumoButton @click="showAssignModal = true" class="btn btn-primary">
               <Icon name="plus" size="md" class="mr-2" />
               {{ t('admin.subscriptions.assignSubscription') }}
-            </button>
+            </KumoButton>
           </div>
         </div>
         <div
@@ -174,7 +133,7 @@
             <span class="mr-2 text-sm font-medium text-primary-800 dark:text-primary-200">
               {{ t('admin.subscriptions.bulk.selected', { count: selectedCount }) }}
             </span>
-            <button
+            <KumoButton
               v-for="action in bulkActions"
               :key="action"
               type="button"
@@ -184,10 +143,10 @@
               @click="openBulkAction(action)"
             >
               {{ t(`admin.subscriptions.bulk.${action}`) }} ({{ bulkTargets[action].length }})
-            </button>
-            <button type="button" class="btn btn-secondary btn-sm" @click="clearSelection">
+            </KumoButton>
+            <KumoButton type="button" class="btn btn-secondary btn-sm" @click="clearSelection">
               {{ t('admin.subscriptions.bulk.clearSelection') }}
-            </button>
+            </KumoButton>
           </div>
           <p class="text-xs text-gray-600 dark:text-gray-400">{{ t('admin.subscriptions.bulk.selectionHint') }}</p>
         </div>
@@ -251,15 +210,7 @@
               <div v-if="row.group?.daily_limit_usd" class="usage-row">
                 <div class="flex items-center gap-2">
                   <span class="usage-label">{{ t('admin.subscriptions.daily') }}</span>
-                  <div class="h-1.5 flex-1 rounded-full bg-gray-200 dark:bg-dark-600">
-                    <div
-                      class="h-1.5 rounded-full transition-all"
-                      :class="getProgressClass(row.daily_usage_usd, row.group?.daily_limit_usd)"
-                      :style="{
-                        width: getProgressWidth(row.daily_usage_usd, row.group?.daily_limit_usd)
-                      }"
-                    ></div>
-                  </div>
+                  <KumoMeter  compact :label="t('common.usage')" :value="Number.parseFloat(String(getProgressWidth(row.daily_usage_usd, row.group?.daily_limit_usd))) || 0" class="h-1.5 flex-1 rounded-full bg-gray-200 dark:bg-dark-600" track-class-name="h-full min-h-[inherit]" :indicator-class-name="['h-1.5 rounded-full transition-all', (getProgressClass(row.daily_usage_usd, row.group?.daily_limit_usd))]" />
                   <span class="usage-amount">
                     ${{ row.daily_usage_usd?.toFixed(2) || '0.00' }}
                     <span class="text-gray-400">/</span>
@@ -288,15 +239,7 @@
               <div v-if="row.group?.weekly_limit_usd" class="usage-row">
                 <div class="flex items-center gap-2">
                   <span class="usage-label">{{ t('admin.subscriptions.weekly') }}</span>
-                  <div class="h-1.5 flex-1 rounded-full bg-gray-200 dark:bg-dark-600">
-                    <div
-                      class="h-1.5 rounded-full transition-all"
-                      :class="getProgressClass(row.weekly_usage_usd, row.group?.weekly_limit_usd)"
-                      :style="{
-                        width: getProgressWidth(row.weekly_usage_usd, row.group?.weekly_limit_usd)
-                      }"
-                    ></div>
-                  </div>
+                  <KumoMeter  compact :label="t('common.usage')" :value="Number.parseFloat(String(getProgressWidth(row.weekly_usage_usd, row.group?.weekly_limit_usd))) || 0" class="h-1.5 flex-1 rounded-full bg-gray-200 dark:bg-dark-600" track-class-name="h-full min-h-[inherit]" :indicator-class-name="['h-1.5 rounded-full transition-all', (getProgressClass(row.weekly_usage_usd, row.group?.weekly_limit_usd))]" />
                   <span class="usage-amount">
                     ${{ row.weekly_usage_usd?.toFixed(2) || '0.00' }}
                     <span class="text-gray-400">/</span>
@@ -325,15 +268,7 @@
               <div v-if="row.group?.monthly_limit_usd" class="usage-row">
                 <div class="flex items-center gap-2">
                   <span class="usage-label">{{ t('admin.subscriptions.monthly') }}</span>
-                  <div class="h-1.5 flex-1 rounded-full bg-gray-200 dark:bg-dark-600">
-                    <div
-                      class="h-1.5 rounded-full transition-all"
-                      :class="getProgressClass(row.monthly_usage_usd, row.group?.monthly_limit_usd)"
-                      :style="{
-                        width: getProgressWidth(row.monthly_usage_usd, row.group?.monthly_limit_usd)
-                      }"
-                    ></div>
-                  </div>
+                  <KumoMeter  compact :label="t('common.usage')" :value="Number.parseFloat(String(getProgressWidth(row.monthly_usage_usd, row.group?.monthly_limit_usd))) || 0" class="h-1.5 flex-1 rounded-full bg-gray-200 dark:bg-dark-600" track-class-name="h-full min-h-[inherit]" :indicator-class-name="['h-1.5 rounded-full transition-all', (getProgressClass(row.monthly_usage_usd, row.group?.monthly_limit_usd))]" />
                   <span class="usage-amount">
                     ${{ row.monthly_usage_usd?.toFixed(2) || '0.00' }}
                     <span class="text-gray-400">/</span>
@@ -418,15 +353,15 @@
 
           <template #cell-actions="{ row }">
             <div class="flex items-center gap-1">
-              <button
+              <KumoButton
                 v-if="row.status === 'active' || row.status === 'expired'"
                 @click="handleExtend(row)"
                 class="flex flex-col items-center gap-0.5 rounded-lg p-1.5 text-gray-500 transition-colors hover:bg-blue-50 hover:text-blue-600 dark:hover:bg-blue-900/20 dark:hover:text-blue-400"
               >
                 <Icon name="calendar" size="sm" />
                 <span class="text-xs">{{ t('admin.subscriptions.adjust') }}</span>
-              </button>
-              <button
+              </KumoButton>
+              <KumoButton
                 v-if="row.status === 'active'"
                 @click="handleResetQuota(row)"
                 :disabled="resettingQuota && resettingSubscription?.id === row.id"
@@ -434,23 +369,23 @@
               >
                 <Icon name="refresh" size="sm" />
                 <span class="text-xs">{{ t('admin.subscriptions.resetQuota') }}</span>
-              </button>
-              <button
+              </KumoButton>
+              <KumoButton
                 v-if="row.status === 'active'"
                 @click="handleRevoke(row)"
                 class="flex flex-col items-center gap-0.5 rounded-lg p-1.5 text-gray-500 transition-colors hover:bg-red-50 hover:text-red-600 dark:hover:bg-red-900/20 dark:hover:text-red-400"
               >
                 <Icon name="ban" size="sm" />
                 <span class="text-xs">{{ t('admin.subscriptions.revoke') }}</span>
-              </button>
-              <button
+              </KumoButton>
+              <KumoButton
                 v-if="row.status === 'revoked'"
                 @click="handleRestore(row)"
                 class="flex flex-col items-center gap-0.5 rounded-lg p-1.5 text-gray-500 transition-colors hover:bg-green-50 hover:text-green-600 dark:hover:bg-green-900/20 dark:hover:text-green-400"
               >
                 <Icon name="refresh" size="sm" />
                 <span class="text-xs">{{ t('admin.subscriptions.restore') }}</span>
-              </button>
+              </KumoButton>
             </div>
           </template>
 
@@ -501,60 +436,31 @@
         @submit.prevent="handleAssignSubscription"
         class="space-y-5"
       >
-        <label class="flex items-center gap-2 text-sm text-gray-700 dark:text-gray-300">
-          <input v-model="batchAssignEnabled" type="checkbox" :disabled="submitting" @change="resetAssignUsers" />
+        <KumoLabel class="flex items-center gap-2 text-sm text-gray-700 dark:text-gray-300">
+          <KumoCheckbox v-model="batchAssignEnabled" type="checkbox" :disabled="submitting" @change="resetAssignUsers" />
           {{ t('admin.subscriptions.batchAssign.enable') }}
-        </label>
+        </KumoLabel>
         <p v-if="batchAssignEnabled" class="input-hint">{{ t('admin.subscriptions.batchAssign.hint') }}</p>
         <div>
-          <label class="input-label">{{ t('admin.subscriptions.form.user') }}</label>
+          <KumoLabel class="input-label">{{ t('admin.subscriptions.form.user') }}</KumoLabel>
           <div class="relative" data-assign-user-search>
-            <input
+            <KumoSearchSelect
               v-model="userSearchKeyword"
-              type="text"
               :disabled="submitting || (batchAssignEnabled && assignUsers.length >= 100)"
               class="input pr-8"
               :placeholder="t('admin.usage.searchUserPlaceholder')"
-              @input="debounceSearchUsers"
-              @focus="showUserDropdown = true"
-            />
-            <button
+              @search="debounceSearchUsers"
+              @focus="showUserDropdown = true" :options="(userSearchResults ?? []).map(user => ({ ...user, disabled: submitting || (batchAssignEnabled && assignUsers.some((selected) => selected.id === user.id)) }))" label-key="email" v-model:open="showUserDropdown" @select="user => selectUser(user)"  :loading="userSearchLoading" :loading-label="t('common.loading')" :empty-text="t('common.noOptionsFound')"><template #option="{ option: user }"><span class="font-medium text-gray-900 dark:text-white">{{ user.email }}</span><span class="ml-2 text-gray-500 dark:text-gray-400">#{{ user.id }}</span></template></KumoSearchSelect>
+            <KumoButton
               v-if="selectedUser"
               @click="clearUserSelection"
               type="button"
               class="absolute right-2 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300"
             >
               <Icon name="x" size="sm" :stroke-width="2" />
-            </button>
+            </KumoButton>
             <!-- User Dropdown -->
-            <div
-              v-if="showUserDropdown && (userSearchResults.length > 0 || userSearchKeyword)"
-              class="absolute z-50 mt-1 max-h-60 w-full overflow-auto rounded-lg border border-gray-200 bg-white shadow-lg dark:border-dark-700 dark:bg-dark-800"
-            >
-              <div
-                v-if="userSearchLoading"
-                class="px-4 py-3 text-sm text-gray-500 dark:text-gray-400"
-              >
-                {{ t('common.loading') }}
-              </div>
-              <div
-                v-else-if="userSearchResults.length === 0 && userSearchKeyword"
-                class="px-4 py-3 text-sm text-gray-500 dark:text-gray-400"
-              >
-                {{ t('common.noOptionsFound') }}
-              </div>
-              <button
-                v-for="user in userSearchResults"
-                :key="user.id"
-                type="button"
-                :disabled="submitting || (batchAssignEnabled && assignUsers.some((selected) => selected.id === user.id))"
-                @click="selectUser(user)"
-                class="w-full px-4 py-2 text-left text-sm hover:bg-gray-100 disabled:opacity-50 dark:hover:bg-dark-700"
-              >
-                <span class="font-medium text-gray-900 dark:text-white">{{ user.email }}</span>
-                <span class="ml-2 text-gray-500 dark:text-gray-400">#{{ user.id }}</span>
-              </button>
-            </div>
+
           </div>
           <div v-if="batchAssignEnabled && assignUsers.length > 0" class="mt-2 space-y-2" data-test="assign-users">
             <p class="text-sm text-gray-600 dark:text-gray-400">
@@ -563,20 +469,20 @@
             <ul class="max-h-40 space-y-1 overflow-y-auto">
               <li v-for="user in assignUsers" :key="user.id" class="flex items-center justify-between gap-2 rounded-lg bg-gray-50 px-3 py-1 text-sm dark:bg-dark-700">
                 <span class="truncate">{{ user.email }} <span class="text-gray-500">#{{ user.id }}</span></span>
-                <button
+                <KumoButton
                   type="button"
                   :disabled="submitting"
                   :aria-label="t('admin.subscriptions.batchAssign.removeUser', { email: user.email })"
                   @click="assignUsers = assignUsers.filter((selected) => selected.id !== user.id)"
                 >
                   <Icon name="x" size="sm" />
-                </button>
+                </KumoButton>
               </li>
             </ul>
           </div>
         </div>
         <div>
-          <label class="input-label">{{ t('admin.subscriptions.form.group') }}</label>
+          <KumoLabel class="input-label">{{ t('admin.subscriptions.form.group') }}</KumoLabel>
           <Select
             v-model="assignForm.group_id"
             :disabled="submitting"
@@ -607,8 +513,8 @@
           <p class="input-hint">{{ t('admin.subscriptions.groupHint') }}</p>
         </div>
         <div>
-          <label class="input-label">{{ t('admin.subscriptions.form.validityDays') }}</label>
-          <input v-model.number="assignForm.validity_days" type="number" min="1" max="36500" step="1" :disabled="submitting" class="input" />
+          <KumoLabel class="input-label">{{ t('admin.subscriptions.form.validityDays') }}</KumoLabel>
+          <KumoInput v-model.number="assignForm.validity_days" type="number" min="1" max="36500" step="1" :disabled="submitting" class="input" />
           <p class="input-hint">{{ t('admin.subscriptions.validityHint') }}</p>
         </div>
         <div v-if="batchAssignResult" class="space-y-2 text-sm" role="status" data-test="batch-assign-result">
@@ -621,37 +527,18 @@
       </form>
       <template #footer>
         <div class="flex justify-end gap-3">
-          <button @click="closeAssignModal" type="button" :disabled="submitting" class="btn btn-secondary">
+          <KumoButton @click="closeAssignModal" type="button" :disabled="submitting" class="btn btn-secondary">
             {{ batchAssignResult ? t('common.close') : t('common.cancel') }}
-          </button>
-          <button
+          </KumoButton>
+          <KumoButton
             type="submit"
             form="assign-subscription-form"
             :disabled="submitting || (batchAssignEnabled && assignUsers.length === 0)"
             class="btn btn-primary"
           >
-            <svg
-              v-if="submitting"
-              class="-ml-1 mr-2 h-4 w-4 animate-spin"
-              fill="none"
-              viewBox="0 0 24 24"
-            >
-              <circle
-                class="opacity-25"
-                cx="12"
-                cy="12"
-                r="10"
-                stroke="currentColor"
-                stroke-width="4"
-              ></circle>
-              <path
-                class="opacity-75"
-                fill="currentColor"
-                d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-              ></path>
-            </svg>
+            <KumoLoader v-if="submitting" class="-ml-1 mr-2 h-4 w-4 animate-spin" />
             {{ submitting ? t('admin.subscriptions.assigning') : t('admin.subscriptions.assign') }}
-          </button>
+          </KumoButton>
         </div>
       </template>
     </BaseDialog>
@@ -694,9 +581,9 @@
           </p>
         </div>
         <div>
-          <label class="input-label">{{ t('admin.subscriptions.form.adjustDays') }}</label>
+          <KumoLabel class="input-label">{{ t('admin.subscriptions.form.adjustDays') }}</KumoLabel>
           <div class="flex items-center gap-2">
-            <input
+            <KumoInput
               v-model.number="extendForm.days"
               type="number"
               required
@@ -709,17 +596,17 @@
       </form>
       <template #footer>
         <div v-if="extendingSubscription" class="flex justify-end gap-3">
-          <button @click="closeExtendModal" type="button" class="btn btn-secondary">
+          <KumoButton @click="closeExtendModal" type="button" class="btn btn-secondary">
             {{ t('common.cancel') }}
-          </button>
-          <button
+          </KumoButton>
+          <KumoButton
             type="submit"
             form="extend-subscription-form"
             :disabled="submitting"
             class="btn btn-primary"
           >
             {{ submitting ? t('admin.subscriptions.adjusting') : t('admin.subscriptions.adjust') }}
-          </button>
+          </KumoButton>
         </div>
       </template>
     </BaseDialog>
@@ -758,14 +645,11 @@
       @cancel="showResetQuotaConfirm = false"
     />
     <!-- Subscription Guide Modal -->
-    <teleport to="body">
-      <transition name="modal">
-        <div v-if="showGuideModal" class="fixed inset-0 z-50 flex items-center justify-center p-4" @mousedown.self="showGuideModal = false">
-          <div class="fixed inset-0 bg-black/50" @click="showGuideModal = false"></div>
-          <div class="relative max-h-[85vh] w-full max-w-2xl overflow-y-auto rounded-xl bg-white p-6 shadow-2xl dark:bg-dark-800">
-            <button type="button" class="absolute right-4 top-4 text-gray-400 hover:text-gray-600 dark:hover:text-gray-200" @click="showGuideModal = false">
+    <KumoDialog v-if="showGuideModal" :show="true" custom-layout width="wide" :title="t('admin.subscriptions.guide.title')" :close-on-click-outside="true"  @close="showGuideModal = false">
+    <div class="relative p-6">
+            <KumoButton type="button" class="absolute right-4 top-4 text-gray-400 hover:text-gray-600 dark:hover:text-gray-200" @click="showGuideModal = false">
               <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" /></svg>
-            </button>
+            </KumoButton>
 
             <h2 class="mb-4 text-lg font-bold text-gray-900 dark:text-white">{{ t('admin.subscriptions.guide.title') }}</h2>
             <p class="mb-5 text-sm text-gray-500 dark:text-gray-400">{{ t('admin.subscriptions.guide.subtitle') }}</p>
@@ -813,14 +697,14 @@
                 {{ t('admin.subscriptions.guide.step3.title') }}
               </h3>
               <div class="ml-8 overflow-hidden rounded-lg border border-gray-200 dark:border-dark-600">
-                <table class="w-full text-sm">
-                  <tbody>
-                    <tr v-for="(row, i) in guideActionRows" :key="i" class="border-b border-gray-100 dark:border-dark-700 last:border-0">
-                      <td class="whitespace-nowrap bg-gray-50 px-3 py-2 font-medium text-gray-700 dark:bg-dark-700 dark:text-gray-300">{{ row.action }}</td>
-                      <td class="px-3 py-2 text-gray-600 dark:text-gray-400">{{ row.desc }}</td>
-                    </tr>
-                  </tbody>
-                </table>
+                <KumoTable class="w-full text-sm">
+                  <KumoTableBody>
+                    <KumoTableRow v-for="(row, i) in guideActionRows" :key="i" class="border-b border-gray-100 dark:border-dark-700 last:border-0">
+                      <KumoTableCell class="whitespace-nowrap bg-gray-50 px-3 py-2 font-medium text-gray-700 dark:bg-dark-700 dark:text-gray-300">{{ row.action }}</KumoTableCell>
+                      <KumoTableCell class="px-3 py-2 text-gray-600 dark:text-gray-400">{{ row.desc }}</KumoTableCell>
+                    </KumoTableRow>
+                  </KumoTableBody>
+                </KumoTable>
               </div>
             </div>
 
@@ -830,16 +714,17 @@
             </div>
 
             <div class="mt-4 text-right">
-              <button type="button" class="btn btn-primary btn-sm" @click="showGuideModal = false">{{ t('common.close') }}</button>
+              <KumoButton type="button" class="btn btn-primary btn-sm" @click="showGuideModal = false">{{ t('common.close') }}</KumoButton>
             </div>
-          </div>
-        </div>
-      </transition>
-    </teleport>
+
+    </div>
+  </KumoDialog>
   </AppLayout>
 </template>
 
 <script setup lang="ts">
+import { KumoButton, KumoCheckbox, KumoDialog, KumoInput, KumoLabel, KumoLoader, KumoMeter, KumoPopoverContent, KumoPopoverRoot, KumoPopoverTrigger, KumoSearchSelect, KumoTable, KumoTableBody, KumoTableCell, KumoTableRow } from '@/components/kumo'
+
 import { ref, reactive, computed, onMounted, onUnmounted } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useAppStore } from '@/stores/app'
@@ -997,7 +882,6 @@ const columns = computed<Column[]>(() =>
 
 // Column dropdown state
 const showColumnDropdown = ref(false)
-const columnDropdownRef = ref<HTMLElement | null>(null)
 
 // Filter options
 const statusOptions = computed(() => [
@@ -1597,25 +1481,15 @@ const formatResetTime = (windowStart: string | null, period: 'daily' | 'weekly' 
 }
 
 // Handle click outside to close dropdowns
-const handleClickOutside = (event: MouseEvent) => {
-  const target = event.target as HTMLElement
-  if (!target.closest('[data-assign-user-search]')) showUserDropdown.value = false
-  if (!target.closest('[data-filter-user-search]')) showFilterUserDropdown.value = false
-  if (columnDropdownRef.value && !columnDropdownRef.value.contains(target)) {
-    showColumnDropdown.value = false
-  }
-}
 
 onMounted(() => {
   loadUserColumnMode()
   loadSavedColumns()
   loadSubscriptions()
   loadGroups()
-  document.addEventListener('click', handleClickOutside)
 })
 
 onUnmounted(() => {
-  document.removeEventListener('click', handleClickOutside)
   if (filterUserSearchTimeout) {
     clearTimeout(filterUserSearchTimeout)
   }

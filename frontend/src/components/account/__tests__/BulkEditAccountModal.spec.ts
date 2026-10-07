@@ -1,9 +1,13 @@
-import { describe, expect, it, vi, beforeEach } from 'vitest'
-import { flushPromises, mount } from '@vue/test-utils'
+import { describe, expect, it, vi, beforeEach, afterEach } from 'vitest'
+import { enableAutoUnmount } from '@vue/test-utils'
+import { mount, flushPromises, portal } from '@/__tests__/render'
+
 import { nextTick } from 'vue'
 import BulkEditAccountModal from '../BulkEditAccountModal.vue'
 import ModelWhitelistSelector from '../ModelWhitelistSelector.vue'
 import { adminAPI } from '@/api/admin'
+
+enableAutoUnmount(afterEach)
 
 const { showError, showSuccess, translate } = vi.hoisted(() => ({
   showError: vi.fn(),
@@ -130,10 +134,10 @@ describe('BulkEditAccountModal', () => {
     const selector = wrapper.findComponent(ModelWhitelistSelector)
     expect(selector.exists()).toBe(true)
 
-    await selector.find('div.cursor-pointer').trigger('click')
+    await selector.get('button[aria-label]').trigger('click')
 
-    expect(wrapper.text()).toContain('gemini-3.1-flash-image')
-    expect(wrapper.text()).toContain('gemini-2.5-flash-image')
+    expect(portal().text()).toContain('gemini-3.1-flash-image')
+    expect(portal().text()).toContain('gemini-2.5-flash-image')
     expect(wrapper.text()).not.toContain('gpt-5.3-codex')
   })
 
@@ -560,7 +564,9 @@ describe('BulkEditAccountModal', () => {
   it('persists Seedance in a two-capability bulk update', async () => {
     const wrapper = mountModal({ selectedPlatforms: ['openai'], selectedTypes: ['apikey'] })
     await wrapper.get('#bulk-edit-openai-endpoint-capabilities-enabled').setValue(true)
+    await vi.waitFor(() => expect(wrapper.get('[data-testid="bulk-edit-openai-endpoint-capability-embeddings"]').attributes('aria-disabled')).not.toBe('true'))
     await wrapper.get('[data-testid="bulk-edit-openai-endpoint-capability-embeddings"]').setValue(false)
+
     await wrapper.get('[data-testid="bulk-edit-openai-endpoint-capability-seedance"]').setValue(true)
     await wrapper.get('#bulk-edit-account-form').trigger('submit.prevent')
     await flushPromises()
@@ -616,7 +622,9 @@ describe('BulkEditAccountModal', () => {
       selectedTypes: ['apikey']
     })
     await wrapper.get('#bulk-edit-openai-endpoint-capabilities-enabled').setValue(true)
+    await vi.waitFor(() => expect(wrapper.get('[data-testid="bulk-edit-openai-endpoint-capability-chat_completions"]').attributes('aria-disabled')).not.toBe('true'))
     await wrapper.get('[data-testid="bulk-edit-openai-endpoint-capability-chat_completions"]').setValue(false)
+    await vi.waitFor(() => expect(wrapper.get('[data-testid="bulk-edit-openai-endpoint-capability-chat_completions"]').attributes('aria-checked')).toBe('false'))
     await wrapper.get('[data-testid="bulk-edit-openai-endpoint-capability-embeddings"]').setValue(false)
 
     expect((wrapper.get('[data-testid="bulk-edit-openai-endpoint-capability-embeddings"]').element as HTMLInputElement).checked)

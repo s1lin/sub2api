@@ -32,10 +32,10 @@
       <form v-else @submit.prevent="handleVerify" class="space-y-5">
         <!-- Verification Code Input -->
         <div>
-          <label for="code" class="input-label text-center">
+          <KumoLabel for="code" class="input-label text-center">
             {{ t('auth.verificationCode') }}
-          </label>
-          <input
+          </KumoLabel>
+          <KumoInput
             id="code"
             v-model="verifyCode"
             type="text"
@@ -106,46 +106,27 @@
         </div>
 
         <!-- Submit Button -->
-        <button
+        <KumoButton
           type="submit"
           :disabled="isLoading || !verifyCode || (pendingOAuthCreateTurnstileRequired && !createAccountTurnstileToken)"
           class="btn btn-primary w-full"
         >
-          <svg
-            v-if="isLoading"
-            class="-ml-1 mr-2 h-4 w-4 animate-spin text-white"
-            fill="none"
-            viewBox="0 0 24 24"
-          >
-            <circle
-              class="opacity-25"
-              cx="12"
-              cy="12"
-              r="10"
-              stroke="currentColor"
-              stroke-width="4"
-            ></circle>
-            <path
-              class="opacity-75"
-              fill="currentColor"
-              d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-            ></path>
-          </svg>
+          <KumoLoader v-if="isLoading" class="-ml-1 mr-2 h-4 w-4 animate-spin text-white" />
           <Icon v-else name="checkCircle" size="md" class="mr-2" />
           {{ isLoading ? t('auth.verifying') : t('auth.verifyAndCreate') }}
-        </button>
+        </KumoButton>
 
         <!-- Resend Code -->
         <div class="text-center">
-          <button
+          <KumoButton
             v-if="countdown > 0"
             type="button"
             disabled
             class="cursor-not-allowed text-sm text-gray-400 dark:text-dark-500"
           >
             {{ t('auth.resendCountdown', { countdown }) }}
-          </button>
-          <button
+          </KumoButton>
+          <KumoButton
             v-else
             type="button"
             @click="handleResendCode"
@@ -159,25 +140,27 @@
               {{ t('auth.clickToResend') }}
             </span>
             <span v-else>{{ t('auth.resendCode') }}</span>
-          </button>
+          </KumoButton>
         </div>
       </form>
     </div>
 
     <!-- Footer -->
     <template #footer>
-      <button
+      <KumoButton
         @click="handleBack"
         class="flex items-center gap-2 text-gray-500 transition-colors hover:text-gray-700 dark:text-dark-400 dark:hover:text-gray-300"
       >
         <Icon name="arrowLeft" size="sm" />
         {{ t('auth.backToRegistration') }}
-      </button>
+      </KumoButton>
     </template>
   </AuthLayout>
 </template>
 
 <script setup lang="ts">
+import { KumoButton, KumoInput, KumoLabel, KumoLoader } from '@/components/kumo'
+
 import { authRedirect } from '@/utils/authRedirect'
 import { computed, ref, onMounted, onUnmounted, watch } from 'vue'
 import { useRouter } from 'vue-router'

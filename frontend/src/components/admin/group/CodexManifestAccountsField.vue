@@ -2,9 +2,9 @@
   <div class="border-t border-gray-200 pt-4 mt-4 dark:border-dark-400">
     <div class="mb-3 flex items-start justify-between gap-3">
       <div class="min-w-0 flex-1">
-        <label class="text-sm font-medium text-gray-700 dark:text-gray-300">
+        <KumoLabel class="text-sm font-medium text-gray-700 dark:text-gray-300">
           {{ t("admin.groups.codexModelsManifest.title") }}
-        </label>
+        </KumoLabel>
         <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">
           {{ t("admin.groups.codexModelsManifest.hint") }}
         </p>
@@ -25,9 +25,9 @@
         {{ t("admin.groups.codexModelsManifest.enabledHint") }}
       </p>
 
-      <label class="input-label">
+      <KumoLabel class="input-label">
         {{ t("admin.groups.codexModelsManifest.accounts") }}
-      </label>
+      </KumoLabel>
 
       <!-- 已选账号标签 -->
       <div
@@ -41,63 +41,44 @@
           class="inline-flex items-center gap-1 rounded-full bg-primary-100 px-2.5 py-1 text-xs font-medium text-primary-700 dark:bg-primary-900/30 dark:text-primary-300"
         >
           {{ accountLabel(id) }}
-          <button
+          <KumoButton
             type="button"
             class="ml-0.5 text-primary-500 hover:text-primary-700 dark:hover:text-primary-200"
             :aria-label="`remove account ${id}`"
             @click="removeAccount(id)"
           >
             <Icon name="x" size="xs" />
-          </button>
+          </KumoButton>
         </span>
       </div>
 
       <!-- 搜索输入 + 下拉 -->
-      <div class="relative" ref="searchContainerRef">
-        <input
-          v-model="searchKeyword"
-          type="text"
-          class="input text-sm"
-          data-testid="codex-manifest-search"
-          :placeholder="t('admin.groups.codexModelsManifest.searchPlaceholder')"
-          @input="searchAccounts"
-          @focus="onSearchFocus"
-        />
-        <div
-          v-if="showDropdown && (searchResults.length > 0 || searchKeyword.trim() !== '')"
-          class="absolute z-50 mt-1 max-h-48 w-full overflow-auto rounded-lg border bg-white shadow-lg dark:border-dark-600 dark:bg-dark-800"
-          data-testid="codex-manifest-dropdown"
-        >
-          <p
-            v-if="searchResults.length === 0"
-            class="px-3 py-2 text-sm text-gray-400"
-            data-testid="codex-manifest-search-empty"
-          >
-            {{ t("admin.groups.codexModelsManifest.searchEmpty") }}
-          </p>
-          <button
-            v-for="account in searchResults"
-            :key="account.id"
-            type="button"
-            class="w-full px-3 py-2 text-left text-sm hover:bg-gray-100 dark:hover:bg-dark-700"
-            :class="{
-              'opacity-50': config.account_ids.includes(account.id),
-            }"
-            :disabled="config.account_ids.includes(account.id)"
-            @click="selectAccount(account)"
-          >
-            <span>{{ account.name }}</span>
-            <span class="ml-2 text-xs text-gray-400">#{{ account.id }}</span>
-          </button>
-        </div>
-      </div>
+      <KumoSearchSelect
+        v-model="searchKeyword"
+        v-model:open="showDropdown"
+        :options="(searchResults).map(account => ({ ...account, disabled: config.account_ids.includes(account.id) }))"
+        label-key="name"
+
+        class="input text-sm"
+        data-testid="codex-manifest-search"
+        :placeholder="t('admin.groups.codexModelsManifest.searchPlaceholder')"
+        :empty-text="t('admin.groups.codexModelsManifest.searchEmpty')"
+        @search="searchAccounts"
+        @focus="onSearchFocus"
+        @select="selectAccount"
+      >
+        <template #option="{ option }">
+          <span>{{ option.name }}</span>
+          <span class="ml-2 text-xs text-gray-400">#{{ option.id }}</span>
+        </template>
+      </KumoSearchSelect>
 
       <!-- 回退子开关 -->
       <div class="mt-3 flex items-start justify-between gap-3">
         <div class="min-w-0 flex-1">
-          <label class="text-sm text-gray-700 dark:text-gray-300">
+          <KumoLabel class="text-sm text-gray-700 dark:text-gray-300">
             {{ t("admin.groups.codexModelsManifest.fallback") }}
-          </label>
+          </KumoLabel>
           <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">
             {{ t("admin.groups.codexModelsManifest.fallbackHint") }}
           </p>
@@ -126,7 +107,9 @@
 </template>
 
 <script setup lang="ts">
-import { computed, onMounted, onUnmounted, ref } from "vue";
+import { KumoButton, KumoLabel, KumoSearchSelect } from '@/components/kumo'
+
+import { computed, ref } from "vue";
 import { useI18n } from "vue-i18n";
 import Icon from "@/components/icons/Icon.vue";
 import Toggle from "@/components/common/Toggle.vue";
@@ -169,22 +152,6 @@ const searchKeyword = ref("");
 const searchResults = ref<SimpleAccount[]>([]);
 const showDropdown = ref(false);
 const showValidationError = ref(false);
-const searchContainerRef = ref<HTMLElement | null>(null);
-
-// 点击下拉容器外部时收起（与 GroupsView 模型路由下拉同一模式）。
-const handleDocumentClick = (event: MouseEvent) => {
-  const target = event.target as HTMLElement;
-  if (searchContainerRef.value && !searchContainerRef.value.contains(target)) {
-    showDropdown.value = false;
-  }
-};
-onMounted(() => {
-  document.addEventListener("click", handleDocumentClick);
-});
-onUnmounted(() => {
-  document.removeEventListener("click", handleDocumentClick);
-});
-
 const searchRunner = useKeyedDebouncedSearch<SimpleAccount[]>({
   delay: 300,
   search: async (keyword, { signal }) => {

@@ -1,6 +1,8 @@
-import { mount } from '@vue/test-utils'
+import { mount, flushPromises } from '@/__tests__/render'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 
+// Preserve concurrent root scheduling while the table initializes its sort on mount.
+vi.mock('react-dom/client', async () => vi.importActual('react-dom/client'))
 import DataTable from '../DataTable.vue'
 
 vi.mock('vue-i18n', () => ({
@@ -66,7 +68,7 @@ describe('DataTable', () => {
       }
     })
 
-    await wrapper.vm.$nextTick()
+    await flushPromises()
 
     const nameHeader = wrapper.findAll('th')[0]
     expect(nameHeader.find('[data-test="custom-name-header"]').exists()).toBe(true)
@@ -76,7 +78,7 @@ describe('DataTable', () => {
     expect(nameHeader.findAll('svg')[1].classes()).toContain('text-gray-300')
 
     await nameHeader.trigger('click')
-    await wrapper.vm.$nextTick()
+    await flushPromises()
 
     expect(nameHeader.attributes('aria-sort')).toBe('descending')
     expect(nameHeader.findAll('svg')[0].classes()).toContain('text-gray-300')
@@ -92,7 +94,7 @@ describe('DataTable', () => {
       }
     })
 
-    await wrapper.vm.$nextTick()
+    await flushPromises()
 
     // Virtualization is OFF for a small list…
     expect((wrapper.vm as any).shouldVirtualize).toBe(false)
@@ -112,7 +114,7 @@ describe('DataTable', () => {
       }
     })
 
-    await wrapper.vm.$nextTick()
+    await flushPromises()
 
     // Virtualization is ON: the mode-switch decision flipped…
     expect((wrapper.vm as any).shouldVirtualize).toBe(true)
@@ -133,7 +135,7 @@ describe('DataTable', () => {
       }
     })
 
-    await wrapper.vm.$nextTick()
+    await flushPromises()
 
     const exposed = (wrapper.vm as any).virtualizer
     const instance = exposed?.value ?? exposed
@@ -154,7 +156,7 @@ describe('DataTable', () => {
       }
     })
 
-    await wrapper.vm.$nextTick()
+    await flushPromises()
 
     const exposed = (wrapper.vm as any).virtualizer
     const instance = exposed?.value ?? exposed
@@ -167,7 +169,7 @@ describe('DataTable', () => {
     const measureElementSpy = vi.spyOn(instance, 'measureElement')
 
     await wrapper.setProps({ data: secondPage })
-    await wrapper.vm.$nextTick()
+    await flushPromises()
 
     const sizeCache = (instance as any).itemSizeCache as Map<number, number>
     expect(sizeCache.size).toBeLessThanOrEqual(secondPage.length)
@@ -188,14 +190,14 @@ describe('DataTable', () => {
       }
     })
 
-    await wrapper.vm.$nextTick()
+    await flushPromises()
 
     const exposed = (wrapper.vm as any).virtualizer
     const instance = exposed?.value ?? exposed
     const measureElementSpy = vi.spyOn(instance, 'measureElement')
 
     await wrapper.setProps({ data: secondPage })
-    await wrapper.vm.$nextTick()
+    await flushPromises()
 
     expect(measureElementSpy.mock.calls.some(([node]) => node === null)).toBe(true)
   })
@@ -220,14 +222,14 @@ describe('DataTable', () => {
       }
     })
 
-    await wrapper.vm.$nextTick()
+    await flushPromises()
 
     const exposed = (wrapper.vm as any).virtualizer
     const instance = exposed?.value ?? exposed
     const measureElementSpy = vi.spyOn(instance, 'measureElement')
 
     await wrapper.setProps({ data: secondPage })
-    await wrapper.vm.$nextTick()
+    await flushPromises()
 
     expect(measureElementSpy.mock.calls.some(([node]) => node === null)).toBe(true)
   })
@@ -242,14 +244,14 @@ describe('DataTable', () => {
       }
     })
 
-    await wrapper.vm.$nextTick()
+    await flushPromises()
 
     const exposed = (wrapper.vm as any).virtualizer
     const instance = exposed?.value ?? exposed
     const measureSpy = vi.spyOn(instance, 'measure')
 
     await wrapper.setProps({ data: [...data].reverse() })
-    await wrapper.vm.$nextTick()
+    await flushPromises()
 
     expect(measureSpy).not.toHaveBeenCalled()
   })
@@ -265,7 +267,7 @@ describe('DataTable', () => {
       }
     })
 
-    await wrapper.vm.$nextTick()
+    await flushPromises()
 
     const exposed = (wrapper.vm as any).virtualizer
     const instance = exposed?.value ?? exposed
@@ -273,7 +275,7 @@ describe('DataTable', () => {
     const measureSpy = vi.spyOn(instance, 'measure')
 
     await wrapper.setProps({ data: [...data].reverse() })
-    await wrapper.vm.$nextTick()
+    await flushPromises()
 
     const sizeCache = (instance as any).itemSizeCache as Map<number, number>
     expect(measureSpy).not.toHaveBeenCalled()
@@ -294,16 +296,16 @@ describe('DataTable', () => {
       }
     })
 
-    await wrapper.get('[data-test="select-all"]').setValue(true)
+    await wrapper.get('[data-test="select-all"]').trigger('click')
 
     const selectedAll = wrapper.emitted('update:selectedKeys')?.at(-1)?.[0]
     expect(selectedAll).toEqual([99, 1, 2])
 
     await wrapper.setProps({ selectedKeys: selectedAll as number[] })
     const rowCheckboxes = wrapper.findAll<HTMLInputElement>('[data-test="select-row"]')
-    expect(rowCheckboxes.every((checkbox) => checkbox.element.checked)).toBe(true)
+    expect(rowCheckboxes.every((checkbox) => checkbox.attributes('aria-checked') === 'true')).toBe(true)
 
-    await rowCheckboxes[0].setValue(false)
+    await rowCheckboxes[0].trigger('click')
 
     expect(wrapper.emitted('update:selectedKeys')?.at(-1)?.[0]).toEqual([99, 2])
     expect(wrapper.emitted('selectionChange')?.at(-1)?.[0]).toEqual([99, 2])
@@ -353,7 +355,7 @@ describe('DataTable', () => {
       }
     })
 
-    await wrapper.get('[data-test="select-all-mobile"]').setValue(true)
+    await wrapper.get('[data-test="select-all-mobile"]').trigger('click')
 
     expect(wrapper.emitted('update:selectedKeys')?.at(-1)?.[0]).toEqual([99, 1, 2])
   })

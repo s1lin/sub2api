@@ -1,5 +1,6 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
-import { DOMWrapper, flushPromises, mount } from '@vue/test-utils'
+import { mount, flushPromises } from '@/__tests__/render'
+import { DOMWrapper } from '@vue/test-utils'
 import { defineComponent } from 'vue'
 
 import AccountsView from '../AccountsView.vue'
@@ -208,7 +209,7 @@ describe('admin AccountsView lite account list', () => {
     await flushPromises()
     expect(wrapper.findComponent(AccountActionMenu).props('show')).toBe(true)
 
-    menu.get('button').element.dispatchEvent(new Event('scroll'))
+    menu.get('[role=menuitem]').element.dispatchEvent(new Event('scroll'))
     await flushPromises()
     expect(wrapper.findComponent(AccountActionMenu).props('show')).toBe(true)
 
@@ -219,7 +220,7 @@ describe('admin AccountsView lite account list', () => {
   })
 
   it('keeps lite=1 on automatic ETag refreshes', async () => {
-    vi.useFakeTimers()
+    vi.useFakeTimers({ toFake: ['Date', 'setTimeout', 'clearTimeout', 'setInterval', 'clearInterval'] })
     vi.spyOn(document, 'hidden', 'get').mockReturnValue(false)
     localStorage.setItem('account-auto-refresh', JSON.stringify({ enabled: true, interval_seconds: 5 }))
     const wrapper = mountView()

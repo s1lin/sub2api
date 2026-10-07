@@ -1,5 +1,6 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest'
-import { flushPromises, mount } from '@vue/test-utils'
+import { mount, flushPromises } from '@/__tests__/render'
+
 import { createPinia, setActivePinia } from 'pinia'
 
 import type { DashboardStats } from '@/types'
@@ -124,7 +125,7 @@ describe('admin DashboardView', () => {
     getUserUsageTrend.mockImplementationOnce(() => new Promise(resolve => { resolveTokens = resolve }))
     getUserUsageTrend.mockResolvedValueOnce({ trend: [{ date: '2026-01-01', user_id: 2, username: 'spender', email: '', requests: 1, tokens: 10, cost: 5, actual_cost: 5 }] })
     const wrapper = mount(DashboardView, {
-      global: { stubs: {
+      global: { stubs: { KumoSurface: { template: '<div><slot /></div>' },
         AppLayout: { template: '<div><slot /></div>' }, LoadingSpinner: true,
         Icon: true, DateRangePicker: true, Select: true, ModelDistributionChart: true,
         TokenUsageTrend: true
@@ -146,7 +147,7 @@ describe('admin DashboardView', () => {
   it('uses last 24 hours as default dashboard range', async () => {
     mount(DashboardView, {
       global: {
-        stubs: {
+        stubs: { KumoSurface: { template: '<div><slot /></div>' },
           AppLayout: { template: '<div><slot /></div>' },
           LoadingSpinner: true,
           Icon: true,

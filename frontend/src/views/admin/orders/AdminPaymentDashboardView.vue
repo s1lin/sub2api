@@ -5,7 +5,7 @@
       <div class="flex items-center justify-end">
         <div class="flex items-center gap-2">
           <div class="flex rounded-lg border border-gray-200 dark:border-dark-600">
-            <button
+            <KumoButton
               v-for="d in DAYS_OPTIONS"
               :key="d"
               type="button"
@@ -16,11 +16,11 @@
               @click="days = d"
             >
               {{ d }}{{ t('payment.admin.daySuffix') }}
-            </button>
+            </KumoButton>
           </div>
-          <button @click="loadDashboard" :disabled="loading" class="btn btn-secondary" :title="t('common.refresh')">
+          <KumoButton @click="loadDashboard" :disabled="loading" class="btn btn-secondary" :title="t('common.refresh')">
             <Icon name="refresh" size="md" :class="loading ? 'animate-spin' : ''" />
-          </button>
+          </KumoButton>
         </div>
       </div>
 
@@ -32,7 +32,7 @@
         <OrderStatsCards :stats="stats" />
         <DailyRevenueChart :data="stats.daily_series || []" :loading="loading" />
         <div class="grid grid-cols-1 gap-6 lg:grid-cols-2">
-          <div class="card p-4">
+          <KumoSurface class="card p-4">
             <h3 class="mb-4 text-sm font-semibold text-gray-900 dark:text-white">{{ t('payment.admin.paymentDistribution') }}</h3>
             <div v-if="!stats.payment_methods?.length" class="flex h-32 items-center justify-center text-sm text-gray-500 dark:text-gray-400">{{ t('payment.admin.noData') }}</div>
             <div v-else class="space-y-3">
@@ -47,8 +47,8 @@
                 </div>
               </div>
             </div>
-          </div>
-          <div class="card p-4">
+          </KumoSurface>
+          <KumoSurface class="card p-4">
             <h3 class="mb-4 text-sm font-semibold text-gray-900 dark:text-white">{{ t('payment.admin.topUsers') }}</h3>
             <div v-if="!hasTopUsers(stats.top_users)" class="flex h-32 items-center justify-center text-sm text-gray-500 dark:text-gray-400">{{ t('payment.admin.noData') }}</div>
             <div v-else class="space-y-2">
@@ -63,7 +63,7 @@
                 </div>
               </div>
             </div>
-          </div>
+          </KumoSurface>
         </div>
       </template>
     </div>
@@ -71,6 +71,8 @@
 </template>
 
 <script setup lang="ts">
+import { KumoButton, KumoSurface } from '@/components/kumo'
+
 import { ref, watch, onMounted } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useAppStore } from '@/stores/app'

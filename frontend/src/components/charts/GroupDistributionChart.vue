@@ -1,5 +1,5 @@
 <template>
-  <div class="card p-4">
+  <KumoSurface class="card p-4">
     <div class="mb-4 flex items-center justify-between gap-3">
       <h3 class="text-sm font-semibold text-gray-900 dark:text-white">
         {{ t('admin.dashboard.groupDistribution') }}
@@ -8,7 +8,7 @@
         v-if="showMetricToggle"
         class="inline-flex rounded-lg border border-gray-200 bg-gray-50 p-0.5 dark:border-dark-700 dark:bg-dark-800"
       >
-        <button
+        <KumoButton
           type="button"
           class="rounded-md px-2.5 py-1 text-xs font-medium transition-colors"
           :class="metric === 'tokens'
@@ -17,8 +17,8 @@
           @click="emit('update:metric', 'tokens')"
         >
           {{ t('admin.dashboard.metricTokens') }}
-        </button>
-        <button
+        </KumoButton>
+        <KumoButton
           type="button"
           class="rounded-md px-2.5 py-1 text-xs font-medium transition-colors"
           :class="metric === 'actual_cost'
@@ -27,7 +27,7 @@
           @click="emit('update:metric', 'actual_cost')"
         >
           {{ t('admin.dashboard.metricActualCost') }}
-        </button>
+        </KumoButton>
       </div>
     </div>
     <div v-if="loading" class="flex h-48 items-center justify-center">
@@ -38,25 +38,25 @@
         <Doughnut :data="chartData" :options="doughnutOptions" />
       </div>
       <div class="max-h-48 w-full min-w-0 flex-1 overflow-auto">
-        <table class="w-full text-xs">
-          <thead>
-            <tr class="text-gray-500 dark:text-gray-400">
-              <th class="pb-2 text-left">{{ t('admin.dashboard.group') }}</th>
-              <th class="pb-2 text-right">{{ t('admin.dashboard.requests') }}</th>
-              <th class="pb-2 text-right">{{ t('admin.dashboard.tokens') }}</th>
-              <th class="pb-2 text-right">{{ t('admin.dashboard.actual') }}</th>
-              <th v-if="showAccountCost" class="pb-2 text-right">{{ t('admin.dashboard.accountCost') }}</th>
-              <th class="pb-2 text-right">{{ t('admin.dashboard.standard') }}</th>
-            </tr>
-          </thead>
-          <tbody>
+        <KumoTable class="w-full text-xs">
+          <KumoTableHeader>
+            <KumoTableRow class="text-gray-500 dark:text-gray-400">
+              <KumoTableHead class="pb-2 text-left">{{ t('admin.dashboard.group') }}</KumoTableHead>
+              <KumoTableHead class="pb-2 text-right">{{ t('admin.dashboard.requests') }}</KumoTableHead>
+              <KumoTableHead class="pb-2 text-right">{{ t('admin.dashboard.tokens') }}</KumoTableHead>
+              <KumoTableHead class="pb-2 text-right">{{ t('admin.dashboard.actual') }}</KumoTableHead>
+              <KumoTableHead v-if="showAccountCost" class="pb-2 text-right">{{ t('admin.dashboard.accountCost') }}</KumoTableHead>
+              <KumoTableHead class="pb-2 text-right">{{ t('admin.dashboard.standard') }}</KumoTableHead>
+            </KumoTableRow>
+          </KumoTableHeader>
+          <KumoTableBody>
             <template v-for="group in displayGroupStats" :key="group.group_id">
-              <tr
+              <KumoTableRow
                 class="border-t border-gray-100 transition-colors dark:border-dark-700"
                 :class="enableBreakdown && group.group_id > 0 ? 'cursor-pointer hover:bg-gray-50 dark:hover:bg-dark-700/40' : ''"
                 @click="enableBreakdown && group.group_id > 0 && toggleBreakdown('group', group.group_id)"
               >
-                <td
+                <KumoTableCell
                   class="max-w-[100px] truncate py-1.5 font-medium"
                   :class="enableBreakdown && group.group_id > 0 ? 'text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300' : 'text-gray-900 dark:text-white'"
                   :title="group.group_name || String(group.group_id)"
@@ -66,36 +66,36 @@
                     <svg v-else-if="enableBreakdown && group.group_id > 0" class="h-3 w-3 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
                     {{ group.group_name || t('admin.dashboard.noGroup') }}
                   </span>
-                </td>
-                <td class="py-1.5 text-right text-gray-600 dark:text-gray-400">
+                </KumoTableCell>
+                <KumoTableCell class="py-1.5 text-right text-gray-600 dark:text-gray-400">
                   {{ formatNumber(group.requests) }}
-                </td>
-                <td class="py-1.5 text-right text-gray-600 dark:text-gray-400">
+                </KumoTableCell>
+                <KumoTableCell class="py-1.5 text-right text-gray-600 dark:text-gray-400">
                   {{ formatTokens(group.total_tokens) }}
-                </td>
-                <td class="py-1.5 text-right text-green-600 dark:text-green-400">
+                </KumoTableCell>
+                <KumoTableCell class="py-1.5 text-right text-green-600 dark:text-green-400">
                   ${{ formatCost(group.actual_cost) }}
-                </td>
-                <td v-if="showAccountCost" class="py-1.5 text-right text-orange-500 dark:text-orange-400">
+                </KumoTableCell>
+                <KumoTableCell v-if="showAccountCost" class="py-1.5 text-right text-orange-500 dark:text-orange-400">
                   ${{ formatCost(group.account_cost) }}
-                </td>
-                <td class="py-1.5 text-right text-gray-400 dark:text-gray-500">
+                </KumoTableCell>
+                <KumoTableCell class="py-1.5 text-right text-gray-400 dark:text-gray-500">
                   ${{ formatCost(group.cost) }}
-                </td>
-              </tr>
+                </KumoTableCell>
+              </KumoTableRow>
               <!-- User breakdown sub-rows -->
-              <tr v-if="expandedKey === `group-${group.group_id}`">
-                <td :colspan="distributionColspan" class="p-0">
+              <KumoTableRow v-if="expandedKey === `group-${group.group_id}`">
+                <KumoTableCell :colspan="distributionColspan" class="p-0">
                   <UserBreakdownSubTable
                     :items="breakdownItems"
                     :loading="breakdownLoading"
                     :show-account-cost="showAccountCost"
                   />
-                </td>
-              </tr>
+                </KumoTableCell>
+              </KumoTableRow>
             </template>
-          </tbody>
-        </table>
+          </KumoTableBody>
+        </KumoTable>
       </div>
     </div>
     <div
@@ -104,10 +104,12 @@
     >
       {{ t('admin.dashboard.noDataAvailable') }}
     </div>
-  </div>
+  </KumoSurface>
 </template>
 
 <script setup lang="ts">
+import { KumoButton, KumoSurface, KumoTable, KumoTableBody, KumoTableCell, KumoTableHead, KumoTableHeader, KumoTableRow } from '@/components/kumo'
+
 import { computed, ref } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { Chart as ChartJS, ArcElement, Tooltip, Legend } from 'chart.js'

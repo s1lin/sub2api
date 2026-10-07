@@ -1,5 +1,5 @@
 <template>
-  <div class="card p-4">
+  <KumoSurface class="card p-4">
     <div class="mb-4 flex items-center justify-between gap-3">
       <h3 class="text-sm font-semibold text-gray-900 dark:text-white">
         {{ !enableRankingView || activeView === 'model_distribution'
@@ -11,7 +11,7 @@
           v-if="showSourceToggle"
           class="inline-flex rounded-lg border border-gray-200 bg-gray-50 p-0.5 dark:border-dark-700 dark:bg-dark-800"
         >
-          <button
+          <KumoButton
             type="button"
             class="rounded-md px-2.5 py-1 text-xs font-medium transition-colors"
             :class="source === 'requested'
@@ -20,8 +20,8 @@
             @click="emit('update:source', 'requested')"
           >
             {{ t('usage.requestedModel') }}
-          </button>
-          <button
+          </KumoButton>
+          <KumoButton
             type="button"
             class="rounded-md px-2.5 py-1 text-xs font-medium transition-colors"
             :class="source === 'upstream'
@@ -30,8 +30,8 @@
             @click="emit('update:source', 'upstream')"
           >
             {{ t('usage.upstreamModel') }}
-          </button>
-          <button
+          </KumoButton>
+          <KumoButton
             type="button"
             class="rounded-md px-2.5 py-1 text-xs font-medium transition-colors"
             :class="source === 'mapping'
@@ -40,13 +40,13 @@
             @click="emit('update:source', 'mapping')"
           >
             {{ t('usage.mapping') }}
-          </button>
+          </KumoButton>
         </div>
         <div
           v-if="showMetricToggle"
           class="inline-flex rounded-lg border border-gray-200 bg-gray-50 p-0.5 dark:border-dark-700 dark:bg-dark-800"
         >
-          <button
+          <KumoButton
             type="button"
             class="rounded-md px-2.5 py-1 text-xs font-medium transition-colors"
             :class="metric === 'tokens'
@@ -55,8 +55,8 @@
             @click="emit('update:metric', 'tokens')"
           >
             {{ t('admin.dashboard.metricTokens') }}
-          </button>
-          <button
+          </KumoButton>
+          <KumoButton
             type="button"
             class="rounded-md px-2.5 py-1 text-xs font-medium transition-colors"
             :class="metric === 'actual_cost'
@@ -65,10 +65,10 @@
             @click="emit('update:metric', 'actual_cost')"
           >
             {{ t('admin.dashboard.metricActualCost') }}
-          </button>
+          </KumoButton>
         </div>
         <div v-if="enableRankingView" class="inline-flex rounded-lg bg-gray-100 p-1 dark:bg-dark-800">
-          <button
+          <KumoButton
             type="button"
             class="rounded-md px-2.5 py-1 text-xs font-medium transition-colors"
             :class="
@@ -79,8 +79,8 @@
             @click="activeView = 'model_distribution'"
           >
             {{ t('admin.dashboard.viewModelDistribution') }}
-          </button>
-          <button
+          </KumoButton>
+          <KumoButton
             type="button"
             class="rounded-md px-2.5 py-1 text-xs font-medium transition-colors"
             :class="
@@ -91,7 +91,7 @@
             @click="activeView = 'spending_ranking'"
           >
             {{ t('admin.dashboard.viewSpendingRanking') }}
-          </button>
+          </KumoButton>
         </div>
       </div>
     </div>
@@ -107,25 +107,25 @@
         <Doughnut :data="chartData" :options="doughnutOptions" />
       </div>
       <div class="max-h-48 w-full min-w-0 flex-1 overflow-auto">
-        <table class="w-full text-xs">
-          <thead>
-            <tr class="text-gray-500 dark:text-gray-400">
-              <th class="pb-2 text-left">{{ t('admin.dashboard.model') }}</th>
-              <th class="pb-2 text-right">{{ t('admin.dashboard.requests') }}</th>
-              <th class="pb-2 text-right">{{ t('admin.dashboard.tokens') }}</th>
-              <th class="pb-2 text-right">{{ t('admin.dashboard.actual') }}</th>
-              <th v-if="showAccountCost" class="pb-2 text-right">{{ t('admin.dashboard.accountCost') }}</th>
-              <th class="pb-2 text-right">{{ t('admin.dashboard.standard') }}</th>
-            </tr>
-          </thead>
-          <tbody>
+        <KumoTable class="w-full text-xs">
+          <KumoTableHeader>
+            <KumoTableRow class="text-gray-500 dark:text-gray-400">
+              <KumoTableHead class="pb-2 text-left">{{ t('admin.dashboard.model') }}</KumoTableHead>
+              <KumoTableHead class="pb-2 text-right">{{ t('admin.dashboard.requests') }}</KumoTableHead>
+              <KumoTableHead class="pb-2 text-right">{{ t('admin.dashboard.tokens') }}</KumoTableHead>
+              <KumoTableHead class="pb-2 text-right">{{ t('admin.dashboard.actual') }}</KumoTableHead>
+              <KumoTableHead v-if="showAccountCost" class="pb-2 text-right">{{ t('admin.dashboard.accountCost') }}</KumoTableHead>
+              <KumoTableHead class="pb-2 text-right">{{ t('admin.dashboard.standard') }}</KumoTableHead>
+            </KumoTableRow>
+          </KumoTableHeader>
+          <KumoTableBody>
             <template v-for="model in displayModelStats" :key="model.model">
-              <tr
+              <KumoTableRow
                 class="border-t border-gray-100 transition-colors dark:border-dark-700"
                 :class="enableBreakdown ? 'cursor-pointer hover:bg-gray-50 dark:hover:bg-dark-700/40' : ''"
                 @click="enableBreakdown && toggleBreakdown('model', model.model)"
               >
-                <td
+                <KumoTableCell
                   class="max-w-[100px] truncate py-1.5 font-medium"
                   :class="enableBreakdown ? 'text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300' : 'text-gray-900 dark:text-white'"
                   :title="model.model"
@@ -135,35 +135,35 @@
                     <svg v-else-if="enableBreakdown" class="h-3 w-3 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
                     {{ model.model }}
                   </span>
-                </td>
-                <td class="py-1.5 text-right text-gray-600 dark:text-gray-400">
+                </KumoTableCell>
+                <KumoTableCell class="py-1.5 text-right text-gray-600 dark:text-gray-400">
                   {{ formatNumber(model.requests) }}
-                </td>
-                <td class="py-1.5 text-right text-gray-600 dark:text-gray-400">
+                </KumoTableCell>
+                <KumoTableCell class="py-1.5 text-right text-gray-600 dark:text-gray-400">
                   {{ formatTokens(model.total_tokens) }}
-                </td>
-                <td class="py-1.5 text-right text-green-600 dark:text-green-400">
+                </KumoTableCell>
+                <KumoTableCell class="py-1.5 text-right text-green-600 dark:text-green-400">
                   ${{ formatCost(model.actual_cost) }}
-                </td>
-                <td v-if="showAccountCost" class="py-1.5 text-right text-orange-500 dark:text-orange-400">
+                </KumoTableCell>
+                <KumoTableCell v-if="showAccountCost" class="py-1.5 text-right text-orange-500 dark:text-orange-400">
                   ${{ formatCost(model.account_cost) }}
-                </td>
-                <td class="py-1.5 text-right text-gray-400 dark:text-gray-500">
+                </KumoTableCell>
+                <KumoTableCell class="py-1.5 text-right text-gray-400 dark:text-gray-500">
                   ${{ formatCost(model.cost) }}
-                </td>
-              </tr>
-              <tr v-if="expandedKey === `model-${model.model}`">
-                <td :colspan="distributionColspan" class="p-0">
+                </KumoTableCell>
+              </KumoTableRow>
+              <KumoTableRow v-if="expandedKey === `model-${model.model}`">
+                <KumoTableCell :colspan="distributionColspan" class="p-0">
                   <UserBreakdownSubTable
                     :items="breakdownItems"
                     :loading="breakdownLoading"
                     :show-account-cost="showAccountCost"
                   />
-                </td>
-              </tr>
+                </KumoTableCell>
+              </KumoTableRow>
             </template>
-          </tbody>
-        </table>
+          </KumoTableBody>
+        </KumoTable>
       </div>
     </div>
     <div
@@ -187,17 +187,17 @@
         <Doughnut :data="rankingChartData" :options="rankingDoughnutOptions" />
       </div>
       <div class="max-h-48 w-full min-w-0 flex-1 overflow-auto">
-        <table class="w-full text-xs">
-          <thead>
-            <tr class="text-gray-500 dark:text-gray-400">
-              <th class="pb-2 text-left">{{ t('admin.dashboard.spendingRankingUser') }}</th>
-              <th class="pb-2 text-right">{{ t('admin.dashboard.spendingRankingRequests') }}</th>
-              <th class="pb-2 text-right">{{ t('admin.dashboard.spendingRankingTokens') }}</th>
-              <th class="pb-2 text-right">{{ t('admin.dashboard.spendingRankingSpend') }}</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr
+        <KumoTable class="w-full text-xs">
+          <KumoTableHeader>
+            <KumoTableRow class="text-gray-500 dark:text-gray-400">
+              <KumoTableHead class="pb-2 text-left">{{ t('admin.dashboard.spendingRankingUser') }}</KumoTableHead>
+              <KumoTableHead class="pb-2 text-right">{{ t('admin.dashboard.spendingRankingRequests') }}</KumoTableHead>
+              <KumoTableHead class="pb-2 text-right">{{ t('admin.dashboard.spendingRankingTokens') }}</KumoTableHead>
+              <KumoTableHead class="pb-2 text-right">{{ t('admin.dashboard.spendingRankingSpend') }}</KumoTableHead>
+            </KumoTableRow>
+          </KumoTableHeader>
+          <KumoTableBody>
+            <KumoTableRow
               v-for="(item, index) in rankingDisplayItems"
               :key="item.isOther ? 'others' : `${item.user_id}-${index}`"
               class="border-t border-gray-100 transition-colors dark:border-dark-700"
@@ -206,7 +206,7 @@
                 : 'cursor-pointer hover:bg-gray-50 dark:hover:bg-dark-700/40'"
               @click="item.isOther ? undefined : emit('ranking-click', item)"
             >
-              <td class="py-1.5">
+              <KumoTableCell class="py-1.5">
                 <div class="flex min-w-0 items-center gap-2">
                   <span class="shrink-0 text-[11px] font-semibold text-gray-500 dark:text-gray-400">
                     {{ item.isOther ? 'Σ' : `#${index + 1}` }}
@@ -218,19 +218,19 @@
                     {{ getRankingRowLabel(item) }}
                   </span>
                 </div>
-              </td>
-              <td class="py-1.5 text-right text-gray-600 dark:text-gray-400">
+              </KumoTableCell>
+              <KumoTableCell class="py-1.5 text-right text-gray-600 dark:text-gray-400">
                 {{ formatNumber(item.requests) }}
-              </td>
-              <td class="py-1.5 text-right text-gray-600 dark:text-gray-400">
+              </KumoTableCell>
+              <KumoTableCell class="py-1.5 text-right text-gray-600 dark:text-gray-400">
                 {{ formatTokens(item.tokens) }}
-              </td>
-              <td class="py-1.5 text-right text-green-600 dark:text-green-400">
+              </KumoTableCell>
+              <KumoTableCell class="py-1.5 text-right text-green-600 dark:text-green-400">
                 ${{ formatCost(item.actual_cost) }}
-              </td>
-            </tr>
-          </tbody>
-        </table>
+              </KumoTableCell>
+            </KumoTableRow>
+          </KumoTableBody>
+        </KumoTable>
       </div>
     </div>
     <div
@@ -239,10 +239,12 @@
     >
       {{ t('admin.dashboard.noDataAvailable') }}
     </div>
-  </div>
+  </KumoSurface>
 </template>
 
 <script setup lang="ts">
+import { KumoButton, KumoSurface, KumoTable, KumoTableBody, KumoTableCell, KumoTableHead, KumoTableHeader, KumoTableRow } from '@/components/kumo'
+
 import { computed, ref } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { Chart as ChartJS, ArcElement, Tooltip, Legend } from 'chart.js'

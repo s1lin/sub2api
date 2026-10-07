@@ -9,10 +9,10 @@
             <span>{{ t('storefront.headlineCreative') }}</span>
           </h1>
           <p>{{ t('storefront.heroDescription') }}</p>
-          <a href="#capabilities" class="brand-button">
+          <KumoButton href="#capabilities" class="brand-button">
             {{ t('storefront.explorePlatform') }}
             <Icon name="arrowRight" size="sm" />
-          </a>
+          </KumoButton>
         </div>
         <div class="hero-art" aria-hidden="true">
           <AsciiOrbit />
@@ -71,7 +71,7 @@
         </div>
         <div v-else-if="loadError" class="pricing-message" role="alert">
           <p>{{ t('storefront.loadError') }}</p>
-          <button type="button" class="brand-button" @click="loadPlans">{{ t('storefront.retry') }}</button>
+          <KumoButton type="button" class="brand-button" @click="loadPlans">{{ t('storefront.retry') }}</KumoButton>
         </div>
         <template v-else>
           <article v-if="balanceEnabled" class="credits-panel" aria-labelledby="credits-title">
@@ -80,9 +80,9 @@
               <h3 id="credits-title">{{ t('storefront.creditsTitle') }}</h3>
               <p>{{ t('storefront.creditsPanelDescription') }}</p>
             </div>
-            <router-link v-if="paymentEnabled" :to="checkoutDestination('/purchase?tab=recharge')" class="brand-button">
+            <KumoLink v-if="paymentEnabled" :to="checkoutDestination('/purchase?tab=recharge')" class="brand-button">
               {{ t('storefront.creditsAction') }} <Icon name="arrowRight" size="sm" />
-            </router-link>
+            </KumoLink>
             <p v-else role="status" class="purchase-unavailable">{{ t('storefront.paymentDisabled') }}</p>
           </article>
           <div v-if="!paymentEnabled && !balanceEnabled" class="pricing-message" role="status">
@@ -91,13 +91,13 @@
           <div v-if="paymentEnabled && subscriptionsEnabled" class="subscription-section">
             <div class="plans-heading">
               <h3>{{ t('storefront.subscriptionsTitle') }}</h3>
-              <label v-if="platforms.length > 1" class="platform-filter">
+              <KumoLabel v-if="platforms.length > 1" class="platform-filter">
                 <span class="sr-only">{{ t('storefront.allPlatforms') }}</span>
-                <select v-model="selectedPlatform">
+                <KumoNativeSelect v-model="selectedPlatform">
                   <option value="">{{ t('storefront.allPlatforms') }}</option>
                   <option v-for="platform in platforms" :key="platform" :value="platform">{{ platformLabel(platform) }}</option>
-                </select>
-              </label>
+                </KumoNativeSelect>
+              </KumoLabel>
             </div>
             <div v-if="plans.length === 0" class="pricing-message" role="status">{{ t('storefront.noPlans') }}</div>
             <div v-else-if="filteredPlans.length === 0" class="pricing-message" role="status">{{ t('storefront.noMatchingPlans') }}</div>
@@ -127,10 +127,12 @@
       <section class="brand-container storefront-faq" aria-labelledby="faq-title">
         <h2 id="faq-title">{{ t('storefront.faqTitle') }}</h2>
         <div class="faq-list">
-          <details v-for="faq in faqs" :key="faq.question">
-            <summary>{{ t(faq.question) }}<Icon name="plus" size="sm" class="faq-plus" /></summary>
+          <KumoCollapsible v-for="faq in faqs" :key="faq.question">
+            <KumoCollapsibleTrigger>{{ t(faq.question) }}<Icon name="plus" size="sm" class="faq-plus" /></KumoCollapsibleTrigger>
+            <KumoCollapsiblePanel>
             <p>{{ t(faq.answer) }}</p>
-          </details>
+          </KumoCollapsiblePanel>
+          </KumoCollapsible>
         </div>
       </section>
     </main>
@@ -142,6 +144,8 @@
 </template>
 
 <script setup lang="ts">
+import { KumoCollapsible, KumoCollapsibleTrigger, KumoCollapsiblePanel, KumoButton, KumoLabel, KumoLink, KumoNativeSelect } from '@/components/kumo'
+
 import { computed, onMounted, ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { useI18n } from 'vue-i18n'
@@ -278,12 +282,12 @@ onMounted(loadPlans)
 .setup-sequence p { max-width: 410px; margin-top: 8px; color: var(--brand-muted); font-size: 15px; line-height: 1.7; }
 .storefront-faq { padding-block: 56px 88px; border-top: 1px solid var(--brand-line); }
 .faq-list { margin-top: 32px; max-width: 860px; }
-.faq-list details { border-bottom: 1px solid var(--brand-line); }
-.faq-list summary { display: flex; align-items: center; justify-content: space-between; gap: 24px; padding-block: 22px; font-size: 16px; font-weight: 550; cursor: pointer; list-style: none; }
-.faq-list summary::-webkit-details-marker { display: none; }
+.faq-list :deep([data-platform-collapsible]) { border-bottom: 1px solid var(--brand-line); }
+.faq-list :deep([data-platform-collapse-trigger]) { display: flex; width: 100%; align-items: center; justify-content: space-between; gap: 24px; padding-block: 22px; text-align: left; font-size: 16px; font-weight: 550; cursor: pointer; list-style: none; }
+
 .faq-plus { flex-shrink: 0; color: var(--brand-muted); transition: transform 180ms ease; }
-.faq-list details[open] .faq-plus { transform: rotate(45deg); }
-.faq-list details p { max-width: 700px; padding-bottom: 24px; color: var(--brand-muted); font-size: 15px; line-height: 1.8; }
+.faq-list :deep([data-panel-open]) .faq-plus { transform: rotate(45deg); }
+.faq-list :deep([data-platform-collapsible] p) { max-width: 700px; padding-bottom: 24px; color: var(--brand-muted); font-size: 15px; line-height: 1.8; }
 @media (prefers-reduced-motion: no-preference) {
   .hero-copy { animation: hero-enter 550ms ease-out both; }
   .hero-art { animation: hero-enter 700ms 100ms ease-out both; }

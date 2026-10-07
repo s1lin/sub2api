@@ -1,4 +1,6 @@
-import { flushPromises, mount } from '@vue/test-utils'
+vi.mock('react-dom/client', async () => vi.importActual('react-dom/client'))
+import { mount, flushPromises } from '@/__tests__/render'
+
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 import WechatPaymentCallbackView from '@/views/auth/WechatPaymentCallbackView.vue'
 

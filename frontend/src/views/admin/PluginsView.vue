@@ -24,14 +24,14 @@
         </div>
 
         <div class="flex flex-shrink-0 items-center gap-2">
-          <input
+          <KumoInput
             ref="fileInput"
             class="hidden"
             type="file"
             accept=".s2plugin,application/zip"
             @change="handleFileSelected"
           />
-          <button
+          <KumoButton
             type="button"
             class="btn btn-primary"
             :disabled="uploading"
@@ -39,8 +39,8 @@
           >
             <Icon name="upload" size="sm" />
             {{ uploading ? t("common.processing") : t("admin.plugins.upload") }}
-          </button>
-          <button
+          </KumoButton>
+          <KumoButton
             type="button"
             class="btn btn-secondary"
             :disabled="loading"
@@ -49,7 +49,7 @@
           >
             <Icon name="refresh" size="sm" />
             <span class="sr-only">{{ t("common.refresh") }}</span>
-          </button>
+          </KumoButton>
         </div>
       </section>
 
@@ -85,7 +85,7 @@
       </div>
 
       <div v-else class="grid grid-cols-1 gap-4 xl:grid-cols-2">
-        <article
+        <KumoSurface
           v-for="plugin in plugins"
           :key="plugin.id"
           class="card overflow-hidden border border-gray-200 dark:border-dark-700"
@@ -121,14 +121,14 @@
                 {{ plugin.description }}
               </p>
             </div>
-            <button
+            <KumoButton
               type="button"
               class="btn btn-secondary btn-sm"
               @click="openConfiguration(plugin)"
             >
               <Icon name="cog" size="sm" />
               {{ t("admin.plugins.configure") }}
-            </button>
+            </KumoButton>
           </div>
 
           <div class="grid grid-cols-1 gap-x-6 gap-y-4 p-5 md:grid-cols-2">
@@ -212,7 +212,7 @@
             </div>
 
             <div class="md:col-span-2">
-              <label
+              <KumoLabel
                 class="flex items-center justify-between gap-4 text-xs font-medium text-gray-600 dark:text-gray-300"
               >
                 <span>{{ t("admin.plugins.rollout") }}</span>
@@ -221,8 +221,8 @@
                     rolloutValues[plugin.id] ?? currentRollout(plugin)
                   }}%</span
                 >
-              </label>
-              <input
+              </KumoLabel>
+              <KumoInput
                 :value="rolloutValues[plugin.id] ?? currentRollout(plugin)"
                 type="range"
                 min="1"
@@ -238,7 +238,7 @@
           <div
             class="flex flex-wrap justify-end gap-2 border-t border-gray-100 px-5 py-4 dark:border-dark-700"
           >
-            <button
+            <KumoButton
               type="button"
               class="btn btn-secondary btn-sm"
               :disabled="busyID === plugin.id"
@@ -246,8 +246,8 @@
             >
               <Icon name="beaker" size="sm" />
               {{ t("admin.plugins.test") }}
-            </button>
-            <button
+            </KumoButton>
+            <KumoButton
               v-if="hasEnabledBinding(plugin)"
               type="button"
               class="btn btn-secondary btn-sm"
@@ -256,8 +256,8 @@
             >
               <Icon name="ban" size="sm" />
               {{ t("admin.plugins.disable") }}
-            </button>
-            <button
+            </KumoButton>
+            <KumoButton
               v-else
               type="button"
               class="btn btn-primary btn-sm"
@@ -270,8 +270,8 @@
             >
               <Icon name="play" size="sm" />
               {{ t("admin.plugins.enable") }}
-            </button>
-            <button
+            </KumoButton>
+            <KumoButton
               type="button"
               class="btn btn-danger btn-sm"
               :disabled="busyID === plugin.id || hasEnabledBinding(plugin)"
@@ -279,9 +279,9 @@
             >
               <Icon name="trash" size="sm" />
               {{ t("admin.plugins.uninstall") }}
-            </button>
+            </KumoButton>
           </div>
-        </article>
+        </KumoSurface>
       </div>
 
       <BaseDialog
@@ -333,6 +333,8 @@
 </template>
 
 <script setup lang="ts">
+import { KumoButton, KumoInput, KumoLabel, KumoSurface } from '@/components/kumo'
+
 import { onBeforeUnmount, onMounted, ref } from "vue";
 import { useI18n } from "vue-i18n";
 import {

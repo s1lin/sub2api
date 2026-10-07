@@ -29,8 +29,8 @@
 
       <div class="grid grid-cols-1 gap-4">
         <div>
-          <label for="crs-base-url" class="input-label">{{ t('admin.accounts.crsBaseUrl') }}</label>
-          <input
+          <KumoLabel for="crs-base-url" class="input-label">{{ t('admin.accounts.crsBaseUrl') }}</KumoLabel>
+          <KumoInput
             id="crs-base-url"
             v-model="form.base_url"
             type="text"
@@ -42,12 +42,12 @@
 
         <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
           <div>
-            <label for="crs-username" class="input-label">{{ t('admin.accounts.crsUsername') }}</label>
-            <input id="crs-username" v-model="form.username" type="text" class="input" required autocomplete="username" />
+            <KumoLabel for="crs-username" class="input-label">{{ t('admin.accounts.crsUsername') }}</KumoLabel>
+            <KumoInput id="crs-username" v-model="form.username" type="text" class="input" required autocomplete="username" />
           </div>
           <div>
-            <label for="crs-password" class="input-label">{{ t('admin.accounts.crsPassword') }}</label>
-            <input
+            <KumoLabel for="crs-password" class="input-label">{{ t('admin.accounts.crsPassword') }}</KumoLabel>
+            <KumoInput
               id="crs-password"
               v-model="form.password"
               type="password"
@@ -58,14 +58,14 @@
           </div>
         </div>
 
-        <label class="flex items-center gap-2 text-sm text-gray-700 dark:text-dark-300">
-          <input
+        <KumoLabel class="flex items-center gap-2 text-sm text-gray-700 dark:text-dark-300">
+          <KumoCheckbox
             v-model="form.sync_proxies"
             type="checkbox"
             class="rounded border-gray-300 dark:border-dark-600"
           />
           {{ t('admin.accounts.syncProxies') }}
-        </label>
+        </KumoLabel>
       </div>
     </form>
 
@@ -102,27 +102,27 @@
             <span class="ml-1 text-xs text-gray-400">({{ previewResult.new_accounts.length }})</span>
           </div>
           <div class="flex gap-2">
-            <button
+            <KumoButton
               type="button"
               class="text-xs text-blue-600 hover:text-blue-700 dark:text-blue-400"
               @click="selectAll"
-            >{{ t('admin.accounts.crsSelectAll') }}</button>
-            <button
+            >{{ t('admin.accounts.crsSelectAll') }}</KumoButton>
+            <KumoButton
               type="button"
               class="text-xs text-gray-500 hover:text-gray-600 dark:text-gray-400"
               @click="selectNone"
-            >{{ t('admin.accounts.crsSelectNone') }}</button>
+            >{{ t('admin.accounts.crsSelectNone') }}</KumoButton>
           </div>
         </div>
         <div
           class="max-h-48 overflow-auto rounded-lg border border-gray-200 p-2 dark:border-dark-600"
         >
-          <label
+          <KumoLabel
             v-for="acc in previewResult.new_accounts"
             :key="acc.crs_account_id"
             class="flex cursor-pointer items-center gap-2 rounded px-2 py-1.5 hover:bg-gray-50 dark:hover:bg-dark-700/40"
           >
-            <input
+            <KumoCheckbox
               type="checkbox"
               :checked="selectedIds.has(acc.crs_account_id)"
               class="rounded border-gray-300 dark:border-dark-600"
@@ -132,7 +132,7 @@
               class="inline-block rounded bg-green-100 px-1.5 py-0.5 text-[10px] font-medium text-green-700 dark:bg-green-900/30 dark:text-green-400"
             >{{ acc.platform }} / {{ acc.type }}</span>
             <span class="truncate text-sm text-gray-700 dark:text-dark-300">{{ acc.name }}</span>
-          </label>
+          </KumoLabel>
         </div>
         <div class="mt-1 text-xs text-gray-400">
           {{ t('admin.accounts.crsSelectedCount', { count: selectedIds.size }) }}
@@ -191,49 +191,49 @@
       <div class="flex justify-end gap-3">
         <!-- Step 1: Input -->
         <template v-if="currentStep === 'input'">
-          <button
+          <KumoButton
             class="btn btn-secondary"
             type="button"
             :disabled="previewing"
             @click="handleClose"
           >
             {{ t('common.cancel') }}
-          </button>
-          <button
+          </KumoButton>
+          <KumoButton
             class="btn btn-primary"
             type="submit"
             form="sync-from-crs-form"
             :disabled="previewing"
           >
             {{ previewing ? t('admin.accounts.crsPreviewing') : t('admin.accounts.crsPreview') }}
-          </button>
+          </KumoButton>
         </template>
 
         <!-- Step 2: Preview -->
         <template v-else-if="currentStep === 'preview'">
-          <button
+          <KumoButton
             class="btn btn-secondary"
             type="button"
             :disabled="syncing"
             @click="handleBack"
           >
             {{ t('admin.accounts.crsBack') }}
-          </button>
-          <button
+          </KumoButton>
+          <KumoButton
             class="btn btn-primary"
             type="button"
             :disabled="syncing || hasNewButNoneSelected"
             @click="handleSync"
           >
             {{ syncing ? t('admin.accounts.syncing') : t('admin.accounts.syncNow') }}
-          </button>
+          </KumoButton>
         </template>
 
         <!-- Step 3: Result -->
         <template v-else-if="currentStep === 'result'">
-          <button class="btn btn-secondary" type="button" @click="handleClose">
+          <KumoButton class="btn btn-secondary" type="button" @click="handleClose">
             {{ t('common.close') }}
-          </button>
+          </KumoButton>
         </template>
       </div>
     </template>
@@ -241,6 +241,8 @@
 </template>
 
 <script setup lang="ts">
+import { KumoButton, KumoCheckbox, KumoInput, KumoLabel } from '@/components/kumo'
+
 import { computed, reactive, ref, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
 import BaseDialog from '@/components/common/BaseDialog.vue'

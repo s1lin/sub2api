@@ -1,7 +1,7 @@
-import { mount } from '@vue/test-utils'
+import { mount } from '@/__tests__/render'
 import { describe, expect, it, vi } from 'vitest'
-
 import GrokFreeIcon from '../GrokFreeIcon.vue'
+
 import PlatformTypeBadge from '../PlatformTypeBadge.vue'
 
 vi.mock('vue-i18n', async () => {
@@ -24,14 +24,14 @@ describe('PlatformTypeBadge Grok plans', () => {
     })
 
     expect(wrapper.text()).toContain('Grok Free')
-    expect(wrapper.findComponent(GrokFreeIcon).exists()).toBe(true)
+    expect(wrapper.get('[data-testid="grok-free-plan-icon"]').element.tagName.toLowerCase()).toBe('svg')
     expect(wrapper.find('[data-testid="grok-free-plan-icon"]').exists()).toBe(true)
     expect(wrapper.find('[data-testid="grok-plan-icon"]').exists()).toBe(false)
     expect(wrapper.text()).not.toContain('2027-01-01')
 
     await wrapper.setProps({ planType: 'FREE' })
     expect(wrapper.text()).toContain('Grok Free')
-    expect(wrapper.findComponent(GrokFreeIcon).exists()).toBe(true)
+    expect(wrapper.get('[data-testid="grok-free-plan-icon"]').element.tagName.toLowerCase()).toBe('svg')
   })
 
   it('keeps SuperGrok labels compatible and marks paid Grok plans', async () => {

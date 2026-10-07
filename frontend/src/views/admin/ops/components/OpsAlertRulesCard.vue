@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import { KumoButton, KumoCheckbox, KumoInput, KumoLabel, KumoTable, KumoTableBody, KumoTableCell, KumoTableHead, KumoTableHeader, KumoTableRow } from '@/components/kumo'
+
 import { computed, onMounted, ref } from 'vue'
 import { useMediaQuery } from '@vueuse/core'
 import { useI18n } from 'vue-i18n'
@@ -399,10 +401,10 @@ function cancelDelete() {
       </div>
 
       <div class="flex items-center gap-2">
-        <button class="btn btn-sm btn-primary" :disabled="loading" @click="openCreate">
+        <KumoButton class="btn btn-sm btn-primary" :disabled="loading" @click="openCreate">
           {{ t('admin.ops.alertRules.create') }}
-        </button>
-        <button
+        </KumoButton>
+        <KumoButton
           class="flex items-center gap-1.5 rounded-lg bg-gray-100 px-3 py-1.5 text-xs font-bold text-gray-700 transition-colors hover:bg-gray-200 disabled:cursor-not-allowed disabled:opacity-50 dark:bg-dark-700 dark:text-gray-300 dark:hover:bg-dark-600"
           :disabled="loading"
           @click="load"
@@ -411,7 +413,7 @@ function cancelDelete() {
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
           </svg>
           {{ t('common.refresh') }}
-        </button>
+        </KumoButton>
       </div>
     </div>
 
@@ -446,8 +448,8 @@ function cancelDelete() {
                 {{ row.enabled ? t('common.enabled') : t('common.disabled') }}
               </span>
               <div class="flex items-center gap-2">
-                <button class="btn btn-sm btn-secondary" @click="openEdit(row)">{{ t('common.edit') }}</button>
-                <button class="btn btn-sm btn-danger" @click="requestDelete(row)">{{ t('common.delete') }}</button>
+                <KumoButton class="btn btn-sm btn-secondary" @click="openEdit(row)">{{ t('common.edit') }}</KumoButton>
+                <KumoButton class="btn btn-sm btn-danger" @click="requestDelete(row)">{{ t('common.delete') }}</KumoButton>
               </div>
             </div>
             <div v-if="row.updated_at" class="text-[10px] text-gray-400">
@@ -455,29 +457,29 @@ function cancelDelete() {
             </div>
           </div>
         </div>
-        <table v-else class="min-w-full divide-y divide-gray-200 dark:divide-dark-700">
-          <thead class="sticky top-0 z-10 bg-gray-50 dark:bg-dark-900">
-            <tr>
-              <th class="px-4 py-3 text-left text-[11px] font-bold uppercase tracking-wider text-gray-500 dark:text-gray-400">
+        <KumoTable v-else class="min-w-full divide-y divide-gray-200 dark:divide-dark-700">
+          <KumoTableHeader class="sticky top-0 z-10 bg-gray-50 dark:bg-dark-900">
+            <KumoTableRow>
+              <KumoTableHead class="px-4 py-3 text-left text-[11px] font-bold uppercase tracking-wider text-gray-500 dark:text-gray-400">
                 {{ t('admin.ops.alertRules.table.name') }}
-              </th>
-              <th class="px-4 py-3 text-left text-[11px] font-bold uppercase tracking-wider text-gray-500 dark:text-gray-400">
+              </KumoTableHead>
+              <KumoTableHead class="px-4 py-3 text-left text-[11px] font-bold uppercase tracking-wider text-gray-500 dark:text-gray-400">
                 {{ t('admin.ops.alertRules.table.metric') }}
-              </th>
-              <th class="px-4 py-3 text-left text-[11px] font-bold uppercase tracking-wider text-gray-500 dark:text-gray-400">
+              </KumoTableHead>
+              <KumoTableHead class="px-4 py-3 text-left text-[11px] font-bold uppercase tracking-wider text-gray-500 dark:text-gray-400">
                 {{ t('admin.ops.alertRules.table.severity') }}
-              </th>
-              <th class="px-4 py-3 text-left text-[11px] font-bold uppercase tracking-wider text-gray-500 dark:text-gray-400">
+              </KumoTableHead>
+              <KumoTableHead class="px-4 py-3 text-left text-[11px] font-bold uppercase tracking-wider text-gray-500 dark:text-gray-400">
                 {{ t('admin.ops.alertRules.table.enabled') }}
-              </th>
-              <th class="px-4 py-3 text-right text-[11px] font-bold uppercase tracking-wider text-gray-500 dark:text-gray-400">
+              </KumoTableHead>
+              <KumoTableHead class="px-4 py-3 text-right text-[11px] font-bold uppercase tracking-wider text-gray-500 dark:text-gray-400">
                 {{ t('admin.ops.alertRules.table.actions') }}
-              </th>
-            </tr>
-          </thead>
-          <tbody class="divide-y divide-gray-200 bg-white dark:divide-dark-700 dark:bg-dark-800">
-            <tr v-for="row in sortedRules" :key="row.id" class="hover:bg-gray-50 dark:hover:bg-dark-700/50">
-              <td class="px-4 py-3">
+              </KumoTableHead>
+            </KumoTableRow>
+          </KumoTableHeader>
+          <KumoTableBody class="divide-y divide-gray-200 bg-white dark:divide-dark-700 dark:bg-dark-800">
+            <KumoTableRow v-for="row in sortedRules" :key="row.id" class="hover:bg-gray-50 dark:hover:bg-dark-700/50">
+              <KumoTableCell class="px-4 py-3">
                 <div class="text-xs font-bold text-gray-900 dark:text-white">{{ row.name }}</div>
                 <div v-if="row.description" class="mt-0.5 line-clamp-2 text-[11px] text-gray-500 dark:text-gray-400">
                   {{ row.description }}
@@ -485,25 +487,25 @@ function cancelDelete() {
                 <div v-if="row.updated_at" class="mt-1 text-[10px] text-gray-400">
                   {{ formatDateTime(row.updated_at) }}
                 </div>
-              </td>
-              <td class="whitespace-nowrap px-4 py-3 text-xs text-gray-700 dark:text-gray-200">
+              </KumoTableCell>
+              <KumoTableCell class="whitespace-nowrap px-4 py-3 text-xs text-gray-700 dark:text-gray-200">
                 <span class="font-mono">{{ row.metric_type }}</span>
                 <span class="mx-1 text-gray-400">{{ row.operator }}</span>
                 <span class="font-mono">{{ row.threshold }}</span>
-              </td>
-              <td class="whitespace-nowrap px-4 py-3 text-xs font-bold text-gray-700 dark:text-gray-200">
+              </KumoTableCell>
+              <KumoTableCell class="whitespace-nowrap px-4 py-3 text-xs font-bold text-gray-700 dark:text-gray-200">
                 {{ row.severity }}
-              </td>
-              <td class="whitespace-nowrap px-4 py-3 text-xs text-gray-700 dark:text-gray-200">
+              </KumoTableCell>
+              <KumoTableCell class="whitespace-nowrap px-4 py-3 text-xs text-gray-700 dark:text-gray-200">
                 {{ row.enabled ? t('common.enabled') : t('common.disabled') }}
-              </td>
-              <td class="whitespace-nowrap px-4 py-3 text-right text-xs">
-                <button class="btn btn-sm btn-secondary" @click="openEdit(row)">{{ t('common.edit') }}</button>
-                <button class="ml-2 btn btn-sm btn-danger" @click="requestDelete(row)">{{ t('common.delete') }}</button>
-              </td>
-            </tr>
-          </tbody>
-        </table>
+              </KumoTableCell>
+              <KumoTableCell class="whitespace-nowrap px-4 py-3 text-right text-xs">
+                <KumoButton class="btn btn-sm btn-secondary" @click="openEdit(row)">{{ t('common.edit') }}</KumoButton>
+                <KumoButton class="ml-2 btn btn-sm btn-danger" @click="requestDelete(row)">{{ t('common.delete') }}</KumoButton>
+              </KumoTableCell>
+            </KumoTableRow>
+          </KumoTableBody>
+        </KumoTable>
       </div>
     </div>
 
@@ -523,17 +525,17 @@ function cancelDelete() {
 
         <div class="grid grid-cols-1 gap-4 md:grid-cols-2">
           <div class="md:col-span-2">
-            <label class="input-label">{{ t('admin.ops.alertRules.form.name') }}</label>
-            <input v-model="draft!.name" class="input" type="text" />
+            <KumoLabel class="input-label">{{ t('admin.ops.alertRules.form.name') }}</KumoLabel>
+            <KumoInput v-model="draft!.name" class="input" type="text" />
           </div>
 
           <div class="md:col-span-2">
-            <label class="input-label">{{ t('admin.ops.alertRules.form.description') }}</label>
-            <input v-model="draft!.description" class="input" type="text" />
+            <KumoLabel class="input-label">{{ t('admin.ops.alertRules.form.description') }}</KumoLabel>
+            <KumoInput v-model="draft!.description" class="input" type="text" />
           </div>
 
           <div>
-            <label class="input-label">{{ t('admin.ops.alertRules.form.metric') }}</label>
+            <KumoLabel class="input-label">{{ t('admin.ops.alertRules.form.metric') }}</KumoLabel>
             <Select v-model="draft!.metric_type" :options="metricOptions" />
             <div v-if="selectedMetricDefinition" class="mt-1 space-y-0.5 text-xs text-gray-500 dark:text-gray-400">
               <p>{{ selectedMetricDefinition.description }}</p>
@@ -550,15 +552,15 @@ function cancelDelete() {
           </div>
 
           <div>
-            <label class="input-label">{{ t('admin.ops.alertRules.form.operator') }}</label>
+            <KumoLabel class="input-label">{{ t('admin.ops.alertRules.form.operator') }}</KumoLabel>
             <Select v-model="draft!.operator" :options="operatorOptions" />
           </div>
 
           <div class="md:col-span-2">
-            <label class="input-label">
+            <KumoLabel class="input-label">
               {{ t('admin.ops.alertRules.form.groupId') }}
               <span v-if="isGroupMetricSelected" class="ml-1 text-red-500">*</span>
-            </label>
+            </KumoLabel>
             <Select
               v-model="draftGroupId"
               :options="groupOptions"
@@ -572,50 +574,50 @@ function cancelDelete() {
           </div>
 
           <div>
-            <label class="input-label">{{ t('admin.ops.alertRules.form.threshold') }}</label>
-            <input v-model.number="draft!.threshold" class="input" type="number" />
+            <KumoLabel class="input-label">{{ t('admin.ops.alertRules.form.threshold') }}</KumoLabel>
+            <KumoInput v-model.number="draft!.threshold" class="input" type="number" />
           </div>
 
           <div>
-            <label class="input-label">{{ t('admin.ops.alertRules.form.severity') }}</label>
+            <KumoLabel class="input-label">{{ t('admin.ops.alertRules.form.severity') }}</KumoLabel>
             <Select v-model="draft!.severity" :options="severityOptions" />
           </div>
 
           <div>
-            <label class="input-label">{{ t('admin.ops.alertRules.form.window') }}</label>
+            <KumoLabel class="input-label">{{ t('admin.ops.alertRules.form.window') }}</KumoLabel>
             <Select v-model="draft!.window_minutes" :options="windowOptions" />
           </div>
 
           <div>
-            <label class="input-label">{{ t('admin.ops.alertRules.form.sustained') }}</label>
-            <input v-model.number="draft!.sustained_minutes" class="input" type="number" min="1" max="1440" />
+            <KumoLabel class="input-label">{{ t('admin.ops.alertRules.form.sustained') }}</KumoLabel>
+            <KumoInput v-model.number="draft!.sustained_minutes" class="input" type="number" min="1" max="1440" />
           </div>
 
           <div>
-            <label class="input-label">{{ t('admin.ops.alertRules.form.cooldown') }}</label>
-            <input v-model.number="draft!.cooldown_minutes" class="input" type="number" min="0" max="1440" />
+            <KumoLabel class="input-label">{{ t('admin.ops.alertRules.form.cooldown') }}</KumoLabel>
+            <KumoInput v-model.number="draft!.cooldown_minutes" class="input" type="number" min="0" max="1440" />
           </div>
 
           <div class="flex items-center justify-between rounded-xl bg-gray-50 px-4 py-3 dark:bg-dark-800/50 md:col-span-2">
             <span class="text-xs font-bold text-gray-700 dark:text-gray-200">{{ t('admin.ops.alertRules.form.enabled') }}</span>
-            <input v-model="draft!.enabled" type="checkbox" class="h-4 w-4 rounded border-gray-300 text-primary-600 focus:ring-primary-500" />
+            <KumoCheckbox v-model="draft!.enabled" type="checkbox" class="h-4 w-4 rounded border-gray-300 text-primary-600 focus:ring-primary-500" />
           </div>
 
           <div class="flex items-center justify-between rounded-xl bg-gray-50 px-4 py-3 dark:bg-dark-800/50 md:col-span-2">
             <span class="text-xs font-bold text-gray-700 dark:text-gray-200">{{ t('admin.ops.alertRules.form.notifyEmail') }}</span>
-            <input v-model="draft!.notify_email" type="checkbox" class="h-4 w-4 rounded border-gray-300 text-primary-600 focus:ring-primary-500" />
+            <KumoCheckbox v-model="draft!.notify_email" type="checkbox" class="h-4 w-4 rounded border-gray-300 text-primary-600 focus:ring-primary-500" />
           </div>
         </div>
       </div>
 
       <template #footer>
         <div class="flex items-center justify-end gap-2">
-          <button class="btn btn-secondary" :disabled="saving" @click="showEditor = false">
+          <KumoButton class="btn btn-secondary" :disabled="saving" @click="showEditor = false">
             {{ t('common.cancel') }}
-          </button>
-          <button class="btn btn-primary" :disabled="saving" @click="save">
+          </KumoButton>
+          <KumoButton class="btn btn-primary" :disabled="saving" @click="save">
             {{ saving ? t('common.saving') : t('common.save') }}
-          </button>
+          </KumoButton>
         </div>
       </template>
     </BaseDialog>

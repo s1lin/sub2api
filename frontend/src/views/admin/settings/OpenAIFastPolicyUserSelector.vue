@@ -1,5 +1,5 @@
 <template>
-  <div ref="containerRef" class="relative">
+  <div class="relative">
     <div v-if="selectedUserIds.length > 0" class="mb-2 flex flex-wrap gap-2">
       <span
         v-for="userId in selectedUserIds"
@@ -16,7 +16,7 @@
         >
           {{ t("admin.settings.openaiFastPolicy.userDeleted") }}
         </span>
-        <button
+        <KumoButton
           type="button"
           class="shrink-0 rounded text-gray-400 hover:text-red-600 dark:hover:text-red-400"
           :aria-label="t('admin.settings.openaiFastPolicy.removeUser')"
@@ -24,7 +24,7 @@
           @click="removeUser(userId)"
         >
           <Icon name="x" size="xs" :stroke-width="2" />
-        </button>
+        </KumoButton>
       </span>
     </div>
 
@@ -34,53 +34,28 @@
         size="sm"
         class="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"
       />
-      <input
+      <KumoSearchSelect
         v-model="searchQuery"
-        type="text"
         autocomplete="off"
         class="input input-sm w-full pl-9"
         :placeholder="t('admin.settings.openaiFastPolicy.userSearchPlaceholder')"
-        @input="debounceSearch"
-        @focus="showDropdown = true"
-      />
-    </div>
-
-    <div
-      v-if="showDropdown && searchQuery.trim()"
-      class="absolute z-50 mt-1 max-h-60 w-full overflow-auto rounded-lg border border-gray-200 bg-white shadow-lg dark:border-dark-600 dark:bg-dark-700"
-    >
-      <div v-if="searchLoading" class="px-4 py-3 text-sm text-gray-500 dark:text-gray-400">
-        {{ t("common.loading") }}
-      </div>
-      <div
-        v-else-if="availableResults.length === 0"
-        class="px-4 py-3 text-sm text-gray-500 dark:text-gray-400"
-      >
-        {{ t("admin.settings.openaiFastPolicy.userSearchEmpty") }}
-      </div>
-      <template v-else>
-        <button
-          v-for="user in availableResults"
-          :key="user.id"
-          type="button"
-          class="flex w-full items-center justify-between gap-3 px-4 py-2 text-left text-sm hover:bg-gray-100 dark:hover:bg-dark-600"
-          @click="selectUser(user)"
-        >
-          <span class="min-w-0 truncate font-medium text-gray-900 dark:text-white">
+        @search="debounceSearch"
+        @focus="showDropdown = true" :options="availableResults" label-key="email" v-model:open="showDropdown" @select="selectUser" :loading="searchLoading" :loading-label="t('common.loading')" :empty-text="t('admin.settings.openaiFastPolicy.userSearchEmpty')"><template #option="{ option: user }"><span class="min-w-0 truncate font-medium text-gray-900 dark:text-white">
             {{ user.email }}
             <span v-if="user.deleted" class="ml-1 text-xs font-normal text-gray-400">
               {{ t("admin.settings.openaiFastPolicy.userDeleted") }}
             </span>
-          </span>
-          <span class="shrink-0 text-xs text-gray-400">#{{ user.id }}</span>
-        </button>
-      </template>
+          </span><span class="shrink-0 text-xs text-gray-400">#{{ user.id }}</span></template></KumoSearchSelect>
     </div>
+
+
   </div>
 </template>
 
 <script setup lang="ts">
-import { computed, onMounted, onUnmounted, ref, watch } from "vue";
+import { KumoButton, KumoSearchSelect } from '@/components/kumo'
+
+import { computed, onUnmounted, ref, watch } from "vue";
 import { useI18n } from "vue-i18n";
 import { adminAPI } from "@/api/admin";
 import type { SimpleUser } from "@/api/admin/usage";
@@ -95,7 +70,6 @@ const emit = defineEmits<{
 }>();
 
 const { t } = useI18n();
-const containerRef = ref<HTMLElement | null>(null);
 const searchQuery = ref("");
 const searchResults = ref<SimpleUser[]>([]);
 const searchLoading = ref(false);
@@ -203,12 +177,6 @@ async function hydrateSelectedUsers(userIds: number[]): Promise<void> {
   selectedUsers.value = next;
 }
 
-function handleDocumentClick(event: MouseEvent): void {
-  const target = event.target as Node | null;
-  if (target && !containerRef.value?.contains(target)) {
-    showDropdown.value = false;
-  }
-}
 
 watch(
   selectedUserIds,
@@ -218,12 +186,9 @@ watch(
   { immediate: true },
 );
 
-onMounted(() => {
-  document.addEventListener("click", handleDocumentClick);
-});
+
 
 onUnmounted(() => {
   clearPendingSearch();
-  document.removeEventListener("click", handleDocumentClick);
 });
 </script>

@@ -24,7 +24,7 @@
          target, which users could not discover. The verb label makes the
          affordance explicit. -->
     <div class="flex flex-wrap items-center gap-1.5">
-      <button
+      <KumoButton
         type="button"
         data-test="cn-provider-balance-probe"
         class="inline-flex items-center gap-0.5 whitespace-nowrap rounded px-1.5 py-0.5 text-[10px] font-medium leading-4 text-blue-600 transition-colors hover:bg-blue-50 disabled:cursor-not-allowed disabled:opacity-50 dark:text-blue-400 dark:hover:bg-blue-900/30"
@@ -47,7 +47,7 @@
           />
         </svg>
         {{ t('admin.accounts.cnProviders.probe') }}
-      </button>
+      </KumoButton>
     </div>
 
     <div v-if="error" class="truncate text-[10px] text-red-600 dark:text-red-400" :title="error">
@@ -57,6 +57,8 @@
 </template>
 
 <script setup lang="ts">
+import { KumoButton } from '@/components/kumo'
+
 import { computed, ref, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { adminAPI } from '@/api/admin'

@@ -10,7 +10,7 @@
         <!-- Row 1: Core Stats -->
         <div class="grid grid-cols-1 min-[360px]:grid-cols-2 gap-4 lg:grid-cols-4">
           <!-- Total API Keys -->
-          <div class="card dashboard-metric p-4">
+          <KumoSurface class="card dashboard-metric p-4">
             <div class="flex items-center gap-3">
               <div class="metric-icon rounded-lg p-2">
                 <Icon name="key" size="md" class="text-[var(--brand-accent)]" :stroke-width="2" />
@@ -27,10 +27,10 @@
                 </p>
               </div>
             </div>
-          </div>
+          </KumoSurface>
 
           <!-- Service Accounts -->
-          <div class="card dashboard-metric p-4">
+          <KumoSurface class="card dashboard-metric p-4">
             <div class="flex items-center gap-3">
               <div class="metric-icon rounded-lg p-2">
                 <Icon name="server" size="md" class="text-[var(--brand-accent)]" :stroke-width="2" />
@@ -52,10 +52,10 @@
                 </p>
               </div>
             </div>
-          </div>
+          </KumoSurface>
 
           <!-- Today Requests -->
-          <div class="card dashboard-metric p-4">
+          <KumoSurface class="card dashboard-metric p-4">
             <div class="flex items-center gap-3">
               <div class="metric-icon rounded-lg p-2">
                 <Icon name="chart" size="md" class="text-[var(--brand-accent)]" :stroke-width="2" />
@@ -72,10 +72,10 @@
                 </p>
               </div>
             </div>
-          </div>
+          </KumoSurface>
 
           <!-- New Users Today -->
-          <div class="card dashboard-metric p-4">
+          <KumoSurface class="card dashboard-metric p-4">
             <div class="flex items-center gap-3">
               <div class="metric-icon rounded-lg p-2">
                 <Icon name="userPlus" size="md" class="text-[var(--brand-accent)]" :stroke-width="2" />
@@ -92,13 +92,13 @@
                 </p>
               </div>
             </div>
-          </div>
+          </KumoSurface>
         </div>
 
         <!-- Row 2: Token Stats -->
         <div class="grid grid-cols-1 min-[360px]:grid-cols-2 gap-4 lg:grid-cols-4">
           <!-- Today Tokens -->
-          <div class="card dashboard-metric p-4">
+          <KumoSurface class="card dashboard-metric p-4">
             <div class="flex items-center gap-3">
               <div class="metric-icon rounded-lg p-2">
                 <Icon name="cube" size="md" class="text-[var(--brand-accent)]" :stroke-width="2" />
@@ -131,10 +131,10 @@
                 </p>
               </div>
             </div>
-          </div>
+          </KumoSurface>
 
           <!-- Total Tokens -->
-          <div class="card dashboard-metric p-4">
+          <KumoSurface class="card dashboard-metric p-4">
             <div class="flex items-center gap-3">
               <div class="metric-icon rounded-lg p-2">
                 <Icon name="database" size="md" class="text-[var(--brand-accent)]" :stroke-width="2" />
@@ -167,10 +167,10 @@
                 </p>
               </div>
             </div>
-          </div>
+          </KumoSurface>
 
           <!-- Performance (RPM/TPM) -->
-          <div class="card dashboard-metric p-4">
+          <KumoSurface class="card dashboard-metric p-4">
             <div class="flex items-center gap-3">
               <div class="metric-icon rounded-lg p-2">
                 <Icon name="bolt" size="md" class="text-[var(--brand-accent)]" :stroke-width="2" />
@@ -193,10 +193,10 @@
                 </div>
               </div>
             </div>
-          </div>
+          </KumoSurface>
 
           <!-- Avg Response Time -->
-          <div class="card dashboard-metric p-4">
+          <KumoSurface class="card dashboard-metric p-4">
             <div class="flex items-center gap-3">
               <div class="metric-icon rounded-lg p-2">
                 <Icon name="clock" size="md" class="text-[var(--brand-accent)]" :stroke-width="2" />
@@ -213,18 +213,18 @@
                 </p>
               </div>
             </div>
-          </div>
+          </KumoSurface>
         </div>
 
         <!-- Quick Actions -->
-        <div class="card p-4">
+        <KumoSurface class="card p-4">
           <div class="mb-3 flex items-center justify-between">
             <h2 class="text-sm font-semibold text-gray-900 dark:text-white">
               {{ t('admin.dashboard.quickActions') }}
             </h2>
           </div>
           <div class="grid grid-cols-1 gap-3 md:grid-cols-2">
-            <button
+            <KumoButton
               v-if="canUseBatchImage"
               type="button"
               class="group flex items-center gap-3 rounded-lg bg-gray-50 p-3 text-left transition-colors hover:bg-primary-50 dark:bg-dark-800/50 dark:hover:bg-primary-900/20"
@@ -242,8 +242,8 @@
                 </span>
               </span>
               <Icon name="chevronRight" size="sm" class="text-gray-400 group-hover:text-primary-500" />
-            </button>
-            <button
+            </KumoButton>
+            <KumoButton
               type="button"
               class="group flex items-center gap-3 rounded-lg bg-gray-50 p-3 text-left transition-colors hover:bg-primary-50 dark:bg-dark-800/50 dark:hover:bg-primary-900/20"
               @click="router.push('/admin/groups')"
@@ -260,14 +260,14 @@
                 </span>
               </span>
               <Icon name="chevronRight" size="sm" class="text-gray-400 group-hover:text-primary-500" />
-            </button>
+            </KumoButton>
           </div>
-        </div>
+        </KumoSurface>
 
         <!-- Charts Section -->
         <div class="space-y-6">
           <!-- Date Range Filter -->
-          <div class="card p-4">
+          <KumoSurface class="card p-4">
             <div class="flex flex-wrap items-center gap-4">
               <div class="flex items-center gap-2">
                 <span class="text-sm font-medium text-gray-700 dark:text-gray-300"
@@ -279,9 +279,9 @@
                   @change="onDateRangeChange"
                 />
               </div>
-              <button @click="loadDashboardStats" :disabled="chartsLoading" class="btn btn-secondary">
+              <KumoButton @click="loadDashboardStats" :disabled="chartsLoading" class="btn btn-secondary">
                 {{ t('common.refresh') }}
-              </button>
+              </KumoButton>
               <div class="ml-auto flex items-center gap-2">
                 <span class="text-sm font-medium text-gray-700 dark:text-gray-300"
                   >{{ t('admin.dashboard.granularity') }}:</span
@@ -295,7 +295,7 @@
                 </div>
               </div>
             </div>
-          </div>
+          </KumoSurface>
 
           <!-- Charts Grid -->
           <div class="grid grid-cols-1 gap-6 lg:grid-cols-2">
@@ -317,15 +317,15 @@
           </div>
 
           <!-- User Usage Trend (Full Width) -->
-          <div class="card p-4">
+          <KumoSurface class="card p-4">
             <div class="mb-4 flex items-center justify-between gap-3">
               <h3 class="text-sm font-semibold text-gray-900 dark:text-white">{{ t('admin.dashboard.recentUsage') }} (Top 12)</h3>
               <div class="flex gap-1" role="group" :aria-label="t('admin.dashboard.recentUsage')">
-                <button v-for="metric in (['tokens', 'actual_cost'] as const)" :key="metric" type="button"
+                <KumoButton v-for="metric in (['tokens', 'actual_cost'] as const)" :key="metric" type="button"
                   class="rounded px-2 py-1 text-xs" :class="userTrendMetric === metric ? 'bg-[var(--brand-accent)] text-[var(--brand-on-accent)]' : 'text-gray-600 dark:text-gray-300'"
                   :aria-pressed="userTrendMetric === metric" @click="setUserTrendMetric(metric)">
                   {{ t(metric === 'tokens' ? 'admin.dashboard.tokens' : 'admin.dashboard.actualSpending') }}
-                </button>
+                </KumoButton>
               </div>
             </div>
             <div class="h-64">
@@ -340,7 +340,7 @@
                 {{ t('admin.dashboard.noDataAvailable') }}
               </div>
             </div>
-          </div>
+          </KumoSurface>
         </div>
       </template>
     </div>
@@ -348,6 +348,8 @@
 </template>
 
 <script setup lang="ts">
+import { KumoButton, KumoSurface } from '@/components/kumo'
+
 import { ref, computed, onMounted } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useRouter } from 'vue-router'

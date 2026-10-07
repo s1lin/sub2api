@@ -1,5 +1,6 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest'
-import { flushPromises, mount } from '@vue/test-utils'
+import { mount, portal, flushPromises } from '@/__tests__/render'
+
 
 const {
   copyToClipboard,
@@ -55,6 +56,7 @@ import ModelWhitelistSelector from '../ModelWhitelistSelector.vue'
 
 function mountSelector(props: Record<string, unknown> = {}) {
   return mount(ModelWhitelistSelector, {
+    attachTo: document.body,
     props: {
       modelValue: [],
       platform: 'openai',
@@ -68,8 +70,8 @@ function mountSelector(props: Record<string, unknown> = {}) {
   })
 }
 
-function findModelRow(wrapper: ReturnType<typeof mountSelector>, modelId: string) {
-  const row = wrapper
+function findModelRow(modelId: string) {
+  const row = portal()
     .findAll('[data-testid="model-option"]')
     .find(candidate => candidate.text().includes(modelId))
 
@@ -124,9 +126,9 @@ describe('ModelWhitelistSelector', () => {
 
   it('copies a model ID without selecting the model', async () => {
     const wrapper = mountSelector()
-    await wrapper.get('div.cursor-pointer').trigger('click')
+    await wrapper.get('button[aria-label="admin.accounts.searchModels"]').trigger('click')
 
-    const row = findModelRow(wrapper, 'gpt-5.6-sol')
+    const row = findModelRow('gpt-5.6-sol')
 
     const copyButton = row.get('[data-testid="copy-model-id"]')
     expect(copyButton.attributes('aria-label')).toBe('复制 gpt-5.6-sol')
@@ -136,17 +138,19 @@ describe('ModelWhitelistSelector', () => {
 
     expect(copyToClipboard).toHaveBeenCalledWith('gpt-5.6-sol')
     expect(wrapper.emitted('update:modelValue')).toBeUndefined()
+    wrapper.unmount()
   })
 
   it('keeps the existing model selection behavior', async () => {
     const wrapper = mountSelector()
-    await wrapper.get('div.cursor-pointer').trigger('click')
+    await wrapper.get('button[aria-label="admin.accounts.searchModels"]').trigger('click')
 
-    const row = findModelRow(wrapper, 'gpt-5.6-sol')
+    const row = findModelRow('gpt-5.6-sol')
     await row.get('[data-testid="select-model"]').trigger('click')
 
     expect(wrapper.emitted('update:modelValue')).toEqual([[['gpt-5.6-sol']]])
     expect(copyToClipboard).not.toHaveBeenCalled()
+    wrapper.unmount()
   })
 
   it('warns when model IDs sync but capability metadata is incomplete', async () => {

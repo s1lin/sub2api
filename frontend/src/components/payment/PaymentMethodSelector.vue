@@ -1,13 +1,13 @@
 <template>
   <div>
-    <label class="mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300">
+    <KumoLabel class="mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300">
       {{ t('payment.paymentMethod') }}
-    </label>
+    </KumoLabel>
     <div
       data-testid="payment-method-grid"
       class="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4"
     >
-      <button
+      <KumoButton
         v-for="method in sortedMethods"
         :key="method.type"
         type="button"
@@ -39,12 +39,14 @@
             </span>
           </span>
         </span>
-      </button>
+      </KumoButton>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
+import { KumoButton, KumoLabel } from '@/components/kumo'
+
 import { computed } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { METHOD_ORDER, isBuiltInAlipayMethod, isBuiltInWxpayMethod } from './providerConfig'

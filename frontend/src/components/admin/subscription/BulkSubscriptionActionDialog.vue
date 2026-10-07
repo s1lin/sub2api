@@ -27,10 +27,10 @@
 
       <fieldset :disabled="parametersLocked" class="space-y-3 disabled:opacity-70">
         <div v-if="currentAction === 'extend'">
-          <label for="bulk-subscription-days" class="input-label">
+          <KumoLabel for="bulk-subscription-days" class="input-label">
             {{ t('admin.subscriptions.form.adjustDays') }}
-          </label>
-          <input
+          </KumoLabel>
+          <KumoInput
             id="bulk-subscription-days"
             v-model.number="days"
             type="number"
@@ -52,8 +52,8 @@
             {{ t('admin.subscriptions.bulk.resetWindows') }}
           </legend>
           <div class="flex flex-wrap gap-5">
-            <label v-for="window in quotaWindows" :key="window" class="flex items-center gap-2 text-sm text-gray-700 dark:text-gray-300">
-              <input
+            <KumoLabel v-for="window in quotaWindows" :key="window" class="flex items-center gap-2 text-sm text-gray-700 dark:text-gray-300">
+              <KumoCheckbox
                 v-model="windows[window]"
                 :name="window"
                 type="checkbox"
@@ -61,7 +61,7 @@
                 :disabled="parametersLocked"
               />
               {{ t(`admin.subscriptions.${window}`) }}
-            </label>
+            </KumoLabel>
           </div>
           <p class="text-xs text-gray-500 dark:text-gray-400">
             {{ t('admin.subscriptions.bulk.resetHint') }}
@@ -97,10 +97,10 @@
 
     <template #footer>
       <div class="flex justify-end gap-3">
-        <button type="button" class="btn btn-secondary" :disabled="!canClose" @click="handleClose">
+        <KumoButton type="button" class="btn btn-secondary" :disabled="!canClose" @click="handleClose">
           {{ result ? t('common.close') : t('common.cancel') }}
-        </button>
-        <button
+        </KumoButton>
+        <KumoButton
           v-if="!result"
           type="submit"
           form="bulk-subscription-action-form"
@@ -108,13 +108,15 @@
           :disabled="submitting || (!pendingOperation && !!validationError)"
         >
           {{ submitting ? t('common.processing') : pendingOperation ? t('admin.subscriptions.bulk.retry') : t('admin.subscriptions.bulk.confirm') }}
-        </button>
+        </KumoButton>
       </div>
     </template>
   </BaseDialog>
 </template>
 
 <script setup lang="ts">
+import { KumoButton, KumoCheckbox, KumoInput, KumoLabel } from '@/components/kumo'
+
 import { computed, reactive, ref, shallowRef, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { adminAPI } from '@/api/admin'

@@ -1,7 +1,7 @@
 <template>
   <div>
     <!-- 铃铛按钮 -->
-    <button
+    <KumoButton
       @click="openModal"
       class="relative flex h-9 w-9 items-center justify-center rounded-lg text-gray-600 transition-all hover:bg-gray-100 hover:scale-105 dark:text-gray-400 dark:hover:bg-dark-800"
       :class="{ 'text-blue-600 dark:text-blue-400': unreadCount > 0 }"
@@ -16,19 +16,12 @@
         <span class="absolute inline-flex h-full w-full animate-ping rounded-full bg-red-500 opacity-75"></span>
         <span class="relative inline-flex h-2 w-2 rounded-full bg-red-500"></span>
       </span>
-    </button>
+    </KumoButton>
 
     <!-- 公告列表 Modal -->
-    <Teleport to="body">
-      <Transition name="modal-fade">
-        <div
-          v-if="isModalOpen"
-          class="fixed inset-0 z-[100] flex items-start justify-center overflow-y-auto bg-gradient-to-br from-black/70 via-black/60 to-black/70 p-4 pt-[8vh] backdrop-blur-md"
-          @click="closeModal"
-        >
-          <div
+    <KumoDialog :show="!!(isModalOpen)" :title="t('announcements.title') ?? ''" custom-layout :close-on-click-outside="true" :close-on-escape="true" :z-index="100" width="wide" @close="closeModal">
+<template v-if="isModalOpen"><div
             class="w-full max-w-[620px] overflow-hidden rounded-3xl bg-white shadow-2xl ring-1 ring-black/5 dark:bg-dark-800 dark:ring-white/10"
-            @click.stop
           >
             <!-- Header with Gradient -->
             <div class="relative overflow-hidden border-b border-gray-100/80 bg-gradient-to-br from-blue-50/50 to-indigo-50/30 px-6 py-5 dark:border-dark-700/50 dark:from-blue-900/10 dark:to-indigo-900/5">
@@ -48,21 +41,21 @@
                   </p>
                 </div>
                 <div class="flex items-center gap-2">
-                  <button
+                  <KumoButton
                     v-if="unreadCount > 0"
                     @click="markAllAsRead"
                     :disabled="loading"
                     class="rounded-lg bg-blue-600 px-4 py-2 text-xs font-medium text-white shadow-lg shadow-blue-500/30 transition-all hover:bg-blue-700 hover:shadow-xl disabled:opacity-50 dark:bg-blue-500 dark:hover:bg-blue-600"
                   >
                     {{ t('announcements.markAllRead') }}
-                  </button>
-                  <button
+                  </KumoButton>
+                  <KumoButton
                     @click="closeModal"
                     class="flex h-9 w-9 items-center justify-center rounded-lg bg-white/50 text-gray-500 backdrop-blur-sm transition-all hover:bg-white hover:text-gray-700 dark:bg-dark-700/50 dark:text-gray-400 dark:hover:bg-dark-700 dark:hover:text-gray-300"
                     :aria-label="t('common.close')"
                   >
                     <Icon name="x" size="sm" />
-                  </button>
+                  </KumoButton>
                 </div>
               </div>
               <!-- Decorative gradient -->
@@ -74,8 +67,8 @@
               <!-- Loading -->
               <div v-if="loading" class="flex items-center justify-center py-16">
                 <div class="relative">
-                  <div class="h-12 w-12 animate-spin rounded-full border-4 border-gray-200 border-t-blue-600 dark:border-dark-600 dark:border-t-blue-400"></div>
-                  <div class="absolute inset-0 h-12 w-12 animate-pulse rounded-full border-4 border-blue-400/30"></div>
+                  <KumoLoader class="h-12 w-12 dark:border-dark-600 dark:border-t-blue-400" />
+                  <KumoSkeleton class="absolute inset-0 h-12 w-12 animate-pulse rounded-full border-4 border-blue-400/30"></KumoSkeleton>
                 </div>
               </div>
 
@@ -173,22 +166,13 @@
                 <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">{{ t('announcements.emptyDescription') }}</p>
               </div>
             </div>
-          </div>
-        </div>
-      </Transition>
-    </Teleport>
+          </div></template>
+</KumoDialog>
 
     <!-- 公告详情 Modal -->
-    <Teleport to="body">
-      <Transition name="modal-fade">
-        <div
-          v-if="detailModalOpen && selectedAnnouncement"
-          class="fixed inset-0 z-[110] flex items-start justify-center overflow-y-auto bg-gradient-to-br from-black/70 via-black/60 to-black/70 p-4 pt-[6vh] backdrop-blur-md"
-          @click="closeDetail"
-        >
-          <div
+    <KumoDialog :show="!!(detailModalOpen && selectedAnnouncement)" :title="selectedAnnouncement?.title ?? ''" custom-layout :close-on-click-outside="true" :close-on-escape="true" :z-index="110" width="wide" @close="closeDetail">
+<template v-if="detailModalOpen && selectedAnnouncement"><div
             class="w-full max-w-[780px] overflow-hidden rounded-3xl bg-white shadow-2xl ring-1 ring-black/5 dark:bg-dark-800 dark:ring-white/10"
-            @click.stop
           >
             <!-- Header with Decorative Elements -->
             <div class="relative overflow-hidden border-b border-gray-100 bg-gradient-to-br from-blue-50/80 via-indigo-50/50 to-purple-50/30 px-8 py-6 dark:border-dark-700 dark:from-blue-900/20 dark:via-indigo-900/10 dark:to-purple-900/5">
@@ -247,13 +231,13 @@
                 </div>
 
                 <!-- Close button -->
-                <button
+                <KumoButton
                   @click="closeDetail"
                   class="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-xl bg-white/50 text-gray-500 backdrop-blur-sm transition-all hover:bg-white hover:text-gray-700 hover:shadow-lg dark:bg-dark-700/50 dark:text-gray-400 dark:hover:bg-dark-700 dark:hover:text-gray-300"
                   :aria-label="t('common.close')"
                 >
                   <Icon name="x" size="md" />
-                </button>
+                </KumoButton>
               </div>
             </div>
 
@@ -283,13 +267,13 @@
                   <span>{{ selectedAnnouncement.read_at ? t('announcements.readStatus') : t('announcements.markReadHint') }}</span>
                 </div>
                 <div class="flex items-center gap-3">
-                  <button
+                  <KumoButton
                     @click="closeDetail"
                     class="rounded-xl border border-gray-300 bg-white px-5 py-2.5 text-sm font-medium text-gray-700 shadow-sm transition-all hover:bg-gray-50 hover:shadow dark:border-dark-600 dark:bg-dark-700 dark:text-gray-300 dark:hover:bg-dark-600"
                   >
                     {{ t('common.close') }}
-                  </button>
-                  <button
+                  </KumoButton>
+                  <KumoButton
                     v-if="!selectedAnnouncement.read_at"
                     @click="markAsReadAndClose(selectedAnnouncement.id)"
                     class="rounded-xl bg-gradient-to-r from-blue-600 to-indigo-600 px-5 py-2.5 text-sm font-medium text-white shadow-lg shadow-blue-500/30 transition-all hover:shadow-xl hover:scale-105"
@@ -300,19 +284,19 @@
                       </svg>
                       {{ t('announcements.markRead') }}
                     </span>
-                  </button>
+                  </KumoButton>
                 </div>
               </div>
             </div>
-          </div>
-        </div>
-      </Transition>
-    </Teleport>
+          </div></template>
+</KumoDialog>
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref, computed, onMounted, onBeforeUnmount, watch } from 'vue'
+import { KumoButton, KumoDialog, KumoLoader, KumoSkeleton } from '@/components/kumo'
+
+import { ref, computed } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { storeToRefs } from 'pinia'
 import { marked } from 'marked'
@@ -394,31 +378,6 @@ async function markAllAsRead() {
   }
 }
 
-function handleEscape(e: KeyboardEvent) {
-  if (e.key === 'Escape') {
-    if (detailModalOpen.value) {
-      closeDetail()
-    } else if (isModalOpen.value) {
-      closeModal()
-    }
-  }
-}
-
-onMounted(() => {
-  document.addEventListener('keydown', handleEscape)
-})
-
-onBeforeUnmount(() => {
-  document.removeEventListener('keydown', handleEscape)
-  document.body.style.overflow = ''
-})
-
-watch(
-  [isModalOpen, detailModalOpen, () => announcementStore.currentPopup],
-  ([modal, detail, popup]) => {
-    document.body.style.overflow = (modal || detail || popup) ? 'hidden' : ''
-  }
-)
 </script>
 
 <style scoped>

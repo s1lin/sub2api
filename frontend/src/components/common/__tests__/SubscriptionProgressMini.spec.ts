@@ -1,4 +1,5 @@
-import { enableAutoUnmount, mount } from '@vue/test-utils'
+import { mount, portal } from '@/__tests__/render'
+import { enableAutoUnmount } from '@vue/test-utils'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import SubscriptionProgressMini from '../SubscriptionProgressMini.vue'
 const store = vi.hoisted(() => ({ activeSubscriptions: [] as unknown[], hasActiveSubscriptions: true, fetchActiveSubscriptions: vi.fn().mockResolvedValue(undefined) }))
@@ -6,7 +7,7 @@ vi.mock('@/stores', () => ({ useSubscriptionStore: () => store }))
 vi.mock('@/utils/featureFlags', () => ({ FeatureFlags: { subscription: 'subscription' }, isFeatureFlagEnabled: () => true }))
 vi.mock('vue-i18n', () => ({ useI18n: () => ({ t: (key: string) => key }) }))
 enableAutoUnmount(afterEach)
-beforeEach(() => { vi.useFakeTimers(); vi.setSystemTime(new Date(2026, 8, 22, 12)) })
+beforeEach(() => { vi.useFakeTimers({ toFake: ['Date', 'setTimeout', 'clearTimeout', 'setInterval', 'clearInterval'] }); vi.setSystemTime(new Date(2026, 8, 22, 12)) })
 afterEach(() => vi.useRealTimers())
 describe('subscription expiry calendar labels', () => {
   it.each([
@@ -18,6 +19,6 @@ describe('subscription expiry calendar labels', () => {
     store.activeSubscriptions = [{ id: 1, group_id: 1, expires_at: expires.toISOString(), group: { name: 'Plan' } }]
     const w = mount(SubscriptionProgressMini, { global: { stubs: { Icon: true, RouterLink: true } } })
     await w.get('button').trigger('click')
-    expect(w.text()).toContain('subscriptionProgress.' + label)
+    expect(portal().get('[role=dialog]').text()).toContain('subscriptionProgress.' + label)
   })
 })

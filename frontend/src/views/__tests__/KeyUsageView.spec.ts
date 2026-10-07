@@ -1,5 +1,6 @@
 import { describe, expect, it, beforeEach, afterEach, vi } from 'vitest'
-import { flushPromises, mount } from '@vue/test-utils'
+import { mount, flushPromises } from '@/__tests__/render'
+
 import { nextTick } from 'vue'
 
 import KeyUsageView from '../KeyUsageView.vue'
@@ -220,7 +221,7 @@ describe('KeyUsageView daily detail', () => {
   })
 
   it('queries the current local calendar date near midnight', async () => {
-    vi.useFakeTimers()
+    vi.useFakeTimers({ toFake: ['Date', 'setTimeout', 'clearTimeout', 'setInterval', 'clearInterval'] })
     vi.setSystemTime(new Date(2026, 6, 13, 0, 30))
 
     const wrapper = mount(KeyUsageView, {

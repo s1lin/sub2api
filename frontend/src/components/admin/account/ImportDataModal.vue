@@ -17,7 +17,7 @@
       </div>
 
       <div>
-        <label class="input-label">{{ t('admin.accounts.dataImportFile') }}</label>
+        <KumoLabel class="input-label">{{ t('admin.accounts.dataImportFile') }}</KumoLabel>
         <div
           class="flex items-center justify-between gap-3 rounded-lg border border-dashed px-4 py-3 transition-colors"
           :class="dragActive
@@ -37,11 +37,11 @@
               <span v-if="files.length > 1"> · {{ fileListTitle }}</span>
             </div>
           </div>
-          <button type="button" class="btn btn-secondary shrink-0" @click="openFilePicker">
+          <KumoButton type="button" class="btn btn-secondary shrink-0" @click="openFilePicker">
             {{ t('common.chooseFile') }}
-          </button>
+          </KumoButton>
         </div>
-        <input
+        <KumoInput
           ref="fileInput"
           type="file"
           class="hidden"
@@ -79,23 +79,25 @@
 
     <template #footer>
       <div class="flex justify-end gap-3">
-        <button class="btn btn-secondary" type="button" :disabled="importing" @click="handleClose">
+        <KumoButton class="btn btn-secondary" type="button" :disabled="importing" @click="handleClose">
           {{ t('common.cancel') }}
-        </button>
-        <button
+        </KumoButton>
+        <KumoButton
           class="btn btn-primary"
           type="submit"
           form="import-data-form"
           :disabled="importing"
         >
           {{ importing ? t('admin.accounts.dataImporting') : t('admin.accounts.dataImportButton') }}
-        </button>
+        </KumoButton>
       </div>
     </template>
   </BaseDialog>
 </template>
 
 <script setup lang="ts">
+import { KumoButton, KumoInput, KumoLabel } from '@/components/kumo'
+
 import { computed, ref, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
 import BaseDialog from '@/components/common/BaseDialog.vue'

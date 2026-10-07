@@ -1,5 +1,5 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
-import { mount } from '@vue/test-utils'
+import { mount } from '@/__tests__/render'
 import UsageProgressBar from '../UsageProgressBar.vue'
 
 vi.mock('vue-i18n', async () => {
@@ -14,7 +14,7 @@ vi.mock('vue-i18n', async () => {
 
 describe('UsageProgressBar', () => {
   beforeEach(() => {
-    vi.useFakeTimers()
+    vi.useFakeTimers({ toFake: ['Date', 'setTimeout', 'clearTimeout', 'setInterval', 'clearInterval'] })
     vi.setSystemTime(new Date('2026-03-17T00:00:00Z'))
   })
 
@@ -160,10 +160,10 @@ describe('UsageProgressBar', () => {
     expect(mountAt(90).get('.h-1\\.5 > div').classes()).toContain('bg-red-500')
 
     // 百分比文本同步分级
-    expect(mountAt(74).get('.h-1\\.5 + span').classes()).toContain('text-gray-600')
-    expect(mountAt(75).get('.h-1\\.5 + span').classes()).toContain('text-amber-600')
-    expect(mountAt(89).get('.h-1\\.5 + span').classes()).toContain('text-amber-600')
-    expect(mountAt(90).get('.h-1\\.5 + span').classes()).toContain('text-red-600')
+    expect(mountAt(74).get('span.shrink-0.text-right').classes()).toContain('text-gray-600')
+    expect(mountAt(75).get('span.shrink-0.text-right').classes()).toContain('text-amber-600')
+    expect(mountAt(89).get('span.shrink-0.text-right').classes()).toContain('text-amber-600')
+    expect(mountAt(90).get('span.shrink-0.text-right').classes()).toContain('text-red-600')
   })
 
   it('labelWidth 默认 fixed：标签保持定宽居中，百分比列不变', () => {
@@ -176,7 +176,7 @@ describe('UsageProgressBar', () => {
     expect(label.classes()).toContain('text-center')
     expect(label.classes()).not.toContain('max-w-[72px]')
 
-    const percent = wrapper.get('.h-1\\.5 + span')
+    const percent = wrapper.get('span.shrink-0.text-right')
     expect(percent.classes()).toContain('w-[32px]')
     expect(percent.classes()).toContain('text-right')
   })
@@ -199,7 +199,7 @@ describe('UsageProgressBar', () => {
     expect(label.classes()).not.toContain('w-[32px]')
     expect(label.classes()).not.toContain('text-center')
 
-    const percent = wrapper.get('.h-1\\.5 + span')
+    const percent = wrapper.get('span.shrink-0.text-right')
     expect(percent.classes()).toContain('w-[32px]')
     expect(percent.classes()).toContain('text-right')
   })

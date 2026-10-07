@@ -29,15 +29,17 @@
     </div>
     <template #footer>
       <div class="flex justify-end">
-        <button @click="$emit('close')" class="btn btn-primary">
+        <KumoButton @click="$emit('close')" class="btn btn-primary">
           {{ t('common.close') }}
-        </button>
+        </KumoButton>
       </div>
     </template>
   </BaseDialog>
 </template>
 
 <script setup lang="ts">
+import { KumoButton } from '@/components/kumo'
+
 import { useI18n } from 'vue-i18n'
 import type { CheckResult } from '@/api/admin/channelMonitor'
 import BaseDialog from '@/components/common/BaseDialog.vue'

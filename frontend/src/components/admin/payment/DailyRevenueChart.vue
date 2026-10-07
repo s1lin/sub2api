@@ -1,5 +1,5 @@
 <template>
-  <div class="card p-4">
+  <KumoSurface class="card p-4">
     <h3 class="mb-4 text-sm font-semibold text-gray-900 dark:text-white">
       {{ t('payment.admin.dailyRevenue') }}
     </h3>
@@ -15,10 +15,12 @@
         {{ t('payment.admin.noData') }}
       </div>
     </div>
-  </div>
+  </KumoSurface>
 </template>
 
 <script setup lang="ts">
+import { KumoSurface } from '@/components/kumo'
+
 import { computed } from 'vue'
 import { useI18n } from 'vue-i18n'
 import {

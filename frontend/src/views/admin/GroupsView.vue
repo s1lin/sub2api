@@ -13,7 +13,7 @@
                 size="md"
                 class="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 dark:text-gray-500"
               />
-              <input
+              <KumoInput
                 v-model="searchQuery"
                 type="text"
                 :placeholder="t('admin.groups.searchGroups')"
@@ -49,7 +49,7 @@
           <div
             class="flex w-full flex-shrink-0 flex-wrap items-center justify-end gap-3 lg:w-auto"
           >
-            <button
+            <KumoButton
               @click="loadGroups"
               :disabled="loading"
               class="btn btn-secondary"
@@ -60,40 +60,22 @@
                 size="md"
                 :class="loading ? 'animate-spin' : ''"
               />
-            </button>
-            <div class="relative" ref="columnDropdownRef">
-              <button
-                @click="showColumnDropdown = !showColumnDropdown"
+            </KumoButton>
+            <KumoPopoverRoot v-model="showColumnDropdown"><KumoPopoverTrigger
                 class="btn btn-secondary"
-                :title="t('admin.groups.columnSettings')"
+                :aria-label="t('admin.groups.columnSettings')"
               >
                 <Icon name="grid" size="md" class="mr-2" />
                 <span class="hidden md:inline">{{
                   t("admin.groups.columnSettings")
                 }}</span>
-              </button>
-              <div
-                v-if="showColumnDropdown"
-                class="absolute right-0 top-full z-50 mt-1 max-h-80 w-48 overflow-y-auto rounded-lg border border-gray-200 bg-white py-1 shadow-lg dark:border-dark-600 dark:bg-dark-800"
+              </KumoPopoverTrigger>
+<KumoPopoverContent
+                class="max-h-80 w-48 overflow-y-auto rounded-lg border border-gray-200 bg-white py-1 shadow-lg dark:border-dark-600 dark:bg-dark-800"
               >
-                <button
-                  v-for="col in toggleableColumns"
-                  :key="col.key"
-                  @click="toggleColumn(col.key)"
-                  class="flex w-full items-center justify-between px-4 py-2 text-left text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-dark-700"
-                >
-                  <span>{{ col.label }}</span>
-                  <Icon
-                    v-if="isColumnVisible(col.key)"
-                    name="check"
-                    size="sm"
-                    class="text-primary-500"
-                    :stroke-width="2"
-                  />
-                </button>
-              </div>
-            </div>
-            <button
+                <KumoLabel v-for="col in toggleableColumns" :key="col.key" class="flex w-full cursor-pointer items-center gap-2 px-3 py-2 text-sm"><KumoCheckbox :checked="isColumnVisible(col.key)"   @change="toggleColumn(col.key)" /><span>{{ col.label }}</span></KumoLabel>
+              </KumoPopoverContent></KumoPopoverRoot>
+            <KumoButton
               v-if="!authStore.isSimpleMode"
               @click="openSortModal"
               class="btn btn-secondary"
@@ -101,15 +83,15 @@
             >
               <Icon name="arrowsUpDown" size="md" class="mr-2" />
               {{ t("admin.groups.sortOrder") }}
-            </button>
-            <button
+            </KumoButton>
+            <KumoButton
               @click="openCreateModal"
               class="btn btn-primary"
               data-tour="groups-create-btn"
             >
               <Icon name="plus" size="md" class="mr-2" />
               {{ t("admin.groups.createGroup") }}
-            </button>
+            </KumoButton>
           </div>
         </div>
       </template>
@@ -381,14 +363,14 @@
 
           <template #cell-actions="{ row }">
             <div class="flex items-center gap-1">
-              <button
+              <KumoButton
                 @click="handleEdit(row)"
                 class="flex flex-col items-center gap-0.5 rounded-lg p-1.5 text-gray-500 transition-colors hover:bg-gray-100 hover:text-primary-600 dark:hover:bg-dark-700 dark:hover:text-primary-400"
               >
                 <Icon name="edit" size="sm" />
                 <span class="text-xs">{{ t("common.edit") }}</span>
-              </button>
-              <button
+              </KumoButton>
+              <KumoButton
                 v-if="!authStore.isSimpleMode"
                 data-testid="group-duplicate"
                 :title="
@@ -408,8 +390,8 @@
                       : t("admin.groups.duplicate")
                   }}
                 </span>
-              </button>
-              <button
+              </KumoButton>
+              <KumoButton
                 v-if="!authStore.isSimpleMode && row.platform === 'composite'"
                 data-testid="group-composite-routes"
                 @click="handleCompositeRoutes(row)"
@@ -419,8 +401,8 @@
                 <span class="text-xs">{{
                   t("admin.groups.compositeRoutes.action")
                 }}</span>
-              </button>
-              <button
+              </KumoButton>
+              <KumoButton
                 v-if="!authStore.isSimpleMode"
                 data-testid="group-rate-multipliers"
                 @click="handleRateMultipliers(row)"
@@ -430,8 +412,8 @@
                 <span class="text-xs">{{
                   t("admin.groups.rateMultipliers")
                 }}</span>
-              </button>
-              <button
+              </KumoButton>
+              <KumoButton
                 v-if="!authStore.isSimpleMode"
                 data-testid="group-rpm-overrides"
                 @click="handleRPMOverrides(row)"
@@ -441,14 +423,14 @@
                 <span class="text-xs">{{
                   t("admin.groups.rpmOverrides")
                 }}</span>
-              </button>
-              <button
+              </KumoButton>
+              <KumoButton
                 @click="handleDelete(row)"
                 class="flex flex-col items-center gap-0.5 rounded-lg p-1.5 text-gray-500 transition-colors hover:bg-red-50 hover:text-red-600 dark:hover:bg-red-900/20 dark:hover:text-red-400"
               >
                 <Icon name="trash" size="sm" />
                 <span class="text-xs">{{ t("common.delete") }}</span>
-              </button>
+              </KumoButton>
             </div>
           </template>
 
@@ -488,8 +470,8 @@
         class="space-y-5"
       >
         <div>
-          <label class="input-label">{{ t("admin.groups.form.name") }}</label>
-          <input
+          <KumoLabel class="input-label">{{ t("admin.groups.form.name") }}</KumoLabel>
+          <KumoInput
             v-model="createForm.name"
             type="text"
             required
@@ -499,20 +481,20 @@
           />
         </div>
         <div>
-          <label class="input-label">{{
+          <KumoLabel class="input-label">{{
             t("admin.groups.form.description")
-          }}</label>
-          <textarea
+          }}</KumoLabel>
+          <KumoTextarea
             v-model="createForm.description"
             rows="3"
             class="input"
             :placeholder="t('admin.groups.optionalDescription')"
-          ></textarea>
+          ></KumoTextarea>
         </div>
         <div>
-          <label class="input-label">{{
+          <KumoLabel class="input-label">{{
             t("admin.groups.form.platform")
-          }}</label>
+          }}</KumoLabel>
           <Select
             v-model="createForm.platform"
             :options="platformOptions"
@@ -524,31 +506,17 @@
         <!-- 从分组复制账号 -->
         <div v-if="!authStore.isSimpleMode && copyAccountsGroupOptions.length > 0">
           <div class="mb-1.5 flex items-center gap-1">
-            <label class="text-sm font-medium text-gray-700 dark:text-gray-300">
+            <KumoLabel class="text-sm font-medium text-gray-700 dark:text-gray-300">
               {{ t("admin.groups.copyAccounts.title") }}
-            </label>
-            <div class="group relative inline-flex">
-              <Icon
+            </KumoLabel>
+            <KumoTooltip  :label="t('common.help')" class="w-72 max-w-[calc(100vw-2rem)]" trigger-class="h-auto p-0 inline-flex"><template #trigger><Icon
                 name="questionCircle"
                 size="sm"
                 :stroke-width="2"
                 class="cursor-help text-gray-400 transition-colors hover:text-primary-500 dark:text-gray-500 dark:hover:text-primary-400"
-              />
-              <div
-                class="pointer-events-none absolute bottom-full left-0 z-50 mb-2 w-72 opacity-0 transition-all duration-200 group-hover:pointer-events-auto group-hover:opacity-100"
-              >
-                <div
-                  class="rounded-lg bg-gray-900 p-3 text-white shadow-lg dark:bg-gray-800"
-                >
-                  <p class="text-xs leading-relaxed text-gray-300">
+              /></template><p class="text-xs leading-relaxed text-gray-600 dark:text-gray-300">
                     {{ t("admin.groups.copyAccounts.tooltip") }}
-                  </p>
-                  <div
-                    class="absolute -bottom-1.5 left-3 h-3 w-3 rotate-45 bg-gray-900 dark:bg-gray-800"
-                  ></div>
-                </div>
-              </div>
-            </div>
+                  </p></KumoTooltip>
           </div>
           <!-- 已选分组标签 -->
           <div
@@ -564,7 +532,7 @@
                 copyAccountsGroupOptions.find((o) => o.value === groupId)
                   ?.label || `#${groupId}`
               }}
-              <button
+              <KumoButton
                 type="button"
                 @click="
                   createForm.copy_accounts_from_group_ids =
@@ -575,11 +543,11 @@
                 class="ml-0.5 text-primary-500 hover:text-primary-700 dark:hover:text-primary-200"
               >
                 <Icon name="x" size="xs" />
-              </button>
+              </KumoButton>
             </span>
           </div>
           <!-- 分组选择下拉 -->
-          <select
+          <KumoNativeSelect
             class="input"
             @change="
               (e) => {
@@ -607,15 +575,15 @@
             >
               {{ opt.label }}
             </option>
-          </select>
+          </KumoNativeSelect>
           <p class="input-hint">{{ t("admin.groups.copyAccounts.hint") }}</p>
         </div>
         <template v-if="!authStore.isSimpleMode">
         <div>
-          <label class="input-label">{{
+          <KumoLabel class="input-label">{{
             t("admin.groups.form.rateMultiplier")
-          }}</label>
-          <input
+          }}</KumoLabel>
+          <KumoInput
             v-model.number="createForm.rate_multiplier"
             type="number"
             step="0.001"
@@ -627,8 +595,8 @@
           <p class="input-hint">{{ t("admin.groups.rateMultiplierHint") }}</p>
         </div>
         <div>
-          <label class="input-label">{{ t("admin.groups.form.rpmLimit") }}</label>
-          <input
+          <KumoLabel class="input-label">{{ t("admin.groups.form.rpmLimit") }}</KumoLabel>
+          <KumoInput
             v-model.number="createForm.rpm_limit"
             type="number"
             min="0"
@@ -652,32 +620,21 @@
           data-tour="group-form-exclusive"
         >
           <div class="mb-1.5 flex items-center gap-1">
-            <label class="text-sm font-medium text-gray-700 dark:text-gray-300">
+            <KumoLabel class="text-sm font-medium text-gray-700 dark:text-gray-300">
               {{ t("admin.groups.form.exclusive") }}
-            </label>
+            </KumoLabel>
             <!-- Help Tooltip -->
-            <div class="group relative inline-flex">
-              <Icon
+            <KumoTooltip  :label="t('common.help')" class="w-72 max-w-[calc(100vw-2rem)]" trigger-class="h-auto p-0 inline-flex"><template #trigger><Icon
                 name="questionCircle"
                 size="sm"
                 :stroke-width="2"
                 class="cursor-help text-gray-400 transition-colors hover:text-primary-500 dark:text-gray-500 dark:hover:text-primary-400"
-              />
-              <!-- Tooltip Popover -->
-              <div
-                class="pointer-events-none absolute bottom-full left-0 z-50 mb-2 w-72 opacity-0 transition-all duration-200 group-hover:pointer-events-auto group-hover:opacity-100"
-              >
-                <div
-                  class="rounded-lg bg-gray-900 p-3 text-white shadow-lg dark:bg-gray-800"
-                >
-                  <p class="mb-2 text-xs font-medium">
+              /><!-- Tooltip Popover --></template><p class="mb-2 text-xs font-medium">
                     {{ t("admin.groups.exclusiveTooltip.title") }}
-                  </p>
-                  <p class="mb-2 text-xs leading-relaxed text-gray-300">
+                  </p><p class="mb-2 text-xs leading-relaxed text-gray-600 dark:text-gray-300">
                     {{ t("admin.groups.exclusiveTooltip.description") }}
-                  </p>
-                  <div class="rounded bg-gray-800 p-2 dark:bg-gray-700">
-                    <p class="text-xs leading-relaxed text-gray-300">
+                  </p><div class="rounded bg-gray-800 p-2 dark:bg-gray-700">
+                    <p class="text-xs leading-relaxed text-gray-600 dark:text-gray-300">
                       <span
                         class="inline-flex items-center gap-1 text-primary-400"
                         ><Icon name="lightbulb" size="xs" />
@@ -685,14 +642,7 @@
                       >
                       {{ t("admin.groups.exclusiveTooltip.exampleContent") }}
                     </p>
-                  </div>
-                  <!-- Arrow -->
-                  <div
-                    class="absolute -bottom-1.5 left-3 h-3 w-3 rotate-45 bg-gray-900 dark:bg-gray-800"
-                  ></div>
-                </div>
-              </div>
-            </div>
+                  </div><!-- Arrow --></KumoTooltip>
           </div>
           <div class="flex items-center gap-3">
             <Toggle v-model="createForm.is_exclusive" />
@@ -709,9 +659,9 @@
         <!-- Subscription Configuration -->
         <div class="mt-4 border-t pt-4">
           <div>
-            <label class="input-label">{{
+            <KumoLabel class="input-label">{{
               t("admin.groups.subscription.type")
-            }}</label>
+            }}</KumoLabel>
             <Select
               v-model="createForm.subscription_type"
               :options="subscriptionTypeOptions"
@@ -727,10 +677,10 @@
             class="space-y-4 border-l-2 border-primary-200 pl-4 dark:border-primary-800"
           >
             <div>
-              <label class="input-label">{{
+              <KumoLabel class="input-label">{{
                 t("admin.groups.subscription.dailyLimit")
-              }}</label>
-              <input
+              }}</KumoLabel>
+              <KumoInput
                 v-model.number="createForm.daily_limit_usd"
                 type="number"
                 step="0.01"
@@ -740,10 +690,10 @@
               />
             </div>
             <div>
-              <label class="input-label">{{
+              <KumoLabel class="input-label">{{
                 t("admin.groups.subscription.weeklyLimit")
-              }}</label>
-              <input
+              }}</KumoLabel>
+              <KumoInput
                 v-model.number="createForm.weekly_limit_usd"
                 type="number"
                 step="0.01"
@@ -753,10 +703,10 @@
               />
             </div>
             <div>
-              <label class="input-label">{{
+              <KumoLabel class="input-label">{{
                 t("admin.groups.subscription.monthlyLimit")
-              }}</label>
-              <input
+              }}</KumoLabel>
+              <KumoInput
                 v-model.number="createForm.monthly_limit_usd"
                 type="number"
                 step="0.01"
@@ -771,9 +721,9 @@
         <div class="border-t pt-4">
           <div class="mb-3 flex items-center justify-between gap-3">
             <div>
-              <label class="text-sm font-medium text-gray-700 dark:text-gray-300">
+              <KumoLabel class="text-sm font-medium text-gray-700 dark:text-gray-300">
                 {{ t("admin.groups.modelAllowlist.title") }}
-              </label>
+              </KumoLabel>
               <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">
                 {{ t("admin.groups.modelAllowlist.hint") }}
               </p>
@@ -797,20 +747,20 @@
                 }}
               </span>
               <div class="flex items-center gap-1.5">
-                <button
+                <KumoButton
                   type="button"
                   class="rounded px-2 py-1 font-medium text-primary-600 transition-colors hover:bg-primary-50 dark:text-primary-400 dark:hover:bg-primary-900/20"
                   @click="selectAllModelAllowlistItems(createModelAllowlistState)"
                 >
                   {{ t("admin.groups.modelAllowlist.selectAll") }}
-                </button>
-                <button
+                </KumoButton>
+                <KumoButton
                   type="button"
                   class="rounded px-2 py-1 font-medium text-gray-600 transition-colors hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-dark-700"
                   @click="invertModelAllowlistSelection(createModelAllowlistState)"
                 >
                   {{ t("admin.groups.modelAllowlist.invertSelection") }}
-                </button>
+                </KumoButton>
               </div>
             </div>
             <div
@@ -830,7 +780,7 @@
                 :key="item.id"
                 class="flex items-center gap-2 rounded border border-gray-200 bg-white px-3 py-2 dark:border-dark-600 dark:bg-dark-800"
               >
-                <input
+                <KumoCheckbox
                   v-model="item.selected"
                   type="checkbox"
                   class="h-4 w-4 rounded border-gray-300 text-primary-600 focus:ring-primary-500"
@@ -844,40 +794,40 @@
                     {{ t("admin.groups.modelAllowlist.wildcardTag") }}
                   </span>
                 </span>
-                <button
+                <KumoButton
                   type="button"
                   :disabled="index === 0"
                   class="rounded p-1 text-gray-400 hover:bg-gray-100 hover:text-gray-700 disabled:opacity-40 dark:hover:bg-dark-600 dark:hover:text-gray-200"
                   @click="moveCreateModelAllowlistItem(index, index - 1)"
                 >
                   <Icon name="arrowUp" size="sm" />
-                </button>
-                <button
+                </KumoButton>
+                <KumoButton
                   type="button"
                   :disabled="index === createModelAllowlistState.items.length - 1"
                   class="rounded p-1 text-gray-400 hover:bg-gray-100 hover:text-gray-700 disabled:opacity-40 dark:hover:bg-dark-600 dark:hover:text-gray-200"
                   @click="moveCreateModelAllowlistItem(index, index + 1)"
                 >
                   <Icon name="arrowDown" size="sm" />
-                </button>
+                </KumoButton>
               </div>
             </div>
             <div class="border-t border-gray-200 px-3 py-2 dark:border-dark-600">
               <div class="flex items-center gap-2">
-                <input
+                <KumoInput
                   v-model="createAllowlistCustomEntry"
                   type="text"
                   :placeholder="t('admin.groups.modelAllowlist.customPlaceholder')"
                   class="min-w-0 flex-1 rounded border border-gray-300 bg-white px-2 py-1.5 text-sm text-gray-700 focus:border-primary-500 focus:outline-none dark:border-dark-500 dark:bg-dark-700 dark:text-gray-200"
                   @keydown.enter.prevent="submitCreateAllowlistCustomEntry"
                 />
-                <button
+                <KumoButton
                   type="button"
                   class="rounded bg-primary-600 px-3 py-1.5 text-sm font-medium text-white transition-colors hover:bg-primary-700"
                   @click="submitCreateAllowlistCustomEntry"
                 >
                   {{ t("admin.groups.modelAllowlist.addCustom") }}
-                </button>
+                </KumoButton>
               </div>
               <p
                 v-if="createAllowlistCustomErrorKey"
@@ -894,40 +844,40 @@
           v-if="supportsImagePricingPlatform(createForm.platform)"
           class="border-t pt-4"
         >
-          <label
+          <KumoLabel
             class="block mb-2 font-medium text-gray-700 dark:text-gray-300"
           >
             {{ t(imagePricingI18nKey(createForm.platform, "title")) }}
-          </label>
+          </KumoLabel>
           <p class="text-xs text-gray-500 dark:text-gray-400 mb-3">
             {{ t(imagePricingI18nKey(createForm.platform, "description")) }}
           </p>
           <div class="mb-4 grid grid-cols-1 gap-3 md:grid-cols-2">
-            <label class="flex items-center gap-2 text-sm text-gray-700 dark:text-gray-300">
-              <input
+            <KumoLabel class="flex items-center gap-2 text-sm text-gray-700 dark:text-gray-300">
+              <KumoCheckbox
                 v-model="createForm.allow_image_generation"
                 type="checkbox"
                 class="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
               />
               {{ t(imagePricingI18nKey(createForm.platform, "allowImageGeneration")) }}
-            </label>
-            <label class="flex items-center gap-2 text-sm text-gray-700 dark:text-gray-300">
-              <input
+            </KumoLabel>
+            <KumoLabel class="flex items-center gap-2 text-sm text-gray-700 dark:text-gray-300">
+              <KumoCheckbox
                 v-model="createForm.image_rate_independent"
                 type="checkbox"
                 class="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
               />
               {{ t(imagePricingI18nKey(createForm.platform, "independentMultiplier")) }}
-            </label>
+            </KumoLabel>
           </div>
           <div
             v-if="createForm.image_rate_independent"
             class="mb-4"
           >
-            <label class="input-label">{{
+            <KumoLabel class="input-label">{{
               t(imagePricingI18nKey(createForm.platform, "imageMultiplier"))
-            }}</label>
-            <input
+            }}</KumoLabel>
+            <KumoInput
               v-model.number="createForm.image_rate_multiplier"
               type="number"
               step="0.0001"
@@ -938,8 +888,8 @@
           </div>
           <div class="grid grid-cols-3 gap-3">
             <div>
-              <label class="input-label">1K ($)</label>
-              <input
+              <KumoLabel class="input-label">1K ($)</KumoLabel>
+              <KumoInput
                 v-model.number="createForm.image_price_1k"
                 type="number"
                 step="0.001"
@@ -949,8 +899,8 @@
               />
             </div>
             <div>
-              <label class="input-label">2K ($)</label>
-              <input
+              <KumoLabel class="input-label">2K ($)</KumoLabel>
+              <KumoInput
                 v-model.number="createForm.image_price_2k"
                 type="number"
                 step="0.001"
@@ -960,8 +910,8 @@
               />
             </div>
             <div>
-              <label class="input-label">4K ($)</label>
-              <input
+              <KumoLabel class="input-label">4K ($)</KumoLabel>
+              <KumoInput
                 v-model.number="createForm.image_price_4k"
                 type="number"
                 step="0.001"
@@ -988,16 +938,16 @@
             </div>
           </div>
           <div v-if="createForm.platform === 'gemini' && createForm.allow_image_generation" class="mt-4 border-t border-dashed border-gray-200 pt-4 dark:border-dark-700">
-            <label
+            <KumoLabel
               class="flex items-center gap-2 text-sm font-medium text-gray-700 dark:text-gray-300"
             >
-              <input
+              <KumoCheckbox
                 v-model="createForm.allow_batch_image_generation"
                 type="checkbox"
                 class="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
               />
               {{ t("admin.groups.imagePricing.allowBatchImageGeneration") }}
-            </label>
+            </KumoLabel>
             <p class="mt-2 text-xs text-gray-500 dark:text-gray-400">
               {{ t("admin.groups.imagePricing.batchSectionHint") }}
             </p>
@@ -1006,10 +956,10 @@
               class="mt-3 grid grid-cols-1 gap-3 md:grid-cols-2"
             >
               <div>
-                <label class="input-label">{{
+                <KumoLabel class="input-label">{{
                   t("admin.groups.imagePricing.batchDiscountMultiplier")
-                }}</label>
-                <input
+                }}</KumoLabel>
+                <KumoInput
                   v-model.number="createForm.batch_image_discount_multiplier"
                   type="number"
                   step="0.0001"
@@ -1019,10 +969,10 @@
                 />
               </div>
               <div>
-                <label class="input-label">{{
+                <KumoLabel class="input-label">{{
                   t("admin.groups.imagePricing.batchHoldMultiplier")
-                }}</label>
-                <input
+                }}</KumoLabel>
+                <KumoInput
                   v-model.number="createForm.batch_image_hold_multiplier"
                   type="number"
                   step="0.0001"
@@ -1046,32 +996,32 @@
           v-if="supportsVideoPricingPlatform(createForm.platform)"
           class="border-t pt-4"
         >
-          <label
+          <KumoLabel
             class="block mb-2 font-medium text-gray-700 dark:text-gray-300"
           >
             {{ t(videoPricingI18nKey("title")) }}
-          </label>
+          </KumoLabel>
           <p class="text-xs text-gray-500 dark:text-gray-400 mb-3">
             {{ t(videoPricingI18nKey("description")) }}
           </p>
           <div class="mb-4">
-            <label class="flex items-center gap-2 text-sm text-gray-700 dark:text-gray-300">
-              <input
+            <KumoLabel class="flex items-center gap-2 text-sm text-gray-700 dark:text-gray-300">
+              <KumoCheckbox
                 v-model="createForm.video_rate_independent"
                 type="checkbox"
                 class="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
               />
               {{ t(videoPricingI18nKey("independentMultiplier")) }}
-            </label>
+            </KumoLabel>
           </div>
           <div
             v-if="createForm.video_rate_independent"
             class="mb-4"
           >
-            <label class="input-label">{{
+            <KumoLabel class="input-label">{{
               t(videoPricingI18nKey("videoMultiplier"))
-            }}</label>
-            <input
+            }}</KumoLabel>
+            <KumoInput
               v-model.number="createForm.video_rate_multiplier"
               type="number"
               step="0.0001"
@@ -1082,8 +1032,8 @@
           </div>
           <div class="grid grid-cols-3 gap-3">
             <div>
-              <label class="input-label">480p ($/s)</label>
-              <input
+              <KumoLabel class="input-label">480p ($/s)</KumoLabel>
+              <KumoInput
                 v-model.number="createForm.video_price_480p"
                 type="number"
                 step="0.001"
@@ -1093,8 +1043,8 @@
               />
             </div>
             <div>
-              <label class="input-label">720p ($/s)</label>
-              <input
+              <KumoLabel class="input-label">720p ($/s)</KumoLabel>
+              <KumoInput
                 v-model.number="createForm.video_price_720p"
                 type="number"
                 step="0.001"
@@ -1104,8 +1054,8 @@
               />
             </div>
             <div>
-              <label class="input-label">1080p ($/s)</label>
-              <input
+              <KumoLabel class="input-label">1080p ($/s)</KumoLabel>
+              <KumoInput
                 v-model.number="createForm.video_price_1080p"
                 type="number"
                 step="0.001"
@@ -1134,7 +1084,7 @@
                 <div class="min-w-0 pb-1 font-mono text-xs text-gray-700 dark:text-gray-300">
                   {{ family.label }}
                 </div>
-                <label
+                <KumoLabel
                   v-for="resolution in grokVideoPriceResolutions"
                   :key="resolution.key"
                   class="block"
@@ -1142,7 +1092,7 @@
                   <span class="mb-1 block text-xs text-gray-500 dark:text-gray-400">
                     {{ resolution.label }} ($/s)
                   </span>
-                  <input
+                  <KumoInput
                     v-model.number="createForm.video_model_prices[family.key][resolution.key]"
                     type="number"
                     step="0.001"
@@ -1150,7 +1100,7 @@
                     class="input"
                     :data-testid="`create-grok-video-price-${family.key}-${resolution.key}`"
                   />
-                </label>
+                </KumoLabel>
               </div>
             </div>
           </div>
@@ -1175,38 +1125,38 @@
         <!-- 高峰时段倍率配置（仅订阅类型分组） -->
         <div v-if="createForm.subscription_type === 'subscription'" class="border-t pt-4">
           <div class="mb-4 grid grid-cols-1 gap-3 md:grid-cols-2">
-            <label class="flex items-center gap-2 text-sm text-gray-700 dark:text-gray-300">
-              <input
+            <KumoLabel class="flex items-center gap-2 text-sm text-gray-700 dark:text-gray-300">
+              <KumoCheckbox
                 v-model="createForm.peak_rate_enabled"
                 type="checkbox"
                 class="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
               />
               <span>{{ t("admin.groups.peakRate.enable") }}</span>
-            </label>
+            </KumoLabel>
           </div>
           <div
             v-if="createForm.peak_rate_enabled"
             class="mb-4 grid grid-cols-1 gap-3 sm:grid-cols-3"
           >
             <div>
-              <label class="input-label">{{ t("admin.groups.peakRate.peakStart") }}</label>
-              <input
+              <KumoLabel class="input-label">{{ t("admin.groups.peakRate.peakStart") }}</KumoLabel>
+              <KumoInput
                 v-model="createForm.peak_start"
                 type="time"
                 class="input"
               />
             </div>
             <div>
-              <label class="input-label">{{ t("admin.groups.peakRate.peakEnd") }}</label>
-              <input
+              <KumoLabel class="input-label">{{ t("admin.groups.peakRate.peakEnd") }}</KumoLabel>
+              <KumoInput
                 v-model="createForm.peak_end"
                 type="time"
                 class="input"
               />
             </div>
             <div>
-              <label class="input-label">{{ t("admin.groups.peakRate.peakMultiplier") }}</label>
-              <input
+              <KumoLabel class="input-label">{{ t("admin.groups.peakRate.peakMultiplier") }}</KumoLabel>
+              <KumoInput
                 v-model.number="createForm.peak_rate_multiplier"
                 type="number"
                 step="0.001"
@@ -1221,14 +1171,14 @@
 
         <!-- 分组利润控制（五个平台 token 请求） -->
         <div v-if="isProfitControlPlatform(createForm.platform)" class="border-t pt-4">
-          <label class="flex items-center gap-2 text-sm text-gray-700 dark:text-gray-300">
-            <input
+          <KumoLabel class="flex items-center gap-2 text-sm text-gray-700 dark:text-gray-300">
+            <KumoCheckbox
               v-model="createForm.profit_control_enabled"
               type="checkbox"
               class="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
             />
             <span>{{ t("admin.groups.profitControl.enable") }}</span>
-          </label>
+          </KumoLabel>
           <p class="mb-3 mt-1.5 text-xs text-gray-500 dark:text-gray-400">
             {{
               createForm.profit_control_enabled
@@ -1241,8 +1191,8 @@
             class="mb-3 grid grid-cols-1 gap-3 sm:grid-cols-2"
           >
             <div>
-              <label class="input-label">{{ t("admin.groups.profitControl.minMargin") }}</label>
-              <input
+              <KumoLabel class="input-label">{{ t("admin.groups.profitControl.minMargin") }}</KumoLabel>
+              <KumoInput
                 v-model.number="createForm.profit_min_margin_percent"
                 type="number"
                 step="0.1"
@@ -1254,8 +1204,8 @@
               />
             </div>
             <div>
-              <label class="input-label">{{ t("admin.groups.profitControl.safetyBuffer") }}</label>
-              <input
+              <KumoLabel class="input-label">{{ t("admin.groups.profitControl.safetyBuffer") }}</KumoLabel>
+              <KumoInput
                 v-model.number="createForm.profit_safety_buffer_percent"
                 type="number"
                 step="0.1"
@@ -1272,36 +1222,22 @@
         <!-- 支持的模型系列（仅 antigravity 平台） -->
         <div v-if="createForm.platform === 'antigravity'" class="border-t pt-4">
           <div class="mb-1.5 flex items-center gap-1">
-            <label class="text-sm font-medium text-gray-700 dark:text-gray-300">
+            <KumoLabel class="text-sm font-medium text-gray-700 dark:text-gray-300">
               {{ t("admin.groups.supportedScopes.title") }}
-            </label>
+            </KumoLabel>
             <!-- Help Tooltip -->
-            <div class="group relative inline-flex">
-              <Icon
+            <KumoTooltip  :label="t('common.help')" class="w-72 max-w-[calc(100vw-2rem)]" trigger-class="h-auto p-0 inline-flex"><template #trigger><Icon
                 name="questionCircle"
                 size="sm"
                 :stroke-width="2"
                 class="cursor-help text-gray-400 transition-colors hover:text-primary-500 dark:text-gray-500 dark:hover:text-primary-400"
-              />
-              <div
-                class="pointer-events-none absolute bottom-full left-0 z-50 mb-2 w-72 opacity-0 transition-all duration-200 group-hover:pointer-events-auto group-hover:opacity-100"
-              >
-                <div
-                  class="rounded-lg bg-gray-900 p-3 text-white shadow-lg dark:bg-gray-800"
-                >
-                  <p class="text-xs leading-relaxed text-gray-300">
+              /></template><p class="text-xs leading-relaxed text-gray-600 dark:text-gray-300">
                     {{ t("admin.groups.supportedScopes.tooltip") }}
-                  </p>
-                  <div
-                    class="absolute -bottom-1.5 left-3 h-3 w-3 rotate-45 bg-gray-900 dark:bg-gray-800"
-                  ></div>
-                </div>
-              </div>
-            </div>
+                  </p></KumoTooltip>
           </div>
           <div class="space-y-2">
-            <label class="flex items-center gap-2 cursor-pointer">
-              <input
+            <KumoLabel class="flex items-center gap-2 cursor-pointer">
+              <KumoCheckbox
                 type="checkbox"
                 :checked="createForm.supported_model_scopes.includes('claude')"
                 @change="toggleCreateScope('claude')"
@@ -1310,9 +1246,9 @@
               <span class="text-sm text-gray-700 dark:text-gray-300">{{
                 t("admin.groups.supportedScopes.claude")
               }}</span>
-            </label>
-            <label class="flex items-center gap-2 cursor-pointer">
-              <input
+            </KumoLabel>
+            <KumoLabel class="flex items-center gap-2 cursor-pointer">
+              <KumoCheckbox
                 type="checkbox"
                 :checked="
                   createForm.supported_model_scopes.includes('gemini_text')
@@ -1323,9 +1259,9 @@
               <span class="text-sm text-gray-700 dark:text-gray-300">{{
                 t("admin.groups.supportedScopes.geminiText")
               }}</span>
-            </label>
-            <label class="flex items-center gap-2 cursor-pointer">
-              <input
+            </KumoLabel>
+            <KumoLabel class="flex items-center gap-2 cursor-pointer">
+              <KumoCheckbox
                 type="checkbox"
                 :checked="
                   createForm.supported_model_scopes.includes('gemini_image')
@@ -1336,7 +1272,7 @@
               <span class="text-sm text-gray-700 dark:text-gray-300">{{
                 t("admin.groups.supportedScopes.geminiImage")
               }}</span>
-            </label>
+            </KumoLabel>
           </div>
           <p class="mt-2 text-xs text-gray-500 dark:text-gray-400">
             {{ t("admin.groups.supportedScopes.hint") }}
@@ -1346,31 +1282,17 @@
         <!-- MCP XML 协议注入（仅 antigravity 平台） -->
         <div v-if="createForm.platform === 'antigravity'" class="border-t pt-4">
           <div class="mb-1.5 flex items-center gap-1">
-            <label class="text-sm font-medium text-gray-700 dark:text-gray-300">
+            <KumoLabel class="text-sm font-medium text-gray-700 dark:text-gray-300">
               {{ t("admin.groups.mcpXml.title") }}
-            </label>
-            <div class="group relative inline-flex">
-              <Icon
+            </KumoLabel>
+            <KumoTooltip  :label="t('common.help')" class="w-72 max-w-[calc(100vw-2rem)]" trigger-class="h-auto p-0 inline-flex"><template #trigger><Icon
                 name="questionCircle"
                 size="sm"
                 :stroke-width="2"
                 class="cursor-help text-gray-400 transition-colors hover:text-primary-500 dark:text-gray-500 dark:hover:text-primary-400"
-              />
-              <div
-                class="pointer-events-none absolute bottom-full left-0 z-50 mb-2 w-72 opacity-0 transition-all duration-200 group-hover:pointer-events-auto group-hover:opacity-100"
-              >
-                <div
-                  class="rounded-lg bg-gray-900 p-3 text-white shadow-lg dark:bg-gray-800"
-                >
-                  <p class="text-xs leading-relaxed text-gray-300">
+              /></template><p class="text-xs leading-relaxed text-gray-600 dark:text-gray-300">
                     {{ t("admin.groups.mcpXml.tooltip") }}
-                  </p>
-                  <div
-                    class="absolute -bottom-1.5 left-3 h-3 w-3 rotate-45 bg-gray-900 dark:bg-gray-800"
-                  ></div>
-                </div>
-              </div>
-            </div>
+                  </p></KumoTooltip>
           </div>
           <div class="flex items-center gap-3">
             <Toggle v-model="createForm.mcp_xml_inject" />
@@ -1387,32 +1309,18 @@
         <!-- Claude Code 客户端限制（仅 anthropic 平台） -->
         <div v-if="createForm.platform === 'anthropic'" class="border-t pt-4">
           <div class="mb-1.5 flex items-center gap-1">
-            <label class="text-sm font-medium text-gray-700 dark:text-gray-300">
+            <KumoLabel class="text-sm font-medium text-gray-700 dark:text-gray-300">
               {{ t("admin.groups.claudeCode.title") }}
-            </label>
+            </KumoLabel>
             <!-- Help Tooltip -->
-            <div class="group relative inline-flex">
-              <Icon
+            <KumoTooltip  :label="t('common.help')" class="w-72 max-w-[calc(100vw-2rem)]" trigger-class="h-auto p-0 inline-flex"><template #trigger><Icon
                 name="questionCircle"
                 size="sm"
                 :stroke-width="2"
                 class="cursor-help text-gray-400 transition-colors hover:text-primary-500 dark:text-gray-500 dark:hover:text-primary-400"
-              />
-              <div
-                class="pointer-events-none absolute bottom-full left-0 z-50 mb-2 w-72 opacity-0 transition-all duration-200 group-hover:pointer-events-auto group-hover:opacity-100"
-              >
-                <div
-                  class="rounded-lg bg-gray-900 p-3 text-white shadow-lg dark:bg-gray-800"
-                >
-                  <p class="text-xs leading-relaxed text-gray-300">
+              /></template><p class="text-xs leading-relaxed text-gray-600 dark:text-gray-300">
                     {{ t("admin.groups.claudeCode.tooltip") }}
-                  </p>
-                  <div
-                    class="absolute -bottom-1.5 left-3 h-3 w-3 rotate-45 bg-gray-900 dark:bg-gray-800"
-                  ></div>
-                </div>
-              </div>
-            </div>
+                  </p></KumoTooltip>
           </div>
           <div class="flex items-center gap-3">
             <Toggle v-model="createForm.claude_code_only" />
@@ -1426,9 +1334,9 @@
           </div>
           <!-- 降级分组选择（仅当启用 claude_code_only 时显示） -->
           <div v-if="createForm.claude_code_only" class="mt-3">
-            <label class="input-label">{{
+            <KumoLabel class="input-label">{{
               t("admin.groups.claudeCode.fallbackGroup")
-            }}</label>
+            }}</KumoLabel>
             <Select
               v-model="createForm.fallback_group_id"
               :options="fallbackGroupOptions"
@@ -1449,10 +1357,10 @@
             {{ t("admin.groups.webSearchPricing.title") }}
           </h4>
           <div>
-            <label class="input-label">{{
+            <KumoLabel class="input-label">{{
               t("admin.groups.webSearchPricing.pricePerCall")
-            }}</label>
-            <input
+            }}</KumoLabel>
+            <KumoInput
               v-model.number="createForm.web_search_price_per_call"
               type="number"
               step="0.001"
@@ -1482,14 +1390,14 @@
               <h4 class="text-sm font-medium text-gray-700 dark:text-gray-300">{{ t("admin.groups.modelPricing.title") }}</h4>
               <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">{{ t("admin.groups.modelPricing.description") }}</p>
             </div>
-            <button type="button" class="btn btn-secondary shrink-0 whitespace-nowrap" @click="addGroupPricing(createForm.model_pricing)">
+            <KumoButton type="button" class="btn btn-secondary shrink-0 whitespace-nowrap" @click="addGroupPricing(createForm.model_pricing)">
               <Icon name="plus" size="sm" class="mr-1" />{{ t("admin.groups.modelPricing.add") }}
-            </button>
+            </KumoButton>
           </div>
-          <label class="mt-3 flex items-start gap-2">
-            <input v-model="createForm.long_context_pricing_enabled" type="checkbox" class="mt-0.5" />
+          <KumoLabel class="mt-3 flex items-start gap-2">
+            <KumoCheckbox v-model="createForm.long_context_pricing_enabled" type="checkbox" class="mt-0.5" />
             <span><span class="block text-sm text-gray-700 dark:text-gray-300">{{ t("admin.groups.modelPricing.longContext") }}</span><span class="block text-xs text-gray-500">{{ t("admin.groups.modelPricing.longContextHint") }}</span></span>
-          </label>
+          </KumoLabel>
           <div class="mt-3 space-y-2">
             <PricingEntryCard v-for="(entry, index) in createForm.model_pricing" :key="index" :entry="entry" :platform="createForm.platform" hide-token-intervals @update="createForm.model_pricing[index] = $event" @remove="createForm.model_pricing.splice(index, 1)" />
           </div>
@@ -1508,8 +1416,8 @@
           </p>
           <div class="grid grid-cols-1 gap-3 md:grid-cols-3">
             <div>
-              <label class="input-label">{{ t("admin.groups.explicitPricing.searchPricePer1k") }}</label>
-              <input
+              <KumoLabel class="input-label">{{ t("admin.groups.explicitPricing.searchPricePer1k") }}</KumoLabel>
+              <KumoInput
                 v-model.number="createForm.search_price_per_1k"
                 type="number"
                 step="0.000001"
@@ -1520,8 +1428,8 @@
               />
             </div>
             <div>
-              <label class="input-label">{{ t("admin.groups.voicePricing.audioRealtimePerMin") }}</label>
-              <input
+              <KumoLabel class="input-label">{{ t("admin.groups.voicePricing.audioRealtimePerMin") }}</KumoLabel>
+              <KumoInput
                 v-model.number="createForm.audio_realtime_price_per_min"
                 type="number"
                 step="0.000001"
@@ -1532,8 +1440,8 @@
               />
             </div>
             <div>
-              <label class="input-label">{{ t("admin.groups.voicePricing.audioTtsPerMillionChars") }}</label>
-              <input
+              <KumoLabel class="input-label">{{ t("admin.groups.voicePricing.audioTtsPerMillionChars") }}</KumoLabel>
+              <KumoInput
                 v-model.number="createForm.audio_tts_price_per_million_chars"
                 type="number"
                 step="0.000001"
@@ -1544,8 +1452,8 @@
               />
             </div>
             <div>
-              <label class="input-label">{{ t("admin.groups.voicePricing.audioSttPerHour") }}</label>
-              <input
+              <KumoLabel class="input-label">{{ t("admin.groups.voicePricing.audioSttPerHour") }}</KumoLabel>
+              <KumoInput
                 v-model.number="createForm.audio_stt_price_per_hour"
                 type="number"
                 step="0.000001"
@@ -1566,9 +1474,9 @@
             {{ t("admin.groups.openaiFast.title") }}
           </h4>
           <div class="flex items-center justify-between gap-4">
-            <label class="text-sm text-gray-600 dark:text-gray-400">
+            <KumoLabel class="text-sm text-gray-600 dark:text-gray-400">
               {{ t("admin.groups.openaiFast.force") }}
-            </label>
+            </KumoLabel>
             <Toggle
               data-testid="create-force-openai-fast"
               :aria-label="t('admin.groups.openaiFast.force')"
@@ -1579,9 +1487,9 @@
             {{ t("admin.groups.openaiFast.hint") }}
           </p>
           <div class="flex items-center justify-between gap-4 mt-4">
-            <label class="text-sm text-gray-600 dark:text-gray-400">
+            <KumoLabel class="text-sm text-gray-600 dark:text-gray-400">
               {{ t("admin.groups.openaiFast.free") }}
-            </label>
+            </KumoLabel>
             <Toggle
               data-testid="create-free-openai-fast"
               :aria-label="t('admin.groups.openaiFast.free')"
@@ -1602,9 +1510,9 @@
             {{ t("admin.groups.openaiLive.title") }}
           </h4>
           <div class="flex items-center justify-between">
-            <label class="text-sm text-gray-600 dark:text-gray-400">{{
+            <KumoLabel class="text-sm text-gray-600 dark:text-gray-400">{{
               t("admin.groups.openaiLive.allow")
-            }}</label>
+            }}</KumoLabel>
             <Toggle
               :model-value="createForm.allow_live"
               @update:model-value="toggleLive('create')"
@@ -1626,9 +1534,9 @@
 
           <!-- 允许 Messages 调度开关 -->
           <div class="flex items-center justify-between">
-            <label class="text-sm text-gray-600 dark:text-gray-400">{{
+            <KumoLabel class="text-sm text-gray-600 dark:text-gray-400">{{
               t("admin.groups.openaiMessages.allowDispatch")
-            }}</label>
+            }}</KumoLabel>
             <Toggle v-model="createForm.allow_messages_dispatch" />
           </div>
           <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">
@@ -1650,11 +1558,11 @@
               >
                 <div class="flex items-center gap-2">
                   <div class="h-2 w-2 rounded-full bg-blue-500"></div>
-                  <label
+                  <KumoLabel
                     class="text-sm font-medium text-gray-900 dark:text-white"
                     >{{
                       t("admin.groups.openaiMessages.familyMappingTitle")
-                    }}</label
+                    }}</KumoLabel
                   >
                 </div>
                 <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">
@@ -1664,10 +1572,10 @@
               <div class="p-4">
                 <div class="grid gap-4 md:grid-cols-3">
                   <div>
-                    <label class="input-label">{{
+                    <KumoLabel class="input-label">{{
                       t("admin.groups.openaiMessages.opusModel")
-                    }}</label>
-                    <input
+                    }}</KumoLabel>
+                    <KumoInput
                       v-model="createForm.opus_mapped_model"
                       type="text"
                       :placeholder="
@@ -1677,10 +1585,10 @@
                     />
                   </div>
                   <div>
-                    <label class="input-label">{{
+                    <KumoLabel class="input-label">{{
                       t("admin.groups.openaiMessages.sonnetModel")
-                    }}</label>
-                    <input
+                    }}</KumoLabel>
+                    <KumoInput
                       v-model="createForm.sonnet_mapped_model"
                       type="text"
                       :placeholder="
@@ -1690,10 +1598,10 @@
                     />
                   </div>
                   <div>
-                    <label class="input-label">{{
+                    <KumoLabel class="input-label">{{
                       t("admin.groups.openaiMessages.haikuModel")
-                    }}</label>
-                    <input
+                    }}</KumoLabel>
+                    <KumoInput
                       v-model="createForm.haiku_mapped_model"
                       type="text"
                       :placeholder="
@@ -1716,11 +1624,11 @@
                   <div>
                     <div class="flex items-center gap-2">
                       <div class="h-2 w-2 rounded-full bg-primary-500"></div>
-                      <label
+                      <KumoLabel
                         class="text-sm font-medium text-primary-900 dark:text-primary-100"
                         >{{
                           t("admin.groups.openaiMessages.exactMappingTitle")
-                        }}</label
+                        }}</KumoLabel
                       >
                     </div>
                     <p
@@ -1740,14 +1648,14 @@
                   <span>{{
                     t("admin.groups.openaiMessages.noExactMappings")
                   }}</span>
-                  <button
+                  <KumoButton
                     type="button"
                     @click="addCreateMessagesDispatchMapping"
                     class="flex items-center gap-1.5 text-sm font-medium text-primary-600 transition-colors hover:text-primary-700 dark:text-primary-400 dark:hover:text-primary-300"
                   >
                     <Icon name="plus" size="sm" />
                     {{ t("admin.groups.openaiMessages.addExactMapping") }}
-                  </button>
+                  </KumoButton>
                 </div>
 
                 <div v-else class="space-y-3">
@@ -1761,10 +1669,10 @@
                         class="grid flex-1 gap-4 md:grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)] md:items-start"
                       >
                         <div>
-                          <label class="input-label">{{
+                          <KumoLabel class="input-label">{{
                             t("admin.groups.openaiMessages.claudeModel")
-                          }}</label>
-                          <input
+                          }}</KumoLabel>
+                          <KumoInput
                             v-model="row.claude_model"
                             type="text"
                             :placeholder="
@@ -1785,10 +1693,10 @@
                           />
                         </div>
                         <div>
-                          <label class="input-label">{{
+                          <KumoLabel class="input-label">{{
                             t("admin.groups.openaiMessages.targetModel")
-                          }}</label>
-                          <input
+                          }}</KumoLabel>
+                          <KumoInput
                             v-model="row.target_model"
                             type="text"
                             :placeholder="
@@ -1800,7 +1708,7 @@
                           />
                         </div>
                       </div>
-                      <button
+                      <KumoButton
                         type="button"
                         @click="removeCreateMessagesDispatchMapping(row)"
                         class="mt-6 flex h-9 w-9 items-center justify-center rounded-lg text-gray-400 transition-colors hover:bg-red-50 hover:text-red-500 dark:hover:bg-red-900/20 dark:hover:text-red-400"
@@ -1809,18 +1717,18 @@
                         "
                       >
                         <Icon name="trash" size="sm" />
-                      </button>
+                      </KumoButton>
                     </div>
                   </div>
 
-                  <button
+                  <KumoButton
                     type="button"
                     @click="addCreateMessagesDispatchMapping"
                     class="flex w-full items-center justify-center gap-2 rounded-xl border-2 border-dashed border-gray-300 bg-white py-3 text-sm font-medium text-gray-500 transition-all hover:border-primary-300 hover:bg-primary-50/50 hover:text-primary-600 dark:border-dark-600 dark:bg-dark-800 dark:text-gray-400 dark:hover:border-primary-800 dark:hover:bg-primary-900/20 dark:hover:text-primary-400"
                   >
                     <Icon name="plus" size="sm" />
                     {{ t("admin.groups.openaiMessages.addExactMapping") }}
-                  </button>
+                  </KumoButton>
                 </div>
               </div>
             </div>
@@ -1843,8 +1751,8 @@
           <!-- require_oauth_only toggle -->
           <div class="flex items-center justify-between">
             <div>
-              <label class="text-sm text-gray-600 dark:text-gray-400"
-                >{{ t("admin.groups.accountFilters.oauthOnly") }}</label
+              <KumoLabel class="text-sm text-gray-600 dark:text-gray-400"
+                >{{ t("admin.groups.accountFilters.oauthOnly") }}</KumoLabel
               >
               <p class="text-xs text-gray-500 dark:text-gray-400 mt-0.5">
                 {{
@@ -1860,8 +1768,8 @@
           <!-- require_privacy_set toggle -->
           <div class="flex items-center justify-between">
             <div>
-              <label class="text-sm text-gray-600 dark:text-gray-400"
-                >{{ t("admin.groups.accountFilters.privacySetOnly") }}</label
+              <KumoLabel class="text-sm text-gray-600 dark:text-gray-400"
+                >{{ t("admin.groups.accountFilters.privacySetOnly") }}</KumoLabel
               >
               <p class="text-xs text-gray-500 dark:text-gray-400 mt-0.5">
                 {{
@@ -1883,9 +1791,9 @@
           "
           class="border-t pt-4"
         >
-          <label class="input-label">{{
+          <KumoLabel class="input-label">{{
             t("admin.groups.invalidRequestFallback.title")
-          }}</label>
+          }}</KumoLabel>
           <Select
             v-model="createForm.fallback_group_id_on_invalid_request"
             :options="invalidRequestFallbackOptions"
@@ -1899,32 +1807,18 @@
         <!-- 模型路由配置（仅 anthropic 平台） -->
         <div v-if="createForm.platform === 'anthropic'" class="border-t pt-4">
           <div class="mb-1.5 flex items-center gap-1">
-            <label class="text-sm font-medium text-gray-700 dark:text-gray-300">
+            <KumoLabel class="text-sm font-medium text-gray-700 dark:text-gray-300">
               {{ t("admin.groups.modelRouting.title") }}
-            </label>
+            </KumoLabel>
             <!-- Help Tooltip -->
-            <div class="group relative inline-flex">
-              <Icon
+            <KumoTooltip  :label="t('common.help')" class="w-80 max-w-[calc(100vw-2rem)]" trigger-class="h-auto p-0 inline-flex"><template #trigger><Icon
                 name="questionCircle"
                 size="sm"
                 :stroke-width="2"
                 class="cursor-help text-gray-400 transition-colors hover:text-primary-500 dark:text-gray-500 dark:hover:text-primary-400"
-              />
-              <div
-                class="pointer-events-none absolute bottom-full left-0 z-50 mb-2 w-80 opacity-0 transition-all duration-200 group-hover:pointer-events-auto group-hover:opacity-100"
-              >
-                <div
-                  class="rounded-lg bg-gray-900 p-3 text-white shadow-lg dark:bg-gray-800"
-                >
-                  <p class="text-xs leading-relaxed text-gray-300">
+              /></template><p class="text-xs leading-relaxed text-gray-600 dark:text-gray-300">
                     {{ t("admin.groups.modelRouting.tooltip") }}
-                  </p>
-                  <div
-                    class="absolute -bottom-1.5 left-3 h-3 w-3 rotate-45 bg-gray-900 dark:bg-gray-800"
-                  ></div>
-                </div>
-              </div>
-            </div>
+                  </p></KumoTooltip>
           </div>
           <!-- 启用开关 -->
           <div class="flex items-center gap-3 mb-3">
@@ -1956,10 +1850,10 @@
               <div class="flex items-start gap-3">
                 <div class="flex-1 space-y-2">
                   <div>
-                    <label class="input-label text-xs">{{
+                    <KumoLabel class="input-label text-xs">{{
                       t("admin.groups.modelRouting.modelPattern")
-                    }}</label>
-                    <input
+                    }}</KumoLabel>
+                    <KumoInput
                       v-model="rule.pattern"
                       type="text"
                       class="input text-sm"
@@ -1969,9 +1863,9 @@
                     />
                   </div>
                   <div>
-                    <label class="input-label text-xs">{{
+                    <KumoLabel class="input-label text-xs">{{
                       t("admin.groups.modelRouting.accounts")
-                    }}</label>
+                    }}</KumoLabel>
                     <!-- 已选账号标签 -->
                     <div
                       v-if="rule.accounts.length > 0"
@@ -1983,82 +1877,54 @@
                         class="inline-flex items-center gap-1 rounded-full bg-primary-100 px-2.5 py-1 text-xs font-medium text-primary-700 dark:bg-primary-900/30 dark:text-primary-300"
                       >
                         {{ account.name }}
-                        <button
+                        <KumoButton
                           type="button"
                           @click="removeSelectedAccount(rule, account.id)"
                           class="ml-0.5 text-primary-500 hover:text-primary-700 dark:hover:text-primary-200"
                         >
                           <Icon name="x" size="xs" />
-                        </button>
+                        </KumoButton>
                       </span>
                     </div>
                     <!-- 账号搜索输入框 -->
                     <div class="relative account-search-container">
-                      <input
+                      <KumoSearchSelect
                         v-model="
                           accountSearchKeyword[getCreateRuleSearchKey(rule)]
                         "
-                        type="text"
                         class="input text-sm"
                         :placeholder="
                           t(
                             'admin.groups.modelRouting.searchAccountPlaceholder',
                           )
                         "
-                        @input="searchAccountsByRule(rule)"
-                        @focus="onAccountSearchFocus(rule)"
-                      />
-                      <!-- 搜索结果下拉框 -->
-                      <div
-                        v-if="
-                          showAccountDropdown[getCreateRuleSearchKey(rule)] &&
-                          accountSearchResults[getCreateRuleSearchKey(rule)]
-                            ?.length > 0
-                        "
-                        class="absolute z-50 mt-1 max-h-48 w-full overflow-auto rounded-lg border bg-white shadow-lg dark:border-dark-600 dark:bg-dark-800"
-                      >
-                        <button
-                          v-for="account in accountSearchResults[
+                        @search="searchAccountsByRule(rule)"
+                        @focus="onAccountSearchFocus(rule)" :options="(accountSearchResults[
                             getCreateRuleSearchKey(rule)
-                          ]"
-                          :key="account.id"
-                          type="button"
-                          @click="selectAccount(rule, account)"
-                          class="w-full px-3 py-2 text-left text-sm hover:bg-gray-100 dark:hover:bg-dark-700"
-                          :class="{
-                            'opacity-50': rule.accounts.some(
-                              (a) => a.id === account.id,
-                            ),
-                          }"
-                          :disabled="
-                            rule.accounts.some((a) => a.id === account.id)
-                          "
-                        >
-                          <span>{{ account.name }}</span>
-                          <span class="ml-2 text-xs text-gray-400"
+                          ] ?? []).map(account => ({ ...account, disabled: rule.accounts.some((a) => a.id === account.id) }))" label-key="name" v-model:open="showAccountDropdown[getCreateRuleSearchKey(rule)]" @select="account => selectAccount(rule, account)"   :loading-label="t('common.loading')" :empty-text="t('common.noOptionsFound')"><template #option="{ option: account }"><span>{{ account.name }}</span><span class="ml-2 text-xs text-gray-400"
                             >#{{ account.id }}</span
-                          >
-                        </button>
-                      </div>
+                          ></template></KumoSearchSelect>
+                      <!-- 搜索结果下拉框 -->
+
                     </div>
                     <p class="text-xs text-gray-400 mt-1">
                       {{ t("admin.groups.modelRouting.accountsHint") }}
                     </p>
                   </div>
                 </div>
-                <button
+                <KumoButton
                   type="button"
                   @click="removeCreateRoutingRule(rule)"
                   class="mt-5 p-1.5 text-gray-400 hover:text-red-500 transition-colors"
                   :title="t('admin.groups.modelRouting.removeRule')"
                 >
                   <Icon name="trash" size="sm" />
-                </button>
+                </KumoButton>
               </div>
             </div>
           </div>
           <!-- 添加规则按钮（仅在启用时显示） -->
-          <button
+          <KumoButton
             v-if="createForm.model_routing_enabled"
             type="button"
             @click="addCreateRoutingRule"
@@ -2066,49 +1932,30 @@
           >
             <Icon name="plus" size="sm" />
             {{ t("admin.groups.modelRouting.addRule") }}
-          </button>
+          </KumoButton>
         </div>
         </template>
       </form>
 
       <template #footer>
         <div class="flex justify-end gap-3 pt-4">
-          <button
+          <KumoButton
             @click="closeCreateModal"
             type="button"
             class="btn btn-secondary"
           >
             {{ t("common.cancel") }}
-          </button>
-          <button
+          </KumoButton>
+          <KumoButton
             type="submit"
             form="create-group-form"
             :disabled="submitting"
             class="btn btn-primary"
             data-tour="group-form-submit"
           >
-            <svg
-              v-if="submitting"
-              class="-ml-1 mr-2 h-4 w-4 animate-spin"
-              fill="none"
-              viewBox="0 0 24 24"
-            >
-              <circle
-                class="opacity-25"
-                cx="12"
-                cy="12"
-                r="10"
-                stroke="currentColor"
-                stroke-width="4"
-              ></circle>
-              <path
-                class="opacity-75"
-                fill="currentColor"
-                d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-              ></path>
-            </svg>
+            <KumoLoader v-if="submitting" class="-ml-1 mr-2 h-4 w-4 animate-spin" />
             {{ submitting ? t("admin.groups.creating") : t("common.create") }}
-          </button>
+          </KumoButton>
         </div>
       </template>
     </BaseDialog>
@@ -2127,8 +1974,8 @@
         class="space-y-5"
       >
         <div>
-          <label class="input-label">{{ t("admin.groups.form.name") }}</label>
-          <input
+          <KumoLabel class="input-label">{{ t("admin.groups.form.name") }}</KumoLabel>
+          <KumoInput
             v-model="editForm.name"
             type="text"
             required
@@ -2137,19 +1984,19 @@
           />
         </div>
         <div>
-          <label class="input-label">{{
+          <KumoLabel class="input-label">{{
             t("admin.groups.form.description")
-          }}</label>
-          <textarea
+          }}</KumoLabel>
+          <KumoTextarea
             v-model="editForm.description"
             rows="3"
             class="input"
-          ></textarea>
+          ></KumoTextarea>
         </div>
         <div>
-          <label class="input-label">{{
+          <KumoLabel class="input-label">{{
             t("admin.groups.form.platform")
-          }}</label>
+          }}</KumoLabel>
           <Select
             v-model="editForm.platform"
             :options="platformOptions"
@@ -2162,31 +2009,17 @@
         <!-- 从分组复制账号（编辑时） -->
         <div v-if="copyAccountsGroupOptionsForEdit.length > 0">
           <div class="mb-1.5 flex items-center gap-1">
-            <label class="text-sm font-medium text-gray-700 dark:text-gray-300">
+            <KumoLabel class="text-sm font-medium text-gray-700 dark:text-gray-300">
               {{ t("admin.groups.copyAccounts.title") }}
-            </label>
-            <div class="group relative inline-flex">
-              <Icon
+            </KumoLabel>
+            <KumoTooltip  :label="t('common.help')" class="w-72 max-w-[calc(100vw-2rem)]" trigger-class="h-auto p-0 inline-flex"><template #trigger><Icon
                 name="questionCircle"
                 size="sm"
                 :stroke-width="2"
                 class="cursor-help text-gray-400 transition-colors hover:text-primary-500 dark:text-gray-500 dark:hover:text-primary-400"
-              />
-              <div
-                class="pointer-events-none absolute bottom-full left-0 z-50 mb-2 w-72 opacity-0 transition-all duration-200 group-hover:pointer-events-auto group-hover:opacity-100"
-              >
-                <div
-                  class="rounded-lg bg-gray-900 p-3 text-white shadow-lg dark:bg-gray-800"
-                >
-                  <p class="text-xs leading-relaxed text-gray-300">
+              /></template><p class="text-xs leading-relaxed text-gray-600 dark:text-gray-300">
                     {{ t("admin.groups.copyAccounts.tooltipEdit") }}
-                  </p>
-                  <div
-                    class="absolute -bottom-1.5 left-3 h-3 w-3 rotate-45 bg-gray-900 dark:bg-gray-800"
-                  ></div>
-                </div>
-              </div>
-            </div>
+                  </p></KumoTooltip>
           </div>
           <!-- 已选分组标签 -->
           <div
@@ -2202,7 +2035,7 @@
                 copyAccountsGroupOptionsForEdit.find((o) => o.value === groupId)
                   ?.label || `#${groupId}`
               }}
-              <button
+              <KumoButton
                 type="button"
                 @click="
                   editForm.copy_accounts_from_group_ids =
@@ -2213,11 +2046,11 @@
                 class="ml-0.5 text-primary-500 hover:text-primary-700 dark:hover:text-primary-200"
               >
                 <Icon name="x" size="xs" />
-              </button>
+              </KumoButton>
             </span>
           </div>
           <!-- 分组选择下拉 -->
-          <select
+          <KumoNativeSelect
             class="input"
             @change="
               (e) => {
@@ -2245,16 +2078,16 @@
             >
               {{ opt.label }}
             </option>
-          </select>
+          </KumoNativeSelect>
           <p class="input-hint">
             {{ t("admin.groups.copyAccounts.hintEdit") }}
           </p>
         </div>
         <div>
-          <label class="input-label">{{
+          <KumoLabel class="input-label">{{
             t("admin.groups.form.rateMultiplier")
-          }}</label>
-          <input
+          }}</KumoLabel>
+          <KumoInput
             v-model.number="editForm.rate_multiplier"
             type="number"
             step="0.001"
@@ -2265,8 +2098,8 @@
           />
         </div>
         <div>
-          <label class="input-label">{{ t("admin.groups.form.rpmLimit") }}</label>
-          <input
+          <KumoLabel class="input-label">{{ t("admin.groups.form.rpmLimit") }}</KumoLabel>
+          <KumoInput
             v-model.number="editForm.rpm_limit"
             type="number"
             min="0"
@@ -2287,32 +2120,21 @@
         />
         <div v-if="editForm.subscription_type !== 'subscription'">
           <div class="mb-1.5 flex items-center gap-1">
-            <label class="text-sm font-medium text-gray-700 dark:text-gray-300">
+            <KumoLabel class="text-sm font-medium text-gray-700 dark:text-gray-300">
               {{ t("admin.groups.form.exclusive") }}
-            </label>
+            </KumoLabel>
             <!-- Help Tooltip -->
-            <div class="group relative inline-flex">
-              <Icon
+            <KumoTooltip  :label="t('common.help')" class="w-72 max-w-[calc(100vw-2rem)]" trigger-class="h-auto p-0 inline-flex"><template #trigger><Icon
                 name="questionCircle"
                 size="sm"
                 :stroke-width="2"
                 class="cursor-help text-gray-400 transition-colors hover:text-primary-500 dark:text-gray-500 dark:hover:text-primary-400"
-              />
-              <!-- Tooltip Popover -->
-              <div
-                class="pointer-events-none absolute bottom-full left-0 z-50 mb-2 w-72 opacity-0 transition-all duration-200 group-hover:pointer-events-auto group-hover:opacity-100"
-              >
-                <div
-                  class="rounded-lg bg-gray-900 p-3 text-white shadow-lg dark:bg-gray-800"
-                >
-                  <p class="mb-2 text-xs font-medium">
+              /><!-- Tooltip Popover --></template><p class="mb-2 text-xs font-medium">
                     {{ t("admin.groups.exclusiveTooltip.title") }}
-                  </p>
-                  <p class="mb-2 text-xs leading-relaxed text-gray-300">
+                  </p><p class="mb-2 text-xs leading-relaxed text-gray-600 dark:text-gray-300">
                     {{ t("admin.groups.exclusiveTooltip.description") }}
-                  </p>
-                  <div class="rounded bg-gray-800 p-2 dark:bg-gray-700">
-                    <p class="text-xs leading-relaxed text-gray-300">
+                  </p><div class="rounded bg-gray-800 p-2 dark:bg-gray-700">
+                    <p class="text-xs leading-relaxed text-gray-600 dark:text-gray-300">
                       <span
                         class="inline-flex items-center gap-1 text-primary-400"
                         ><Icon name="lightbulb" size="xs" />
@@ -2320,14 +2142,7 @@
                       >
                       {{ t("admin.groups.exclusiveTooltip.exampleContent") }}
                     </p>
-                  </div>
-                  <!-- Arrow -->
-                  <div
-                    class="absolute -bottom-1.5 left-3 h-3 w-3 rotate-45 bg-gray-900 dark:bg-gray-800"
-                  ></div>
-                </div>
-              </div>
-            </div>
+                  </div><!-- Arrow --></KumoTooltip>
           </div>
           <div class="flex items-center gap-3">
             <Toggle v-model="editForm.is_exclusive" />
@@ -2341,16 +2156,16 @@
           </div>
         </div>
         <div>
-          <label class="input-label">{{ t("admin.groups.form.status") }}</label>
+          <KumoLabel class="input-label">{{ t("admin.groups.form.status") }}</KumoLabel>
           <Select v-model="editForm.status" :options="editStatusOptions" />
         </div>
 
         <!-- Subscription Configuration -->
         <div class="mt-4 border-t pt-4">
           <div>
-            <label class="input-label">{{
+            <KumoLabel class="input-label">{{
               t("admin.groups.subscription.type")
-            }}</label>
+            }}</KumoLabel>
             <Select
               v-model="editForm.subscription_type"
               :options="subscriptionTypeOptions"
@@ -2367,10 +2182,10 @@
             class="space-y-4 border-l-2 border-primary-200 pl-4 dark:border-primary-800"
           >
             <div>
-              <label class="input-label">{{
+              <KumoLabel class="input-label">{{
                 t("admin.groups.subscription.dailyLimit")
-              }}</label>
-              <input
+              }}</KumoLabel>
+              <KumoInput
                 v-model.number="editForm.daily_limit_usd"
                 type="number"
                 step="0.01"
@@ -2380,10 +2195,10 @@
               />
             </div>
             <div>
-              <label class="input-label">{{
+              <KumoLabel class="input-label">{{
                 t("admin.groups.subscription.weeklyLimit")
-              }}</label>
-              <input
+              }}</KumoLabel>
+              <KumoInput
                 v-model.number="editForm.weekly_limit_usd"
                 type="number"
                 step="0.01"
@@ -2393,10 +2208,10 @@
               />
             </div>
             <div>
-              <label class="input-label">{{
+              <KumoLabel class="input-label">{{
                 t("admin.groups.subscription.monthlyLimit")
-              }}</label>
-              <input
+              }}</KumoLabel>
+              <KumoInput
                 v-model.number="editForm.monthly_limit_usd"
                 type="number"
                 step="0.01"
@@ -2411,9 +2226,9 @@
         <div class="border-t pt-4">
           <div class="mb-3 flex items-center justify-between gap-3">
             <div>
-              <label class="text-sm font-medium text-gray-700 dark:text-gray-300">
+              <KumoLabel class="text-sm font-medium text-gray-700 dark:text-gray-300">
                 {{ t("admin.groups.modelAllowlist.title") }}
-              </label>
+              </KumoLabel>
               <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">
                 {{ t("admin.groups.modelAllowlist.hint") }}
               </p>
@@ -2437,20 +2252,20 @@
                 }}
               </span>
               <div class="flex items-center gap-1.5">
-                <button
+                <KumoButton
                   type="button"
                   class="rounded px-2 py-1 font-medium text-primary-600 transition-colors hover:bg-primary-50 dark:text-primary-400 dark:hover:bg-primary-900/20"
                   @click="selectAllModelAllowlistItems(editModelAllowlistState)"
                 >
                   {{ t("admin.groups.modelAllowlist.selectAll") }}
-                </button>
-                <button
+                </KumoButton>
+                <KumoButton
                   type="button"
                   class="rounded px-2 py-1 font-medium text-gray-600 transition-colors hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-dark-700"
                   @click="invertModelAllowlistSelection(editModelAllowlistState)"
                 >
                   {{ t("admin.groups.modelAllowlist.invertSelection") }}
-                </button>
+                </KumoButton>
               </div>
             </div>
             <div
@@ -2470,7 +2285,7 @@
                 :key="item.id"
                 class="flex items-center gap-2 rounded border border-gray-200 bg-white px-3 py-2 dark:border-dark-600 dark:bg-dark-800"
               >
-                <input
+                <KumoCheckbox
                   v-model="item.selected"
                   type="checkbox"
                   class="h-4 w-4 rounded border-gray-300 text-primary-600 focus:ring-primary-500"
@@ -2484,40 +2299,40 @@
                     {{ t("admin.groups.modelAllowlist.wildcardTag") }}
                   </span>
                 </span>
-                <button
+                <KumoButton
                   type="button"
                   :disabled="index === 0"
                   class="rounded p-1 text-gray-400 hover:bg-gray-100 hover:text-gray-700 disabled:opacity-40 dark:hover:bg-dark-600 dark:hover:text-gray-200"
                   @click="moveEditModelAllowlistItem(index, index - 1)"
                 >
                   <Icon name="arrowUp" size="sm" />
-                </button>
-                <button
+                </KumoButton>
+                <KumoButton
                   type="button"
                   :disabled="index === editModelAllowlistState.items.length - 1"
                   class="rounded p-1 text-gray-400 hover:bg-gray-100 hover:text-gray-700 disabled:opacity-40 dark:hover:bg-dark-600 dark:hover:text-gray-200"
                   @click="moveEditModelAllowlistItem(index, index + 1)"
                 >
                   <Icon name="arrowDown" size="sm" />
-                </button>
+                </KumoButton>
               </div>
             </div>
             <div class="border-t border-gray-200 px-3 py-2 dark:border-dark-600">
               <div class="flex items-center gap-2">
-                <input
+                <KumoInput
                   v-model="editAllowlistCustomEntry"
                   type="text"
                   :placeholder="t('admin.groups.modelAllowlist.customPlaceholder')"
                   class="min-w-0 flex-1 rounded border border-gray-300 bg-white px-2 py-1.5 text-sm text-gray-700 focus:border-primary-500 focus:outline-none dark:border-dark-500 dark:bg-dark-700 dark:text-gray-200"
                   @keydown.enter.prevent="submitEditAllowlistCustomEntry"
                 />
-                <button
+                <KumoButton
                   type="button"
                   class="rounded bg-primary-600 px-3 py-1.5 text-sm font-medium text-white transition-colors hover:bg-primary-700"
                   @click="submitEditAllowlistCustomEntry"
                 >
                   {{ t("admin.groups.modelAllowlist.addCustom") }}
-                </button>
+                </KumoButton>
               </div>
               <p
                 v-if="editAllowlistCustomErrorKey"
@@ -2534,40 +2349,40 @@
           v-if="supportsImagePricingPlatform(editForm.platform)"
           class="border-t pt-4"
         >
-          <label
+          <KumoLabel
             class="block mb-2 font-medium text-gray-700 dark:text-gray-300"
           >
             {{ t(imagePricingI18nKey(editForm.platform, "title")) }}
-          </label>
+          </KumoLabel>
           <p class="text-xs text-gray-500 dark:text-gray-400 mb-3">
             {{ t(imagePricingI18nKey(editForm.platform, "description")) }}
           </p>
           <div class="mb-4 grid grid-cols-1 gap-3 md:grid-cols-2">
-            <label class="flex items-center gap-2 text-sm text-gray-700 dark:text-gray-300">
-              <input
+            <KumoLabel class="flex items-center gap-2 text-sm text-gray-700 dark:text-gray-300">
+              <KumoCheckbox
                 v-model="editForm.allow_image_generation"
                 type="checkbox"
                 class="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
               />
               {{ t(imagePricingI18nKey(editForm.platform, "allowImageGeneration")) }}
-            </label>
-            <label class="flex items-center gap-2 text-sm text-gray-700 dark:text-gray-300">
-              <input
+            </KumoLabel>
+            <KumoLabel class="flex items-center gap-2 text-sm text-gray-700 dark:text-gray-300">
+              <KumoCheckbox
                 v-model="editForm.image_rate_independent"
                 type="checkbox"
                 class="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
               />
               {{ t(imagePricingI18nKey(editForm.platform, "independentMultiplier")) }}
-            </label>
+            </KumoLabel>
           </div>
           <div
             v-if="editForm.image_rate_independent"
             class="mb-4"
           >
-            <label class="input-label">{{
+            <KumoLabel class="input-label">{{
               t(imagePricingI18nKey(editForm.platform, "imageMultiplier"))
-            }}</label>
-            <input
+            }}</KumoLabel>
+            <KumoInput
               v-model.number="editForm.image_rate_multiplier"
               type="number"
               step="0.0001"
@@ -2578,8 +2393,8 @@
           </div>
           <div class="grid grid-cols-3 gap-3">
             <div>
-              <label class="input-label">1K ($)</label>
-              <input
+              <KumoLabel class="input-label">1K ($)</KumoLabel>
+              <KumoInput
                 v-model.number="editForm.image_price_1k"
                 type="number"
                 step="0.001"
@@ -2589,8 +2404,8 @@
               />
             </div>
             <div>
-              <label class="input-label">2K ($)</label>
-              <input
+              <KumoLabel class="input-label">2K ($)</KumoLabel>
+              <KumoInput
                 v-model.number="editForm.image_price_2k"
                 type="number"
                 step="0.001"
@@ -2600,8 +2415,8 @@
               />
             </div>
             <div>
-              <label class="input-label">4K ($)</label>
-              <input
+              <KumoLabel class="input-label">4K ($)</KumoLabel>
+              <KumoInput
                 v-model.number="editForm.image_price_4k"
                 type="number"
                 step="0.001"
@@ -2628,16 +2443,16 @@
             </div>
           </div>
           <div v-if="editForm.platform === 'gemini' && editForm.allow_image_generation" class="mt-4 border-t border-dashed border-gray-200 pt-4 dark:border-dark-700">
-            <label
+            <KumoLabel
               class="flex items-center gap-2 text-sm font-medium text-gray-700 dark:text-gray-300"
             >
-              <input
+              <KumoCheckbox
                 v-model="editForm.allow_batch_image_generation"
                 type="checkbox"
                 class="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
               />
               {{ t("admin.groups.imagePricing.allowBatchImageGeneration") }}
-            </label>
+            </KumoLabel>
             <p class="mt-2 text-xs text-gray-500 dark:text-gray-400">
               {{ t("admin.groups.imagePricing.batchSectionHint") }}
             </p>
@@ -2646,10 +2461,10 @@
               class="mt-3 grid grid-cols-1 gap-3 md:grid-cols-2"
             >
               <div>
-                <label class="input-label">{{
+                <KumoLabel class="input-label">{{
                   t("admin.groups.imagePricing.batchDiscountMultiplier")
-                }}</label>
-                <input
+                }}</KumoLabel>
+                <KumoInput
                   v-model.number="editForm.batch_image_discount_multiplier"
                   type="number"
                   step="0.0001"
@@ -2659,10 +2474,10 @@
                 />
               </div>
               <div>
-                <label class="input-label">{{
+                <KumoLabel class="input-label">{{
                   t("admin.groups.imagePricing.batchHoldMultiplier")
-                }}</label>
-                <input
+                }}</KumoLabel>
+                <KumoInput
                   v-model.number="editForm.batch_image_hold_multiplier"
                   type="number"
                   step="0.0001"
@@ -2686,32 +2501,32 @@
           v-if="supportsVideoPricingPlatform(editForm.platform)"
           class="border-t pt-4"
         >
-          <label
+          <KumoLabel
             class="block mb-2 font-medium text-gray-700 dark:text-gray-300"
           >
             {{ t(videoPricingI18nKey("title")) }}
-          </label>
+          </KumoLabel>
           <p class="text-xs text-gray-500 dark:text-gray-400 mb-3">
             {{ t(videoPricingI18nKey("description")) }}
           </p>
           <div class="mb-4">
-            <label class="flex items-center gap-2 text-sm text-gray-700 dark:text-gray-300">
-              <input
+            <KumoLabel class="flex items-center gap-2 text-sm text-gray-700 dark:text-gray-300">
+              <KumoCheckbox
                 v-model="editForm.video_rate_independent"
                 type="checkbox"
                 class="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
               />
               {{ t(videoPricingI18nKey("independentMultiplier")) }}
-            </label>
+            </KumoLabel>
           </div>
           <div
             v-if="editForm.video_rate_independent"
             class="mb-4"
           >
-            <label class="input-label">{{
+            <KumoLabel class="input-label">{{
               t(videoPricingI18nKey("videoMultiplier"))
-            }}</label>
-            <input
+            }}</KumoLabel>
+            <KumoInput
               v-model.number="editForm.video_rate_multiplier"
               type="number"
               step="0.0001"
@@ -2722,8 +2537,8 @@
           </div>
           <div class="grid grid-cols-3 gap-3">
             <div>
-              <label class="input-label">480p ($/s)</label>
-              <input
+              <KumoLabel class="input-label">480p ($/s)</KumoLabel>
+              <KumoInput
                 v-model.number="editForm.video_price_480p"
                 type="number"
                 step="0.001"
@@ -2733,8 +2548,8 @@
               />
             </div>
             <div>
-              <label class="input-label">720p ($/s)</label>
-              <input
+              <KumoLabel class="input-label">720p ($/s)</KumoLabel>
+              <KumoInput
                 v-model.number="editForm.video_price_720p"
                 type="number"
                 step="0.001"
@@ -2744,8 +2559,8 @@
               />
             </div>
             <div>
-              <label class="input-label">1080p ($/s)</label>
-              <input
+              <KumoLabel class="input-label">1080p ($/s)</KumoLabel>
+              <KumoInput
                 v-model.number="editForm.video_price_1080p"
                 type="number"
                 step="0.001"
@@ -2774,7 +2589,7 @@
                 <div class="min-w-0 pb-1 font-mono text-xs text-gray-700 dark:text-gray-300">
                   {{ family.label }}
                 </div>
-                <label
+                <KumoLabel
                   v-for="resolution in grokVideoPriceResolutions"
                   :key="resolution.key"
                   class="block"
@@ -2782,7 +2597,7 @@
                   <span class="mb-1 block text-xs text-gray-500 dark:text-gray-400">
                     {{ resolution.label }} ($/s)
                   </span>
-                  <input
+                  <KumoInput
                     v-model.number="editForm.video_model_prices[family.key][resolution.key]"
                     type="number"
                     step="0.001"
@@ -2790,7 +2605,7 @@
                     class="input"
                     :data-testid="`edit-grok-video-price-${family.key}-${resolution.key}`"
                   />
-                </label>
+                </KumoLabel>
               </div>
             </div>
           </div>
@@ -2815,38 +2630,38 @@
         <!-- 高峰时段倍率配置（仅订阅类型分组） -->
         <div v-if="editForm.subscription_type === 'subscription'" class="border-t pt-4">
           <div class="mb-4 grid grid-cols-1 gap-3 md:grid-cols-2">
-            <label class="flex items-center gap-2 text-sm text-gray-700 dark:text-gray-300">
-              <input
+            <KumoLabel class="flex items-center gap-2 text-sm text-gray-700 dark:text-gray-300">
+              <KumoCheckbox
                 v-model="editForm.peak_rate_enabled"
                 type="checkbox"
                 class="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
               />
               <span>{{ t("admin.groups.peakRate.enable") }}</span>
-            </label>
+            </KumoLabel>
           </div>
           <div
             v-if="editForm.peak_rate_enabled"
             class="mb-4 grid grid-cols-1 gap-3 sm:grid-cols-3"
           >
             <div>
-              <label class="input-label">{{ t("admin.groups.peakRate.peakStart") }}</label>
-              <input
+              <KumoLabel class="input-label">{{ t("admin.groups.peakRate.peakStart") }}</KumoLabel>
+              <KumoInput
                 v-model="editForm.peak_start"
                 type="time"
                 class="input"
               />
             </div>
             <div>
-              <label class="input-label">{{ t("admin.groups.peakRate.peakEnd") }}</label>
-              <input
+              <KumoLabel class="input-label">{{ t("admin.groups.peakRate.peakEnd") }}</KumoLabel>
+              <KumoInput
                 v-model="editForm.peak_end"
                 type="time"
                 class="input"
               />
             </div>
             <div>
-              <label class="input-label">{{ t("admin.groups.peakRate.peakMultiplier") }}</label>
-              <input
+              <KumoLabel class="input-label">{{ t("admin.groups.peakRate.peakMultiplier") }}</KumoLabel>
+              <KumoInput
                 v-model.number="editForm.peak_rate_multiplier"
                 type="number"
                 step="0.001"
@@ -2861,14 +2676,14 @@
 
         <!-- 分组利润控制（五个平台 token 请求） -->
         <div v-if="isProfitControlPlatform(editForm.platform)" class="border-t pt-4">
-          <label class="flex items-center gap-2 text-sm text-gray-700 dark:text-gray-300">
-            <input
+          <KumoLabel class="flex items-center gap-2 text-sm text-gray-700 dark:text-gray-300">
+            <KumoCheckbox
               v-model="editForm.profit_control_enabled"
               type="checkbox"
               class="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
             />
             <span>{{ t("admin.groups.profitControl.enable") }}</span>
-          </label>
+          </KumoLabel>
           <p class="mb-3 mt-1.5 text-xs text-gray-500 dark:text-gray-400">
             {{
               editForm.profit_control_enabled
@@ -2881,8 +2696,8 @@
             class="mb-3 grid grid-cols-1 gap-3 sm:grid-cols-2"
           >
             <div>
-              <label class="input-label">{{ t("admin.groups.profitControl.minMargin") }}</label>
-              <input
+              <KumoLabel class="input-label">{{ t("admin.groups.profitControl.minMargin") }}</KumoLabel>
+              <KumoInput
                 v-model.number="editForm.profit_min_margin_percent"
                 type="number"
                 step="0.1"
@@ -2894,8 +2709,8 @@
               />
             </div>
             <div>
-              <label class="input-label">{{ t("admin.groups.profitControl.safetyBuffer") }}</label>
-              <input
+              <KumoLabel class="input-label">{{ t("admin.groups.profitControl.safetyBuffer") }}</KumoLabel>
+              <KumoInput
                 v-model.number="editForm.profit_safety_buffer_percent"
                 type="number"
                 step="0.1"
@@ -2912,36 +2727,22 @@
         <!-- 支持的模型系列（仅 antigravity 平台） -->
         <div v-if="editForm.platform === 'antigravity'" class="border-t pt-4">
           <div class="mb-1.5 flex items-center gap-1">
-            <label class="text-sm font-medium text-gray-700 dark:text-gray-300">
+            <KumoLabel class="text-sm font-medium text-gray-700 dark:text-gray-300">
               {{ t("admin.groups.supportedScopes.title") }}
-            </label>
+            </KumoLabel>
             <!-- Help Tooltip -->
-            <div class="group relative inline-flex">
-              <Icon
+            <KumoTooltip  :label="t('common.help')" class="w-72 max-w-[calc(100vw-2rem)]" trigger-class="h-auto p-0 inline-flex"><template #trigger><Icon
                 name="questionCircle"
                 size="sm"
                 :stroke-width="2"
                 class="cursor-help text-gray-400 transition-colors hover:text-primary-500 dark:text-gray-500 dark:hover:text-primary-400"
-              />
-              <div
-                class="pointer-events-none absolute bottom-full left-0 z-50 mb-2 w-72 opacity-0 transition-all duration-200 group-hover:pointer-events-auto group-hover:opacity-100"
-              >
-                <div
-                  class="rounded-lg bg-gray-900 p-3 text-white shadow-lg dark:bg-gray-800"
-                >
-                  <p class="text-xs leading-relaxed text-gray-300">
+              /></template><p class="text-xs leading-relaxed text-gray-600 dark:text-gray-300">
                     {{ t("admin.groups.supportedScopes.tooltip") }}
-                  </p>
-                  <div
-                    class="absolute -bottom-1.5 left-3 h-3 w-3 rotate-45 bg-gray-900 dark:bg-gray-800"
-                  ></div>
-                </div>
-              </div>
-            </div>
+                  </p></KumoTooltip>
           </div>
           <div class="space-y-2">
-            <label class="flex items-center gap-2 cursor-pointer">
-              <input
+            <KumoLabel class="flex items-center gap-2 cursor-pointer">
+              <KumoCheckbox
                 type="checkbox"
                 :checked="editForm.supported_model_scopes.includes('claude')"
                 @change="toggleEditScope('claude')"
@@ -2950,9 +2751,9 @@
               <span class="text-sm text-gray-700 dark:text-gray-300">{{
                 t("admin.groups.supportedScopes.claude")
               }}</span>
-            </label>
-            <label class="flex items-center gap-2 cursor-pointer">
-              <input
+            </KumoLabel>
+            <KumoLabel class="flex items-center gap-2 cursor-pointer">
+              <KumoCheckbox
                 type="checkbox"
                 :checked="
                   editForm.supported_model_scopes.includes('gemini_text')
@@ -2963,9 +2764,9 @@
               <span class="text-sm text-gray-700 dark:text-gray-300">{{
                 t("admin.groups.supportedScopes.geminiText")
               }}</span>
-            </label>
-            <label class="flex items-center gap-2 cursor-pointer">
-              <input
+            </KumoLabel>
+            <KumoLabel class="flex items-center gap-2 cursor-pointer">
+              <KumoCheckbox
                 type="checkbox"
                 :checked="
                   editForm.supported_model_scopes.includes('gemini_image')
@@ -2976,7 +2777,7 @@
               <span class="text-sm text-gray-700 dark:text-gray-300">{{
                 t("admin.groups.supportedScopes.geminiImage")
               }}</span>
-            </label>
+            </KumoLabel>
           </div>
           <p class="mt-2 text-xs text-gray-500 dark:text-gray-400">
             {{ t("admin.groups.supportedScopes.hint") }}
@@ -2986,31 +2787,17 @@
         <!-- MCP XML 协议注入（仅 antigravity 平台） -->
         <div v-if="editForm.platform === 'antigravity'" class="border-t pt-4">
           <div class="mb-1.5 flex items-center gap-1">
-            <label class="text-sm font-medium text-gray-700 dark:text-gray-300">
+            <KumoLabel class="text-sm font-medium text-gray-700 dark:text-gray-300">
               {{ t("admin.groups.mcpXml.title") }}
-            </label>
-            <div class="group relative inline-flex">
-              <Icon
+            </KumoLabel>
+            <KumoTooltip  :label="t('common.help')" class="w-72 max-w-[calc(100vw-2rem)]" trigger-class="h-auto p-0 inline-flex"><template #trigger><Icon
                 name="questionCircle"
                 size="sm"
                 :stroke-width="2"
                 class="cursor-help text-gray-400 transition-colors hover:text-primary-500 dark:text-gray-500 dark:hover:text-primary-400"
-              />
-              <div
-                class="pointer-events-none absolute bottom-full left-0 z-50 mb-2 w-72 opacity-0 transition-all duration-200 group-hover:pointer-events-auto group-hover:opacity-100"
-              >
-                <div
-                  class="rounded-lg bg-gray-900 p-3 text-white shadow-lg dark:bg-gray-800"
-                >
-                  <p class="text-xs leading-relaxed text-gray-300">
+              /></template><p class="text-xs leading-relaxed text-gray-600 dark:text-gray-300">
                     {{ t("admin.groups.mcpXml.tooltip") }}
-                  </p>
-                  <div
-                    class="absolute -bottom-1.5 left-3 h-3 w-3 rotate-45 bg-gray-900 dark:bg-gray-800"
-                  ></div>
-                </div>
-              </div>
-            </div>
+                  </p></KumoTooltip>
           </div>
           <div class="flex items-center gap-3">
             <Toggle v-model="editForm.mcp_xml_inject" />
@@ -3027,32 +2814,18 @@
         <!-- Claude Code 客户端限制（仅 anthropic 平台） -->
         <div v-if="editForm.platform === 'anthropic'" class="border-t pt-4">
           <div class="mb-1.5 flex items-center gap-1">
-            <label class="text-sm font-medium text-gray-700 dark:text-gray-300">
+            <KumoLabel class="text-sm font-medium text-gray-700 dark:text-gray-300">
               {{ t("admin.groups.claudeCode.title") }}
-            </label>
+            </KumoLabel>
             <!-- Help Tooltip -->
-            <div class="group relative inline-flex">
-              <Icon
+            <KumoTooltip  :label="t('common.help')" class="w-72 max-w-[calc(100vw-2rem)]" trigger-class="h-auto p-0 inline-flex"><template #trigger><Icon
                 name="questionCircle"
                 size="sm"
                 :stroke-width="2"
                 class="cursor-help text-gray-400 transition-colors hover:text-primary-500 dark:text-gray-500 dark:hover:text-primary-400"
-              />
-              <div
-                class="pointer-events-none absolute bottom-full left-0 z-50 mb-2 w-72 opacity-0 transition-all duration-200 group-hover:pointer-events-auto group-hover:opacity-100"
-              >
-                <div
-                  class="rounded-lg bg-gray-900 p-3 text-white shadow-lg dark:bg-gray-800"
-                >
-                  <p class="text-xs leading-relaxed text-gray-300">
+              /></template><p class="text-xs leading-relaxed text-gray-600 dark:text-gray-300">
                     {{ t("admin.groups.claudeCode.tooltip") }}
-                  </p>
-                  <div
-                    class="absolute -bottom-1.5 left-3 h-3 w-3 rotate-45 bg-gray-900 dark:bg-gray-800"
-                  ></div>
-                </div>
-              </div>
-            </div>
+                  </p></KumoTooltip>
           </div>
           <div class="flex items-center gap-3">
             <Toggle v-model="editForm.claude_code_only" />
@@ -3066,9 +2839,9 @@
           </div>
           <!-- 降级分组选择（仅当启用 claude_code_only 时显示） -->
           <div v-if="editForm.claude_code_only" class="mt-3">
-            <label class="input-label">{{
+            <KumoLabel class="input-label">{{
               t("admin.groups.claudeCode.fallbackGroup")
-            }}</label>
+            }}</KumoLabel>
             <Select
               v-model="editForm.fallback_group_id"
               :options="fallbackGroupOptionsForEdit"
@@ -3089,10 +2862,10 @@
             {{ t("admin.groups.webSearchPricing.title") }}
           </h4>
           <div>
-            <label class="input-label">{{
+            <KumoLabel class="input-label">{{
               t("admin.groups.webSearchPricing.pricePerCall")
-            }}</label>
-            <input
+            }}</KumoLabel>
+            <KumoInput
               v-model.number="editForm.web_search_price_per_call"
               type="number"
               step="0.001"
@@ -3132,14 +2905,14 @@
               <h4 class="text-sm font-medium text-gray-700 dark:text-gray-300">{{ t("admin.groups.modelPricing.title") }}</h4>
               <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">{{ t("admin.groups.modelPricing.description") }}</p>
             </div>
-            <button type="button" class="btn btn-secondary shrink-0 whitespace-nowrap" @click="addGroupPricing(editForm.model_pricing)">
+            <KumoButton type="button" class="btn btn-secondary shrink-0 whitespace-nowrap" @click="addGroupPricing(editForm.model_pricing)">
               <Icon name="plus" size="sm" class="mr-1" />{{ t("admin.groups.modelPricing.add") }}
-            </button>
+            </KumoButton>
           </div>
-          <label class="mt-3 flex items-start gap-2">
-            <input v-model="editForm.long_context_pricing_enabled" type="checkbox" class="mt-0.5" />
+          <KumoLabel class="mt-3 flex items-start gap-2">
+            <KumoCheckbox v-model="editForm.long_context_pricing_enabled" type="checkbox" class="mt-0.5" />
             <span><span class="block text-sm text-gray-700 dark:text-gray-300">{{ t("admin.groups.modelPricing.longContext") }}</span><span class="block text-xs text-gray-500">{{ t("admin.groups.modelPricing.longContextHint") }}</span></span>
-          </label>
+          </KumoLabel>
           <div class="mt-3 space-y-2">
             <PricingEntryCard v-for="(entry, index) in editForm.model_pricing" :key="index" :entry="entry" :platform="editForm.platform" hide-token-intervals @update="editForm.model_pricing[index] = $event" @remove="editForm.model_pricing.splice(index, 1)" />
           </div>
@@ -3158,8 +2931,8 @@
           </p>
           <div class="grid grid-cols-1 gap-3 md:grid-cols-3">
             <div>
-              <label class="input-label">{{ t("admin.groups.explicitPricing.searchPricePer1k") }}</label>
-              <input
+              <KumoLabel class="input-label">{{ t("admin.groups.explicitPricing.searchPricePer1k") }}</KumoLabel>
+              <KumoInput
                 v-model.number="editForm.search_price_per_1k"
                 type="number"
                 step="0.000001"
@@ -3170,8 +2943,8 @@
               />
             </div>
             <div>
-              <label class="input-label">{{ t("admin.groups.voicePricing.audioRealtimePerMin") }}</label>
-              <input
+              <KumoLabel class="input-label">{{ t("admin.groups.voicePricing.audioRealtimePerMin") }}</KumoLabel>
+              <KumoInput
                 v-model.number="editForm.audio_realtime_price_per_min"
                 type="number"
                 step="0.000001"
@@ -3182,8 +2955,8 @@
               />
             </div>
             <div>
-              <label class="input-label">{{ t("admin.groups.voicePricing.audioTtsPerMillionChars") }}</label>
-              <input
+              <KumoLabel class="input-label">{{ t("admin.groups.voicePricing.audioTtsPerMillionChars") }}</KumoLabel>
+              <KumoInput
                 v-model.number="editForm.audio_tts_price_per_million_chars"
                 type="number"
                 step="0.000001"
@@ -3194,8 +2967,8 @@
               />
             </div>
             <div>
-              <label class="input-label">{{ t("admin.groups.voicePricing.audioSttPerHour") }}</label>
-              <input
+              <KumoLabel class="input-label">{{ t("admin.groups.voicePricing.audioSttPerHour") }}</KumoLabel>
+              <KumoInput
                 v-model.number="editForm.audio_stt_price_per_hour"
                 type="number"
                 step="0.000001"
@@ -3216,9 +2989,9 @@
             {{ t("admin.groups.openaiFast.title") }}
           </h4>
           <div class="flex items-center justify-between gap-4">
-            <label class="text-sm text-gray-600 dark:text-gray-400">
+            <KumoLabel class="text-sm text-gray-600 dark:text-gray-400">
               {{ t("admin.groups.openaiFast.force") }}
-            </label>
+            </KumoLabel>
             <Toggle
               data-testid="edit-force-openai-fast"
               :aria-label="t('admin.groups.openaiFast.force')"
@@ -3229,9 +3002,9 @@
             {{ t("admin.groups.openaiFast.hint") }}
           </p>
           <div class="flex items-center justify-between gap-4 mt-4">
-            <label class="text-sm text-gray-600 dark:text-gray-400">
+            <KumoLabel class="text-sm text-gray-600 dark:text-gray-400">
               {{ t("admin.groups.openaiFast.free") }}
-            </label>
+            </KumoLabel>
             <Toggle
               data-testid="edit-free-openai-fast"
               :aria-label="t('admin.groups.openaiFast.free')"
@@ -3252,9 +3025,9 @@
             {{ t("admin.groups.openaiLive.title") }}
           </h4>
           <div class="flex items-center justify-between">
-            <label class="text-sm text-gray-600 dark:text-gray-400">{{
+            <KumoLabel class="text-sm text-gray-600 dark:text-gray-400">{{
               t("admin.groups.openaiLive.allow")
-            }}</label>
+            }}</KumoLabel>
             <Toggle
               :model-value="editForm.allow_live"
               @update:model-value="toggleLive('edit')"
@@ -3276,9 +3049,9 @@
 
           <!-- 允许 Messages 调度开关 -->
           <div class="flex items-center justify-between">
-            <label class="text-sm text-gray-600 dark:text-gray-400">{{
+            <KumoLabel class="text-sm text-gray-600 dark:text-gray-400">{{
               t("admin.groups.openaiMessages.allowDispatch")
-            }}</label>
+            }}</KumoLabel>
             <Toggle v-model="editForm.allow_messages_dispatch" />
           </div>
           <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">
@@ -3299,11 +3072,11 @@
               >
                 <div class="flex items-center gap-2">
                   <div class="h-2 w-2 rounded-full bg-blue-500"></div>
-                  <label
+                  <KumoLabel
                     class="text-sm font-medium text-gray-900 dark:text-white"
                     >{{
                       t("admin.groups.openaiMessages.familyMappingTitle")
-                    }}</label
+                    }}</KumoLabel
                   >
                 </div>
                 <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">
@@ -3313,10 +3086,10 @@
               <div class="p-4">
                 <div class="grid gap-4 md:grid-cols-3">
                   <div>
-                    <label class="input-label">{{
+                    <KumoLabel class="input-label">{{
                       t("admin.groups.openaiMessages.opusModel")
-                    }}</label>
-                    <input
+                    }}</KumoLabel>
+                    <KumoInput
                       v-model="editForm.opus_mapped_model"
                       type="text"
                       :placeholder="
@@ -3326,10 +3099,10 @@
                     />
                   </div>
                   <div>
-                    <label class="input-label">{{
+                    <KumoLabel class="input-label">{{
                       t("admin.groups.openaiMessages.sonnetModel")
-                    }}</label>
-                    <input
+                    }}</KumoLabel>
+                    <KumoInput
                       v-model="editForm.sonnet_mapped_model"
                       type="text"
                       :placeholder="
@@ -3339,10 +3112,10 @@
                     />
                   </div>
                   <div>
-                    <label class="input-label">{{
+                    <KumoLabel class="input-label">{{
                       t("admin.groups.openaiMessages.haikuModel")
-                    }}</label>
-                    <input
+                    }}</KumoLabel>
+                    <KumoInput
                       v-model="editForm.haiku_mapped_model"
                       type="text"
                       :placeholder="
@@ -3365,11 +3138,11 @@
                   <div>
                     <div class="flex items-center gap-2">
                       <div class="h-2 w-2 rounded-full bg-primary-500"></div>
-                      <label
+                      <KumoLabel
                         class="text-sm font-medium text-primary-900 dark:text-primary-100"
                         >{{
                           t("admin.groups.openaiMessages.exactMappingTitle")
-                        }}</label
+                        }}</KumoLabel
                       >
                     </div>
                     <p
@@ -3389,14 +3162,14 @@
                   <span>{{
                     t("admin.groups.openaiMessages.noExactMappings")
                   }}</span>
-                  <button
+                  <KumoButton
                     type="button"
                     @click="addEditMessagesDispatchMapping"
                     class="flex items-center gap-1.5 text-sm font-medium text-primary-600 transition-colors hover:text-primary-700 dark:text-primary-400 dark:hover:text-primary-300"
                   >
                     <Icon name="plus" size="sm" />
                     {{ t("admin.groups.openaiMessages.addExactMapping") }}
-                  </button>
+                  </KumoButton>
                 </div>
 
                 <div v-else class="space-y-3">
@@ -3410,10 +3183,10 @@
                         class="grid flex-1 gap-4 md:grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)] md:items-start"
                       >
                         <div>
-                          <label class="input-label">{{
+                          <KumoLabel class="input-label">{{
                             t("admin.groups.openaiMessages.claudeModel")
-                          }}</label>
-                          <input
+                          }}</KumoLabel>
+                          <KumoInput
                             v-model="row.claude_model"
                             type="text"
                             :placeholder="
@@ -3434,10 +3207,10 @@
                           />
                         </div>
                         <div>
-                          <label class="input-label">{{
+                          <KumoLabel class="input-label">{{
                             t("admin.groups.openaiMessages.targetModel")
-                          }}</label>
-                          <input
+                          }}</KumoLabel>
+                          <KumoInput
                             v-model="row.target_model"
                             type="text"
                             :placeholder="
@@ -3449,7 +3222,7 @@
                           />
                         </div>
                       </div>
-                      <button
+                      <KumoButton
                         type="button"
                         @click="removeEditMessagesDispatchMapping(row)"
                         class="mt-6 flex h-9 w-9 items-center justify-center rounded-lg text-gray-400 transition-colors hover:bg-red-50 hover:text-red-500 dark:hover:bg-red-900/20 dark:hover:text-red-400"
@@ -3458,18 +3231,18 @@
                         "
                       >
                         <Icon name="trash" size="sm" />
-                      </button>
+                      </KumoButton>
                     </div>
                   </div>
 
-                  <button
+                  <KumoButton
                     type="button"
                     @click="addEditMessagesDispatchMapping"
                     class="flex w-full items-center justify-center gap-2 rounded-xl border-2 border-dashed border-gray-300 bg-white py-3 text-sm font-medium text-gray-500 transition-all hover:border-primary-300 hover:bg-primary-50/50 hover:text-primary-600 dark:border-dark-600 dark:bg-dark-800 dark:text-gray-400 dark:hover:border-primary-800 dark:hover:bg-primary-900/20 dark:hover:text-primary-400"
                   >
                     <Icon name="plus" size="sm" />
                     {{ t("admin.groups.openaiMessages.addExactMapping") }}
-                  </button>
+                  </KumoButton>
                 </div>
               </div>
             </div>
@@ -3492,8 +3265,8 @@
           <!-- require_oauth_only toggle -->
           <div class="flex items-center justify-between">
             <div>
-              <label class="text-sm text-gray-600 dark:text-gray-400"
-                >{{ t("admin.groups.accountFilters.oauthOnly") }}</label
+              <KumoLabel class="text-sm text-gray-600 dark:text-gray-400"
+                >{{ t("admin.groups.accountFilters.oauthOnly") }}</KumoLabel
               >
               <p class="text-xs text-gray-500 dark:text-gray-400 mt-0.5">
                 {{
@@ -3509,8 +3282,8 @@
           <!-- require_privacy_set toggle -->
           <div class="flex items-center justify-between">
             <div>
-              <label class="text-sm text-gray-600 dark:text-gray-400"
-                >{{ t("admin.groups.accountFilters.privacySetOnly") }}</label
+              <KumoLabel class="text-sm text-gray-600 dark:text-gray-400"
+                >{{ t("admin.groups.accountFilters.privacySetOnly") }}</KumoLabel
               >
               <p class="text-xs text-gray-500 dark:text-gray-400 mt-0.5">
                 {{
@@ -3532,9 +3305,9 @@
           "
           class="border-t pt-4"
         >
-          <label class="input-label">{{
+          <KumoLabel class="input-label">{{
             t("admin.groups.invalidRequestFallback.title")
-          }}</label>
+          }}</KumoLabel>
           <Select
             v-model="editForm.fallback_group_id_on_invalid_request"
             :options="invalidRequestFallbackOptionsForEdit"
@@ -3548,32 +3321,18 @@
         <!-- 模型路由配置（仅 anthropic 平台） -->
         <div v-if="editForm.platform === 'anthropic'" class="border-t pt-4">
           <div class="mb-1.5 flex items-center gap-1">
-            <label class="text-sm font-medium text-gray-700 dark:text-gray-300">
+            <KumoLabel class="text-sm font-medium text-gray-700 dark:text-gray-300">
               {{ t("admin.groups.modelRouting.title") }}
-            </label>
+            </KumoLabel>
             <!-- Help Tooltip -->
-            <div class="group relative inline-flex">
-              <Icon
+            <KumoTooltip  :label="t('common.help')" class="w-80 max-w-[calc(100vw-2rem)]" trigger-class="h-auto p-0 inline-flex"><template #trigger><Icon
                 name="questionCircle"
                 size="sm"
                 :stroke-width="2"
                 class="cursor-help text-gray-400 transition-colors hover:text-primary-500 dark:text-gray-500 dark:hover:text-primary-400"
-              />
-              <div
-                class="pointer-events-none absolute bottom-full left-0 z-50 mb-2 w-80 opacity-0 transition-all duration-200 group-hover:pointer-events-auto group-hover:opacity-100"
-              >
-                <div
-                  class="rounded-lg bg-gray-900 p-3 text-white shadow-lg dark:bg-gray-800"
-                >
-                  <p class="text-xs leading-relaxed text-gray-300">
+              /></template><p class="text-xs leading-relaxed text-gray-600 dark:text-gray-300">
                     {{ t("admin.groups.modelRouting.tooltip") }}
-                  </p>
-                  <div
-                    class="absolute -bottom-1.5 left-3 h-3 w-3 rotate-45 bg-gray-900 dark:bg-gray-800"
-                  ></div>
-                </div>
-              </div>
-            </div>
+                  </p></KumoTooltip>
           </div>
           <!-- 启用开关 -->
           <div class="flex items-center gap-3 mb-3">
@@ -3605,10 +3364,10 @@
               <div class="flex items-start gap-3">
                 <div class="flex-1 space-y-2">
                   <div>
-                    <label class="input-label text-xs">{{
+                    <KumoLabel class="input-label text-xs">{{
                       t("admin.groups.modelRouting.modelPattern")
-                    }}</label>
-                    <input
+                    }}</KumoLabel>
+                    <KumoInput
                       v-model="rule.pattern"
                       type="text"
                       class="input text-sm"
@@ -3618,9 +3377,9 @@
                     />
                   </div>
                   <div>
-                    <label class="input-label text-xs">{{
+                    <KumoLabel class="input-label text-xs">{{
                       t("admin.groups.modelRouting.accounts")
-                    }}</label>
+                    }}</KumoLabel>
                     <!-- 已选账号标签 -->
                     <div
                       v-if="rule.accounts.length > 0"
@@ -3632,82 +3391,54 @@
                         class="inline-flex items-center gap-1 rounded-full bg-primary-100 px-2.5 py-1 text-xs font-medium text-primary-700 dark:bg-primary-900/30 dark:text-primary-300"
                       >
                         {{ account.name }}
-                        <button
+                        <KumoButton
                           type="button"
                           @click="removeSelectedAccount(rule, account.id, true)"
                           class="ml-0.5 text-primary-500 hover:text-primary-700 dark:hover:text-primary-200"
                         >
                           <Icon name="x" size="xs" />
-                        </button>
+                        </KumoButton>
                       </span>
                     </div>
                     <!-- 账号搜索输入框 -->
                     <div class="relative account-search-container">
-                      <input
+                      <KumoSearchSelect
                         v-model="
                           accountSearchKeyword[getEditRuleSearchKey(rule)]
                         "
-                        type="text"
                         class="input text-sm"
                         :placeholder="
                           t(
                             'admin.groups.modelRouting.searchAccountPlaceholder',
                           )
                         "
-                        @input="searchAccountsByRule(rule, true)"
-                        @focus="onAccountSearchFocus(rule, true)"
-                      />
-                      <!-- 搜索结果下拉框 -->
-                      <div
-                        v-if="
-                          showAccountDropdown[getEditRuleSearchKey(rule)] &&
-                          accountSearchResults[getEditRuleSearchKey(rule)]
-                            ?.length > 0
-                        "
-                        class="absolute z-50 mt-1 max-h-48 w-full overflow-auto rounded-lg border bg-white shadow-lg dark:border-dark-600 dark:bg-dark-800"
-                      >
-                        <button
-                          v-for="account in accountSearchResults[
+                        @search="searchAccountsByRule(rule, true)"
+                        @focus="onAccountSearchFocus(rule, true)" :options="(accountSearchResults[
                             getEditRuleSearchKey(rule)
-                          ]"
-                          :key="account.id"
-                          type="button"
-                          @click="selectAccount(rule, account, true)"
-                          class="w-full px-3 py-2 text-left text-sm hover:bg-gray-100 dark:hover:bg-dark-700"
-                          :class="{
-                            'opacity-50': rule.accounts.some(
-                              (a) => a.id === account.id,
-                            ),
-                          }"
-                          :disabled="
-                            rule.accounts.some((a) => a.id === account.id)
-                          "
-                        >
-                          <span>{{ account.name }}</span>
-                          <span class="ml-2 text-xs text-gray-400"
+                          ] ?? []).map(account => ({ ...account, disabled: rule.accounts.some((a) => a.id === account.id) }))" label-key="name" v-model:open="showAccountDropdown[getEditRuleSearchKey(rule)]" @select="account => selectAccount(rule, account, true)"   :loading-label="t('common.loading')" :empty-text="t('common.noOptionsFound')"><template #option="{ option: account }"><span>{{ account.name }}</span><span class="ml-2 text-xs text-gray-400"
                             >#{{ account.id }}</span
-                          >
-                        </button>
-                      </div>
+                          ></template></KumoSearchSelect>
+                      <!-- 搜索结果下拉框 -->
+
                     </div>
                     <p class="text-xs text-gray-400 mt-1">
                       {{ t("admin.groups.modelRouting.accountsHint") }}
                     </p>
                   </div>
                 </div>
-                <button
+                <KumoButton
                   type="button"
                   @click="removeEditRoutingRule(rule)"
                   class="mt-5 p-1.5 text-gray-400 hover:text-red-500 transition-colors"
                   :title="t('admin.groups.modelRouting.removeRule')"
                 >
                   <Icon name="trash" size="sm" />
-                </button>
+                </KumoButton>
               </div>
             </div>
           </div>
           <!-- 添加规则按钮（仅在启用时显示） -->
-          <button
+          <KumoButton
             v-if="editForm.model_routing_enabled"
             type="button"
             @click="addEditRoutingRule"
@@ -3715,49 +3446,30 @@
           >
             <Icon name="plus" size="sm" />
             {{ t("admin.groups.modelRouting.addRule") }}
-          </button>
+          </KumoButton>
         </div>
         </template>
       </form>
 
       <template #footer>
         <div class="flex justify-end gap-3 pt-4">
-          <button
+          <KumoButton
             @click="closeEditModal"
             type="button"
             class="btn btn-secondary"
           >
             {{ t("common.cancel") }}
-          </button>
-          <button
+          </KumoButton>
+          <KumoButton
             type="submit"
             form="edit-group-form"
             :disabled="submitting"
             class="btn btn-primary"
             data-tour="group-form-submit"
           >
-            <svg
-              v-if="submitting"
-              class="-ml-1 mr-2 h-4 w-4 animate-spin"
-              fill="none"
-              viewBox="0 0 24 24"
-            >
-              <circle
-                class="opacity-25"
-                cx="12"
-                cy="12"
-                r="10"
-                stroke="currentColor"
-                stroke-width="4"
-              ></circle>
-              <path
-                class="opacity-75"
-                fill="currentColor"
-                d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-              ></path>
-            </svg>
+            <KumoLoader v-if="submitting" class="-ml-1 mr-2 h-4 w-4 animate-spin" />
             {{ submitting ? t("admin.groups.updating") : t("common.update") }}
-          </button>
+          </KumoButton>
         </div>
       </template>
     </BaseDialog>
@@ -3849,40 +3561,21 @@
 
       <template #footer>
         <div class="flex justify-end gap-3 pt-4">
-          <button
+          <KumoButton
             @click="closeSortModal"
             type="button"
             class="btn btn-secondary"
           >
             {{ t("common.cancel") }}
-          </button>
-          <button
+          </KumoButton>
+          <KumoButton
             @click="saveSortOrder"
             :disabled="sortSubmitting"
             class="btn btn-primary"
           >
-            <svg
-              v-if="sortSubmitting"
-              class="-ml-1 mr-2 h-4 w-4 animate-spin"
-              fill="none"
-              viewBox="0 0 24 24"
-            >
-              <circle
-                class="opacity-25"
-                cx="12"
-                cy="12"
-                r="10"
-                stroke="currentColor"
-                stroke-width="4"
-              ></circle>
-              <path
-                class="opacity-75"
-                fill="currentColor"
-                d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-              ></path>
-            </svg>
+            <KumoLoader v-if="sortSubmitting" class="-ml-1 mr-2 h-4 w-4 animate-spin" />
             {{ sortSubmitting ? t("common.saving") : t("common.save") }}
-          </button>
+          </KumoButton>
         </div>
       </template>
     </BaseDialog>
@@ -3906,7 +3599,7 @@
             <h3 class="text-sm font-semibold text-gray-900 dark:text-white">
               {{ t("admin.groups.compositeRoutes.routes") }}
             </h3>
-            <button
+            <KumoButton
               type="button"
               class="btn btn-secondary btn-sm"
               :disabled="compositeRoutesLoading"
@@ -3917,7 +3610,7 @@
                 size="sm"
                 :class="compositeRoutesLoading ? 'animate-spin' : ''"
               />
-            </button>
+            </KumoButton>
           </div>
 
           <div
@@ -3936,46 +3629,46 @@
               {{ t("admin.groups.compositeRoutes.empty") }}
             </div>
             <div v-else class="overflow-x-auto">
-              <table class="min-w-full divide-y divide-gray-200 text-sm dark:divide-dark-600">
-                <thead class="bg-gray-50 text-left text-xs font-medium uppercase tracking-wide text-gray-500 dark:bg-dark-800 dark:text-gray-400">
-                  <tr>
-                    <th class="px-3 py-2">
+              <KumoTable class="min-w-full divide-y divide-gray-200 text-sm dark:divide-dark-600">
+                <KumoTableHeader class="bg-gray-50 text-left text-xs font-medium uppercase tracking-wide text-gray-500 dark:bg-dark-800 dark:text-gray-400">
+                  <KumoTableRow>
+                    <KumoTableHead class="px-3 py-2">
                       {{ t("admin.groups.compositeRoutes.publicModel") }}
-                    </th>
-                    <th class="px-3 py-2">
+                    </KumoTableHead>
+                    <KumoTableHead class="px-3 py-2">
                       {{ t("admin.groups.compositeRoutes.target") }}
-                    </th>
-                    <th class="px-3 py-2">
+                    </KumoTableHead>
+                    <KumoTableHead class="px-3 py-2">
                       {{ t("admin.groups.compositeRoutes.scope") }}
-                    </th>
-                    <th class="px-3 py-2 text-right">
+                    </KumoTableHead>
+                    <KumoTableHead class="px-3 py-2 text-right">
                       {{ t("admin.groups.columns.actions") }}
-                    </th>
-                  </tr>
-                </thead>
-                <tbody class="divide-y divide-gray-100 bg-white dark:divide-dark-700 dark:bg-dark-900">
-                  <tr
+                    </KumoTableHead>
+                  </KumoTableRow>
+                </KumoTableHeader>
+                <KumoTableBody class="divide-y divide-gray-100 bg-white dark:divide-dark-700 dark:bg-dark-900">
+                  <KumoTableRow
                     v-for="route in compositeRoutes"
                     :key="route.id"
                     :class="!route.enabled && 'opacity-60'"
                   >
-                    <td class="max-w-[15rem] px-3 py-2">
+                    <KumoTableCell class="max-w-[15rem] px-3 py-2">
                       <div class="break-all font-medium text-gray-900 dark:text-white">
                         {{ route.public_model }}
                       </div>
                       <div class="mt-1 flex flex-wrap items-center gap-1.5">
-                        <span class="badge badge-gray">{{
+                        <KumoBadge class="badge badge-gray">{{
                           compositeRouteMatchLabel(route.match_type)
-                        }}</span>
-                        <span
+                        }}</KumoBadge>
+                        <KumoBadge
                           v-if="!route.enabled"
                           class="badge badge-danger"
                         >
                           {{ t("admin.accounts.status.inactive") }}
-                        </span>
+                        </KumoBadge>
                       </div>
-                    </td>
-                    <td class="px-3 py-2">
+                    </KumoTableCell>
+                    <KumoTableCell class="px-3 py-2">
                       <div class="flex items-center gap-1.5 text-gray-900 dark:text-white">
                         <PlatformIcon :platform="route.target_platform" size="xs" />
                         <span>{{ formatCompositePlatform(route.target_platform) }}</span>
@@ -3983,8 +3676,8 @@
                       <div class="mt-1 break-all text-xs text-gray-500 dark:text-gray-400">
                         {{ route.upstream_model || route.public_model }}
                       </div>
-                    </td>
-                    <td class="px-3 py-2">
+                    </KumoTableCell>
+                    <KumoTableCell class="px-3 py-2">
                       <div class="text-gray-700 dark:text-gray-300">
                         {{ formatCompositeEndpoint(route.endpoint) }}
                       </div>
@@ -3992,30 +3685,30 @@
                         {{ t("admin.groups.compositeRoutes.priority") }}:
                         {{ route.priority }}
                       </div>
-                    </td>
-                    <td class="px-3 py-2">
+                    </KumoTableCell>
+                    <KumoTableCell class="px-3 py-2">
                       <div class="flex justify-end gap-1">
-                        <button
+                        <KumoButton
                           type="button"
                           class="rounded p-1.5 text-gray-500 hover:bg-gray-100 hover:text-primary-600 dark:hover:bg-dark-700 dark:hover:text-primary-400"
                           :title="t('common.edit')"
                           @click="editCompositeRoute(route)"
                         >
                           <Icon name="edit" size="sm" />
-                        </button>
-                        <button
+                        </KumoButton>
+                        <KumoButton
                           type="button"
                           class="rounded p-1.5 text-gray-500 hover:bg-red-50 hover:text-red-600 dark:hover:bg-red-900/20 dark:hover:text-red-400"
                           :title="t('common.delete')"
                           @click="deleteCompositeRoute(route)"
                         >
                           <Icon name="trash" size="sm" />
-                        </button>
+                        </KumoButton>
                       </div>
-                    </td>
-                  </tr>
-                </tbody>
-              </table>
+                    </KumoTableCell>
+                  </KumoTableRow>
+                </KumoTableBody>
+              </KumoTable>
             </div>
           </div>
         </section>
@@ -4030,21 +3723,21 @@
                     : t("admin.groups.compositeRoutes.addRoute")
                 }}
               </h3>
-              <button
+              <KumoButton
                 v-if="compositeRouteEditingId"
                 type="button"
                 class="text-xs font-medium text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200"
                 @click="resetCompositeRouteForm"
               >
                 {{ t("common.cancel") }}
-              </button>
+              </KumoButton>
             </div>
 
             <div>
-              <label class="input-label">{{
+              <KumoLabel class="input-label">{{
                 t("admin.groups.compositeRoutes.publicModel")
-              }}</label>
-              <input
+              }}</KumoLabel>
+              <KumoInput
                 v-model.trim="compositeRouteForm.public_model"
                 type="text"
                 class="input"
@@ -4055,18 +3748,18 @@
 
             <div class="grid grid-cols-1 gap-3 sm:grid-cols-2">
               <div>
-                <label class="input-label">{{
+                <KumoLabel class="input-label">{{
                   t("admin.groups.compositeRoutes.matchType")
-                }}</label>
+                }}</KumoLabel>
                 <Select
                   v-model="compositeRouteForm.match_type"
                   :options="compositeRouteMatchOptions"
                 />
               </div>
               <div>
-                <label class="input-label">{{
+                <KumoLabel class="input-label">{{
                   t("admin.groups.compositeRoutes.endpoint")
-                }}</label>
+                }}</KumoLabel>
                 <Select
                   v-model="compositeRouteForm.endpoint"
                   :options="compositeRouteEndpointOptions"
@@ -4076,19 +3769,19 @@
 
             <div class="grid grid-cols-1 gap-3 sm:grid-cols-2">
               <div>
-                <label class="input-label">{{
+                <KumoLabel class="input-label">{{
                   t("admin.groups.compositeRoutes.targetPlatform")
-                }}</label>
+                }}</KumoLabel>
                 <Select
                   v-model="compositeRouteForm.target_platform"
                   :options="compositeRoutePlatformOptions"
                 />
               </div>
               <div>
-                <label class="input-label">{{
+                <KumoLabel class="input-label">{{
                   t("admin.groups.compositeRoutes.priority")
-                }}</label>
-                <input
+                }}</KumoLabel>
+                <KumoInput
                   v-model.number="compositeRouteForm.priority"
                   type="number"
                   min="1"
@@ -4099,10 +3792,10 @@
             </div>
 
             <div>
-              <label class="input-label">{{
+              <KumoLabel class="input-label">{{
                 t("admin.groups.compositeRoutes.upstreamModel")
-              }}</label>
-              <input
+              }}</KumoLabel>
+              <KumoInput
                 v-model.trim="compositeRouteForm.upstream_model"
                 type="text"
                 class="input"
@@ -4114,26 +3807,26 @@
             </div>
 
             <div>
-              <label class="input-label">{{
+              <KumoLabel class="input-label">{{
                 t("admin.groups.compositeRoutes.notes")
-              }}</label>
-              <textarea
+              }}</KumoLabel>
+              <KumoTextarea
                 v-model.trim="compositeRouteForm.notes"
                 rows="2"
                 class="input"
-              ></textarea>
+              ></KumoTextarea>
             </div>
 
             <div class="flex items-center justify-between gap-3">
-              <label class="flex items-center gap-2 text-sm text-gray-700 dark:text-gray-300">
-                <input
+              <KumoLabel class="flex items-center gap-2 text-sm text-gray-700 dark:text-gray-300">
+                <KumoCheckbox
                   v-model="compositeRouteForm.enabled"
                   type="checkbox"
                   class="h-4 w-4 rounded border-gray-300 text-primary-600 focus:ring-primary-500 dark:border-dark-600 dark:bg-dark-700"
                 />
                 {{ t("admin.groups.compositeRoutes.enabled") }}
-              </label>
-              <button
+              </KumoLabel>
+              <KumoButton
                 type="submit"
                 class="btn btn-primary"
                 :disabled="compositeRouteSaving"
@@ -4145,7 +3838,7 @@
                   class="mr-2"
                 />
                 {{ compositeRouteEditingId ? t("common.update") : t("common.create") }}
-              </button>
+              </KumoButton>
             </div>
           </form>
 
@@ -4154,7 +3847,7 @@
               {{ t("admin.groups.compositeRoutes.preview") }}
             </h3>
             <div class="space-y-3">
-              <input
+              <KumoInput
                 v-model.trim="compositePreviewModel"
                 type="text"
                 class="input"
@@ -4167,14 +3860,14 @@
                   :options="compositeRouteEndpointOptions"
                   class="min-w-0 flex-1"
                 />
-                <button
+                <KumoButton
                   type="button"
                   class="btn btn-secondary"
                   :disabled="compositePreviewLoading || !compositePreviewModel"
                   @click="previewCompositeRoute"
                 >
                   <Icon name="play" size="sm" />
-                </button>
+                </KumoButton>
               </div>
 
               <div
@@ -4196,13 +3889,13 @@
                         : t("admin.groups.compositeRoutes.notMatched")
                     }}
                   </span>
-                  <span class="badge badge-gray">
+                  <KumoBadge class="badge badge-gray">
                     {{
                       compositeRouteSourceLabel(
                         compositePreviewDecision.source,
                       )
                     }}
-                  </span>
+                  </KumoBadge>
                 </div>
                 <div
                   v-if="compositePreviewDecision.matched"
@@ -4235,13 +3928,13 @@
 
       <template #footer>
         <div class="flex justify-end pt-4">
-          <button
+          <KumoButton
             type="button"
             class="btn btn-secondary"
             @click="closeCompositeRoutesModal"
           >
             {{ t("common.close") }}
-          </button>
+          </KumoButton>
         </div>
       </template>
     </BaseDialog>
@@ -4265,6 +3958,8 @@
 </template>
 
 <script setup lang="ts">
+import { KumoBadge, KumoButton, KumoCheckbox, KumoInput, KumoLabel, KumoLoader, KumoNativeSelect, KumoPopoverContent, KumoPopoverRoot, KumoPopoverTrigger, KumoSearchSelect, KumoTable, KumoTableBody, KumoTableCell, KumoTableHead, KumoTableHeader, KumoTableRow, KumoTextarea, KumoTooltip } from '@/components/kumo'
+
 import { ref, reactive, computed, onMounted, onUnmounted, watch } from "vue";
 import { useI18n } from "vue-i18n";
 import { useAppStore } from "@/stores/app";
@@ -4491,7 +4186,6 @@ const toggleableColumns = computed(() =>
 );
 const hiddenColumns = reactive<Set<string>>(new Set());
 const showColumnDropdown = ref(false);
-const columnDropdownRef = ref<HTMLElement | null>(null);
 
 const getValidHiddenColumnKeys = () =>
   new Set(toggleableColumns.value.map((col) => col.key));
@@ -6808,18 +6502,6 @@ watch(
 )
 
 // 点击外部关闭账号搜索下拉框
-const handleClickOutside = (event: MouseEvent) => {
-  const target = event.target as HTMLElement;
-  // 检查是否点击在下拉框或输入框内
-  if (!target.closest(".account-search-container")) {
-    Object.keys(showAccountDropdown.value).forEach((key) => {
-      showAccountDropdown.value[key] = false;
-    });
-  }
-  if (columnDropdownRef.value && !columnDropdownRef.value.contains(target)) {
-    showColumnDropdown.value = false;
-  }
-};
 
 // 打开排序弹窗
 const openSortModal = async () => {
@@ -6871,11 +6553,9 @@ onMounted(() => {
     void loadLiveCapability();
     loadModelAllowlistCandidates("create", 0, createForm.platform);
   }
-  document.addEventListener("click", handleClickOutside);
 });
 
 onUnmounted(() => {
-  document.removeEventListener("click", handleClickOutside);
   accountSearchRunner.clearAll();
   clearAllAccountSearchState();
 });

@@ -54,8 +54,8 @@
       </div>
 
       <div>
-        <label class="input-label" for="ollama-cloud-session">{{ t('admin.accounts.ollamaCloud.sessionLabel') }}</label>
-        <textarea
+        <KumoLabel class="input-label" for="ollama-cloud-session">{{ t('admin.accounts.ollamaCloud.sessionLabel') }}</KumoLabel>
+        <KumoTextarea
           id="ollama-cloud-session"
           v-model="session"
           rows="3"
@@ -70,7 +70,7 @@
       </div>
 
       <div class="flex flex-wrap items-center gap-2">
-        <button
+        <KumoButton
           type="button"
           class="btn btn-primary btn-sm"
           :disabled="saving || !session.trim() || !state.encryption_key_configured"
@@ -79,8 +79,8 @@
         >
           <Icon name="check" size="xs" class="mr-1.5" />
           {{ t('common.save') }}
-        </button>
-        <button
+        </KumoButton>
+        <KumoButton
           v-if="state.configured"
           type="button"
           class="btn btn-secondary btn-sm text-red-600 dark:text-red-400"
@@ -90,8 +90,8 @@
         >
           <Icon name="trash" size="xs" class="mr-1.5" />
           {{ t('admin.accounts.ollamaCloud.deleteSession') }}
-        </button>
-        <button
+        </KumoButton>
+        <KumoButton
           v-if="state.configured"
           type="button"
           class="btn btn-secondary btn-sm"
@@ -101,14 +101,14 @@
         >
           <Icon name="refresh" size="xs" class="mr-1.5" :class="{ 'animate-spin': refreshing }" />
           {{ t('admin.accounts.ollamaCloud.refreshNow') }}
-        </button>
+        </KumoButton>
       </div>
 
       <div v-if="state.configured" class="flex items-center justify-between gap-4 border-t border-gray-100 pt-4 dark:border-dark-700">
         <div>
-          <label class="text-sm font-medium text-gray-900 dark:text-white">
+          <KumoLabel class="text-sm font-medium text-gray-900 dark:text-white">
             {{ t('admin.accounts.ollamaCloud.autoRefresh') }}
-          </label>
+          </KumoLabel>
           <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">
             {{ t('admin.accounts.ollamaCloud.autoRefreshHint') }}
           </p>
@@ -136,6 +136,8 @@
 </template>
 
 <script setup lang="ts">
+import { KumoButton, KumoLabel, KumoTextarea } from '@/components/kumo'
+
 import { computed, onMounted, ref, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { adminAPI } from '@/api/admin'

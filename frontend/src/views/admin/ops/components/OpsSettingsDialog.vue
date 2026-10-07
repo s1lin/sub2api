@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import { KumoCollapsible, KumoCollapsibleTrigger, KumoCollapsiblePanel, KumoButton, KumoInput, KumoLabel } from '@/components/kumo'
+
 import { ref, computed, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useAppStore } from '@/stores/app'
@@ -250,8 +252,8 @@ async function saveAllSettings() {
       <div class="rounded-2xl bg-gray-50 p-4 dark:bg-dark-700/50">
         <h4 class="mb-3 text-sm font-semibold text-gray-900 dark:text-white">{{ t('admin.ops.settings.dataCollection') }}</h4>
         <div>
-          <label class="input-label">{{ t('admin.ops.settings.evaluationInterval') }}</label>
-          <input
+          <KumoLabel class="input-label">{{ t('admin.ops.settings.evaluationInterval') }}</KumoLabel>
+          <KumoInput
             v-model.number="runtimeSettings.evaluation_interval_seconds"
             type="number"
             min="1"
@@ -269,24 +271,24 @@ async function saveAllSettings() {
         <div class="space-y-4">
           <div class="flex items-center justify-between">
             <div>
-              <label class="font-medium text-gray-900 dark:text-white">{{ t('admin.ops.settings.enableAlert') }}</label>
+              <KumoLabel class="font-medium text-gray-900 dark:text-white">{{ t('admin.ops.settings.enableAlert') }}</KumoLabel>
             </div>
             <Toggle v-model="emailConfig.alert.enabled" />
           </div>
 
           <div v-if="emailConfig.alert.enabled">
-            <label class="input-label">{{ t('admin.ops.settings.alertRecipients') }}</label>
+            <KumoLabel class="input-label">{{ t('admin.ops.settings.alertRecipients') }}</KumoLabel>
             <div class="flex gap-2">
-              <input
+              <KumoInput
                 v-model="alertRecipientInput"
                 type="email"
                 class="input"
                 :placeholder="t('admin.ops.settings.emailPlaceholder')"
                 @keydown.enter.prevent="addRecipient('alert')"
               />
-              <button class="btn btn-secondary whitespace-nowrap" type="button" @click="addRecipient('alert')">
+              <KumoButton class="btn btn-secondary whitespace-nowrap" type="button" @click="addRecipient('alert')">
                 {{ t('common.add') }}
-              </button>
+              </KumoButton>
             </div>
             <div class="mt-2 flex flex-wrap gap-2">
               <span
@@ -295,7 +297,7 @@ async function saveAllSettings() {
                 class="inline-flex items-center gap-2 rounded-full bg-blue-100 px-3 py-1 text-xs font-medium text-blue-700 dark:bg-blue-900/30 dark:text-blue-400"
               >
                 {{ email }}
-                <button type="button" class="text-blue-700/80 hover:text-blue-900" @click="removeRecipient('alert', email)">×</button>
+                <KumoButton type="button" class="text-blue-700/80 hover:text-blue-900" @click="removeRecipient('alert', email)">×</KumoButton>
               </span>
             </div>
             <p class="mt-2 text-xs text-gray-500 dark:text-gray-400">
@@ -304,7 +306,7 @@ async function saveAllSettings() {
           </div>
 
           <div v-if="emailConfig.alert.enabled">
-            <label class="input-label">{{ t('admin.ops.settings.minSeverity') }}</label>
+            <KumoLabel class="input-label">{{ t('admin.ops.settings.minSeverity') }}</KumoLabel>
             <Select v-model="emailConfig.alert.min_severity" :options="severityOptions" />
           </div>
         </div>
@@ -317,24 +319,24 @@ async function saveAllSettings() {
         <div class="space-y-4">
           <div class="flex items-center justify-between">
             <div>
-              <label class="font-medium text-gray-900 dark:text-white">{{ t('admin.ops.settings.enableReport') }}</label>
+              <KumoLabel class="font-medium text-gray-900 dark:text-white">{{ t('admin.ops.settings.enableReport') }}</KumoLabel>
             </div>
             <Toggle v-model="emailConfig.report.enabled" />
           </div>
 
           <div v-if="emailConfig.report.enabled">
-            <label class="input-label">{{ t('admin.ops.settings.reportRecipients') }}</label>
+            <KumoLabel class="input-label">{{ t('admin.ops.settings.reportRecipients') }}</KumoLabel>
             <div class="flex gap-2">
-              <input
+              <KumoInput
                 v-model="reportRecipientInput"
                 type="email"
                 class="input"
                 :placeholder="t('admin.ops.settings.emailPlaceholder')"
                 @keydown.enter.prevent="addRecipient('report')"
               />
-              <button class="btn btn-secondary whitespace-nowrap" type="button" @click="addRecipient('report')">
+              <KumoButton class="btn btn-secondary whitespace-nowrap" type="button" @click="addRecipient('report')">
                 {{ t('common.add') }}
-              </button>
+              </KumoButton>
             </div>
             <div class="mt-2 flex flex-wrap gap-2">
               <span
@@ -343,7 +345,7 @@ async function saveAllSettings() {
                 class="inline-flex items-center gap-2 rounded-full bg-blue-100 px-3 py-1 text-xs font-medium text-blue-700 dark:bg-blue-900/30 dark:text-blue-400"
               >
                 {{ email }}
-                <button type="button" class="text-blue-700/80 hover:text-blue-900" @click="removeRecipient('report', email)">×</button>
+                <KumoButton type="button" class="text-blue-700/80 hover:text-blue-900" @click="removeRecipient('report', email)">×</KumoButton>
               </span>
             </div>
             <p class="mt-2 text-xs text-gray-500 dark:text-gray-400">
@@ -353,18 +355,18 @@ async function saveAllSettings() {
 
           <div v-if="emailConfig.report.enabled" class="grid grid-cols-1 gap-4 md:grid-cols-2">
             <div class="flex items-center justify-between">
-              <label class="text-sm font-medium text-gray-700 dark:text-gray-300">{{ t('admin.ops.settings.dailySummary') }}</label>
+              <KumoLabel class="text-sm font-medium text-gray-700 dark:text-gray-300">{{ t('admin.ops.settings.dailySummary') }}</KumoLabel>
               <Toggle v-model="emailConfig.report.daily_summary_enabled" />
             </div>
             <div v-if="emailConfig.report.daily_summary_enabled">
-              <input v-model="emailConfig.report.daily_summary_schedule" type="text" class="input" placeholder="0 9 * * *" />
+              <KumoInput v-model="emailConfig.report.daily_summary_schedule" type="text" class="input" placeholder="0 9 * * *" />
             </div>
             <div class="flex items-center justify-between">
-              <label class="text-sm font-medium text-gray-700 dark:text-gray-300">{{ t('admin.ops.settings.weeklySummary') }}</label>
+              <KumoLabel class="text-sm font-medium text-gray-700 dark:text-gray-300">{{ t('admin.ops.settings.weeklySummary') }}</KumoLabel>
               <Toggle v-model="emailConfig.report.weekly_summary_enabled" />
             </div>
             <div v-if="emailConfig.report.weekly_summary_enabled">
-              <input v-model="emailConfig.report.weekly_summary_schedule" type="text" class="input" placeholder="0 9 * * 1" />
+              <KumoInput v-model="emailConfig.report.weekly_summary_schedule" type="text" class="input" placeholder="0 9 * * 1" />
             </div>
           </div>
         </div>
@@ -377,8 +379,8 @@ async function saveAllSettings() {
 
         <div class="space-y-4">
           <div>
-            <label class="input-label">{{ t('admin.ops.settings.slaMinPercent') }}</label>
-            <input
+            <KumoLabel class="input-label">{{ t('admin.ops.settings.slaMinPercent') }}</KumoLabel>
+            <KumoInput
               v-model.number="metricThresholds.sla_percent_min"
               type="number"
               min="0"
@@ -391,8 +393,8 @@ async function saveAllSettings() {
 
 
           <div>
-            <label class="input-label">{{ t('admin.ops.settings.ttftP99MaxMs') }}</label>
-            <input
+            <KumoLabel class="input-label">{{ t('admin.ops.settings.ttftP99MaxMs') }}</KumoLabel>
+            <KumoInput
               v-model.number="metricThresholds.ttft_p99_ms_max"
               type="number"
               min="0"
@@ -403,8 +405,8 @@ async function saveAllSettings() {
           </div>
 
           <div>
-            <label class="input-label">{{ t('admin.ops.settings.requestErrorRateMaxPercent') }}</label>
-            <input
+            <KumoLabel class="input-label">{{ t('admin.ops.settings.requestErrorRateMaxPercent') }}</KumoLabel>
+            <KumoInput
               v-model.number="metricThresholds.request_error_rate_percent_max"
               type="number"
               min="0"
@@ -416,8 +418,8 @@ async function saveAllSettings() {
           </div>
 
           <div>
-            <label class="input-label">{{ t('admin.ops.settings.upstreamErrorRateMaxPercent') }}</label>
-            <input
+            <KumoLabel class="input-label">{{ t('admin.ops.settings.upstreamErrorRateMaxPercent') }}</KumoLabel>
+            <KumoInput
               v-model.number="metricThresholds.upstream_error_rate_percent_max"
               type="number"
               min="0"
@@ -431,23 +433,24 @@ async function saveAllSettings() {
       </div>
 
       <!-- 高级设置 -->
-      <details class="rounded-2xl bg-gray-50 dark:bg-dark-700/50">
-        <summary class="cursor-pointer p-4 text-sm font-semibold text-gray-900 dark:text-white">
+      <KumoCollapsible class="rounded-2xl bg-gray-50 dark:bg-dark-700/50">
+            <KumoCollapsibleTrigger class="cursor-pointer p-4 text-sm font-semibold text-gray-900 dark:text-white">
           {{ t('admin.ops.settings.advancedSettings') }}
-        </summary>
+        </KumoCollapsibleTrigger>
+            <KumoCollapsiblePanel>
         <div class="space-y-4 px-4 pb-4">
           <!-- 数据保留策略 -->
           <div class="space-y-3">
             <h5 class="text-xs font-semibold text-gray-700 dark:text-gray-300">{{ t('admin.ops.settings.dataRetention') }}</h5>
 
             <div class="flex items-center justify-between">
-              <label class="text-sm font-medium text-gray-700 dark:text-gray-300">{{ t('admin.ops.settings.enableCleanup') }}</label>
+              <KumoLabel class="text-sm font-medium text-gray-700 dark:text-gray-300">{{ t('admin.ops.settings.enableCleanup') }}</KumoLabel>
               <Toggle v-model="advancedSettings.data_retention.cleanup_enabled" />
             </div>
 
             <div v-if="advancedSettings.data_retention.cleanup_enabled">
-              <label class="input-label">{{ t('admin.ops.settings.cleanupSchedule') }}</label>
-              <input
+              <KumoLabel class="input-label">{{ t('admin.ops.settings.cleanupSchedule') }}</KumoLabel>
+              <KumoInput
                 v-model="advancedSettings.data_retention.cleanup_schedule"
                 type="text"
                 class="input"
@@ -458,8 +461,8 @@ async function saveAllSettings() {
 
             <div class="grid grid-cols-1 gap-4 md:grid-cols-3">
               <div>
-                <label class="input-label">{{ t('admin.ops.settings.errorLogRetentionDays') }}</label>
-                <input
+                <KumoLabel class="input-label">{{ t('admin.ops.settings.errorLogRetentionDays') }}</KumoLabel>
+                <KumoInput
                   v-model.number="advancedSettings.data_retention.error_log_retention_days"
                   type="number"
                   min="0"
@@ -468,8 +471,8 @@ async function saveAllSettings() {
                 />
               </div>
               <div>
-                <label class="input-label">{{ t('admin.ops.settings.minuteMetricsRetentionDays') }}</label>
-                <input
+                <KumoLabel class="input-label">{{ t('admin.ops.settings.minuteMetricsRetentionDays') }}</KumoLabel>
+                <KumoInput
                   v-model.number="advancedSettings.data_retention.minute_metrics_retention_days"
                   type="number"
                   min="0"
@@ -478,8 +481,8 @@ async function saveAllSettings() {
                 />
               </div>
               <div>
-                <label class="input-label">{{ t('admin.ops.settings.hourlyMetricsRetentionDays') }}</label>
-                <input
+                <KumoLabel class="input-label">{{ t('admin.ops.settings.hourlyMetricsRetentionDays') }}</KumoLabel>
+                <KumoInput
                   v-model.number="advancedSettings.data_retention.hourly_metrics_retention_days"
                   type="number"
                   min="0"
@@ -497,7 +500,7 @@ async function saveAllSettings() {
 
             <div class="flex items-center justify-between">
               <div>
-                <label class="text-sm font-medium text-gray-700 dark:text-gray-300">{{ t('admin.ops.settings.enableAggregation') }}</label>
+                <KumoLabel class="text-sm font-medium text-gray-700 dark:text-gray-300">{{ t('admin.ops.settings.enableAggregation') }}</KumoLabel>
                 <p class="mt-1 text-xs text-gray-500">{{ t('admin.ops.settings.aggregationHint') }}</p>
               </div>
               <Toggle v-model="advancedSettings.aggregation.aggregation_enabled" />
@@ -511,8 +514,8 @@ async function saveAllSettings() {
 
             <div class="grid grid-cols-1 gap-4 md:grid-cols-2">
               <div>
-                <label class="input-label">{{ t('admin.ops.settings.openaiQuotaAutoPauseDefault5h') }}</label>
-                <input
+                <KumoLabel class="input-label">{{ t('admin.ops.settings.openaiQuotaAutoPauseDefault5h') }}</KumoLabel>
+                <KumoInput
                   v-model.number="quotaAutoPause5hPercent"
                   type="number"
                   min="0"
@@ -523,8 +526,8 @@ async function saveAllSettings() {
                 />
               </div>
               <div>
-                <label class="input-label">{{ t('admin.ops.settings.openaiQuotaAutoPauseDefault7d') }}</label>
-                <input
+                <KumoLabel class="input-label">{{ t('admin.ops.settings.openaiQuotaAutoPauseDefault7d') }}</KumoLabel>
+                <KumoInput
                   v-model.number="quotaAutoPause7dPercent"
                   type="number"
                   min="0"
@@ -544,7 +547,7 @@ async function saveAllSettings() {
 
             <div class="flex items-center justify-between">
               <div>
-                <label class="text-sm font-medium text-gray-700 dark:text-gray-300">{{ t('admin.ops.settings.ignoreCountTokensErrors') }}</label>
+                <KumoLabel class="text-sm font-medium text-gray-700 dark:text-gray-300">{{ t('admin.ops.settings.ignoreCountTokensErrors') }}</KumoLabel>
                 <p class="mt-1 text-xs text-gray-500">
                   {{ t('admin.ops.settings.ignoreCountTokensErrorsHint') }}
                 </p>
@@ -554,7 +557,7 @@ async function saveAllSettings() {
 
             <div class="flex items-center justify-between">
               <div>
-                <label class="text-sm font-medium text-gray-700 dark:text-gray-300">{{ t('admin.ops.settings.ignoreContextCanceled') }}</label>
+                <KumoLabel class="text-sm font-medium text-gray-700 dark:text-gray-300">{{ t('admin.ops.settings.ignoreContextCanceled') }}</KumoLabel>
                 <p class="mt-1 text-xs text-gray-500">
                   {{ t('admin.ops.settings.ignoreContextCanceledHint') }}
                 </p>
@@ -564,7 +567,7 @@ async function saveAllSettings() {
 
             <div class="flex items-center justify-between">
               <div>
-                <label class="text-sm font-medium text-gray-700 dark:text-gray-300">{{ t('admin.ops.settings.ignoreNoAvailableAccounts') }}</label>
+                <KumoLabel class="text-sm font-medium text-gray-700 dark:text-gray-300">{{ t('admin.ops.settings.ignoreNoAvailableAccounts') }}</KumoLabel>
                 <p class="mt-1 text-xs text-gray-500">
                   {{ t('admin.ops.settings.ignoreNoAvailableAccountsHint') }}
                 </p>
@@ -574,7 +577,7 @@ async function saveAllSettings() {
 
             <div class="flex items-center justify-between">
               <div>
-                <label class="text-sm font-medium text-gray-700 dark:text-gray-300">{{ t('admin.ops.settings.ignoreInsufficientBalanceErrors') }}</label>
+                <KumoLabel class="text-sm font-medium text-gray-700 dark:text-gray-300">{{ t('admin.ops.settings.ignoreInsufficientBalanceErrors') }}</KumoLabel>
                 <p class="mt-1 text-xs text-gray-500">
                   {{ t('admin.ops.settings.ignoreInsufficientBalanceErrorsHint') }}
                 </p>
@@ -589,7 +592,7 @@ async function saveAllSettings() {
 
             <div class="flex items-center justify-between">
               <div>
-                <label class="text-sm font-medium text-gray-700 dark:text-gray-300">{{ t('admin.ops.settings.enableAutoRefresh') }}</label>
+                <KumoLabel class="text-sm font-medium text-gray-700 dark:text-gray-300">{{ t('admin.ops.settings.enableAutoRefresh') }}</KumoLabel>
                 <p class="mt-1 text-xs text-gray-500">
                   {{ t('admin.ops.settings.enableAutoRefreshHint') }}
                 </p>
@@ -598,7 +601,7 @@ async function saveAllSettings() {
             </div>
 
             <div v-if="advancedSettings.auto_refresh_enabled">
-              <label class="input-label">{{ t('admin.ops.settings.refreshInterval') }}</label>
+              <KumoLabel class="input-label">{{ t('admin.ops.settings.refreshInterval') }}</KumoLabel>
               <Select
                 v-model="advancedSettings.auto_refresh_interval_seconds"
                 :options="[
@@ -616,7 +619,7 @@ async function saveAllSettings() {
 
             <div class="flex items-center justify-between">
               <div>
-                <label class="text-sm font-medium text-gray-700 dark:text-gray-300">{{ t('admin.ops.settings.displayAlertEvents') }}</label>
+                <KumoLabel class="text-sm font-medium text-gray-700 dark:text-gray-300">{{ t('admin.ops.settings.displayAlertEvents') }}</KumoLabel>
                 <p class="mt-1 text-xs text-gray-500">
                   {{ t('admin.ops.settings.displayAlertEventsHint') }}
                 </p>
@@ -626,7 +629,7 @@ async function saveAllSettings() {
 
             <div class="flex items-center justify-between">
               <div>
-                <label class="text-sm font-medium text-gray-700 dark:text-gray-300">{{ t('admin.ops.settings.displayOpenAITokenStats') }}</label>
+                <KumoLabel class="text-sm font-medium text-gray-700 dark:text-gray-300">{{ t('admin.ops.settings.displayOpenAITokenStats') }}</KumoLabel>
                 <p class="mt-1 text-xs text-gray-500">
                   {{ t('admin.ops.settings.displayOpenAITokenStatsHint') }}
                 </p>
@@ -635,15 +638,16 @@ async function saveAllSettings() {
             </div>
           </div>
         </div>
-      </details>
+      </KumoCollapsiblePanel>
+          </KumoCollapsible>
     </div>
 
     <template #footer>
       <div class="flex justify-end gap-2">
-        <button class="btn btn-secondary" @click="emit('close')">{{ t('common.cancel') }}</button>
-        <button class="btn btn-primary" :disabled="saving || !validation.valid" @click="saveAllSettings">
+        <KumoButton class="btn btn-secondary" @click="emit('close')">{{ t('common.cancel') }}</KumoButton>
+        <KumoButton class="btn btn-primary" :disabled="saving || !validation.valid" @click="saveAllSettings">
           {{ saving ? t('common.saving') : t('common.save') }}
-        </button>
+        </KumoButton>
       </div>
     </template>
   </BaseDialog>

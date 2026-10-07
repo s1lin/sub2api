@@ -1,5 +1,6 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
-import { enableAutoUnmount, flushPromises, mount, type VueWrapper } from '@vue/test-utils'
+import { mount, flushPromises } from '@/__tests__/render'
+import { enableAutoUnmount, type VueWrapper } from '@vue/test-utils'
 import ProfileBalanceNotifyCard from '../ProfileBalanceNotifyCard.vue'
 
 const { sendNotifyEmailCode, verifyNotifyEmail, getProfile } = vi.hoisted(() => ({
@@ -33,7 +34,7 @@ const button = (wrapper: VueWrapper, text: string) =>
 
 describe('ProfileBalanceNotifyCard', () => {
   beforeEach(() => {
-    vi.useFakeTimers()
+    vi.useFakeTimers({ toFake: ['Date', 'setTimeout', 'clearTimeout', 'setInterval', 'clearInterval'] })
     vi.resetAllMocks()
     sendNotifyEmailCode.mockResolvedValue({})
     getProfile.mockResolvedValue({ balance_notify_extra_emails: [] })

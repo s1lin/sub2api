@@ -13,16 +13,16 @@
       <div class="divide-y divide-gray-200 border-y border-gray-200 dark:divide-dark-700 dark:border-dark-700">
         <div class="space-y-3 py-4">
           <div class="flex items-center justify-between gap-4">
-            <label for="bulk-concurrency" class="input-label mb-0">
+            <KumoLabel for="bulk-concurrency" class="input-label mb-0">
               {{ t('admin.users.columns.concurrency') }}
-            </label>
+            </KumoLabel>
             <Toggle
               v-model="enableConcurrency"
               :aria-label="t('admin.users.bulkLimits.enableConcurrency')"
               data-test="enable-concurrency"
             />
           </div>
-          <input
+          <KumoInput
             v-if="enableConcurrency"
             id="bulk-concurrency"
             v-model="concurrencyValue"
@@ -36,9 +36,9 @@
 
         <div class="space-y-3 py-4">
           <div class="flex items-center justify-between gap-4">
-            <label for="bulk-rpm-limit" class="input-label mb-0">
+            <KumoLabel for="bulk-rpm-limit" class="input-label mb-0">
               {{ t('admin.users.form.rpmLimit') }}
-            </label>
+            </KumoLabel>
             <Toggle
               v-model="enableRPMLimit"
               :aria-label="t('admin.users.bulkLimits.enableRPMLimit')"
@@ -46,7 +46,7 @@
             />
           </div>
           <div v-if="enableRPMLimit">
-            <input
+            <KumoInput
               id="bulk-rpm-limit"
               v-model="rpmLimitValue"
               type="number"
@@ -72,10 +72,10 @@
 
     <template #footer>
       <div class="flex justify-end gap-3">
-        <button type="button" class="btn btn-secondary" @click="emit('close')">
+        <KumoButton type="button" class="btn btn-secondary" @click="emit('close')">
           {{ t('common.cancel') }}
-        </button>
-        <button
+        </KumoButton>
+        <KumoButton
           type="submit"
           form="bulk-edit-user-limits-form"
           class="btn btn-primary"
@@ -83,13 +83,15 @@
           data-test="submit"
         >
           {{ submitting ? t('admin.users.bulkLimits.applying') : t('admin.users.bulkLimits.apply') }}
-        </button>
+        </KumoButton>
       </div>
     </template>
   </BaseDialog>
 </template>
 
 <script setup lang="ts">
+import { KumoButton, KumoInput, KumoLabel } from '@/components/kumo'
+
 import { computed, ref, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { adminAPI } from '@/api/admin'

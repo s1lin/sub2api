@@ -1,4 +1,4 @@
-import { mount } from '@vue/test-utils'
+import { mount } from '@/__tests__/render'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 import TimePricingSection from '../TimePricingSection.vue'
 import { createDefaultTimePricingForm } from '../types'
@@ -70,7 +70,7 @@ describe('TimePricingSection', () => {
     })
 
     const removeButton = wrapper.get('[data-testid="remove-time-period-0"]')
-    expect(removeButton.attributes('title')).toBe('admin.channels.form.removeTimePeriod')
+    expect(removeButton.attributes('aria-label')).toBe('admin.channels.form.removeTimePeriod')
     expect(removeButton.attributes('aria-label')).toBe('admin.channels.form.removeTimePeriod')
     await removeButton.trigger('click')
 

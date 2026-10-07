@@ -1,5 +1,5 @@
 <template>
-  <div class="card">
+  <KumoSurface class="card">
     <div class="border-b border-gray-100 px-6 py-4 dark:border-dark-700">
       <h2 class="text-lg font-medium text-gray-900 dark:text-white">
         {{ t('profile.totp.title') }}
@@ -11,7 +11,7 @@
     <div class="px-6 py-6">
       <!-- Loading state -->
       <div v-if="loading" class="flex items-center justify-center py-8">
-        <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-primary-500"></div>
+        <KumoLoader class="h-8 w-8" />
       </div>
 
       <!-- Feature disabled globally -->
@@ -48,13 +48,13 @@
             </p>
           </div>
         </div>
-        <button
+        <KumoButton
           type="button"
           class="btn btn-outline-danger"
           @click="showDisableDialog = true"
         >
           {{ t('profile.totp.disable') }}
-        </button>
+        </KumoButton>
       </div>
 
       <!-- 2FA Not Enabled -->
@@ -74,13 +74,13 @@
             </p>
           </div>
         </div>
-        <button
+        <KumoButton
           type="button"
           class="btn btn-primary"
           @click="showSetupModal = true"
         >
           {{ t('profile.totp.enable') }}
-        </button>
+        </KumoButton>
       </div>
     </div>
 
@@ -97,10 +97,12 @@
       @close="showDisableDialog = false"
       @success="handleDisableSuccess"
     />
-  </div>
+  </KumoSurface>
 </template>
 
 <script setup lang="ts">
+import { KumoButton, KumoLoader, KumoSurface } from '@/components/kumo'
+
 import { ref, onMounted } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { totpAPI } from '@/api'

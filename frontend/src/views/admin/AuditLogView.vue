@@ -3,19 +3,19 @@
     <TablePageLayout>
       <!-- Filters -->
       <template #filters>
-        <div class="card p-4 sm:p-6">
+        <KumoSurface class="card p-4 sm:p-6">
           <div class="flex flex-wrap items-end justify-between gap-4">
             <!-- Left: filter fields -->
             <div class="flex flex-1 flex-wrap items-end gap-4">
               <div class="w-full sm:w-auto sm:min-w-[240px]">
-                <label class="input-label">{{ t('admin.audit.filters.q') }}</label>
+                <KumoLabel class="input-label">{{ t('admin.audit.filters.q') }}</KumoLabel>
                 <div class="relative">
                   <Icon
                     name="search"
                     size="md"
                     class="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"
                   />
-                  <input
+                  <KumoInput
                     v-model.trim="filters.q"
                     type="text"
                     class="input pl-10"
@@ -26,37 +26,37 @@
               </div>
 
               <div class="w-full sm:w-auto sm:min-w-[200px]">
-                <label class="input-label">{{ t('admin.audit.filters.actorEmail') }}</label>
-                <input v-model.trim="filters.actor_email" type="text" class="input" @keyup.enter="search" />
+                <KumoLabel class="input-label">{{ t('admin.audit.filters.actorEmail') }}</KumoLabel>
+                <KumoInput v-model.trim="filters.actor_email" type="text" class="input" @keyup.enter="search" />
               </div>
 
               <div class="w-full sm:w-auto sm:min-w-[180px]">
-                <label class="input-label">{{ t('admin.audit.filters.action') }}</label>
-                <input v-model.trim="filters.action" type="text" class="input" @keyup.enter="search" />
+                <KumoLabel class="input-label">{{ t('admin.audit.filters.action') }}</KumoLabel>
+                <KumoInput v-model.trim="filters.action" type="text" class="input" @keyup.enter="search" />
               </div>
 
               <div class="w-full sm:w-auto sm:min-w-[160px]">
-                <label class="input-label">{{ t('admin.audit.filters.clientIp') }}</label>
-                <input v-model.trim="filters.client_ip" type="text" class="input" @keyup.enter="search" />
+                <KumoLabel class="input-label">{{ t('admin.audit.filters.clientIp') }}</KumoLabel>
+                <KumoInput v-model.trim="filters.client_ip" type="text" class="input" @keyup.enter="search" />
               </div>
 
               <div class="w-full sm:w-auto sm:min-w-[140px]">
-                <label class="input-label">{{ t('admin.audit.filters.method') }}</label>
+                <KumoLabel class="input-label">{{ t('admin.audit.filters.method') }}</KumoLabel>
                 <Select v-model="filters.method" :options="methodOptions" @change="search" />
               </div>
 
               <div class="w-full sm:w-auto sm:min-w-[170px]">
-                <label class="input-label">{{ t('admin.audit.filters.authMethod') }}</label>
+                <KumoLabel class="input-label">{{ t('admin.audit.filters.authMethod') }}</KumoLabel>
                 <Select v-model="filters.auth_method" :options="authMethodOptions" @change="search" />
               </div>
 
               <div class="w-full sm:w-auto sm:min-w-[140px]">
-                <label class="input-label">{{ t('admin.audit.filters.result') }}</label>
+                <KumoLabel class="input-label">{{ t('admin.audit.filters.result') }}</KumoLabel>
                 <Select v-model="filters.success" :options="resultOptions" @change="search" />
               </div>
 
               <div class="w-full sm:w-auto sm:min-w-[170px]">
-                <label class="input-label">{{ t('admin.dashboard.timeRange') }}</label>
+                <KumoLabel class="input-label">{{ t('admin.dashboard.timeRange') }}</KumoLabel>
                 <Select
                   :model-value="timeRange"
                   :options="timeRangeOptions"
@@ -67,19 +67,19 @@
 
             <!-- Right: actions -->
             <div class="flex w-full flex-wrap items-center justify-end gap-3 sm:w-auto">
-              <button type="button" class="btn btn-primary" :disabled="loading" @click="search">
+              <KumoButton type="button" class="btn btn-primary" :disabled="loading" @click="search">
                 {{ t('common.search') }}
-              </button>
-              <button type="button" class="btn btn-secondary" :disabled="loading" @click="resetFilters">
+              </KumoButton>
+              <KumoButton type="button" class="btn btn-secondary" :disabled="loading" @click="resetFilters">
                 {{ t('common.reset') }}
-              </button>
-              <button type="button" class="btn btn-danger" @click="openClearDialog">
+              </KumoButton>
+              <KumoButton type="button" class="btn btn-danger" @click="openClearDialog">
                 <Icon name="trash" size="sm" class="mr-1.5" />
                 {{ t('admin.audit.clearAll') }}
-              </button>
+              </KumoButton>
             </div>
           </div>
-        </div>
+        </KumoSurface>
       </template>
 
       <!-- Table -->
@@ -127,14 +127,14 @@
           </template>
 
           <template #cell-actions="{ row }">
-            <button
+            <KumoButton
               type="button"
               class="inline-flex items-center gap-1 font-medium text-primary-600 transition-colors hover:text-primary-700 dark:text-primary-400 dark:hover:text-primary-300"
               @click="openDetail(row.id)"
             >
               <Icon name="eye" size="sm" />
               {{ t('admin.audit.columns.detail') }}
-            </button>
+            </KumoButton>
           </template>
 
           <template #empty>
@@ -169,7 +169,7 @@
     >
       <div v-if="detailLoading" class="flex items-center justify-center py-16">
         <div class="flex flex-col items-center gap-3">
-          <div class="h-8 w-8 animate-spin rounded-full border-b-2 border-primary-600"></div>
+          <KumoLoader class="h-8 w-8" />
           <div class="text-sm font-medium text-gray-500 dark:text-gray-400">{{ t('common.loading') }}</div>
         </div>
       </div>
@@ -278,26 +278,26 @@
     >
       <div class="space-y-4 py-2">
         <div>
-          <label class="input-label">{{ t('admin.ops.customTimeRange.startTime') }}</label>
-          <input v-model="customStartTimeInput" type="datetime-local" class="input" />
+          <KumoLabel class="input-label">{{ t('admin.ops.customTimeRange.startTime') }}</KumoLabel>
+          <KumoInput v-model="customStartTimeInput" type="datetime-local" class="input" />
         </div>
         <div>
-          <label class="input-label">{{ t('admin.ops.customTimeRange.endTime') }}</label>
-          <input v-model="customEndTimeInput" type="datetime-local" class="input" />
+          <KumoLabel class="input-label">{{ t('admin.ops.customTimeRange.endTime') }}</KumoLabel>
+          <KumoInput v-model="customEndTimeInput" type="datetime-local" class="input" />
         </div>
       </div>
       <template #footer>
-        <button type="button" class="btn btn-secondary" @click="handleCustomTimeRangeCancel">
+        <KumoButton type="button" class="btn btn-secondary" @click="handleCustomTimeRangeCancel">
           {{ t('common.cancel') }}
-        </button>
-        <button
+        </KumoButton>
+        <KumoButton
           type="button"
           class="btn btn-primary"
           :disabled="!customStartTimeInput || !customEndTimeInput"
           @click="handleCustomTimeRangeConfirm"
         >
           {{ t('common.confirm') }}
-        </button>
+        </KumoButton>
       </template>
     </BaseDialog>
 
@@ -323,7 +323,7 @@
     >
       <div class="py-2">
         <p class="text-sm text-gray-500 dark:text-gray-400">{{ t('admin.audit.clearConfirm.totpHint') }}</p>
-        <input
+        <KumoInput
           v-model.trim="clearTotpCode"
           type="text"
           inputmode="numeric"
@@ -335,23 +335,25 @@
         />
       </div>
       <template #footer>
-        <button type="button" class="btn btn-secondary" :disabled="clearing" @click="cancelClearTotp">
+        <KumoButton type="button" class="btn btn-secondary" :disabled="clearing" @click="cancelClearTotp">
           {{ t('common.cancel') }}
-        </button>
-        <button
+        </KumoButton>
+        <KumoButton
           type="button"
           class="btn btn-danger"
           :disabled="clearing || clearTotpCode.length !== 6"
           @click="submitClear"
         >
           {{ clearing ? t('common.loading') : t('admin.audit.clearAll') }}
-        </button>
+        </KumoButton>
       </template>
     </BaseDialog>
   </AppLayout>
 </template>
 
 <script setup lang="ts">
+import { KumoButton, KumoInput, KumoLabel, KumoLoader, KumoSurface } from '@/components/kumo'
+
 import { computed, onMounted, reactive, ref } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { adminAPI, type AuditLog } from '@/api/admin'

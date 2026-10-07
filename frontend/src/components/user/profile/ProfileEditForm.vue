@@ -16,10 +16,10 @@
           </p>
         </div>
         <div>
-          <label for="username" class="input-label">
+          <KumoLabel for="username" class="input-label">
             {{ t('profile.username') }}
-          </label>
-          <input
+          </KumoLabel>
+          <KumoInput
             id="username"
             v-model="username"
             type="text"
@@ -29,9 +29,9 @@
         </div>
 
         <div class="flex justify-end pt-4">
-          <button type="submit" :disabled="loading" class="btn btn-primary">
+          <KumoButton type="submit" :disabled="loading" class="btn btn-primary">
             {{ loading ? t('profile.updating') : t('profile.updateProfile') }}
-          </button>
+          </KumoButton>
         </div>
       </form>
     </div>
@@ -39,6 +39,8 @@
 </template>
 
 <script setup lang="ts">
+import { KumoButton, KumoInput, KumoLabel } from '@/components/kumo'
+
 import { ref, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useAuthStore } from '@/stores/auth'

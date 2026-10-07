@@ -13,7 +13,10 @@ vi.mock('@/utils/ipGeoLookup', () => ipGeoMocks)
 vi.mock('@/stores/app', () => ({ useAppStore: () => appStoreMocks }))
 
 import { describe, expect, it, vi, beforeEach } from 'vitest'
-import { mount } from '@vue/test-utils'
+import { mount, portal, showTooltip } from '@/__tests__/render'
+import { enableAutoUnmount } from '@vue/test-utils'
+import { afterEach } from 'vitest'
+enableAutoUnmount(afterEach)
 import { nextTick } from 'vue'
 
 import UsageTable from '../UsageTable.vue'
@@ -144,7 +147,7 @@ describe('admin UsageTable tooltip', () => {
   })
 
   it('marks only usage rows that actually applied long-context billing', () => {
-    const wrapper = mount(UsageTable, {
+    const wrapper = mount(UsageTable, { attachTo: document.body,
       props: {
         data: [
           {
@@ -186,7 +189,7 @@ describe('admin UsageTable tooltip', () => {
         </div>
       `,
     }
-    const wrapper = mount(UsageTable, {
+    const wrapper = mount(UsageTable, { attachTo: document.body,
       props: {
         data: [
           {
@@ -241,7 +244,7 @@ describe('admin UsageTable tooltip', () => {
       output_tokens: 101,
     }
 
-    const wrapper = mount(UsageTable, {
+    const wrapper = mount(UsageTable, { attachTo: document.body,
       props: {
         data: [row],
         loading: false,
@@ -257,11 +260,10 @@ describe('admin UsageTable tooltip', () => {
       },
     })
 
-    const tooltipTriggers = wrapper.findAll('.group.relative')
-    await tooltipTriggers[tooltipTriggers.length - 1].trigger('mouseenter')
+    await showTooltip(wrapper.get('button[aria-label="Cost Breakdown"]'))
     await nextTick()
 
-    const text = wrapper.text()
+    const text = portal().text()
     expect(text).toContain('Service tier')
     expect(text).toContain('Fast')
     expect(text).toContain('Rate')
@@ -291,13 +293,12 @@ describe('admin UsageTable tooltip', () => {
       account_stats_cost: 0.00000012,
       account_rate_multiplier: 1.5,
     }
-    const wrapper = mount(UsageTable, {
+    const wrapper = mount(UsageTable, { attachTo: document.body,
       props: { data: [row], loading: false, columns: [] },
       global: { stubs: { DataTable: DataTableStub, EmptyState: true, Icon: true, Teleport: true } },
     })
-    const triggers = wrapper.findAll('.group.relative')
-    await triggers[triggers.length - 1].trigger('mouseenter')
-    const amounts = wrapper.get('.fixed').findAll('span').map(span => span.text())
+    await showTooltip(wrapper.get('button[aria-label="Cost Breakdown"]'))
+    const amounts = portal().get('[role=tooltip]').findAll('span').map(span => span.text())
     expect(amounts).toEqual(expect.arrayContaining([
       '$0.00000001', '$0.00000002', '$0.00000003', '$0.00000004',
       '$0.00000005', '$0.00000006', '$0.00000022', '$0.00000042', '$0.00000018',
@@ -307,7 +308,7 @@ describe('admin UsageTable tooltip', () => {
   })
 
   it('uses eight decimal places for missing cost values', async () => {
-    const wrapper = mount(UsageTable, {
+    const wrapper = mount(UsageTable, { attachTo: document.body,
       props: {
         data: [{ ...baseImageRow, billing_mode: 'per_request', image_count: 0, total_cost: undefined, actual_cost: undefined }],
         loading: false,
@@ -315,9 +316,8 @@ describe('admin UsageTable tooltip', () => {
       },
       global: { stubs: { DataTable: DataTableStub, EmptyState: true, Icon: true, Teleport: true } },
     })
-    const triggers = wrapper.findAll('.group.relative')
-    await triggers[triggers.length - 1].trigger('mouseenter')
-    const amounts = wrapper.get('.fixed').findAll('span').map(span => span.text()).filter(text => text.startsWith('$'))
+    await showTooltip(wrapper.get('button[aria-label="Cost Breakdown"]'))
+    const amounts = portal().get('[role=tooltip]').findAll('span').map(span => span.text()).filter(text => text.startsWith('$'))
     expect(amounts).toEqual(['$0.00000000', '$0.00000000', '$0.00000000', '$0.00000000'])
     wrapper.unmount()
   })
@@ -339,7 +339,7 @@ describe('admin UsageTable tooltip', () => {
       output_tokens: 0,
     }
 
-    const wrapper = mount(UsageTable, {
+    const wrapper = mount(UsageTable, { attachTo: document.body,
       props: {
         data: [row],
         loading: false,
@@ -355,13 +355,13 @@ describe('admin UsageTable tooltip', () => {
       },
     })
 
-    const text = wrapper.text()
+    const text = portal().text()
     expect(text).toContain('claude-sonnet-4')
     expect(text).toContain('claude-sonnet-4-20250514')
   })
 
   it('shows requested and forwarded reasoning effort separately when they differ', () => {
-    const wrapper = mount(UsageTable, {
+    const wrapper = mount(UsageTable, { attachTo: document.body,
       props: {
         data: [{
           request_id: 'req-admin-effort-1',
@@ -382,14 +382,14 @@ describe('admin UsageTable tooltip', () => {
       },
     })
 
-    const text = wrapper.text()
+    const text = portal().text()
     expect(text).toContain('Max')
     expect(text).toContain('XHigh')
     expect(text).toContain('↳')
   })
 
   it('shows a single reasoning effort when requested matches forwarded', () => {
-    const wrapper = mount(UsageTable, {
+    const wrapper = mount(UsageTable, { attachTo: document.body,
       props: {
         data: [{
           request_id: 'req-admin-effort-2',
@@ -409,13 +409,13 @@ describe('admin UsageTable tooltip', () => {
       },
     })
 
-    const text = wrapper.text()
+    const text = portal().text()
     expect(text).toContain('Max')
     expect(text).not.toContain('↳')
   })
 
   it('hides mapped reasoning effort for user rows that only have the requested value', () => {
-    const wrapper = mount(UsageTable, {
+    const wrapper = mount(UsageTable, { attachTo: document.body,
       props: {
         data: [{
           request_id: 'req-user-effort-1',
@@ -452,7 +452,7 @@ describe('admin UsageTable tooltip', () => {
 			expectedBadge: 'Different model',
 		},
 	])('shows a compact upstream response audit marker for $name', ({ responseModel, expectedBadge }) => {
-		const wrapper = mount(UsageTable, {
+		const wrapper = mount(UsageTable, { attachTo: document.body,
 			props: {
 				data: [{
 					request_id: `req-${responseModel}`,
@@ -475,7 +475,7 @@ describe('admin UsageTable tooltip', () => {
 			},
 		})
 
-		const text = wrapper.text()
+		const text = portal().text()
 		expect(text).toContain('gpt-5.6-sol')
 		expect(text).toContain('gpt-5.5')
 		expect(text).toContain(responseModel)
@@ -533,7 +533,7 @@ describe('admin UsageTable tooltip', () => {
       expected: ['legacy unstandardized: 512x512', 'Legacy record', 'unknown'],
     },
   ])('shows image usage metadata for $name', async ({ row, expected }) => {
-    const wrapper = mount(UsageTable, {
+    const wrapper = mount(UsageTable, { attachTo: document.body,
       props: {
         data: [row],
         loading: false,
@@ -549,10 +549,10 @@ describe('admin UsageTable tooltip', () => {
       },
     })
 
-    await wrapper.find('.group.relative').trigger('mouseenter')
+    await showTooltip(wrapper.get('button[aria-label="Cost Breakdown"]'))
     await nextTick()
 
-    const text = wrapper.text()
+    const text = portal().text()
     expect(text).toContain('Image count')
     expect(text).toContain('Billing size')
     expect(text).toContain('Size source')
@@ -566,7 +566,7 @@ describe('admin UsageTable tooltip', () => {
   })
 
   it('displays historical image rows with missing billing_mode as image usage without a 2K fallback', async () => {
-    const wrapper = mount(UsageTable, {
+    const wrapper = mount(UsageTable, { attachTo: document.body,
       props: {
         data: [
           {
@@ -593,10 +593,10 @@ describe('admin UsageTable tooltip', () => {
       },
     })
 
-    await wrapper.find('.group.relative').trigger('mouseenter')
+    await showTooltip(wrapper.get('button[aria-label="Cost Breakdown"]'))
     await nextTick()
 
-    const text = wrapper.text()
+    const text = portal().text()
     expect(text).toContain('Image')
     expect(text).toContain('Image count')
     expect(text).toContain('Per-image price')
@@ -615,7 +615,7 @@ describe('admin UsageTable request ID column', () => {
     const writeText = vi.fn().mockResolvedValue(undefined)
     vi.stubGlobal('navigator', { clipboard: { writeText } })
 
-    const wrapper = mount(UsageTable, {
+    const wrapper = mount(UsageTable, { attachTo: document.body,
       props: {
         data: [{ ...baseImageRow, request_id: 'req-admin-visible-id' }],
         loading: false,
@@ -632,7 +632,7 @@ describe('admin UsageTable request ID column', () => {
     })
 
     expect(wrapper.text()).toContain('req-admin-visible-id')
-    await wrapper.get('button[title="Copy to clipboard"]').trigger('click')
+    await wrapper.get('button[aria-label="Copy to clipboard"]').trigger('click')
 
     expect(writeText).toHaveBeenCalledWith('req-admin-visible-id')
     expect(appStoreMocks.showSuccess).toHaveBeenCalledWith('Request ID copied')
@@ -642,7 +642,7 @@ describe('admin UsageTable request ID column', () => {
     const writeText = vi.fn().mockResolvedValue(undefined)
     vi.stubGlobal('navigator', { clipboard: { writeText } })
 
-    const wrapper = mount(UsageTable, {
+    const wrapper = mount(UsageTable, { attachTo: document.body,
       props: {
         data: [{ ...baseImageRow, request_id: '', upstream_request_id: '20260903082826779695' }],
         loading: false,
@@ -659,7 +659,7 @@ describe('admin UsageTable request ID column', () => {
     })
 
     expect(wrapper.text()).toContain('20260903082826779695')
-    const copyButtons = wrapper.findAll('button[title="Copy to clipboard"]')
+    const copyButtons = wrapper.findAll('button[aria-label="Copy to clipboard"]')
     expect(copyButtons).toHaveLength(1)
     await copyButtons[0].trigger('click')
 
@@ -688,7 +688,7 @@ describe('admin UsageTable IP geolocation batch toolbar', () => {
   })
 
   it('does not render the batch toolbar when the ip_address column is not visible', () => {
-    const wrapper = mount(UsageTable, {
+    const wrapper = mount(UsageTable, { attachTo: document.body,
       props: {
         data: [{ request_id: 'r1', ip_address: '8.8.8.8' }],
         loading: false,
@@ -700,7 +700,7 @@ describe('admin UsageTable IP geolocation batch toolbar', () => {
   })
 
   it('renders the batch toolbar with a pending count when the ip_address column is visible', () => {
-    const wrapper = mount(UsageTable, {
+    const wrapper = mount(UsageTable, { attachTo: document.body,
       props: {
         data: [
           { request_id: 'r1', ip_address: '8.8.8.8' },
@@ -720,7 +720,7 @@ describe('admin UsageTable IP geolocation batch toolbar', () => {
 
   it('fetches deduplicated IPs from the current page when the batch button is clicked', async () => {
     ipGeoMocks.fetchBatch.mockResolvedValue(true)
-    const wrapper = mount(UsageTable, {
+    const wrapper = mount(UsageTable, { attachTo: document.body,
       props: {
         data: [
           { request_id: 'r1', ip_address: '8.8.8.8' },
@@ -739,7 +739,7 @@ describe('admin UsageTable IP geolocation batch toolbar', () => {
 
   it('emits ipGeoBatchFailed when the batch request reports a network-level failure', async () => {
     ipGeoMocks.fetchBatch.mockResolvedValue(false)
-    const wrapper = mount(UsageTable, {
+    const wrapper = mount(UsageTable, { attachTo: document.body,
       props: {
         data: [{ request_id: 'r1', ip_address: '8.8.8.8' }],
         loading: false,
@@ -753,7 +753,7 @@ describe('admin UsageTable IP geolocation batch toolbar', () => {
 
   it('renders IpGeoCell content for ip_address cells', () => {
     ipGeoMocks.getEntry.mockReturnValue({ status: 'success', label: 'CN · Guangdong · Shenzhen', detail: {} })
-    const wrapper = mount(UsageTable, {
+    const wrapper = mount(UsageTable, { attachTo: document.body,
       props: {
         data: [{ request_id: 'r1', ip_address: '121.35.47.43' }],
         loading: false,
@@ -799,7 +799,7 @@ describe('admin UsageTable deleted-user badge', () => {
       output_tokens: 1,
     }
 
-    const wrapper = mount(UsageTable, {
+    const wrapper = mount(UsageTable, { attachTo: document.body,
       props: {
         data: [row],
         loading: false,
@@ -834,7 +834,7 @@ describe('admin UsageTable deleted-user badge', () => {
       output_tokens: 1,
     }
 
-    const wrapper = mount(UsageTable, {
+    const wrapper = mount(UsageTable, { attachTo: document.body,
       props: {
         data: [row],
         loading: false,

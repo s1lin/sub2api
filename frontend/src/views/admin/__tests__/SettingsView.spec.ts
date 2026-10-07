@@ -1,6 +1,10 @@
+import { enableAutoUnmount } from '@vue/test-utils'
+import { afterEach } from 'vitest'
+enableAutoUnmount(afterEach)
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { defineComponent, h } from "vue";
-import { flushPromises, mount } from "@vue/test-utils";
+import { flushPromises, mount, selectOption } from '@/__tests__/render'
+
 
 import enCommon from "@/i18n/locales/en/common";
 import enSettings from "@/i18n/locales/en/admin/settings";
@@ -550,7 +554,7 @@ const baseSettingsResponse = {
 function mountView() {
   return mount(SettingsView, {
     global: {
-      stubs: {
+      stubs: { KumoSurface: { template: '<div><slot /></div>' },
         AppLayout: AppLayoutStub,
         Select: SelectStub,
         Toggle: ToggleStub,
@@ -1352,7 +1356,7 @@ describe("admin SettingsView payment visible method controls", () => {
 
     const wrapper = mount(SettingsView, {
       global: {
-        stubs: {
+        stubs: { KumoSurface: { template: '<div><slot /></div>' },
           AppLayout: AppLayoutStub,
           Select: SelectStub,
           Toggle: ToggleStub,
@@ -1500,7 +1504,7 @@ describe("admin SettingsView payment visible method controls", () => {
     const modeSelect = wrapper.get('[data-testid="openai-ttft-mode"]');
     expect((modeSelect.element as HTMLSelectElement).value).toBe("visible");
 
-    await modeSelect.setValue("semantic");
+    await selectOption(modeSelect, 'admin.settings.gatewayForwarding.openaiTTFTModeSemantic');
     await wrapper.find("form").trigger("submit.prevent");
     await flushPromises();
 
@@ -1698,7 +1702,7 @@ describe("admin SettingsView payment visible method controls", () => {
 
     const wrapper = mount(SettingsView, {
       global: {
-        stubs: {
+        stubs: { KumoSurface: { template: '<div><slot /></div>' },
           AppLayout: AppLayoutStub,
           Select: SelectStub,
           Toggle: ToggleStub,
@@ -1893,6 +1897,7 @@ describe("admin SettingsView wechat connect controls", () => {
     await wrapper.find("form").trigger("submit.prevent");
     await flushPromises();
 
+    await vi.waitFor(async () => { await flushPromises(); expect((wrapper.get('[data-testid="wechat-connect-mp-app-secret"]').element as HTMLInputElement).value).toBe('') }, { timeout: 2000 });
     expect(updateSettings).toHaveBeenCalledTimes(1);
     expect(updateSettings).toHaveBeenCalledWith(
       expect.objectContaining({

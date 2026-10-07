@@ -1,5 +1,6 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest'
-import { flushPromises, mount } from '@vue/test-utils'
+import { mount, flushPromises } from '@/__tests__/render'
+
 import OpenAIQuotaResetCell from '../OpenAIQuotaResetCell.vue'
 import ConfirmDialog from '@/components/common/ConfirmDialog.vue'
 import type { Account } from '@/types'
@@ -98,7 +99,7 @@ describe('OpenAIQuotaResetCell — Codex 点数', () => {
       extra: { codex_credits_snapshot: { credits: balance, fetched_at: 1770000000 } },
     }) } })
     expect(points(wrapper).text()).toContain(balance.balance)
-    expect(points(wrapper).attributes('title')).toContain('admin.accounts.openaiQuotaReset.pointsUpdatedAt:')
+    expect(points(wrapper).attributes('aria-label')).toContain('admin.accounts.openaiQuotaReset.pointsUpdatedAt:')
     expect(refreshOpenAIQuota).not.toHaveBeenCalled()
     expect(resetButton(wrapper).attributes('disabled')).toBeDefined()
     wrapper.unmount()
@@ -156,7 +157,7 @@ describe('OpenAIQuotaResetCell — 外审 F6:影子禁用重置', () => {
 
     const btn = resetButton(wrapper)
     expect(btn.attributes('disabled')).toBeDefined()
-    expect(btn.attributes('title')).toBe('admin.accounts.openaiQuotaReset.resetTooltipShadow')
+    expect(btn.attributes('aria-label')).toBe('admin.accounts.openaiQuotaReset.resetTooltipShadow')
     wrapper.unmount()
   })
 
@@ -166,7 +167,7 @@ describe('OpenAIQuotaResetCell — 外审 F6:影子禁用重置', () => {
 
     const btn = resetButton(wrapper)
     // 未加载数据时本就 disabled(无次数),但提示语必须是 needQuery,不得是 shadow 提示。
-    expect(btn.attributes('title')).toBe('admin.accounts.openaiQuotaReset.resetTooltipNeedQuery')
+    expect(btn.attributes('aria-label')).toBe('admin.accounts.openaiQuotaReset.resetTooltipNeedQuery')
     wrapper.unmount()
   })
 
@@ -208,7 +209,7 @@ describe('OpenAIQuotaResetCell — 外审 F6:影子禁用重置', () => {
     expect(wrapper.text()).not.toContain('admin.accounts.openaiQuotaReset.expiresAt:')
     const btn = resetButton(wrapper)
     expect(btn.attributes('disabled')).toBeDefined()
-    expect(btn.attributes('title')).toBe('admin.accounts.openaiQuotaReset.resetTooltipNeedQuery')
+    expect(btn.attributes('aria-label')).toBe('admin.accounts.openaiQuotaReset.resetTooltipNeedQuery')
     wrapper.unmount()
   })
 

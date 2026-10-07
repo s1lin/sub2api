@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import { KumoButton, KumoSurface, KumoTable, KumoTableBody, KumoTableCell, KumoTableHead, KumoTableHeader, KumoTableRow } from '@/components/kumo'
+
 import { computed, ref, watch } from 'vue'
 import { useMediaQuery } from '@vueuse/core'
 import { useI18n } from 'vue-i18n'
@@ -158,7 +160,7 @@ function onNextPage() {
 </script>
 
 <template>
-  <section class="card p-4 md:p-5">
+  <KumoSurface class="card p-4 md:p-5">
     <div class="mb-4 flex flex-wrap items-center justify-between gap-3">
       <h3 class="text-sm font-bold text-gray-900 dark:text-white">
         {{ t('admin.ops.openaiTokenStats.title') }}
@@ -177,20 +179,20 @@ function onNextPage() {
           <div class="w-24">
             <Select v-model="pageSize" :options="pageSizeOptions" />
           </div>
-          <button
+          <KumoButton
             class="btn btn-secondary btn-sm"
             :disabled="loading || page <= 1"
             @click="onPrevPage"
           >
             {{ t('admin.ops.openaiTokenStats.prevPage') }}
-          </button>
-          <button
+          </KumoButton>
+          <KumoButton
             class="btn btn-secondary btn-sm"
             :disabled="loading || page >= totalPages"
             @click="onNextPage"
           >
             {{ t('admin.ops.openaiTokenStats.nextPage') }}
-          </button>
+          </KumoButton>
           <span class="text-xs text-gray-500 dark:text-gray-400">
             {{ t('admin.ops.openaiTokenStats.pageInfo', { page, total: totalPages }) }}
           </span>
@@ -246,39 +248,39 @@ function onNextPage() {
               </div>
             </div>
           </div>
-          <table v-else class="min-w-full text-left text-xs md:text-sm">
-            <thead class="sticky top-0 z-10 bg-white dark:bg-dark-800">
-              <tr class="border-b border-gray-200 text-gray-500 dark:border-dark-700 dark:text-gray-400">
-                <th class="px-2 py-2 font-semibold">{{ t('admin.ops.openaiTokenStats.table.model') }}</th>
-                <th class="px-2 py-2 font-semibold">{{ t('admin.ops.openaiTokenStats.table.requestCount') }}</th>
-                <th class="px-2 py-2 font-semibold">{{ t('admin.ops.openaiTokenStats.table.avgTokensPerSec') }}</th>
-                <th class="px-2 py-2 font-semibold">{{ t('admin.ops.openaiTokenStats.table.avgFirstTokenMs') }}</th>
-                <th class="px-2 py-2 font-semibold">{{ t('admin.ops.openaiTokenStats.table.totalOutputTokens') }}</th>
-                <th class="px-2 py-2 font-semibold">{{ t('admin.ops.openaiTokenStats.table.avgDurationMs') }}</th>
-                <th class="px-2 py-2 font-semibold">{{ t('admin.ops.openaiTokenStats.table.requestsWithFirstToken') }}</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr
+          <KumoTable v-else class="min-w-full text-left text-xs md:text-sm">
+            <KumoTableHeader class="sticky top-0 z-10 bg-white dark:bg-dark-800">
+              <KumoTableRow class="border-b border-gray-200 text-gray-500 dark:border-dark-700 dark:text-gray-400">
+                <KumoTableHead class="px-2 py-2 font-semibold">{{ t('admin.ops.openaiTokenStats.table.model') }}</KumoTableHead>
+                <KumoTableHead class="px-2 py-2 font-semibold">{{ t('admin.ops.openaiTokenStats.table.requestCount') }}</KumoTableHead>
+                <KumoTableHead class="px-2 py-2 font-semibold">{{ t('admin.ops.openaiTokenStats.table.avgTokensPerSec') }}</KumoTableHead>
+                <KumoTableHead class="px-2 py-2 font-semibold">{{ t('admin.ops.openaiTokenStats.table.avgFirstTokenMs') }}</KumoTableHead>
+                <KumoTableHead class="px-2 py-2 font-semibold">{{ t('admin.ops.openaiTokenStats.table.totalOutputTokens') }}</KumoTableHead>
+                <KumoTableHead class="px-2 py-2 font-semibold">{{ t('admin.ops.openaiTokenStats.table.avgDurationMs') }}</KumoTableHead>
+                <KumoTableHead class="px-2 py-2 font-semibold">{{ t('admin.ops.openaiTokenStats.table.requestsWithFirstToken') }}</KumoTableHead>
+              </KumoTableRow>
+            </KumoTableHeader>
+            <KumoTableBody>
+              <KumoTableRow
                 v-for="row in items"
                 :key="row.model"
                 class="border-b border-gray-100 text-gray-700 last:border-b-0 dark:border-dark-800 dark:text-gray-200"
               >
-                <td class="px-2 py-2 font-medium">{{ row.model }}</td>
-                <td class="px-2 py-2">{{ formatInt(row.request_count) }}</td>
-                <td class="px-2 py-2">{{ formatRate(row.avg_tokens_per_sec) }}</td>
-                <td class="px-2 py-2">{{ formatRate(row.avg_first_token_ms) }}</td>
-                <td class="px-2 py-2">{{ formatInt(row.total_output_tokens) }}</td>
-                <td class="px-2 py-2">{{ formatInt(row.avg_duration_ms) }}</td>
-                <td class="px-2 py-2">{{ formatInt(row.requests_with_first_token) }}</td>
-              </tr>
-            </tbody>
-          </table>
+                <KumoTableCell class="px-2 py-2 font-medium">{{ row.model }}</KumoTableCell>
+                <KumoTableCell class="px-2 py-2">{{ formatInt(row.request_count) }}</KumoTableCell>
+                <KumoTableCell class="px-2 py-2">{{ formatRate(row.avg_tokens_per_sec) }}</KumoTableCell>
+                <KumoTableCell class="px-2 py-2">{{ formatRate(row.avg_first_token_ms) }}</KumoTableCell>
+                <KumoTableCell class="px-2 py-2">{{ formatInt(row.total_output_tokens) }}</KumoTableCell>
+                <KumoTableCell class="px-2 py-2">{{ formatInt(row.avg_duration_ms) }}</KumoTableCell>
+                <KumoTableCell class="px-2 py-2">{{ formatInt(row.requests_with_first_token) }}</KumoTableCell>
+              </KumoTableRow>
+            </KumoTableBody>
+          </KumoTable>
         </div>
       </div>
       <div v-if="viewMode === 'topn'" class="mt-3 text-xs text-gray-500 dark:text-gray-400">
         {{ t('admin.ops.openaiTokenStats.totalModels', { total }) }}
       </div>
     </div>
-  </section>
+  </KumoSurface>
 </template>

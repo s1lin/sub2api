@@ -1,6 +1,5 @@
 import { afterEach, describe, expect, it, vi } from 'vitest'
-import { mount } from '@vue/test-utils'
-import { nextTick } from 'vue'
+import { mount, settleControls } from '@/__tests__/render'
 import BaseDialog from '../BaseDialog.vue'
 
 vi.mock('vue-i18n', () => ({
@@ -22,14 +21,14 @@ describe('BaseDialog', () => {
     })
 
     await wrapper.setProps({ show: true })
-    await nextTick()
+    await settleControls()
     const body = document.body.querySelector<HTMLElement>('.modal-body')
     expect(body).not.toBeNull()
     body!.scrollTop = 480
 
     await wrapper.setProps({ show: false })
     await wrapper.setProps({ show: true })
-    await nextTick()
+    await settleControls()
 
     expect(document.body.querySelector<HTMLElement>('.modal-body')?.scrollTop).toBe(0)
     wrapper.unmount()

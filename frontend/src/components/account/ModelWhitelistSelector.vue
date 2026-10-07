@@ -1,11 +1,8 @@
 <template>
   <div>
     <!-- Multi-select Dropdown -->
-    <div class="relative mb-3">
-      <div
-        @click="toggleDropdown"
-        class="cursor-pointer rounded-lg border border-gray-300 bg-white px-3 py-2 dark:border-dark-500 dark:bg-dark-700"
-      >
+    <KumoPopoverRoot v-model="showDropdown">
+      <div class="mb-3 rounded-lg border border-gray-300 bg-white p-2 dark:border-dark-500 dark:bg-dark-700">
         <div class="grid grid-cols-2 gap-1.5">
           <span
             v-for="model in modelValue"
@@ -16,29 +13,27 @@
               <ModelIcon :model="model" size="14px" />
               <span class="truncate">{{ model }}</span>
             </span>
-            <button
+            <KumoButton
               type="button"
               @click.stop="removeModel(model)"
+              :aria-label="`${t('common.delete')} ${model}`"
               class="shrink-0 rounded-full hover:bg-gray-200 dark:hover:bg-dark-500"
             >
               <Icon name="x" size="xs" class="h-3.5 w-3.5" :stroke-width="2" />
-            </button>
+            </KumoButton>
           </span>
         </div>
-        <div class="mt-2 flex items-center justify-between border-t border-gray-200 pt-2 dark:border-dark-600">
+        <KumoPopoverTrigger class="mt-2 flex w-full items-center justify-between border-t border-gray-200 pt-2 dark:border-dark-600" :aria-label="t('admin.accounts.searchModels')">
           <span class="text-xs text-gray-400">{{ t('admin.accounts.modelCount', { count: modelValue.length }) }}</span>
           <svg class="h-5 w-5 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
           </svg>
-        </div>
+        </KumoPopoverTrigger>
       </div>
       <!-- Dropdown List -->
-      <div
-        v-if="showDropdown"
-        class="absolute left-0 right-0 top-full z-50 mt-1 rounded-lg border border-gray-200 bg-white shadow-lg dark:border-dark-600 dark:bg-dark-700"
-      >
+      <KumoPopoverContent align="start" class="w-[min(28rem,calc(100vw-2rem))] p-0">
         <div class="sticky top-0 border-b border-gray-200 bg-white p-2 dark:border-dark-600 dark:bg-dark-700">
-          <input
+          <KumoInput
             v-model="searchQuery"
             type="text"
             class="input w-full text-sm"
@@ -53,28 +48,17 @@
             data-testid="model-option"
             class="group flex items-center hover:bg-gray-100 dark:hover:bg-dark-600"
           >
-            <button
-              type="button"
-              data-testid="select-model"
-              class="flex min-w-0 flex-1 items-center gap-2 px-3 py-2 text-left text-sm"
-              @click="toggleModel(model.value)"
-            >
-              <span
-                :class="[
-                  'flex h-4 w-4 shrink-0 items-center justify-center rounded border',
-                  modelValue.includes(model.value)
-                    ? 'border-primary-500 bg-primary-500 text-white'
-                    : 'border-gray-300 dark:border-dark-500'
-                ]"
-              >
-                <svg v-if="modelValue.includes(model.value)" class="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7" />
-                </svg>
-              </span>
+            <KumoLabel class="flex min-w-0 flex-1 cursor-pointer items-center gap-2 px-3 py-2 text-sm">
+              <KumoCheckbox
+                data-testid="select-model"
+                :checked="modelValue.includes(model.value)"
+                :aria-label="model.value"
+                @change="toggleModel(model.value)"
+              />
               <ModelIcon :model="model.value" size="18px" />
               <span class="truncate text-gray-900 dark:text-white">{{ model.value }}</span>
-            </button>
-            <button
+            </KumoLabel>
+            <KumoButton
               type="button"
               data-testid="copy-model-id"
               class="mr-2 rounded p-1.5 text-gray-400 opacity-70 transition-colors hover:bg-gray-200 hover:text-primary-600 focus-visible:opacity-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-500 group-hover:opacity-100 dark:text-gray-500 dark:hover:bg-dark-500 dark:hover:text-primary-400"
@@ -83,25 +67,25 @@
               @click="copyModelId(model.value)"
             >
               <Icon name="copy" size="sm" />
-            </button>
+            </KumoButton>
           </div>
           <div v-if="filteredModels.length === 0" class="px-3 py-4 text-center text-sm text-gray-500">
             {{ t('admin.accounts.noMatchingModels') }}
           </div>
         </div>
-      </div>
-    </div>
+      </KumoPopoverContent>
+    </KumoPopoverRoot>
 
     <!-- Quick Actions -->
     <div class="mb-4 flex flex-wrap gap-2">
-      <button
+      <KumoButton
         type="button"
         @click="fillRelated"
         class="rounded-lg border border-blue-200 px-3 py-1.5 text-sm text-blue-600 hover:bg-blue-50 dark:border-blue-800 dark:text-blue-400 dark:hover:bg-blue-900/30"
       >
         {{ t('admin.accounts.fillRelatedModels') }}
-      </button>
-      <button
+      </KumoButton>
+      <KumoButton
         v-if="canSyncUpstream"
         type="button"
         @click="syncUpstreamModels"
@@ -109,21 +93,21 @@
         class="rounded-lg border border-emerald-200 px-3 py-1.5 text-sm text-emerald-600 hover:bg-emerald-50 disabled:cursor-not-allowed disabled:opacity-60 dark:border-emerald-800 dark:text-emerald-400 dark:hover:bg-emerald-900/30"
       >
         {{ isSyncingUpstream ? t('admin.accounts.syncUpstreamModelsLoading') : t('admin.accounts.syncUpstreamModels') }}
-      </button>
-      <button
+      </KumoButton>
+      <KumoButton
         type="button"
         @click="clearAll"
         class="rounded-lg border border-red-200 px-3 py-1.5 text-sm text-red-600 hover:bg-red-50 dark:border-red-800 dark:text-red-400 dark:hover:bg-red-900/30"
       >
         {{ t('admin.accounts.clearAllModels') }}
-      </button>
+      </KumoButton>
     </div>
 
     <!-- Custom Model Input -->
     <div class="mb-3">
-      <label class="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-300">{{ t('admin.accounts.customModelName') }}</label>
+      <KumoLabel class="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-300">{{ t('admin.accounts.customModelName') }}</KumoLabel>
       <div class="flex gap-2">
-        <input
+        <KumoInput
           v-model="customModel"
           type="text"
           class="input flex-1"
@@ -132,20 +116,22 @@
           @compositionstart="isComposing = true"
           @compositionend="isComposing = false"
         />
-        <button
+        <KumoButton
           type="button"
           @click="addCustom"
           class="rounded-lg bg-primary-50 px-4 py-2 text-sm font-medium text-primary-600 hover:bg-primary-100 dark:bg-primary-900/30 dark:text-primary-400 dark:hover:bg-primary-900/50"
         >
           {{ t('admin.accounts.addModel') }}
-        </button>
+        </KumoButton>
       </div>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref, computed } from 'vue'
+import { KumoButton, KumoCheckbox, KumoInput, KumoLabel, KumoPopoverContent, KumoPopoverRoot, KumoPopoverTrigger } from '@/components/kumo'
+
+import { ref, computed, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useAppStore } from '@/stores/app'
 import { accountsAPI } from '@/api/admin/accounts'
@@ -247,10 +233,7 @@ const filteredModels = computed(() => {
   )
 })
 
-const toggleDropdown = () => {
-  showDropdown.value = !showDropdown.value
-  if (!showDropdown.value) searchQuery.value = ''
-}
+watch(showDropdown, open => { if (!open) searchQuery.value = '' })
 
 const removeModel = (model: string) => {
   emit('update:modelValue', props.modelValue.filter(m => m !== model))

@@ -1,4 +1,4 @@
-import { mount } from '@vue/test-utils'
+import { mount } from '@/__tests__/render'
 import { describe, expect, it, vi } from 'vitest'
 import { defineComponent } from 'vue'
 import OpsErrorDistributionChart from '../OpsErrorDistributionChart.vue'

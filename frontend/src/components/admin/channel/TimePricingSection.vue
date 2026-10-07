@@ -2,14 +2,14 @@
   <section class="mt-3 border-t border-gray-200 pt-3 dark:border-dark-600">
     <div class="flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
       <div class="min-w-0 flex-1 sm:max-w-2xl">
-        <label class="block text-xs font-medium text-gray-500 dark:text-gray-400">
+        <KumoLabel class="block text-xs font-medium text-gray-500 dark:text-gray-400">
           {{ t('admin.channels.form.timePricing') }}
-        </label>
+        </KumoLabel>
         <div class="mt-2 grid grid-cols-1 gap-2 sm:grid-cols-2">
           <div class="min-w-0">
-            <label class="block text-xs text-gray-400">
+            <KumoLabel class="block text-xs text-gray-400">
               {{ t('admin.channels.form.timezone') }}
-            </label>
+            </KumoLabel>
             <Select
               :model-value="modelValue.timezone"
               :options="timezoneOptions"
@@ -22,9 +22,9 @@
             />
           </div>
           <div class="min-w-0">
-            <label class="block text-xs text-gray-400">
+            <KumoLabel class="block text-xs text-gray-400">
               {{ t('admin.channels.form.timePricingDayScope') }}
-            </label>
+            </KumoLabel>
             <Select
               :model-value="modelValue.weekdays_only"
               :options="dayScopeOptions"
@@ -36,14 +36,14 @@
           </div>
         </div>
       </div>
-      <button
+      <KumoButton
         type="button"
         class="self-start text-xs text-primary-600 hover:text-primary-700 sm:self-end sm:pb-2"
         data-testid="add-time-period"
         @click="addPeriod"
       >
         + {{ t('admin.channels.form.addTimePeriod') }}
-      </button>
+      </KumoButton>
     </div>
 
     <div v-if="modelValue.periods.length > 0" class="mt-3 space-y-3">
@@ -53,10 +53,10 @@
         class="grid grid-cols-1 gap-2 border-t border-gray-200 pt-3 sm:grid-cols-[minmax(0,1fr)_minmax(0,1fr)_minmax(0,1fr)_2rem] sm:items-end dark:border-dark-600"
       >
         <div class="min-w-0">
-          <label :for="`${inputIdPrefix}-start-${index}`" class="block text-xs text-gray-400">
+          <KumoLabel :for="`${inputIdPrefix}-start-${index}`" class="block text-xs text-gray-400">
             {{ t('admin.channels.form.startTime') }}
-          </label>
-          <input
+          </KumoLabel>
+          <KumoInput
             :id="`${inputIdPrefix}-start-${index}`"
             :value="period.start_time"
             type="text"
@@ -70,10 +70,10 @@
           />
         </div>
         <div class="min-w-0">
-          <label :for="`${inputIdPrefix}-end-${index}`" class="block text-xs text-gray-400">
+          <KumoLabel :for="`${inputIdPrefix}-end-${index}`" class="block text-xs text-gray-400">
             {{ t('admin.channels.form.endTime') }}
-          </label>
-          <input
+          </KumoLabel>
+          <KumoInput
             :id="`${inputIdPrefix}-end-${index}`"
             :value="period.end_time"
             type="text"
@@ -87,10 +87,10 @@
           />
         </div>
         <div class="min-w-0">
-          <label :for="`${inputIdPrefix}-multiplier-${index}`" class="block text-xs text-gray-400">
+          <KumoLabel :for="`${inputIdPrefix}-multiplier-${index}`" class="block text-xs text-gray-400">
             {{ t('admin.channels.form.multiplier') }}
-          </label>
-          <input
+          </KumoLabel>
+          <KumoInput
             :id="`${inputIdPrefix}-multiplier-${index}`"
             :value="period.multiplier"
             type="number"
@@ -101,7 +101,7 @@
             @blur="formatMultiplier(index, ($event.target as HTMLInputElement).value)"
           />
         </div>
-        <button
+        <KumoButton
           type="button"
           class="flex h-8 w-8 items-center justify-center rounded text-gray-400 hover:text-red-500"
           :title="t('admin.channels.form.removeTimePeriod')"
@@ -110,13 +110,15 @@
           @click="removePeriod(index)"
         >
           <Icon name="trash" size="sm" />
-        </button>
+        </KumoButton>
       </div>
     </div>
   </section>
 </template>
 
 <script setup lang="ts">
+import { KumoButton, KumoInput, KumoLabel } from '@/components/kumo'
+
 import { computed, getCurrentInstance } from 'vue'
 import { useI18n } from 'vue-i18n'
 import Select from '@/components/common/Select.vue'

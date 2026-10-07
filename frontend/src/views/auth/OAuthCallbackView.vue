@@ -1,17 +1,17 @@
 <template>
   <div class="min-h-screen bg-gray-50 px-4 py-10 dark:bg-dark-900">
     <div class="mx-auto max-w-2xl">
-      <div v-if="isProcessing" class="card p-6 text-center">
-        <div class="mx-auto h-8 w-8 animate-spin rounded-full border-2 border-primary-500 border-t-transparent"></div>
+      <KumoSurface v-if="isProcessing" class="card p-6 text-center">
+        <KumoLoader class="mx-auto h-8 w-8" />
         <h1 class="mt-4 text-lg font-semibold text-gray-900 dark:text-white">
           {{ t('auth.oauth.callbackTitle') }}
         </h1>
         <p class="mt-2 text-sm text-gray-600 dark:text-gray-400">
           {{ t('auth.oauth.callbackHint') }}
         </p>
-      </div>
+      </KumoSurface>
 
-      <div v-else-if="needsRegistrationCompletion" class="card p-6">
+      <KumoSurface v-else-if="needsRegistrationCompletion" class="card p-6">
         <h1 class="text-lg font-semibold text-gray-900 dark:text-white">
           {{ t('auth.oidc.callbackTitle', { providerName }) }}
         </h1>
@@ -21,8 +21,8 @@
 
         <div class="mt-6 space-y-4">
           <div>
-            <label class="input-label">{{ t('auth.emailLabel') }}</label>
-            <input
+            <KumoLabel class="input-label">{{ t('auth.emailLabel') }}</KumoLabel>
+            <KumoInput
               class="input w-full"
               type="email"
               :value="registrationEmail"
@@ -31,8 +31,8 @@
             />
           </div>
           <div>
-            <label class="input-label">{{ t('auth.passwordLabel') }}</label>
-            <input
+            <KumoLabel class="input-label">{{ t('auth.passwordLabel') }}</KumoLabel>
+            <KumoInput
               v-model="password"
               type="password"
               class="input w-full"
@@ -43,8 +43,8 @@
             />
           </div>
           <div>
-            <label class="input-label">{{ t('auth.confirmPassword') }}</label>
-            <input
+            <KumoLabel class="input-label">{{ t('auth.confirmPassword') }}</KumoLabel>
+            <KumoInput
               v-model="confirmPassword"
               type="password"
               class="input w-full"
@@ -55,8 +55,8 @@
             />
           </div>
           <div v-if="invitationRequired">
-            <label class="input-label">{{ t('auth.invitationCodeLabel') }}</label>
-            <input
+            <KumoLabel class="input-label">{{ t('auth.invitationCodeLabel') }}</KumoLabel>
+            <KumoInput
               v-model="invitationCode"
               type="text"
               class="input w-full"
@@ -68,30 +68,30 @@
           <p v-if="registrationError" class="text-sm text-red-600 dark:text-red-400">
             {{ registrationError }}
           </p>
-          <button
+          <KumoButton
             class="btn btn-primary w-full"
             type="button"
             :disabled="isSubmitting || !canSubmitRegistration"
             @click="handleSubmitRegistration"
           >
             {{ isSubmitting ? t('common.processing') : t('auth.oidc.completeRegistration') }}
-          </button>
+          </KumoButton>
         </div>
-      </div>
+      </KumoSurface>
 
-      <div v-else-if="invalidCallback" class="card p-6 text-center">
+      <KumoSurface v-else-if="invalidCallback" class="card p-6 text-center">
         <h1 class="text-lg font-semibold text-gray-900 dark:text-white">
           {{ t('auth.oauth.invalidCallbackTitle') }}
         </h1>
         <p class="mt-2 text-sm text-gray-600 dark:text-gray-400">
           {{ t('auth.oauth.invalidCallbackHint') }}
         </p>
-        <button class="btn btn-primary mt-6" type="button" @click="router.replace('/login')">
+        <KumoButton class="btn btn-primary mt-6" type="button" @click="router.replace('/login')">
           {{ t('auth.backToLogin') }}
-        </button>
-      </div>
+        </KumoButton>
+      </KumoSurface>
 
-      <div v-else class="card p-6">
+      <KumoSurface v-else class="card p-6">
         <h1 class="text-lg font-semibold text-gray-900 dark:text-white">
           {{ t('auth.oauth.callbackTitle') }}
         </h1>
@@ -101,51 +101,53 @@
 
         <div class="mt-6 space-y-4">
           <div>
-            <label class="input-label">{{ t('auth.oauth.code') }}</label>
+            <KumoLabel class="input-label">{{ t('auth.oauth.code') }}</KumoLabel>
             <div class="flex gap-2">
-              <input class="input flex-1 font-mono text-sm" :value="code" readonly />
-              <button class="btn btn-secondary" type="button" :disabled="!code" @click="copy(code)">
+              <KumoInput class="input flex-1 font-mono text-sm" :value="code" readonly />
+              <KumoButton class="btn btn-secondary" type="button" :disabled="!code" @click="copy(code)">
                 {{ t('common.copy') }}
-              </button>
+              </KumoButton>
             </div>
           </div>
 
           <div>
-            <label class="input-label">{{ t('auth.oauth.state') }}</label>
+            <KumoLabel class="input-label">{{ t('auth.oauth.state') }}</KumoLabel>
             <div class="flex gap-2">
-              <input class="input flex-1 font-mono text-sm" :value="state" readonly />
-              <button
+              <KumoInput class="input flex-1 font-mono text-sm" :value="state" readonly />
+              <KumoButton
                 class="btn btn-secondary"
                 type="button"
                 :disabled="!state"
                 @click="copy(state)"
               >
                 {{ t('common.copy') }}
-              </button>
+              </KumoButton>
             </div>
           </div>
 
           <div>
-            <label class="input-label">{{ t('auth.oauth.fullUrl') }}</label>
+            <KumoLabel class="input-label">{{ t('auth.oauth.fullUrl') }}</KumoLabel>
             <div class="flex gap-2">
-              <input class="input flex-1 font-mono text-xs" :value="fullUrl" readonly />
-              <button
+              <KumoInput class="input flex-1 font-mono text-xs" :value="fullUrl" readonly />
+              <KumoButton
                 class="btn btn-secondary"
                 type="button"
                 :disabled="!fullUrl"
                 @click="copy(fullUrl)"
               >
                 {{ t('common.copy') }}
-              </button>
+              </KumoButton>
             </div>
           </div>
         </div>
-      </div>
+      </KumoSurface>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
+import { KumoButton, KumoInput, KumoLabel, KumoLoader, KumoSurface } from '@/components/kumo'
+
 import { computed, onMounted, ref, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useRoute, useRouter } from 'vue-router'

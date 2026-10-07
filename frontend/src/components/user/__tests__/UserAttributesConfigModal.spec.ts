@@ -1,5 +1,6 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
-import { enableAutoUnmount, flushPromises, mount } from '@vue/test-utils'
+import { mount, flushPromises } from '@/__tests__/render'
+import { enableAutoUnmount } from '@vue/test-utils'
 import UserAttributesConfigModal from '../UserAttributesConfigModal.vue'
 
 const mocks = vi.hoisted(() => ({ listDefinitions: vi.fn(), updateDefinition: vi.fn(), createDefinition: vi.fn() }))
@@ -33,7 +34,7 @@ describe('UserAttributesConfigModal optional text fields', () => {
     ['New description', 'New placeholder']
   ])('persists description %j and placeholder %j explicitly', async (description, placeholder) => {
     const wrapper = await openConfig()
-    await wrapper.get('button[title="common.edit"]').trigger('click')
+    await wrapper.get('button[aria-label="common.edit"]').trigger('click')
     await wrapper.get('input[placeholder="admin.users.attributes.fieldDescriptionHint"]').setValue(description)
     await wrapper.get('input[placeholder="admin.users.attributes.placeholderHint"]').setValue(placeholder)
     await wrapper.get('form').trigger('submit')

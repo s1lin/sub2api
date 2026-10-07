@@ -1,5 +1,6 @@
 import { defineComponent, h, type PropType } from "vue";
-import { flushPromises, mount } from "@vue/test-utils";
+import { flushPromises, mount } from '@/__tests__/render'
+
 import { createPinia } from "pinia";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 

@@ -43,9 +43,9 @@
 
       <!-- Grok: mode first, then optional model / mode params -->
       <div v-if="isGrokAccount" class="space-y-1.5">
-        <label class="text-sm font-medium text-gray-700 dark:text-gray-300">
+        <KumoLabel class="text-sm font-medium text-gray-700 dark:text-gray-300">
           {{ t('admin.accounts.grok.testMode') }}
-        </label>
+        </KumoLabel>
         <Select
           v-model="grokTestMode"
           :options="grokTestModeOptions"
@@ -57,9 +57,9 @@
       </div>
 
       <div v-if="showModelSelect" class="space-y-1.5">
-        <label class="text-sm font-medium text-gray-700 dark:text-gray-300">
+        <KumoLabel class="text-sm font-medium text-gray-700 dark:text-gray-300">
           {{ t('admin.accounts.selectTestModel') }}
-        </label>
+        </KumoLabel>
         <Select
           v-model="selectedModelId"
           :options="modelOptionsForMode"
@@ -71,9 +71,9 @@
       </div>
 
       <div v-if="isOpenAIAccount" class="space-y-1.5">
-        <label class="text-sm font-medium text-gray-700 dark:text-gray-300">
+        <KumoLabel class="text-sm font-medium text-gray-700 dark:text-gray-300">
           {{ t('admin.accounts.openai.testMode') }}
-        </label>
+        </KumoLabel>
         <Select
           v-model="testMode"
           :options="openAITestModeOptions"
@@ -100,18 +100,18 @@
 
       <!-- Optional media uploads for real generation / transcription -->
       <div v-if="supportsImageUpload" class="space-y-1.5">
-        <label class="text-sm font-medium text-gray-700 dark:text-gray-300">
+        <KumoLabel class="text-sm font-medium text-gray-700 dark:text-gray-300">
           {{ imageUploadLabel }}
-        </label>
+        </KumoLabel>
         <div class="flex items-center gap-3">
-          <button
+          <KumoButton
             type="button"
             class="btn btn-secondary btn-sm shrink-0"
             :disabled="status === 'connecting'"
             @click="imageFileInput?.click()"
           >
             {{ t('admin.accounts.grok.chooseImageFile') }}
-          </button>
+          </KumoButton>
           <span class="min-w-0 truncate text-xs text-gray-500 dark:text-gray-400">
             {{
               uploadImageName
@@ -119,7 +119,7 @@
                 : t('common.noFileSelected')
             }}
           </span>
-          <input
+          <KumoInput
             ref="imageFileInput"
             type="file"
             accept="image/png,image/jpeg,image/webp,image/gif"
@@ -139,18 +139,18 @@
       </div>
 
       <div v-if="supportsAudioUpload" class="space-y-1.5">
-        <label class="text-sm font-medium text-gray-700 dark:text-gray-300">
+        <KumoLabel class="text-sm font-medium text-gray-700 dark:text-gray-300">
           {{ t('admin.accounts.grok.audioUploadLabel') }}
-        </label>
+        </KumoLabel>
         <div class="flex items-center gap-3">
-          <button
+          <KumoButton
             type="button"
             class="btn btn-secondary btn-sm shrink-0"
             :disabled="status === 'connecting'"
             @click="audioFileInput?.click()"
           >
             {{ t('admin.accounts.grok.chooseAudioFile') }}
-          </button>
+          </KumoButton>
           <span class="min-w-0 truncate text-xs text-gray-500 dark:text-gray-400">
             {{
               uploadAudioName
@@ -158,7 +158,7 @@
                 : t('common.noFileSelected')
             }}
           </span>
-          <input
+          <KumoInput
             ref="audioFileInput"
             type="file"
             accept="audio/*,.wav,.mp3,.m4a,.ogg,.webm"
@@ -214,14 +214,14 @@
         </div>
 
         <!-- Copy Button -->
-        <button
+        <KumoButton
           v-if="outputLines.length > 0"
           @click="copyOutput"
           class="absolute right-2 top-2 rounded-lg bg-gray-800/80 p-1.5 text-gray-400 opacity-0 transition-all hover:bg-gray-700 hover:text-white group-hover:opacity-100"
           :title="t('admin.accounts.copyOutput')"
         >
           <Icon name="link" size="sm" :stroke-width="2" />
-        </button>
+        </KumoButton>
       </div>
 
       <div v-if="generatedImages.length > 0" class="space-y-2">
@@ -281,27 +281,9 @@
       </div>
 
       <!-- Image Lightbox -->
-      <Teleport to="body">
-        <Transition name="fade">
-          <div
-            v-if="previewImageUrl"
-            class="fixed inset-0 z-[100] flex items-center justify-center bg-black/80 p-4"
-            @click.self="previewImageUrl = ''"
-          >
-            <button
-              class="absolute right-4 top-4 rounded-full bg-black/50 p-2 text-white transition-colors hover:bg-black/70"
-              @click="previewImageUrl = ''"
-            >
-              <Icon name="x" size="lg" :stroke-width="2" />
-            </button>
-            <img
-              :src="previewImageUrl"
-              :alt="t('admin.accounts.imageLightboxAlt')"
-              class="max-h-[90vh] max-w-[90vw] rounded-lg object-contain shadow-2xl"
-            />
-          </div>
-        </Transition>
-      </Teleport>
+      <BaseDialog :show="!!previewImageUrl" :title="t('common.preview')" width="wide" :z-index="100" close-on-click-outside @close="previewImageUrl = ''">
+        <img :src="previewImageUrl" :alt="t('admin.accounts.imageLightboxAlt')" class="mx-auto max-h-[70vh] max-w-full object-contain" />
+      </BaseDialog>
 
       <!-- Test Info -->
       <div class="flex items-center justify-between px-1 text-xs text-gray-500 dark:text-gray-400">
@@ -320,13 +302,13 @@
 
     <template #footer>
       <div class="flex justify-end gap-3">
-        <button
+        <KumoButton
           @click="handleClose"
           class="rounded-lg bg-gray-100 px-4 py-2 text-sm font-medium text-gray-700 transition-colors hover:bg-gray-200 dark:bg-dark-600 dark:text-gray-300 dark:hover:bg-dark-500"
         >
           {{ t('common.close') }}
-        </button>
-        <button
+        </KumoButton>
+        <KumoButton
           @click="startTest"
           :disabled="!canStartTest"
           :class="[
@@ -358,13 +340,15 @@
                   : t('admin.accounts.retry')
             }}
           </span>
-        </button>
+        </KumoButton>
       </div>
     </template>
   </BaseDialog>
 </template>
 
 <script setup lang="ts">
+import { KumoButton, KumoInput, KumoLabel } from '@/components/kumo'
+
 import { computed, ref, watch, nextTick } from 'vue'
 import { getRequestAuthToken } from '@/auth/clerk'
 import { useI18n } from 'vue-i18n'

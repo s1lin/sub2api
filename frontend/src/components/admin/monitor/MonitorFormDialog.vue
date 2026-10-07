@@ -7,15 +7,15 @@
   >
     <form id="channel-monitor-form" @submit.prevent="handleSubmit" class="space-y-5">
       <div>
-        <label class="input-label">{{ t('admin.channelMonitor.form.name') }} <span class="text-red-500">*</span></label>
-        <input v-model="form.name" type="text" required class="input" :placeholder="t('admin.channelMonitor.form.namePlaceholder')" />
+        <KumoLabel class="input-label">{{ t('admin.channelMonitor.form.name') }} <span class="text-red-500">*</span></KumoLabel>
+        <KumoInput v-model="form.name" type="text" required class="input" :placeholder="t('admin.channelMonitor.form.namePlaceholder')" />
       </div>
 
       <!-- 检测模式：probe（探活）/ quota（仅配额）/ quota_probe（探活+配额） -->
       <div>
-        <label class="input-label">{{ t('admin.channelMonitor.form.checkMode') }}</label>
+        <KumoLabel class="input-label">{{ t('admin.channelMonitor.form.checkMode') }}</KumoLabel>
         <div class="grid gap-3 sm:grid-cols-3" data-testid="monitor-check-mode">
-          <button
+          <KumoButton
             v-for="opt in checkModeOptions"
             :key="opt.value"
             type="button"
@@ -28,14 +28,14 @@
           >
             <span class="block text-sm font-semibold">{{ opt.label }}</span>
             <span class="mt-0.5 block text-xs opacity-80">{{ opt.hint }}</span>
-          </button>
+          </KumoButton>
         </div>
       </div>
 
       <div>
-        <label class="input-label">{{ t('admin.channelMonitor.form.provider') }} <span class="text-red-500">*</span></label>
+        <KumoLabel class="input-label">{{ t('admin.channelMonitor.form.provider') }} <span class="text-red-500">*</span></KumoLabel>
         <div class="grid grid-cols-2 gap-3 sm:grid-cols-4">
-          <button
+          <KumoButton
             v-for="opt in providerOptions"
             :key="opt.value"
             type="button"
@@ -47,15 +47,15 @@
           >
             <ProviderIcon :provider="opt.value" :size="18" />
             <span>{{ opt.label }}</span>
-          </button>
+          </KumoButton>
         </div>
       </div>
 
       <!-- 配额模式数据源：关联账号（复用账号侧用量/余额服务） -->
       <div v-if="usesQuotaMode">
-        <label class="input-label">
+        <KumoLabel class="input-label">
           {{ t('admin.channelMonitor.form.linkedAccount') }} <span class="text-red-500">*</span>
-        </label>
+        </KumoLabel>
         <div data-testid="monitor-linked-account">
           <Select
             v-model="accountSelectValue"
@@ -79,9 +79,9 @@
       </div>
 
       <div v-if="form.provider === PROVIDER_OPENAI && usesProbePart" class="rounded-lg border border-blue-100 bg-blue-50/50 p-3 dark:border-blue-500/20 dark:bg-blue-500/10">
-        <label class="input-label">{{ t('admin.channelMonitor.form.apiMode') }}</label>
+        <KumoLabel class="input-label">{{ t('admin.channelMonitor.form.apiMode') }}</KumoLabel>
         <div class="grid gap-3 sm:grid-cols-2">
-          <button
+          <KumoButton
             v-for="opt in apiModeOptions"
             :key="opt.value"
             type="button"
@@ -92,42 +92,42 @@
           >
             <span class="block text-sm font-semibold">{{ opt.label }}</span>
             <span class="mt-0.5 block text-xs opacity-80">{{ opt.hint }}</span>
-          </button>
+          </KumoButton>
         </div>
       </div>
 
       <div v-if="usesProbePart">
-        <label class="input-label">{{ t('admin.channelMonitor.form.endpoint') }} <span class="text-red-500">*</span></label>
+        <KumoLabel class="input-label">{{ t('admin.channelMonitor.form.endpoint') }} <span class="text-red-500">*</span></KumoLabel>
         <div class="flex gap-2">
-          <input v-model="form.endpoint" data-testid="monitor-endpoint" type="text" required class="input flex-1" :placeholder="t('admin.channelMonitor.form.endpointPlaceholder')" />
-          <button type="button" @click="useCurrentDomain" class="btn btn-secondary whitespace-nowrap">
+          <KumoInput v-model="form.endpoint" data-testid="monitor-endpoint" type="text" required class="input flex-1" :placeholder="t('admin.channelMonitor.form.endpointPlaceholder')" />
+          <KumoButton type="button" @click="useCurrentDomain" class="btn btn-secondary whitespace-nowrap">
             {{ t('admin.channelMonitor.form.useCurrentDomain') }}
-          </button>
+          </KumoButton>
         </div>
       </div>
 
       <div v-if="usesProbePart">
-        <label class="input-label">
+        <KumoLabel class="input-label">
           {{ t('admin.channelMonitor.form.apiKey') }}<span v-if="!editing" class="text-red-500"> *</span>
-        </label>
+        </KumoLabel>
         <div class="flex gap-2">
-          <input
+          <KumoInput
             v-model="form.api_key"
             type="password"
             :required="!editing"
             class="input flex-1"
             :placeholder="editing ? t('admin.channelMonitor.form.apiKeyEditPlaceholder') : t('admin.channelMonitor.form.apiKeyPlaceholder')"
           />
-          <button type="button" @click="openMyKeyPicker" class="btn btn-secondary whitespace-nowrap">
+          <KumoButton type="button" @click="openMyKeyPicker" class="btn btn-secondary whitespace-nowrap">
             {{ t('admin.channelMonitor.form.useMyKey') }}
-          </button>
+          </KumoButton>
         </div>
         <p v-if="editing && editing.api_key_masked" class="mt-1 text-xs text-gray-400">{{ editing.api_key_masked }}</p>
       </div>
 
       <div v-if="usesProbePart">
-        <label class="input-label">{{ t('admin.channelMonitor.form.primaryModel') }} <span class="text-red-500">*</span></label>
-        <input
+        <KumoLabel class="input-label">{{ t('admin.channelMonitor.form.primaryModel') }} <span class="text-red-500">*</span></KumoLabel>
+        <KumoInput
           v-model="form.primary_model"
           data-testid="monitor-primary-model"
           type="text"
@@ -139,7 +139,7 @@
       </div>
 
       <div v-if="usesProbePart">
-        <label class="input-label">{{ t('admin.channelMonitor.form.extraModels') }}</label>
+        <KumoLabel class="input-label">{{ t('admin.channelMonitor.form.extraModels') }}</KumoLabel>
         <ModelTagInput
           :models="form.extra_models"
           :platform="form.provider"
@@ -149,37 +149,38 @@
       </div>
 
       <div>
-        <label class="input-label">{{ t('admin.channelMonitor.form.groupName') }}</label>
-        <input v-model="form.group_name" type="text" class="input" :placeholder="t('admin.channelMonitor.form.groupNamePlaceholder')" />
+        <KumoLabel class="input-label">{{ t('admin.channelMonitor.form.groupName') }}</KumoLabel>
+        <KumoInput v-model="form.group_name" type="text" class="input" :placeholder="t('admin.channelMonitor.form.groupNamePlaceholder')" />
       </div>
 
       <div>
-        <label class="input-label">{{ t('admin.channelMonitor.form.intervalSeconds') }} <span class="text-red-500">*</span></label>
-        <input v-model.number="form.interval_seconds" type="number" min="15" max="3600" required class="input" />
+        <KumoLabel class="input-label">{{ t('admin.channelMonitor.form.intervalSeconds') }} <span class="text-red-500">*</span></KumoLabel>
+        <KumoInput v-model.number="form.interval_seconds" type="number" min="15" max="3600" required class="input" />
         <p class="mt-1 text-xs text-gray-400">{{ t('admin.channelMonitor.form.intervalSecondsHint') }}</p>
       </div>
 
       <div>
-        <label class="input-label">{{ t('admin.channelMonitor.form.jitterSeconds') }}</label>
-        <input v-model.number="form.jitter_seconds" type="number" min="0" :max="maxJitterSeconds" class="input" />
+        <KumoLabel class="input-label">{{ t('admin.channelMonitor.form.jitterSeconds') }}</KumoLabel>
+        <KumoInput v-model.number="form.jitter_seconds" type="number" min="0" :max="maxJitterSeconds" class="input" />
         <p class="mt-1 text-xs text-gray-400">{{ t('admin.channelMonitor.form.jitterSecondsHint') }}</p>
       </div>
 
       <div class="flex items-center justify-between">
-        <label class="input-label mb-0">{{ t('admin.channelMonitor.form.enabled') }}</label>
+        <KumoLabel class="input-label mb-0">{{ t('admin.channelMonitor.form.enabled') }}</KumoLabel>
         <Toggle v-model="form.enabled" />
       </div>
 
       <!-- 高级设置区：请求模板 + 自定义 headers/body（仅探活模式有意义） -->
-      <details v-if="usesProbePart" class="rounded-lg border border-gray-200 bg-gray-50/50 p-3 dark:border-dark-700 dark:bg-dark-900/30">
-        <summary class="cursor-pointer text-sm font-medium text-gray-700 dark:text-gray-300">
+      <KumoCollapsible v-if="usesProbePart" class="rounded-lg border border-gray-200 bg-gray-50/50 p-3 dark:border-dark-700 dark:bg-dark-900/30">
+            <KumoCollapsibleTrigger class="cursor-pointer text-sm font-medium text-gray-700 dark:text-gray-300">
           {{ t('admin.channelMonitor.advanced.section') }}
-        </summary>
+        </KumoCollapsibleTrigger>
+            <KumoCollapsiblePanel>
         <p class="mt-1 text-xs text-gray-400">{{ t('admin.channelMonitor.advanced.sectionHint') }}</p>
 
         <div class="mt-4 space-y-4">
           <div>
-            <label class="input-label">{{ t('admin.channelMonitor.templateField.label') }}</label>
+            <KumoLabel class="input-label">{{ t('admin.channelMonitor.templateField.label') }}</KumoLabel>
             <Select
               v-model="templateSelectValue"
               :options="templateOptions"
@@ -199,15 +200,16 @@
             @update:body-override="form.body_override = $event"
           />
         </div>
-      </details>
+      </KumoCollapsiblePanel>
+          </KumoCollapsible>
     </form>
 
     <template #footer>
       <div class="flex justify-end gap-3">
-        <button @click="$emit('close')" type="button" class="btn btn-secondary">
+        <KumoButton @click="$emit('close')" type="button" class="btn btn-secondary">
           {{ t('common.cancel') }}
-        </button>
-        <button
+        </KumoButton>
+        <KumoButton
           type="submit"
           form="channel-monitor-form"
           :disabled="submitting"
@@ -216,7 +218,7 @@
           {{ submitting
             ? t('common.submitting')
             : editing ? t('common.update') : t('common.create') }}
-        </button>
+        </KumoButton>
       </div>
     </template>
   </BaseDialog>
@@ -233,6 +235,8 @@
 </template>
 
 <script setup lang="ts">
+import { KumoCollapsible, KumoCollapsibleTrigger, KumoCollapsiblePanel, KumoButton, KumoInput, KumoLabel } from '@/components/kumo'
+
 import { ref, reactive, computed, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useAppStore } from '@/stores/app'

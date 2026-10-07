@@ -1,5 +1,6 @@
 import { afterEach, describe, expect, it, vi } from 'vitest'
-import { flushPromises, mount } from '@vue/test-utils'
+import { mount, flushPromises, portal } from '@/__tests__/render'
+
 import { AxiosError } from 'axios'
 import apiClient from '@/api/client'
 import OpenAIReferralCell from '../OpenAIReferralCell.vue'
@@ -12,7 +13,7 @@ vi.mock('vue-i18n', () => ({ useI18n: () => ({ t: (key: string) => key }) }))
 const originalAdapter = apiClient.defaults.adapter
 const mountCell = () => mount(OpenAIReferralCell, {
   props: { account: { id: 1, name: 'Test account', platform: 'openai', type: 'oauth' } as Account },
-  global: { stubs: { teleport: true } },
+  attachTo: document.body,
 })
 let wrapper: ReturnType<typeof mountCell> | undefined
 afterEach(() => {
@@ -37,15 +38,15 @@ describe('invitation transport failures', () => {
       wrapper = mountCell()
       await wrapper.get('[data-testid="referral-open"]').trigger('click')
       await flushPromises()
-      await wrapper.get('[data-testid="referral-email"]').setValue('friend@example.com')
-      await wrapper.get('[data-testid="referral-consent"]').setValue(true)
-      await wrapper.get('form').trigger('submit')
+      await portal().get('[data-testid="referral-email"]').setValue('friend@example.com')
+      await portal().get('[data-testid="referral-consent"]').setValue(true)
+      await portal().get('form').trigger('submit')
       await flushPromises()
-      expect(wrapper.get('[role="alert"]').text()).toBe('admin.accounts.openaiReferral.sendUnknown')
-      expect(wrapper.text()).not.toContain('Network error.')
-      expect(wrapper.text()).not.toContain('admin.accounts.openaiReferral.sent')
-      expect(wrapper.get('[data-testid="referral-send"]').attributes('disabled')).toBeDefined()
-      await wrapper.get('form').trigger('submit')
+      expect(portal().get('[role="alert"]').text()).toBe('admin.accounts.openaiReferral.sendUnknown')
+      expect(portal().text()).not.toContain('Network error.')
+      expect(portal().text()).not.toContain('admin.accounts.openaiReferral.sent')
+      expect(portal().get('[data-testid="referral-send"]').attributes('disabled')).toBeDefined()
+      await portal().get('form').trigger('submit')
       await flushPromises()
       expect(adapter.mock.calls.filter(([config]) => config.url.endsWith('/invite'))).toHaveLength(1)
     }
@@ -58,8 +59,8 @@ describe('invitation transport failures', () => {
     wrapper = mountCell()
     await wrapper.get('[data-testid="referral-open"]').trigger('click')
     await flushPromises()
-    expect(wrapper.get('[role="alert"]').text()).toBe('Network error. Please check your connection.')
-    expect(wrapper.text()).not.toContain('admin.accounts.openaiReferral.sendUnknown')
-    expect(wrapper.get('[data-testid="referral-send"]').attributes('disabled')).toBeDefined()
+    expect(portal().get('[role="alert"]').text()).toBe('Network error. Please check your connection.')
+    expect(portal().text()).not.toContain('admin.accounts.openaiReferral.sendUnknown')
+    expect(portal().get('[data-testid="referral-send"]').attributes('disabled')).toBeDefined()
   })
 })

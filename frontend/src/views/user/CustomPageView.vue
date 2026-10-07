@@ -1,11 +1,11 @@
 <template>
   <AppLayout>
     <div class="custom-page-layout">
-      <div class="card flex-1 min-h-0 overflow-hidden">
+      <KumoSurface class="card flex-1 min-h-0 overflow-hidden">
         <div v-if="loading" class="flex h-full items-center justify-center py-12">
-          <div
-            class="h-8 w-8 animate-spin rounded-full border-2 border-primary-500 border-t-transparent"
-          ></div>
+          <KumoLoader
+            class="h-8 w-8"
+           />
         </div>
 
         <div
@@ -36,9 +36,9 @@
           >
             <div class="toc-header">
               <span class="toc-title">{{ t('customPage.tableOfContents') }}</span>
-              <button class="toc-close-btn" @click="tocVisible = false">
+              <KumoButton class="toc-close-btn" @click="tocVisible = false">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>
-              </button>
+              </KumoButton>
             </div>
             <nav class="toc-nav">
               <a
@@ -58,14 +58,14 @@
           </aside>
 
           <!-- TOC Toggle Button (when collapsed) -->
-          <button
+          <KumoButton
             v-show="!tocVisible && tocItems.length > 0"
             class="toc-toggle-btn"
             @click="tocVisible = true"
           >
             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12h18M3 6h18M3 18h18"/></svg>
             <span class="ml-1 text-xs">{{ t('customPage.tableOfContents') }}</span>
-          </button>
+          </KumoButton>
 
           <!-- Content -->
           <div
@@ -95,7 +95,7 @@
 
         <!-- Iframe embed mode -->
         <div v-else ref="embedShell" class="custom-embed-shell">
-          <a
+          <KumoButton
             v-if="!menuItem?.hide_open_button"
             ref="openButton"
             :href="embeddedUrl"
@@ -113,19 +113,21 @@
           >
             <Icon name="externalLink" size="sm" class="mr-1.5" :stroke-width="2" />
             {{ t('customPage.openInNewTab') }}
-          </a>
+          </KumoButton>
           <iframe
             :src="embeddedUrl"
             class="custom-embed-frame"
             allowfullscreen
           ></iframe>
         </div>
-      </div>
+      </KumoSurface>
     </div>
   </AppLayout>
 </template>
 
 <script setup lang="ts">
+import { KumoButton, KumoLoader, KumoSurface } from '@/components/kumo'
+
 import { getRequestAuthToken } from '@/auth/clerk'
 import { computed, nextTick, onMounted, onUnmounted, ref, watch } from 'vue'
 import { useRoute } from 'vue-router'

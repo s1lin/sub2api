@@ -92,7 +92,7 @@
                 data-testid="profile-binding-email-form"
                 class="grid gap-2 sm:grid-cols-[minmax(0,1.4fr)_auto]"
               >
-                <input
+                <KumoInput
                   v-model.trim="emailBindingForm.email"
                   data-testid="profile-binding-email-input"
                   type="email"
@@ -100,7 +100,7 @@
                   :placeholder="t('profile.authBindings.emailPlaceholder')"
                   :disabled="isSendingEmailCode || isBindingEmail"
                 />
-                <button
+                <KumoButton
                   data-testid="profile-binding-email-send-code"
                   type="button"
                   class="btn btn-secondary btn-sm"
@@ -112,8 +112,8 @@
                       ? t('common.loading')
                       : t('profile.authBindings.sendCodeAction')
                   }}
-                </button>
-                <input
+                </KumoButton>
+                <KumoInput
                   v-model.trim="emailBindingForm.verifyCode"
                   data-testid="profile-binding-email-code-input"
                   type="text"
@@ -123,7 +123,7 @@
                   :placeholder="t('profile.authBindings.codePlaceholder')"
                   :disabled="isBindingEmail"
                 />
-                <input
+                <KumoInput
                   v-model="emailBindingForm.password"
                   data-testid="profile-binding-email-password-input"
                   type="password"
@@ -131,7 +131,7 @@
                   :placeholder="emailPasswordPlaceholder"
                   :disabled="isBindingEmail"
                 />
-                <button
+                <KumoButton
                   data-testid="profile-binding-email-submit"
                   type="button"
                   class="btn btn-primary btn-sm sm:col-span-2"
@@ -143,13 +143,13 @@
                       ? t('common.loading')
                       : emailSubmitActionLabel
                   }}
-                </button>
+                </KumoButton>
               </div>
             </div>
           </div>
 
           <div class="flex shrink-0 flex-wrap items-center gap-3">
-            <button
+            <KumoButton
               v-if="item.provider === 'email' && compact"
               data-testid="profile-binding-email-toggle"
               type="button"
@@ -161,8 +161,8 @@
                   ? t('profile.authBindings.hideEmailFormAction')
                   : t('profile.authBindings.manageEmailAction')
               }}
-            </button>
-            <button
+            </KumoButton>
+            <KumoButton
               v-if="item.canBind"
               :data-testid="`profile-binding-${item.provider}-action`"
               type="button"
@@ -170,8 +170,8 @@
               @click="startBinding(item.provider)"
             >
               {{ t('profile.authBindings.bindAction', { providerName: item.label }) }}
-            </button>
-            <button
+            </KumoButton>
+            <KumoButton
               v-if="item.canUnbind"
               :data-testid="`profile-binding-${item.provider}-unbind`"
               type="button"
@@ -184,7 +184,7 @@
                   ? t('common.loading')
                   : t('profile.authBindings.unbindAction')
               }}
-            </button>
+            </KumoButton>
           </div>
         </div>
       </div>
@@ -193,6 +193,8 @@
 </template>
 
 <script setup lang="ts">
+import { KumoButton, KumoInput } from '@/components/kumo'
+
 import { computed, reactive, ref, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useRoute } from 'vue-router'

@@ -1,8 +1,6 @@
-<template>
-  <div v-if="subscriptionFeatureEnabled && hasActiveSubscriptions" class="relative" ref="containerRef">
+<template><KumoPopoverRoot v-if="subscriptionFeatureEnabled && hasActiveSubscriptions" v-model="tooltipOpen">
     <!-- Mini Progress Display -->
-    <button
-      @click="toggleTooltip"
+    <KumoPopoverTrigger
       class="flex cursor-pointer items-center gap-2 rounded-xl bg-purple-50 px-3 py-1.5 transition-colors hover:bg-purple-100 dark:bg-purple-900/20 dark:hover:bg-purple-900/30"
       :title="t('subscriptionProgress.viewDetails')"
     >
@@ -21,13 +19,11 @@
           {{ activeSubscriptions.length }}
         </span>
       </div>
-    </button>
+    </KumoPopoverTrigger>
 
     <!-- Hover/Click Tooltip -->
-    <transition name="dropdown">
-      <div
-        v-if="tooltipOpen"
-        class="absolute right-0 z-50 mt-2 w-[340px] overflow-hidden rounded-xl border border-gray-200 bg-white shadow-xl dark:border-dark-700 dark:bg-dark-800"
+    <KumoPopoverContent
+        class="    w-[340px] overflow-hidden rounded-xl border border-gray-200 bg-white shadow-xl dark:border-dark-700 dark:bg-dark-800"
       >
         <div class="border-b border-gray-100 p-3 dark:border-dark-700">
           <h3 class="text-sm font-semibold text-gray-900 dark:text-white">
@@ -76,23 +72,15 @@
                   <span class="w-8 flex-shrink-0 text-[10px] text-gray-500">{{
                     t('subscriptionProgress.daily')
                   }}</span>
-                  <div class="h-1.5 min-w-0 flex-1 rounded-full bg-gray-200 dark:bg-dark-600">
-                    <div
-                      class="h-1.5 rounded-full transition-all"
-                      :class="
+                  <KumoMeter  compact :label="t('common.usage')" :value="Number.parseFloat(String(getProgressWidth(
+                          subscription.daily_usage_usd,
+                          subscription.group?.daily_limit_usd
+                        ))) || 0" class="h-1.5 min-w-0 flex-1 rounded-full bg-gray-200 dark:bg-dark-600" track-class-name="h-full min-h-[inherit]" :indicator-class-name="['h-1.5 rounded-full transition-all', (
                         getProgressBarClass(
                           subscription.daily_usage_usd,
                           subscription.group?.daily_limit_usd
                         )
-                      "
-                      :style="{
-                        width: getProgressWidth(
-                          subscription.daily_usage_usd,
-                          subscription.group?.daily_limit_usd
-                        )
-                      }"
-                    ></div>
-                  </div>
+                      )]" />
                   <span class="w-24 flex-shrink-0 text-right text-[10px] text-gray-500">
                     {{
                       formatUsage(subscription.daily_usage_usd, subscription.group?.daily_limit_usd)
@@ -104,23 +92,15 @@
                   <span class="w-8 flex-shrink-0 text-[10px] text-gray-500">{{
                     t('subscriptionProgress.weekly')
                   }}</span>
-                  <div class="h-1.5 min-w-0 flex-1 rounded-full bg-gray-200 dark:bg-dark-600">
-                    <div
-                      class="h-1.5 rounded-full transition-all"
-                      :class="
+                  <KumoMeter  compact :label="t('common.usage')" :value="Number.parseFloat(String(getProgressWidth(
+                          subscription.weekly_usage_usd,
+                          subscription.group?.weekly_limit_usd
+                        ))) || 0" class="h-1.5 min-w-0 flex-1 rounded-full bg-gray-200 dark:bg-dark-600" track-class-name="h-full min-h-[inherit]" :indicator-class-name="['h-1.5 rounded-full transition-all', (
                         getProgressBarClass(
                           subscription.weekly_usage_usd,
                           subscription.group?.weekly_limit_usd
                         )
-                      "
-                      :style="{
-                        width: getProgressWidth(
-                          subscription.weekly_usage_usd,
-                          subscription.group?.weekly_limit_usd
-                        )
-                      }"
-                    ></div>
-                  </div>
+                      )]" />
                   <span class="w-24 flex-shrink-0 text-right text-[10px] text-gray-500">
                     {{
                       formatUsage(subscription.weekly_usage_usd, subscription.group?.weekly_limit_usd)
@@ -132,23 +112,15 @@
                   <span class="w-8 flex-shrink-0 text-[10px] text-gray-500">{{
                     t('subscriptionProgress.monthly')
                   }}</span>
-                  <div class="h-1.5 min-w-0 flex-1 rounded-full bg-gray-200 dark:bg-dark-600">
-                    <div
-                      class="h-1.5 rounded-full transition-all"
-                      :class="
+                  <KumoMeter  compact :label="t('common.usage')" :value="Number.parseFloat(String(getProgressWidth(
+                          subscription.monthly_usage_usd,
+                          subscription.group?.monthly_limit_usd
+                        ))) || 0" class="h-1.5 min-w-0 flex-1 rounded-full bg-gray-200 dark:bg-dark-600" track-class-name="h-full min-h-[inherit]" :indicator-class-name="['h-1.5 rounded-full transition-all', (
                         getProgressBarClass(
                           subscription.monthly_usage_usd,
                           subscription.group?.monthly_limit_usd
                         )
-                      "
-                      :style="{
-                        width: getProgressWidth(
-                          subscription.monthly_usage_usd,
-                          subscription.group?.monthly_limit_usd
-                        )
-                      }"
-                    ></div>
-                  </div>
+                      )]" />
                   <span class="w-24 flex-shrink-0 text-right text-[10px] text-gray-500">
                     {{
                       formatUsage(
@@ -172,13 +144,13 @@
             {{ t('subscriptionProgress.viewAll') }}
           </router-link>
         </div>
-      </div>
-    </transition>
-  </div>
-</template>
+      </KumoPopoverContent>
+  </KumoPopoverRoot></template>
 
 <script setup lang="ts">
-import { ref, computed, onMounted, onBeforeUnmount } from 'vue'
+import { KumoMeter, KumoPopoverContent, KumoPopoverRoot, KumoPopoverTrigger } from '@/components/kumo'
+
+import { ref, computed, onMounted } from 'vue'
 import { useI18n } from 'vue-i18n'
 import Icon from '@/components/icons/Icon.vue'
 import { useSubscriptionStore } from '@/stores'
@@ -190,7 +162,6 @@ const { t } = useI18n()
 
 const subscriptionStore = useSubscriptionStore()
 
-const containerRef = ref<HTMLElement | null>(null)
 const tooltipOpen = ref(false)
 
 // Use store data instead of local state
@@ -283,22 +254,15 @@ function getDaysRemainingClass(expiresAt: string): string {
   return 'text-gray-500 dark:text-dark-400'
 }
 
-function toggleTooltip() {
-  tooltipOpen.value = !tooltipOpen.value
-}
+
 
 function closeTooltip() {
   tooltipOpen.value = false
 }
 
-function handleClickOutside(event: MouseEvent) {
-  if (containerRef.value && !containerRef.value.contains(event.target as Node)) {
-    closeTooltip()
-  }
-}
+
 
 onMounted(() => {
-  document.addEventListener('click', handleClickOutside)
   // Trigger initial fetch if not already loaded
   // The actual data loading is handled by App.vue globally
   if (!subscriptionFeatureEnabled.value) return
@@ -307,9 +271,6 @@ onMounted(() => {
   })
 })
 
-onBeforeUnmount(() => {
-  document.removeEventListener('click', handleClickOutside)
-})
 </script>
 
 <style scoped>

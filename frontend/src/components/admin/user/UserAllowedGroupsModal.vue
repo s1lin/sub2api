@@ -14,10 +14,7 @@
 
       <!-- 加载状态 -->
       <div v-if="loading" class="flex justify-center py-12">
-        <svg class="h-10 w-10 animate-spin text-primary-500" fill="none" viewBox="0 0 24 24">
-          <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-          <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-        </svg>
+        <KumoLoader class="h-10 w-10 animate-spin text-primary-500" />
       </div>
 
       <div v-else class="space-y-6">
@@ -40,8 +37,8 @@
               <div class="flex items-center gap-4">
                 <!-- 复选框 -->
                 <div class="flex-shrink-0">
-                  <label class="relative flex h-6 w-6 cursor-pointer items-center justify-center">
-                    <input
+                  <KumoLabel class="relative flex h-6 w-6 cursor-pointer items-center justify-center">
+                    <KumoCheckbox
                       type="checkbox"
                       :checked="config.isSelected"
                       @change="toggleExclusiveGroup(config.groupId)"
@@ -52,7 +49,7 @@
                         <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
                       </svg>
                     </div>
-                  </label>
+                  </KumoLabel>
                 </div>
 
                 <!-- 分组信息 -->
@@ -77,8 +74,8 @@
 
                 <!-- 专属倍率输入 -->
                 <div class="flex flex-shrink-0 items-center gap-3">
-                  <label class="text-sm font-medium text-gray-600 dark:text-gray-400">{{ t('admin.users.customRate') }}</label>
-                  <input
+                  <KumoLabel class="text-sm font-medium text-gray-600 dark:text-gray-400">{{ t('admin.users.customRate') }}</KumoLabel>
+                  <KumoInput
                     type="number"
                     step="0.001"
                     min="0.001"
@@ -101,15 +98,15 @@
               {{ restrictPublicGroups ? t('admin.users.publicGroupsRestricted') : t('admin.users.publicGroups') }}
             </h4>
             <span class="text-xs text-gray-400">({{ publicGroupConfigs.length }})</span>
-            <label class="ml-auto flex cursor-pointer items-center gap-2 text-sm text-gray-600 dark:text-gray-400">
-              <input
+            <KumoLabel class="ml-auto flex cursor-pointer items-center gap-2 text-sm text-gray-600 dark:text-gray-400">
+              <KumoCheckbox
                 type="checkbox"
                 :checked="restrictPublicGroups"
                 @change="toggleRestrictPublicGroups"
                 class="h-4 w-4 cursor-pointer rounded border-gray-300 text-primary-600 focus:ring-primary-500 dark:border-dark-500"
               />
               {{ t('admin.users.restrictPublicGroups') }}
-            </label>
+            </KumoLabel>
           </div>
           <p class="mb-3 text-xs text-gray-500 dark:text-gray-400">{{ t('admin.users.restrictPublicGroupsHint') }}</p>
           <div class="grid gap-3">
@@ -121,7 +118,7 @@
               <div class="flex items-center gap-4">
                 <!-- 未开启限制时公开分组恒可用，此处仅作展示；开启后才是真实开关 -->
                 <div class="flex-shrink-0">
-                  <input
+                  <KumoCheckbox
                     v-if="restrictPublicGroups"
                     type="checkbox"
                     :checked="config.isSelected"
@@ -157,8 +154,8 @@
 
                 <!-- 专属倍率输入 -->
                 <div class="flex flex-shrink-0 items-center gap-3">
-                  <label class="text-sm font-medium text-gray-600 dark:text-gray-400">{{ t('admin.users.customRate') }}</label>
-                  <input
+                  <KumoLabel class="text-sm font-medium text-gray-600 dark:text-gray-400">{{ t('admin.users.customRate') }}</KumoLabel>
+                  <KumoInput
                     type="number"
                     step="0.001"
                     min="0.001"
@@ -187,20 +184,19 @@
 
     <template #footer>
       <div class="flex justify-end gap-3">
-        <button @click="$emit('close')" class="btn btn-secondary px-5">{{ t('common.cancel') }}</button>
-        <button @click="handleSave" :disabled="submitting || !loaded" class="btn btn-primary px-6">
-          <svg v-if="submitting" class="-ml-1 mr-2 h-4 w-4 animate-spin" fill="none" viewBox="0 0 24 24">
-            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-          </svg>
+        <KumoButton @click="$emit('close')" class="btn btn-secondary px-5">{{ t('common.cancel') }}</KumoButton>
+        <KumoButton @click="handleSave" :disabled="submitting || !loaded" class="btn btn-primary px-6">
+          <KumoLoader v-if="submitting" class="-ml-1 mr-2 h-4 w-4 animate-spin" />
           {{ submitting ? t('common.saving') : t('common.save') }}
-        </button>
+        </KumoButton>
       </div>
     </template>
   </BaseDialog>
 </template>
 
 <script setup lang="ts">
+import { KumoButton, KumoCheckbox, KumoInput, KumoLabel, KumoLoader } from '@/components/kumo'
+
 import { ref, watch, computed } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useAppStore } from '@/stores/app'

@@ -1,5 +1,8 @@
+import { enableAutoUnmount } from '@vue/test-utils'
+enableAutoUnmount(afterEach)
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
-import { flushPromises, mount } from '@vue/test-utils'
+import { mount, flushPromises, portal } from '@/__tests__/render'
+
 import { defineComponent } from 'vue'
 
 import UserUsageView from '@/views/user/UsageView.vue'
@@ -279,7 +282,7 @@ describe('usage reasoning effort page display', () => {
     expect(wrapper.find('[data-testid="reasoning-effort-cell"]').exists()).toBe(false)
 
     await wrapper.get('[data-testid="usage-column-settings"]').trigger('click')
-    await wrapper.get('[data-testid="usage-column-toggle-reasoning_effort"]').trigger('click')
+    await portal().get('[data-testid="usage-column-toggle-reasoning_effort"]').trigger('click')
     await flushPromises()
 
     const cell = reasoningCellText(wrapper)
@@ -312,7 +315,7 @@ describe('usage reasoning effort page display', () => {
     await flushPromises()
 
     await wrapper.get('[data-testid="usage-column-settings"]').trigger('click')
-    await wrapper.get('[data-testid="usage-column-toggle-reasoning_effort"]').trigger('click')
+    await portal().get('[data-testid="usage-column-toggle-reasoning_effort"]').trigger('click')
     await flushPromises()
 
     const cell = reasoningCellText(wrapper)

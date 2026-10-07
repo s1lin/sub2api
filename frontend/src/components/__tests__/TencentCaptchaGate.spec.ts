@@ -1,4 +1,5 @@
-import { flushPromises, mount } from '@vue/test-utils'
+import { mount, flushPromises } from '@/__tests__/render'
+
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 import TencentCaptchaGate from '@/components/TencentCaptchaGate.vue'
 import { loadTencentCaptcha, resetTencentCaptchaLoaderForTest } from '@/utils/tencentCaptcha'
@@ -198,7 +199,7 @@ describe('TencentCaptchaGate', () => {
   })
 
   it('refreshes a preloaded proof before the provider ticket expires', async () => {
-    vi.useFakeTimers()
+    vi.useFakeTimers({ toFake: ['Date', 'setTimeout', 'clearTimeout', 'setInterval', 'clearInterval'] })
     try {
       let callback: ((result: CaptchaResult) => void) | undefined
       let constructorCount = 0

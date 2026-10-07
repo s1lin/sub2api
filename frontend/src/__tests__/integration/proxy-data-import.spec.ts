@@ -1,5 +1,6 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest'
-import { flushPromises, mount } from '@vue/test-utils'
+import { mount, flushPromises } from '@/__tests__/render'
+
 import { adminAPI } from '@/api/admin'
 import type { AdminDataImportResult } from '@/types'
 import ImportDataModal from '@/components/admin/proxy/ImportDataModal.vue'

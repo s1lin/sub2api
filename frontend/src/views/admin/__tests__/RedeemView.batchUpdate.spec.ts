@@ -1,5 +1,6 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest'
-import { flushPromises, mount } from '@vue/test-utils'
+import { mount, flushPromises, portal } from '@/__tests__/render'
+
 
 import RedeemView from '../RedeemView.vue'
 
@@ -160,8 +161,7 @@ describe('admin RedeemView batch update', () => {
           Select: SelectStub,
           GroupBadge: true,
           GroupOptionItem: true,
-          Icon: true,
-          Teleport: true
+          Icon: true
         }
       }
     })
@@ -171,11 +171,11 @@ describe('admin RedeemView batch update', () => {
     await wrapper.get('[data-test="batch-update-open"]').trigger('click')
     await flushPromises()
 
-    await wrapper.get('[data-test="batch-field-status"]').setValue(true)
-    await wrapper.get('[data-test="batch-status-select"]').setValue('disabled')
-    await wrapper.get('[data-test="batch-field-notes"]').setValue(true)
-    await wrapper.get('[data-test="batch-notes-input"]').setValue('maintenance')
-    await wrapper.get('[data-test="batch-update-form"]').trigger('submit')
+    await portal().get('[data-test="batch-field-status"]').setValue(true)
+    await portal().get('[data-test="batch-status-select"]').setValue('disabled')
+    await portal().get('[data-test="batch-field-notes"]').setValue(true)
+    await portal().get('[data-test="batch-notes-input"]').setValue('maintenance')
+    await portal().get('[data-test="batch-update-form"]').trigger('submit')
     await flushPromises()
 
     expect(batchUpdateRedeemCodes).toHaveBeenCalledWith([1], {
@@ -183,5 +183,6 @@ describe('admin RedeemView batch update', () => {
       notes: 'maintenance'
     })
     expect(showSuccess).toHaveBeenCalledWith('admin.redeem.batchUpdateSuccess')
+    wrapper.unmount()
   })
 })

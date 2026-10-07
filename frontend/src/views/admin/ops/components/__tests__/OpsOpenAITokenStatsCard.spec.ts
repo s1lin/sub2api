@@ -1,6 +1,7 @@
 import { describe, it, expect, beforeEach, vi } from 'vitest'
 import { defineComponent } from 'vue'
-import { flushPromises, mount } from '@vue/test-utils'
+import { mount, flushPromises } from '@/__tests__/render'
+
 import OpsOpenAITokenStatsCard from '../OpsOpenAITokenStatsCard.vue'
 
 const mockGetOpenAITokenStats = vi.fn()
@@ -88,7 +89,7 @@ describe('OpsOpenAITokenStatsCard', () => {
     const wrapper = mount(OpsOpenAITokenStatsCard, {
       props: { refreshToken: 0 },
       global: {
-        stubs: {
+        stubs: { KumoSurface: { template: '<div><slot /></div>' },
           Select: SelectStub,
           EmptyState: EmptyStateStub,
         },
@@ -125,7 +126,7 @@ describe('OpsOpenAITokenStatsCard', () => {
     const wrapper = mount(OpsOpenAITokenStatsCard, {
       props: { platformFilter: 'openai', groupIdFilter: 7, refreshToken: 0 },
       global: {
-        stubs: {
+        stubs: { KumoSurface: { template: '<div><slot /></div>' },
           Select: SelectStub,
           EmptyState: EmptyStateStub,
         },
@@ -164,7 +165,7 @@ describe('OpsOpenAITokenStatsCard', () => {
         refreshToken: 0,
       },
       global: {
-        stubs: {
+        stubs: { KumoSurface: { template: '<div><slot /></div>' },
           Select: SelectStub,
           EmptyState: EmptyStateStub,
         },
@@ -209,7 +210,7 @@ describe('OpsOpenAITokenStatsCard', () => {
         refreshToken: 0,
       },
       global: {
-        stubs: {
+        stubs: { KumoSurface: { template: '<div><slot /></div>' },
           Select: SelectStub,
           EmptyState: EmptyStateStub,
         },
@@ -264,7 +265,7 @@ describe('OpsOpenAITokenStatsCard', () => {
     const wrapper = mount(OpsOpenAITokenStatsCard, {
       props: { refreshToken: 0 },
       global: {
-        stubs: {
+        stubs: { KumoSurface: { template: '<div><slot /></div>' },
           Select: SelectStub,
           EmptyState: EmptyStateStub,
         },
@@ -281,7 +282,7 @@ describe('OpsOpenAITokenStatsCard', () => {
     const wrapper = mount(OpsOpenAITokenStatsCard, {
       props: { refreshToken: 0 },
       global: {
-        stubs: {
+        stubs: { KumoSurface: { template: '<div><slot /></div>' },
           Select: SelectStub,
           EmptyState: EmptyStateStub,
         },
@@ -298,7 +299,7 @@ describe('OpsOpenAITokenStatsCard', () => {
     const wrapper = mount(OpsOpenAITokenStatsCard, {
       props: { refreshToken: 0 },
       global: {
-        stubs: {
+        stubs: { KumoSurface: { template: '<div><slot /></div>' },
           Select: SelectStub,
           EmptyState: EmptyStateStub,
         },

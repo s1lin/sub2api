@@ -1,5 +1,6 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
-import { enableAutoUnmount, mount } from '@vue/test-utils'
+import { mount } from '@/__tests__/render'
+import { enableAutoUnmount } from '@vue/test-utils'
 import ImageUpload from '../ImageUpload.vue'
 
 vi.mock('vue-i18n', () => ({ useI18n: () => ({ t: (key: string) => key }) }))

@@ -1,5 +1,6 @@
 import { defineComponent } from 'vue'
-import { flushPromises, mount } from '@vue/test-utils'
+import { mount, flushPromises } from '@/__tests__/render'
+
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 
 import MonitorFormDialog from '@/components/admin/monitor/MonitorFormDialog.vue'
@@ -102,8 +103,8 @@ describe('channel monitor Grok provider', () => {
     expect(PROVIDERS).toContain(PROVIDER_GROK)
     const providerButtons = wrapper.findAll('[data-testid^="monitor-provider-"]')
     expect(providerButtons).toHaveLength(10)
-    expect(providerButtons[0].element.parentElement?.className).toContain('grid-cols-2')
-    expect(providerButtons[0].element.parentElement?.className).toContain('sm:grid-cols-4')
+    expect(providerButtons[0].element.closest('.grid')?.className).toContain('grid-cols-2')
+    expect(providerButtons[0].element.closest('.grid')?.className).toContain('sm:grid-cols-4')
 
     const grokButton = wrapper.get('[data-testid="monitor-provider-grok"]')
     expect(grokButton.find('svg').exists()).toBe(true)

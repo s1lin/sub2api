@@ -1,5 +1,6 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest'
-import { flushPromises, shallowMount, RouterLinkStub } from '@vue/test-utils'
+import { flushPromises, mount } from '@/__tests__/render'
+import { RouterLinkStub } from '@vue/test-utils'
 import { createI18n } from 'vue-i18n'
 import PricingView from '../PricingView.vue'
 import SubscriptionPlanCard from '@/components/payment/SubscriptionPlanCard.vue'
@@ -35,10 +36,17 @@ const plans = [
 ]
 
 function render(locale = 'en') {
-  return shallowMount(PricingView, {
+  return mountWithControls(PricingView, {
     global: {
       plugins: [createI18n({ legacy: false, locale, messages: { en, zh }, messageCompiler: message => () => String(message) })],
-      stubs: { RouterLink: RouterLinkStub },
+      stubs: {
+        RouterLink: RouterLinkStub,
+        KumoLabel: { template: '<label><slot /></label>' },
+        KumoNativeSelect: {
+          props: ['modelValue'], emits: ['update:modelValue'],
+          template: '<select :value="modelValue" @change="$emit(\'update:modelValue\', $event.target.value)"><slot /></select>',
+        },
+      },
     },
   })
 }
@@ -127,3 +135,12 @@ describe('Public storefront purchase journeys', () => {
     expect(wrapper.text()).not.toContain('storefront.')
   })
 })
+
+// Isolate page dependencies while exercising the shared Kumo controls.
+function mountWithControls(component: Parameters<typeof mount>[0], options: any = {}) {
+  return mount(component, { ...options, global: { ...options.global, stubs: {
+    PublicHeader: true, Icon: true, AsciiOrbit: true, SubscriptionPlanCard: true,
+    KumoSurface: { template: '<div><slot /></div>' },
+    ...options.global?.stubs,
+  } } })
+}

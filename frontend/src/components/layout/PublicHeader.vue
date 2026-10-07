@@ -8,9 +8,9 @@
       <div class="public-nav-actions">
         <a v-if="docUrl" :href="docUrl" target="_blank" rel="noopener noreferrer" class="public-docs brand-text-link">{{ t('home.viewDocs') }}</a>
         <LocaleSwitcher text-only />
-        <button type="button" class="brand-theme-toggle" :aria-label="t(isDark ? 'home.switchToLight' : 'home.switchToDark')" @click="toggleTheme">
+        <KumoButton type="button" class="brand-theme-toggle" :aria-label="t(isDark ? 'home.switchToLight' : 'home.switchToDark')" @click="toggleTheme">
           <Icon :name="isDark ? 'sun' : 'moon'" size="md" />
-        </button>
+        </KumoButton>
         <router-link :to="authStore.isAuthenticated ? accountPath : '/login'" class="public-account-link brand-text-link">
           {{ t(authStore.isAuthenticated ? 'storefront.account' : 'home.login') }}
         </router-link>
@@ -20,6 +20,8 @@
 </template>
 
 <script setup lang="ts">
+import { KumoButton } from '@/components/kumo'
+
 import { computed } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useAppStore } from '@/stores/app'

@@ -14,14 +14,14 @@
       <form @submit.prevent="handleLogin" class="space-y-5">
         <!-- Email Input -->
         <div>
-          <label for="email" class="input-label">
+          <KumoLabel for="email" class="input-label">
             {{ t('auth.emailLabel') }}
-          </label>
+          </KumoLabel>
           <div class="relative">
             <div class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3.5">
               <Icon name="mail" size="md" class="text-gray-400 dark:text-dark-500" />
             </div>
-            <input
+            <KumoInput
               id="email"
               v-model="formData.email"
               type="email"
@@ -38,14 +38,14 @@
 
         <!-- Password Input -->
         <div>
-          <label for="password" class="input-label">
+          <KumoLabel for="password" class="input-label">
             {{ t('auth.passwordLabel') }}
-          </label>
+          </KumoLabel>
           <div class="relative">
             <div class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3.5">
               <Icon name="lock" size="md" class="text-gray-400 dark:text-dark-500" />
             </div>
-            <input
+            <KumoInput
               id="password"
               v-model="formData.password"
               :type="showPassword ? 'text' : 'password'"
@@ -56,7 +56,7 @@
               :class="{ 'input-error': errors.password }"
               :placeholder="t('auth.passwordPlaceholder')"
             />
-            <button
+            <KumoButton
               type="button"
               @click="showPassword = !showPassword"
               :disabled="authActionDisabled"
@@ -64,7 +64,7 @@
             >
               <Icon v-if="showPassword" name="eyeOff" size="md" />
               <Icon v-else name="eye" size="md" />
-            </button>
+            </KumoButton>
           </div>
           <div class="mt-1 flex items-center justify-between">
             <span></span>
@@ -98,34 +98,15 @@
         </div>
 
         <!-- Submit Button -->
-        <button
+        <KumoButton
           type="submit"
           :disabled="authActionDisabled || (turnstileEnabled && !turnstileToken)"
           class="btn btn-primary w-full"
         >
-          <svg
-            v-if="isLoading"
-            class="-ml-1 mr-2 h-4 w-4 animate-spin text-white"
-            fill="none"
-            viewBox="0 0 24 24"
-          >
-            <circle
-              class="opacity-25"
-              cx="12"
-              cy="12"
-              r="10"
-              stroke="currentColor"
-              stroke-width="4"
-            ></circle>
-            <path
-              class="opacity-75"
-              fill="currentColor"
-              d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-            ></path>
-          </svg>
+          <KumoLoader v-if="isLoading" class="-ml-1 mr-2 h-4 w-4 animate-spin text-white" />
           <Icon v-else name="login" size="md" class="mr-2" />
           {{ isLoading ? t('auth.signingIn') : t('auth.signIn') }}
-        </button>
+        </KumoButton>
 
         <LoginAgreementPrompt
           v-if="loginAgreementEnabled"
@@ -148,7 +129,7 @@
             <div class="h-px flex-1 bg-gray-200 dark:bg-dark-700"></div>
           </div>
 
-          <button
+          <KumoButton
             v-if="showPasskeyLogin"
             type="button"
             class="btn btn-secondary w-full"
@@ -157,7 +138,7 @@
           >
             <Icon name="key" size="md" class="mr-2" />
             {{ passkeyLoading ? t('auth.passkeySigningIn') : t('auth.passkeySignIn') }}
-          </button>
+          </KumoButton>
 
           <EmailOAuthButtons
             :disabled="authActionDisabled"
@@ -222,6 +203,8 @@
 </template>
 
 <script setup lang="ts">
+import { KumoButton, KumoInput, KumoLabel, KumoLoader } from '@/components/kumo'
+
 import { authRedirect } from '@/utils/authRedirect'
 import { computed, ref, reactive, onMounted, watch } from 'vue'
 import { useRouter } from 'vue-router'

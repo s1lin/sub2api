@@ -1,5 +1,5 @@
 <template>
-  <div class="card">
+  <KumoSurface class="card">
     <div class="flex items-start justify-between border-b border-gray-100 px-6 py-4 dark:border-dark-700">
       <div>
         <h2 class="text-lg font-medium text-gray-900 dark:text-white">
@@ -9,7 +9,7 @@
           {{ t('profile.passkey.description') }}
         </p>
       </div>
-      <button
+      <KumoButton
         v-if="enabled && supported && !showAddForm"
         type="button"
         class="btn btn-primary"
@@ -17,7 +17,7 @@
         @click="showAddForm = true"
       >
         {{ t('profile.passkey.add') }}
-      </button>
+      </KumoButton>
     </div>
 
     <div class="px-6 py-6">
@@ -35,8 +35,8 @@
         >
           <div class="grid gap-3 sm:grid-cols-2">
             <div>
-              <label for="passkey-name" class="input-label">{{ t('profile.passkey.name') }}</label>
-              <input
+              <KumoLabel for="passkey-name" class="input-label">{{ t('profile.passkey.name') }}</KumoLabel>
+              <KumoInput
                 id="passkey-name"
                 v-model="newName"
                 class="input"
@@ -46,10 +46,10 @@
               />
             </div>
             <div>
-              <label for="passkey-add-password" class="input-label">{{
+              <KumoLabel for="passkey-add-password" class="input-label">{{
                 t('profile.currentPassword')
-              }}</label>
-              <input
+              }}</KumoLabel>
+              <KumoInput
                 id="passkey-add-password"
                 v-model="newPassword"
                 type="password"
@@ -60,17 +60,17 @@
             </div>
           </div>
           <div class="flex justify-end gap-2">
-            <button type="button" class="btn btn-secondary" :disabled="busy" @click="cancelAdd">
+            <KumoButton type="button" class="btn btn-secondary" :disabled="busy" @click="cancelAdd">
               {{ t('common.cancel') }}
-            </button>
-            <button type="submit" class="btn btn-primary" :disabled="busy || newPassword.length === 0">
+            </KumoButton>
+            <KumoButton type="submit" class="btn btn-primary" :disabled="busy || newPassword.length === 0">
               {{ busy ? t('common.processing') : t('profile.passkey.continue') }}
-            </button>
+            </KumoButton>
           </div>
         </form>
 
         <div v-if="loading" class="flex justify-center py-6">
-          <div class="h-8 w-8 animate-spin rounded-full border-b-2 border-primary-500"></div>
+          <KumoLoader class="h-8 w-8" />
         </div>
 
         <div
@@ -107,22 +107,22 @@
               </p>
             </div>
             <div class="flex shrink-0 gap-2">
-              <button
+              <KumoButton
                 type="button"
                 class="btn btn-secondary btn-sm"
                 :disabled="busy"
                 @click="renamePasskey(credential)"
               >
                 {{ t('common.edit') }}
-              </button>
-              <button
+              </KumoButton>
+              <KumoButton
                 type="button"
                 class="btn btn-ghost btn-sm text-red-600 hover:bg-red-50 dark:text-red-300 dark:hover:bg-red-950/30"
                 :disabled="busy"
                 @click="deletePasskey(credential)"
               >
                 {{ t('common.delete') }}
-              </button>
+              </KumoButton>
             </div>
           </div>
         </div>
@@ -130,12 +130,8 @@
     </div>
 
     <!-- 删除确认：吊销凭据需验证当前密码，防止被窃会话静默移除 Passkey -->
-    <div v-if="deleteTarget" class="fixed inset-0 z-50 overflow-y-auto">
-      <div class="flex min-h-full items-center justify-center p-4">
-        <div class="fixed inset-0 bg-black/50 transition-opacity" @click="closeDeleteDialog"></div>
-        <div
-          class="relative w-full max-w-md transform rounded-xl bg-white p-6 shadow-xl transition-all dark:bg-dark-800"
-        >
+    <KumoDialog v-if="deleteTarget" :show="true" custom-layout width="narrow" :title="t('profile.passkey.deleteTitle')" :close-on-click-outside="true"  @close="closeDeleteDialog">
+    <div class="relative p-6">
           <h3 class="text-lg font-semibold text-gray-900 dark:text-white">
             {{ t('profile.passkey.deleteTitle') }}
           </h3>
@@ -144,10 +140,10 @@
           </p>
           <form class="mt-4 space-y-4" @submit.prevent="confirmDelete">
             <div>
-              <label for="passkey-delete-password" class="input-label">{{
+              <KumoLabel for="passkey-delete-password" class="input-label">{{
                 t('profile.currentPassword')
-              }}</label>
-              <input
+              }}</KumoLabel>
+              <KumoInput
                 id="passkey-delete-password"
                 v-model="deletePassword"
                 type="password"
@@ -158,25 +154,27 @@
               />
             </div>
             <div class="flex justify-end gap-3">
-              <button type="button" class="btn btn-secondary" :disabled="busy" @click="closeDeleteDialog">
+              <KumoButton type="button" class="btn btn-secondary" :disabled="busy" @click="closeDeleteDialog">
                 {{ t('common.cancel') }}
-              </button>
-              <button
+              </KumoButton>
+              <KumoButton
                 type="submit"
                 class="btn btn-danger"
                 :disabled="busy || deletePassword.length === 0"
               >
                 {{ busy ? t('common.processing') : t('common.delete') }}
-              </button>
+              </KumoButton>
             </div>
           </form>
-        </div>
-      </div>
+
     </div>
-  </div>
+  </KumoDialog>
+  </KumoSurface>
 </template>
 
 <script setup lang="ts">
+import { KumoButton, KumoDialog, KumoInput, KumoLabel, KumoLoader, KumoSurface } from '@/components/kumo'
+
 import { ref, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { passkeyAPI, type PasskeyCredentialSummary } from '@/api'

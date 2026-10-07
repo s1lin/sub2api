@@ -1,6 +1,7 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 import { defineComponent, h } from 'vue'
-import { flushPromises, mount } from '@vue/test-utils'
+import { mount, flushPromises } from '@/__tests__/render'
+
 import type { DOMWrapper, VueWrapper } from '@vue/test-utils'
 
 import RiskControlView from '../RiskControlView.vue'
@@ -522,8 +523,8 @@ describe('admin RiskControlView', () => {
       'grid-cols-1',
       'xl:grid-cols-[minmax(0,520px)_minmax(0,1fr)]',
     ]))
-    expect(syncCard.element.parentElement).toBe(runtimeCards.element)
-    expect(apiKeyLoadCard.element.parentElement).toBe(runtimeCards.element)
+    expect(syncCard.element.closest('[data-test="pre-block-runtime-cards"]')).toBe(runtimeCards.element)
+    expect(apiKeyLoadCard.element.closest('[data-test="pre-block-runtime-cards"]')).toBe(runtimeCards.element)
     expect(syncCard.classes()).toContain('card')
     expect(apiKeyLoadCard.classes()).toContain('card')
     expect(syncCard.get('h2').text()).toBe('admin.riskControl.preBlockSyncStatus')

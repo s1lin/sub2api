@@ -14,7 +14,7 @@
           {{ t('channelMonitorV2.settings.description') }}
         </p>
       </div>
-      <button
+      <KumoButton
         type="button"
         class="btn btn-primary"
         :disabled="saving || !dirty"
@@ -22,7 +22,7 @@
       >
         <Icon name="check" size="sm" />
         {{ t('channelMonitorV2.settings.save') }}
-      </button>
+      </KumoButton>
     </header>
 
     <div
@@ -39,15 +39,15 @@
       <router-link class="ml-1 font-medium underline" to="/admin/settings">{{ t('admin.settings.tabs.features') }}</router-link>
     </div>
 
-    <div
+    <KumoSurface
       v-if="loading"
       class="card flex min-h-[200px] items-center justify-center !rounded-3xl !border-0 text-sm text-gray-400 shadow-sm ring-1 ring-gray-900/5 dark:ring-dark-700"
     >
       <span class="animate-pulse">{{ t('channelMonitorV2.settings.loading') }}</span>
-    </div>
+    </KumoSurface>
 
     <template v-else-if="draft">
-      <div class="card divide-y divide-gray-100 !rounded-3xl !border-0 shadow-sm ring-1 ring-gray-900/5 dark:divide-dark-700 dark:!bg-dark-800 dark:ring-dark-700">
+      <KumoSurface class="card divide-y divide-gray-100 !rounded-3xl !border-0 shadow-sm ring-1 ring-gray-900/5 dark:divide-dark-700 dark:!bg-dark-800 dark:ring-dark-700">
         <div class="flex flex-wrap items-center justify-between gap-4 px-5 py-4">
           <div>
             <strong class="text-sm font-semibold text-gray-900 dark:text-white">{{ t('channelMonitorV2.settings.enableTitle') }}</strong>
@@ -62,28 +62,11 @@
             <strong class="text-sm font-semibold text-gray-900 dark:text-white">{{ t('channelMonitorV2.settings.refreshTitle') }}</strong>
             <p class="mt-0.5 text-xs text-gray-500 dark:text-dark-400">{{ t('channelMonitorV2.settings.refreshHint') }}</p>
           </div>
-          <div class="tabs inline-flex w-auto" role="group" :aria-label="t('channelMonitorV2.settings.refreshAria')">
-            <button
-              type="button"
-              class="tab"
-              :class="draft.refresh_interval_seconds === 60 ? 'tab-active' : ''"
-              @click="draft.refresh_interval_seconds = 60"
-            >
-              1 min
-            </button>
-            <button
-              type="button"
-              class="tab"
-              :class="draft.refresh_interval_seconds === 300 ? 'tab-active' : ''"
-              @click="draft.refresh_interval_seconds = 300"
-            >
-              5 min
-            </button>
-          </div>
+          <KumoTabs v-model="draft.refresh_interval_seconds" :tabs="[{ value: 60, label: '1 min' }, { value: 300, label: '5 min' }]" />
         </div>
-      </div>
+      </KumoSurface>
 
-      <div class="card overflow-hidden !rounded-3xl !border-0 shadow-sm ring-1 ring-gray-900/5 dark:!bg-dark-800 dark:ring-dark-700">
+      <KumoSurface class="card overflow-hidden !rounded-3xl !border-0 shadow-sm ring-1 ring-gray-900/5 dark:!bg-dark-800 dark:ring-dark-700">
         <div class="card-header !py-3">
           <h3 class="text-sm font-semibold text-gray-900 dark:text-white">{{ t('channelMonitorV2.settings.platformsTitle') }}</h3>
           <p class="mt-0.5 text-xs text-gray-500 dark:text-dark-400">
@@ -98,24 +81,24 @@
           >
             <Toggle v-model="platform.enabled" />
             <strong class="text-sm font-medium text-gray-900 dark:text-white">{{ platformLabel(platform.platform) }}</strong>
-            <input
+            <KumoInput
               class="input"
               :value="platform.models.join(', ')"
               type="text"
               :placeholder="t('channelMonitorV2.settings.modelsPlaceholder')"
               @change="setModels(platform, $event)"
             />
-            <span
+            <KumoBadge
               class="badge justify-self-start sm:justify-self-end"
               :class="platform.models.length ? 'badge-gray' : 'badge badge-primary'"
             >
               {{ platform.models.length ? t('channelMonitorV2.settings.badgeOther') : t('channelMonitorV2.settings.badgeAllModels') }}
-            </span>
+            </KumoBadge>
           </div>
         </div>
-      </div>
+      </KumoSurface>
 
-      <div class="card overflow-hidden !rounded-3xl !border-0 shadow-sm ring-1 ring-gray-900/5 dark:!bg-dark-800 dark:ring-dark-700">
+      <KumoSurface class="card overflow-hidden !rounded-3xl !border-0 shadow-sm ring-1 ring-gray-900/5 dark:!bg-dark-800 dark:ring-dark-700">
         <div class="card-header flex flex-wrap items-center justify-between gap-2 !py-3">
           <div>
             <h3 class="text-sm font-semibold text-gray-900 dark:text-white">{{ t('channelMonitorV2.settings.groupsTitle') }}</h3>
@@ -127,23 +110,23 @@
               }}
             </p>
           </div>
-          <button
+          <KumoButton
             v-if="draft.group_ids.length"
             type="button"
             class="btn btn-ghost btn-sm"
             @click="draft.group_ids = []"
           >
             {{ t('channelMonitorV2.settings.groupsAll') }}
-          </button>
+          </KumoButton>
         </div>
         <div class="max-h-[min(40vh,280px)] overflow-y-auto px-3 py-2 sm:px-4">
           <div class="grid grid-cols-1 gap-1 sm:grid-cols-2">
-            <label
+            <KumoLabel
               v-for="group in groups"
               :key="group.id"
               class="flex cursor-pointer items-center gap-3 rounded-xl px-3 py-2.5 text-sm transition hover:bg-gray-50 dark:hover:bg-dark-800/60"
             >
-              <input
+              <KumoCheckbox
                 type="checkbox"
                 class="h-4 w-4 rounded border-gray-300 text-primary-600 focus:ring-primary-500/40"
                 :checked="draft.group_ids.includes(group.id)"
@@ -151,13 +134,13 @@
               />
               <span class="min-w-0 flex-1 truncate font-medium text-gray-800 dark:text-gray-100">{{ group.name }}</span>
               <small class="shrink-0 text-xs text-gray-400">{{ platformLabel(group.platform) }} · #{{ group.id }}</small>
-            </label>
+            </KumoLabel>
           </div>
           <p v-if="groups.length === 0" class="empty-state py-8 text-sm text-gray-400">{{ t('channelMonitorV2.settings.groupsEmpty') }}</p>
         </div>
-      </div>
+      </KumoSurface>
 
-      <div class="card overflow-hidden !rounded-3xl !border-0 shadow-sm ring-1 ring-gray-900/5 dark:!bg-dark-800 dark:ring-dark-700">
+      <KumoSurface class="card overflow-hidden !rounded-3xl !border-0 shadow-sm ring-1 ring-gray-900/5 dark:!bg-dark-800 dark:ring-dark-700">
         <div class="card-header !py-3">
           <h3 class="text-sm font-semibold text-gray-900 dark:text-white">{{ t('channelMonitorV2.settings.errorsTitle') }}</h3>
           <p class="mt-0.5 text-xs text-gray-500 dark:text-dark-400">
@@ -166,12 +149,12 @@
         </div>
         <div class="max-h-[min(40vh,320px)] overflow-y-auto px-3 py-2 sm:px-4">
           <div class="grid grid-cols-1 gap-1 sm:grid-cols-2">
-            <label
+            <KumoLabel
               v-for="category in errorCategories"
               :key="category"
               class="flex cursor-pointer items-center gap-3 rounded-xl px-3 py-2.5 text-sm transition hover:bg-gray-50 dark:hover:bg-dark-800/60"
             >
-              <input
+              <KumoCheckbox
                 type="checkbox"
                 class="h-4 w-4 rounded border-gray-300 text-primary-600 focus:ring-primary-500/40"
                 :checked="isCategoryIgnored(category)"
@@ -181,7 +164,7 @@
                 {{ categoryLabel(category) }}
               </span>
               <small class="shrink-0 font-mono text-[10px] text-gray-400">{{ category }}</small>
-            </label>
+            </KumoLabel>
           </div>
         </div>
         <div class="border-t border-gray-100 px-5 py-3 text-xs text-gray-500 dark:border-dark-700 dark:text-dark-400">
@@ -192,9 +175,9 @@
             })
           }}
         </div>
-      </div>
+      </KumoSurface>
 
-      <div class="card overflow-hidden !rounded-3xl !border-0 shadow-sm ring-1 ring-gray-900/5 dark:!bg-dark-800 dark:ring-dark-700">
+      <KumoSurface class="card overflow-hidden !rounded-3xl !border-0 shadow-sm ring-1 ring-gray-900/5 dark:!bg-dark-800 dark:ring-dark-700">
         <div class="card-header !py-3">
           <h3 class="text-sm font-semibold text-gray-900 dark:text-white">{{ t('channelMonitorV2.settings.healthTitle') }}</h3>
           <p class="mt-0.5 text-xs text-gray-500 dark:text-dark-400">
@@ -202,40 +185,40 @@
           </p>
         </div>
         <div class="grid grid-cols-1 gap-4 px-5 py-4 sm:grid-cols-2 lg:grid-cols-4">
-          <label class="block">
+          <KumoLabel class="block">
             <span class="input-label">{{ t('channelMonitorV2.settings.fields.minimumSample') }}</span>
-            <input v-model.number="draft.health_thresholds.minimum_sample" class="input" type="number" min="1" max="10000" />
-          </label>
-          <label class="block">
+            <KumoInput v-model.number="draft.health_thresholds.minimum_sample" class="input" type="number" min="1" max="10000" />
+          </KumoLabel>
+          <KumoLabel class="block">
             <span class="input-label">{{ t('channelMonitorV2.settings.fields.warningError') }}</span>
-            <input v-model.number="warningErrorPercent" class="input" type="number" min="0" max="100" step="0.1" />
-          </label>
-          <label class="block">
+            <KumoInput v-model.number="warningErrorPercent" class="input" type="number" min="0" max="100" step="0.1" />
+          </KumoLabel>
+          <KumoLabel class="block">
             <span class="input-label">{{ t('channelMonitorV2.settings.fields.criticalError') }}</span>
-            <input v-model.number="criticalErrorPercent" class="input" type="number" min="0" max="100" step="0.1" />
-          </label>
-          <label class="block">
+            <KumoInput v-model.number="criticalErrorPercent" class="input" type="number" min="0" max="100" step="0.1" />
+          </KumoLabel>
+          <KumoLabel class="block">
             <span class="input-label">{{ t('channelMonitorV2.settings.fields.targetTtft') }}</span>
-            <input v-model.number="draft.health_thresholds.target_ttft_ms" class="input" type="number" min="1" step="100" />
-          </label>
-          <label class="block">
+            <KumoInput v-model.number="draft.health_thresholds.target_ttft_ms" class="input" type="number" min="1" step="100" />
+          </KumoLabel>
+          <KumoLabel class="block">
             <span class="input-label">{{ t('channelMonitorV2.settings.fields.warningTtft') }}</span>
-            <input v-model.number="draft.health_thresholds.warning_ttft_ms" class="input" type="number" min="1" step="100" />
-          </label>
-          <label class="block">
+            <KumoInput v-model.number="draft.health_thresholds.warning_ttft_ms" class="input" type="number" min="1" step="100" />
+          </KumoLabel>
+          <KumoLabel class="block">
             <span class="input-label">{{ t('channelMonitorV2.settings.fields.criticalTtft') }}</span>
-            <input v-model.number="draft.health_thresholds.critical_ttft_ms" class="input" type="number" min="1" step="100" />
-          </label>
-          <label class="block">
+            <KumoInput v-model.number="draft.health_thresholds.critical_ttft_ms" class="input" type="number" min="1" step="100" />
+          </KumoLabel>
+          <KumoLabel class="block">
             <span class="input-label">{{ t('channelMonitorV2.settings.fields.warningCache') }}</span>
-            <input v-model.number="warningCachePercent" class="input" type="number" min="0" max="100" step="0.1" />
-          </label>
-          <label class="block">
+            <KumoInput v-model.number="warningCachePercent" class="input" type="number" min="0" max="100" step="0.1" />
+          </KumoLabel>
+          <KumoLabel class="block">
             <span class="input-label">{{ t('channelMonitorV2.settings.fields.criticalCache') }}</span>
-            <input v-model.number="criticalCachePercent" class="input" type="number" min="0" max="100" step="0.1" />
-          </label>
+            <KumoInput v-model.number="criticalCachePercent" class="input" type="number" min="0" max="100" step="0.1" />
+          </KumoLabel>
         </div>
-      </div>
+      </KumoSurface>
 
       <div class="space-y-2">
         <div class="rounded-2xl border border-primary-200 bg-primary-50/80 px-4 py-3 text-sm text-primary-900 dark:border-primary-800/50 dark:bg-primary-900/20 dark:text-primary-100">
@@ -261,6 +244,8 @@
 </template>
 
 <script setup lang="ts">
+import { KumoBadge, KumoButton, KumoCheckbox, KumoInput, KumoLabel, KumoSurface, KumoTabs } from '@/components/kumo'
+
 import { computed, onMounted, ref } from 'vue'
 import { useI18n } from 'vue-i18n'
 import Toggle from '@/components/common/Toggle.vue'

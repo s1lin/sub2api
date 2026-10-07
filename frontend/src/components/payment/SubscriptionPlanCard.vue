@@ -1,5 +1,5 @@
 <template>
-  <div class="subscription-plan card relative flex flex-col overflow-hidden">
+  <KumoSurface class="subscription-plan card relative flex flex-col overflow-hidden">
     <div class="flex flex-1 flex-col p-6">
       <!-- Header: name + badge + price -->
       <div class="mb-5 flex flex-wrap items-start justify-between gap-4">
@@ -81,18 +81,20 @@
       <div class="flex-1" />
 
       <!-- Subscribe Button -->
-      <button
+      <KumoButton
         type="button"
         class="btn btn-primary w-full py-3"
         @click="emit('select', plan)"
       >
         {{ isRenewal ? t('payment.renewNow') : t('payment.subscribeNow') }}
-      </button>
+      </KumoButton>
     </div>
-  </div>
+  </KumoSurface>
 </template>
 
 <script setup lang="ts">
+import { KumoButton, KumoSurface } from '@/components/kumo'
+
 import { computed } from 'vue'
 import { useI18n } from 'vue-i18n'
 import type { SubscriptionPlan } from '@/types/payment'

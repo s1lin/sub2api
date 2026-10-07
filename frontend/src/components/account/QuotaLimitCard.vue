@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import { KumoButton, KumoSwitch } from '@/components/kumo'
+
 import { ref, watch, computed } from 'vue'
 import { useI18n } from 'vue-i18n'
 import QuotaDimensionRow from './QuotaDimensionRow.vue'
@@ -134,32 +136,18 @@ const dailyFixedHint = computed(() =>
   <div class="rounded-lg border border-gray-200 dark:border-dark-600">
       <!-- Header: toggle + collapse -->
       <div class="flex items-center justify-between p-4" :class="{ 'pb-0': localEnabled && !collapsed }">
-        <div class="flex items-center gap-2 flex-1 cursor-pointer" @click="localEnabled && (collapsed = !collapsed)">
+        <KumoButton class="flex items-center gap-2 flex-1 text-left" :disabled="!localEnabled" :aria-expanded="localEnabled && !collapsed" @click="collapsed = !collapsed">
           <svg v-if="localEnabled" class="h-4 w-4 text-gray-400 transition-transform" :class="{ '-rotate-90': collapsed }" viewBox="0 0 20 20" fill="currentColor">
             <path fill-rule="evenodd" d="M5.23 7.21a.75.75 0 011.06.02L10 11.168l3.71-3.938a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z" clip-rule="evenodd" />
           </svg>
           <div>
-            <label class="input-label mb-0 cursor-pointer">{{ t('admin.accounts.quotaLimitToggle') }}</label>
+            <span class="input-label mb-0">{{ t('admin.accounts.quotaLimitToggle') }}</span>
             <p class="mt-0.5 text-xs text-gray-500 dark:text-gray-400">
               {{ t('admin.accounts.quotaLimitToggleHint') }}
             </p>
           </div>
-        </div>
-        <button
-          type="button"
-          @click="localEnabled = !localEnabled"
-          :class="[
-            'relative inline-flex h-6 w-11 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2',
-            localEnabled ? 'bg-primary-600' : 'bg-gray-200 dark:bg-dark-600'
-          ]"
-        >
-          <span
-            :class="[
-              'pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out',
-              localEnabled ? 'translate-x-5' : 'translate-x-0'
-            ]"
-          />
-        </button>
+        </KumoButton>
+        <KumoSwitch v-model="localEnabled"  />
       </div>
 
       <!-- Collapsible content -->

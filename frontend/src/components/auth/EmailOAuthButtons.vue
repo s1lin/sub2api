@@ -9,7 +9,7 @@
     </div>
 
     <div :class="providerGridClass">
-      <button
+      <KumoButton
         v-for="provider in visibleProviders"
         :key="provider"
         type="button"
@@ -20,12 +20,14 @@
         <GitHubMark v-if="provider === 'github'" class="h-5 w-5 text-gray-800 dark:text-gray-100" />
         <GoogleMark v-else class="h-5 w-5" />
         <span class="font-medium">{{ providerLabel(provider) }}</span>
-      </button>
+      </KumoButton>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
+import { KumoButton } from '@/components/kumo'
+
 import { computed } from 'vue'
 import { useRoute } from 'vue-router'
 import { useI18n } from 'vue-i18n'

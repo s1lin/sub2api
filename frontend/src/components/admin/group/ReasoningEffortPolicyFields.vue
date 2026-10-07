@@ -1,9 +1,9 @@
 <template>
   <div class="space-y-4">
     <div>
-      <label :for="`${idPrefix}-max-effort`" class="input-label">
+      <KumoLabel :for="`${idPrefix}-max-effort`" class="input-label">
         {{ t("admin.groups.form.maxReasoningEffort") }}
-      </label>
+      </KumoLabel>
       <Select
         :id="`${idPrefix}-max-effort`"
         :model-value="maxEffort"
@@ -18,9 +18,9 @@
     </div>
 
     <div>
-      <label :for="`${idPrefix}-over-limit`" class="input-label">
+      <KumoLabel :for="`${idPrefix}-over-limit`" class="input-label">
         {{ t("admin.groups.form.maxReasoningEffortOverLimit") }}
-      </label>
+      </KumoLabel>
       <Select
         :id="`${idPrefix}-over-limit`"
         :model-value="overLimit"
@@ -36,21 +36,21 @@
     <div class="border-t border-gray-200 pt-4 dark:border-dark-600">
       <div class="mb-3 flex items-center justify-between gap-3">
         <div>
-          <label class="input-label mb-0">
+          <KumoLabel class="input-label mb-0">
             {{ t("admin.groups.form.reasoningEffortMappings") }}
-          </label>
+          </KumoLabel>
           <p class="input-hint mb-0">
             {{ t("admin.groups.form.reasoningEffortMappingsHint") }}
           </p>
         </div>
-        <button
+        <KumoButton
           type="button"
           class="inline-flex min-h-11 shrink-0 items-center gap-1.5 rounded-lg px-2.5 text-sm font-medium text-primary-600 transition-colors hover:bg-primary-50 hover:text-primary-700 focus:outline-none focus:ring-2 focus:ring-primary-500/30 dark:text-primary-400 dark:hover:bg-primary-900/20 dark:hover:text-primary-300"
           @click="addGroup"
         >
           <Icon name="plus" size="sm" />
           {{ t("admin.groups.form.addReasoningEffortMapping") }}
-        </button>
+        </KumoButton>
       </div>
 
       <div v-if="mappings.length > 0" class="space-y-2">
@@ -63,9 +63,9 @@
             class="grid grid-cols-1 items-start gap-3 md:grid-cols-[minmax(0,1fr)_1.25rem_minmax(0,1fr)_2.75rem]"
           >
             <div>
-              <label :for="`${idPrefix}-${group.id}-match-type`" class="input-label">
+              <KumoLabel :for="`${idPrefix}-${group.id}-match-type`" class="input-label">
                 {{ t("admin.groups.form.reasoningEffortMatchType") }}
-              </label>
+              </KumoLabel>
               <Select
                 :id="`${idPrefix}-${group.id}-match-type`"
                 :model-value="group.match_type"
@@ -89,10 +89,10 @@
             <div class="hidden md:block" aria-hidden="true" />
 
             <div>
-              <label :for="`${idPrefix}-${group.id}-model`" class="input-label">
+              <KumoLabel :for="`${idPrefix}-${group.id}-model`" class="input-label">
                 {{ t("admin.groups.form.reasoningEffortModel") }}
-              </label>
-              <input
+              </KumoLabel>
+              <KumoInput
                 :id="`${idPrefix}-${group.id}-model`"
                 :value="group.model"
                 type="text"
@@ -105,7 +105,7 @@
               />
             </div>
 
-            <button
+            <KumoButton
               type="button"
               class="flex h-11 w-11 items-center justify-center self-end rounded-lg text-gray-400 transition-colors hover:bg-red-50 hover:text-red-500 focus:outline-none focus:ring-2 focus:ring-red-500/30 dark:hover:bg-red-900/20 dark:hover:text-red-400"
               :title="t('admin.groups.form.removeReasoningEffortMapping')"
@@ -113,7 +113,7 @@
               @click="removeGroup(group.id)"
             >
               <Icon name="trash" size="sm" />
-            </button>
+            </KumoButton>
           </div>
 
           <p
@@ -130,9 +130,9 @@
             class="grid grid-cols-1 items-start gap-3 md:grid-cols-[minmax(0,1fr)_1.25rem_minmax(0,1fr)_2.75rem]"
           >
             <div>
-              <label :for="`${idPrefix}-${pair.id}-from`" class="input-label">
+              <KumoLabel :for="`${idPrefix}-${pair.id}-from`" class="input-label">
                 {{ t("admin.groups.form.reasoningEffortFrom") }}
-              </label>
+              </KumoLabel>
               <Select
                 :id="`${idPrefix}-${pair.id}-from`"
                 :model-value="pair.from"
@@ -158,9 +158,9 @@
             </div>
 
             <div>
-              <label :for="`${idPrefix}-${pair.id}-to`" class="input-label">
+              <KumoLabel :for="`${idPrefix}-${pair.id}-to`" class="input-label">
                 {{ t("admin.groups.form.reasoningEffortTo") }}
-              </label>
+              </KumoLabel>
               <Select
                 :id="`${idPrefix}-${pair.id}-to`"
                 :model-value="pair.to"
@@ -181,7 +181,7 @@
               </p>
             </div>
 
-            <button
+            <KumoButton
               type="button"
               class="flex h-11 w-11 items-center justify-center self-end rounded-lg text-gray-400 transition-colors hover:bg-red-50 hover:text-red-500 focus:outline-none focus:ring-2 focus:ring-red-500/30 dark:hover:bg-red-900/20 dark:hover:text-red-400"
               :title="t('admin.groups.form.removeReasoningEffortPair')"
@@ -189,17 +189,17 @@
               @click="removePair(group.id, pair.id)"
             >
               <Icon name="trash" size="sm" />
-            </button>
+            </KumoButton>
           </div>
 
-          <button
+          <KumoButton
             type="button"
             class="inline-flex min-h-9 items-center gap-1.5 text-sm font-medium text-primary-600 transition-colors hover:text-primary-700 focus:outline-none focus:ring-2 focus:ring-primary-500/30 dark:text-primary-400 dark:hover:text-primary-300"
             @click="addPair(group.id)"
           >
             <Icon name="plus" size="sm" />
             {{ t("admin.groups.form.addReasoningEffortPair") }}
-          </button>
+          </KumoButton>
         </div>
       </div>
     </div>
@@ -207,6 +207,8 @@
 </template>
 
 <script setup lang="ts">
+import { KumoButton, KumoInput, KumoLabel } from '@/components/kumo'
+
 import { computed, ref } from "vue";
 import { useI18n } from "vue-i18n";
 import type { GroupPlatform } from "@/types";

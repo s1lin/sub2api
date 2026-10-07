@@ -31,7 +31,7 @@
         <!-- Client Tabs -->
         <div v-if="clientTabs.length" class="overflow-x-auto border-b border-gray-200 dark:border-dark-700">
           <nav class="-mb-px flex min-w-max gap-4 sm:gap-6" aria-label="Client">
-            <button
+            <KumoButton
               v-for="tab in clientTabs"
               :key="tab.id"
               type="button"
@@ -47,7 +47,7 @@
                 <component :is="tab.icon" class="w-4 h-4" />
                 {{ tab.label }}
               </span>
-            </button>
+            </KumoButton>
           </nav>
         </div>
 
@@ -69,7 +69,7 @@
             role="radiogroup"
             :aria-label="t('keys.useKeyModal.openai.authModeTitle')"
           >
-            <button
+            <KumoButton
               type="button"
               role="radio"
               data-testid="codex-auth-mode-legacy"
@@ -83,8 +83,8 @@
               @click="codexAuthMode = 'legacy'"
             >
               {{ t('keys.useKeyModal.openai.authModeLegacy') }}
-            </button>
-            <button
+            </KumoButton>
+            <KumoButton
               type="button"
               role="radio"
               data-testid="codex-auth-mode-api-key"
@@ -98,7 +98,7 @@
               @click="codexAuthMode = 'api-key'"
             >
               {{ t('keys.useKeyModal.openai.authModeApiKey') }}
-            </button>
+            </KumoButton>
           </div>
           <div
             v-if="codexAuthMode === 'api-key'"
@@ -113,7 +113,7 @@
         <!-- OS/Shell Tabs -->
         <div v-if="showShellTabs" class="overflow-x-auto border-b border-gray-200 dark:border-dark-700">
           <nav class="-mb-px flex min-w-max gap-4" aria-label="Tabs">
-            <button
+            <KumoButton
               v-for="tab in currentTabs"
               :key="tab.id"
               type="button"
@@ -129,7 +129,7 @@
                 <component :is="tab.icon" class="w-4 h-4" />
                 {{ tab.label }}
               </span>
-            </button>
+            </KumoButton>
           </nav>
         </div>
 
@@ -149,7 +149,7 @@
               <!-- Code Header -->
               <div class="flex items-center justify-between px-4 py-2 bg-gray-800 dark:bg-dark-800 border-b border-gray-700 dark:border-dark-700">
                 <span class="min-w-0 truncate text-xs text-gray-400 font-mono">{{ file.path }}</span>
-                <button
+                <KumoButton
                   type="button"
                   @click="copyContent(file.content, index)"
                   class="flex flex-shrink-0 items-center gap-1.5 px-2.5 py-1 text-xs font-medium rounded-lg transition-colors"
@@ -164,7 +164,7 @@
                     <path stroke-linecap="round" stroke-linejoin="round" d="M15.666 3.888A2.25 2.25 0 0013.5 2.25h-3c-1.03 0-1.9.693-2.166 1.638m7.332 0c.055.194.084.4.084.612v0a.75.75 0 01-.75.75H9a.75.75 0 01-.75-.75v0c0-.212.03-.418.084-.612m7.332 0c.646.049 1.288.11 1.927.184 1.1.128 1.907 1.077 1.907 2.185V19.5a2.25 2.25 0 01-2.25 2.25H6.75A2.25 2.25 0 014.5 19.5V6.257c0-1.108.806-2.057 1.907-2.185a48.208 48.208 0 011.927-.184" />
                   </svg>
                   {{ copiedIndex === index ? t('keys.useKeyModal.copied') : t('keys.useKeyModal.copy') }}
-                </button>
+                </KumoButton>
               </div>
               <!-- Code Content -->
               <pre class="p-4 text-sm font-mono text-gray-100 overflow-x-auto"><code v-if="file.highlighted" v-html="file.highlighted"></code><code v-else v-text="file.content"></code></pre>
@@ -188,7 +188,7 @@
               <p class="mt-1 truncate font-mono text-xs text-gray-700 dark:text-gray-300">
                 {{ codexModelCatalogMode === 'remote' ? codexModelCatalogUrl : codexModelCatalogPath }}
               </p>
-              <select
+              <KumoNativeSelect
                 v-model="codexModelCatalogMode"
                 data-testid="codex-model-catalog-mode"
                 :aria-label="t('keys.useKeyModal.codexModelCatalog.mode')"
@@ -196,12 +196,12 @@
               >
                 <option value="remote" :disabled="codexModelCatalogOversized">{{ t('keys.useKeyModal.codexModelCatalog.remote') }}</option>
                 <option value="file">{{ t('keys.useKeyModal.codexModelCatalog.local') }}</option>
-              </select>
+              </KumoNativeSelect>
               <p v-if="codexModelCatalogOversized" class="mt-2 text-xs text-amber-700 dark:text-amber-300">
                 {{ t('keys.useKeyModal.codexModelCatalog.oversized') }}
               </p>
             </div>
-            <button
+            <KumoButton
               v-if="codexModelManifestState === 'ready'"
               type="button"
               class="btn btn-primary min-h-9 flex-shrink-0 px-3 text-xs"
@@ -209,8 +209,8 @@
             >
               <Icon name="download" size="sm" class="mr-1.5" />
               {{ t('keys.useKeyModal.codexModelCatalog.download') }}
-            </button>
-            <button
+            </KumoButton>
+            <KumoButton
               v-else
               type="button"
               data-testid="codex-model-catalog-fetch"
@@ -227,7 +227,7 @@
               {{ codexModelManifestState === 'error'
                 ? t('keys.useKeyModal.codexModelCatalog.retry')
                 : t('keys.useKeyModal.codexModelCatalog.fetch') }}
-            </button>
+            </KumoButton>
           </div>
           <p
             v-if="codexModelManifestState === 'ready'"
@@ -255,18 +255,20 @@
 
     <template #footer>
       <div class="flex justify-end">
-        <button
+        <KumoButton
           @click="emit('close')"
           class="btn btn-secondary"
         >
           {{ t('common.close') }}
-        </button>
+        </KumoButton>
       </div>
     </template>
   </BaseDialog>
 </template>
 
 <script setup lang="ts">
+import { KumoButton, KumoNativeSelect } from '@/components/kumo'
+
 import { ref, computed, h, watch, type Component } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { saveAs } from 'file-saver'

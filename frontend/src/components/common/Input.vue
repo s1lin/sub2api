@@ -1,9 +1,9 @@
 <template>
   <div class="w-full">
-    <label v-if="label" :for="id" class="input-label mb-1.5 block">
+    <KumoLabel v-if="label" :for="id" class="input-label mb-1.5 block">
       {{ label }}
       <span v-if="required" class="text-red-500">*</span>
-    </label>
+    </KumoLabel>
     <div class="relative">
       <!-- Prefix Icon Slot -->
       <div
@@ -13,7 +13,7 @@
         <slot name="prefix"></slot>
       </div>
 
-      <input
+      <KumoInput
         :id="id"
         ref="inputRef"
         :type="type"
@@ -56,6 +56,8 @@
 </template>
 
 <script setup lang="ts">
+import { KumoInput, KumoLabel } from '@/components/kumo'
+
 import { computed, ref } from 'vue'
 
 interface Props {

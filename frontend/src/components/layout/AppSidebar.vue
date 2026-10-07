@@ -1,4 +1,14 @@
 <template>
+  <component
+    :is="desktopNavigation ? 'div' : KumoDialog"
+    class="contents"
+    :show="mobileOpen"
+    :drawer="true"
+    :custom-layout="true"
+    :title="t('common.toggleMenu')"
+    :close-on-click-outside="true"
+    @close="closeMobile"
+  >
   <aside
     class="sidebar"
     :class="[
@@ -38,7 +48,7 @@
           <template v-for="item in adminNavItems" :key="item.path">
             <!-- Collapsible group (has children) -->
             <template v-if="item.children?.length">
-              <button
+              <KumoButton
                 type="button"
                 class="sidebar-link mb-1 w-full"
                 :class="{
@@ -60,7 +70,7 @@
                     :class="isGroupExpanded(item) ? 'rotate-180' : ''"
                   />
                 </span>
-              </button>
+              </KumoButton>
               <!-- Children -->
               <div v-if="!sidebarCollapsed && isGroupExpanded(item)" class="mb-1 ml-4 border-l border-gray-200 pl-2 dark:border-dark-600">
                 <router-link
@@ -150,7 +160,7 @@
     <!-- Bottom Section -->
     <div class="mt-auto border-t border-gray-100 p-3 dark:border-dark-800">
       <!-- Theme Toggle -->
-      <button
+      <KumoButton
         @click="toggleTheme"
         class="sidebar-link mb-2 w-full"
         :class="{ 'sidebar-link-collapsed': sidebarCollapsed }"
@@ -161,10 +171,10 @@
         <span class="sidebar-label" :class="{ 'sidebar-label-collapsed': sidebarCollapsed }" :aria-hidden="sidebarCollapsed ? 'true' : 'false'">{{
           isDark ? t('nav.lightMode') : t('nav.darkMode')
         }}</span>
-      </button>
+      </KumoButton>
 
       <!-- Collapse Button -->
-      <button
+      <KumoButton
         @click="toggleSidebar"
         class="sidebar-link w-full"
         :class="{ 'sidebar-link-collapsed': sidebarCollapsed }"
@@ -173,21 +183,15 @@
         <ChevronDoubleLeftIcon v-if="!sidebarCollapsed" class="h-5 w-5 flex-shrink-0" />
         <ChevronDoubleRightIcon v-else class="h-5 w-5 flex-shrink-0" />
         <span class="sidebar-label" :class="{ 'sidebar-label-collapsed': sidebarCollapsed }" :aria-hidden="sidebarCollapsed ? 'true' : 'false'">{{ t('nav.collapse') }}</span>
-      </button>
+      </KumoButton>
     </div>
   </aside>
-
-  <!-- Mobile Overlay -->
-  <transition name="fade">
-    <div
-      v-if="mobileOpen"
-      class="fixed inset-0 z-30 bg-black/50 lg:hidden"
-      @click="closeMobile"
-    ></div>
-  </transition>
+  </component>
 </template>
 
 <script setup lang="ts">
+import { KumoButton, KumoDialog } from '@/components/kumo'
+
 import { useTheme } from '@/composables/useTheme'
 import { computed, h, nextTick, onBeforeUnmount, onMounted, ref, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
@@ -249,6 +253,12 @@ const { canUseBatchImage, refreshBatchImageAccess } = useBatchImageAccess()
 
 const sidebarCollapsed = computed(() => appStore.sidebarCollapsed)
 const mobileOpen = computed(() => appStore.mobileOpen)
+const desktopMedia = window.matchMedia('(min-width: 1024px)')
+const desktopNavigation = ref(desktopMedia.matches)
+const updateNavigationViewport = () => {
+  desktopNavigation.value = desktopMedia.matches
+  if (desktopNavigation.value) closeMobile()
+}
 const isAdmin = computed(() => authStore.isAdmin)
 const sidebarNavRef = ref<HTMLElement | null>(null)
 const { isDark, toggleTheme } = useTheme()
@@ -941,6 +951,7 @@ watch(
 )
 
 onMounted(() => {
+  desktopMedia.addEventListener('change', updateNavigationViewport)
   void refreshBatchImageAccess()
   if (isAdmin.value) {
     adminSettingsStore.fetch()
@@ -956,6 +967,7 @@ onMounted(() => {
 })
 
 onBeforeUnmount(() => {
+  desktopMedia.removeEventListener('change', updateNavigationViewport)
   if (sidebarNavRef.value) {
     appStore.sidebarScrollTop = sidebarNavRef.value.scrollTop
   }

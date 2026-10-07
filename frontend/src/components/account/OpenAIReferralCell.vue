@@ -1,6 +1,6 @@
 <template>
   <div class="flex flex-wrap items-center gap-1.5">
-    <button
+    <KumoButton
       type="button"
       data-testid="referral-count"
       class="rounded px-1.5 py-0.5 text-[10px] font-medium text-violet-600 hover:bg-violet-50 disabled:opacity-50 dark:text-violet-400 dark:hover:bg-violet-900/30"
@@ -9,8 +9,8 @@
       @click="refresh()"
     >
       {{ t('admin.accounts.openaiReferral.available') }} {{ countDisplay }}
-    </button>
-    <button
+    </KumoButton>
+    <KumoButton
       type="button"
       data-testid="referral-open"
       class="rounded px-1.5 py-0.5 text-[10px] font-medium text-blue-600 hover:bg-blue-50 disabled:opacity-50 dark:text-blue-400 dark:hover:bg-blue-900/30"
@@ -19,7 +19,7 @@
       @click="openDialog"
     >
       {{ t('admin.accounts.openaiReferral.invite') }}
-    </button>
+    </KumoButton>
     <span v-if="error && !show" class="max-w-48 truncate text-[10px] text-red-600" :title="error">{{ error }}</span>
     <span v-if="warning && !show" class="max-w-48 truncate text-[10px] text-amber-700 dark:text-amber-400" :title="warning">{{ warning }}</span>
     <BaseDialog
@@ -39,9 +39,9 @@
             <p class="font-medium text-violet-800 dark:text-violet-300">{{ programLabel }}</p>
             <p class="mt-1 text-gray-600 dark:text-gray-300">{{ t('admin.accounts.openaiReferral.available') }} {{ countDisplay }}</p>
           </div>
-          <button type="button" class="btn btn-secondary btn-sm" :disabled="loading || sending" @click="refresh()">
+          <KumoButton type="button" class="btn btn-secondary btn-sm" :disabled="loading || sending" @click="refresh()">
             {{ loading ? t('common.loading') : t('common.refresh') }}
-          </button>
+          </KumoButton>
         </div>
         <div v-if="eligibility?.title || eligibility?.description || eligibility?.rules?.length" class="space-y-2 text-sm text-gray-600 dark:text-gray-300">
           <p v-if="eligibility.title" class="font-medium">{{ eligibility.title }}</p>
@@ -54,8 +54,8 @@
           {{ t('admin.accounts.openaiReferral.unavailable') }}
         </p>
         <div>
-          <label :for="emailID" class="input-label">{{ t('admin.accounts.openaiReferral.email') }}</label>
-          <input
+          <KumoLabel :for="emailID" class="input-label">{{ t('admin.accounts.openaiReferral.email') }}</KumoLabel>
+          <KumoInput
             :id="emailID"
             v-model="email"
             type="email"
@@ -68,10 +68,10 @@
             data-testid="referral-email"
           />
         </div>
-        <label v-if="needsConsent" class="flex items-start gap-2 text-sm text-gray-600 dark:text-gray-300">
-          <input v-model="confirmed" type="checkbox" class="mt-1" :disabled="sending" data-testid="referral-consent" />
+        <KumoLabel v-if="needsConsent" class="flex items-start gap-2 text-sm text-gray-600 dark:text-gray-300">
+          <KumoCheckbox v-model="confirmed" type="checkbox" class="mt-1" :disabled="sending" data-testid="referral-consent" />
           {{ t('admin.accounts.openaiReferral.consent') }}
-        </label>
+        </KumoLabel>
         <p v-if="error" role="alert" class="text-sm text-red-600 dark:text-red-400">{{ error }}</p>
         <p v-if="sentEmail" role="status" class="text-sm text-emerald-700 dark:text-emerald-400">
           {{ t('admin.accounts.openaiReferral.sent', { email: sentEmail }) }}
@@ -79,16 +79,18 @@
         <p v-if="warning" role="status" class="text-sm text-amber-700 dark:text-amber-400">{{ warning }}</p>
       </form>
       <template #footer>
-        <button type="button" class="btn btn-secondary" :disabled="sending" @click="closeDialog">{{ t('common.close') }}</button>
-        <button type="submit" :form="formID" class="btn btn-primary" :disabled="!canSend" data-testid="referral-send">
+        <KumoButton type="button" class="btn btn-secondary" :disabled="sending" @click="closeDialog">{{ t('common.close') }}</KumoButton>
+        <KumoButton type="submit" :form="formID" class="btn btn-primary" :disabled="!canSend" data-testid="referral-send">
           {{ sending ? t('admin.accounts.openaiReferral.sending') : t('admin.accounts.openaiReferral.send') }}
-        </button>
+        </KumoButton>
       </template>
     </BaseDialog>
   </div>
 </template>
 
 <script setup lang="ts">
+import { KumoButton, KumoCheckbox, KumoInput, KumoLabel } from '@/components/kumo'
+
 import { computed, ref, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
 import type { Account } from '@/types'

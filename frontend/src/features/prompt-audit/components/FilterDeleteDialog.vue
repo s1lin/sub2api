@@ -5,75 +5,79 @@
 
       <fieldset>
         <legend class="text-xs font-medium text-gray-600 dark:text-dark-200">{{ t('admin.promptAudit.events.filterTimeRange') }}</legend>
-        <div class="mt-2 flex flex-wrap gap-2" role="radiogroup" :aria-label="t('admin.promptAudit.events.filterTimeRange')">
-          <label
+        <KumoRadioGroup v-model="preset" name="prompt-delete-range" class="contents">
+<div class="mt-2 flex flex-wrap gap-2" role="radiogroup" :aria-label="t('admin.promptAudit.events.filterTimeRange')">
+          <KumoRadio :value="option.id" :data-test="`range-preset-${option.id}`" @change="criteriaChanged" appearance="card"
             v-for="option in DELETE_RANGE_PRESETS"
             :key="option.id"
             class="cursor-pointer"
           >
-            <input v-model="preset" type="radio" name="prompt-delete-range" :value="option.id" class="peer sr-only" :data-test="`range-preset-${option.id}`" @change="criteriaChanged" />
-            <span class="inline-flex items-center rounded-full border border-gray-200 px-3 py-1.5 text-xs font-medium text-gray-600 transition-colors peer-checked:border-red-500 peer-checked:bg-red-50 peer-checked:text-red-700 peer-focus-visible:ring-2 peer-focus-visible:ring-red-500/30 dark:border-dark-600 dark:text-dark-300 dark:peer-checked:border-red-500 dark:peer-checked:bg-red-950/40 dark:peer-checked:text-red-300">
+
+            <span class="inline-flex items-center text-xs font-medium text-gray-600 dark:text-dark-300">
               {{ t(`admin.promptAudit.events.timePresets.${option.id}`) }}
             </span>
-          </label>
+          </KumoRadio>
         </div>
+</KumoRadioGroup>
         <p class="mt-2 text-xs text-gray-500 dark:text-dark-400">{{ t('admin.promptAudit.events.filterTimeRangeHint') }}</p>
         <div v-if="preset === 'custom'" class="mt-3 grid gap-3 sm:grid-cols-2" data-test="custom-range">
-          <label class="text-xs text-gray-600 dark:text-dark-200">
+          <KumoLabel class="text-xs text-gray-600 dark:text-dark-200">
             <span>{{ t('admin.promptAudit.events.startAt') }}</span>
-            <input v-model="local.start_at" type="datetime-local" class="input mt-1 w-full" :aria-label="t('admin.promptAudit.events.startAt')" @change="criteriaChanged" />
-          </label>
-          <label class="text-xs text-gray-600 dark:text-dark-200">
+            <KumoInput v-model="local.start_at" type="datetime-local" class="input mt-1 w-full" :aria-label="t('admin.promptAudit.events.startAt')" @change="criteriaChanged" />
+          </KumoLabel>
+          <KumoLabel class="text-xs text-gray-600 dark:text-dark-200">
             <span>{{ t('admin.promptAudit.events.endAt') }}</span>
-            <input v-model="local.end_at" type="datetime-local" class="input mt-1 w-full" :aria-label="t('admin.promptAudit.events.endAt')" @change="criteriaChanged" />
-          </label>
+            <KumoInput v-model="local.end_at" type="datetime-local" class="input mt-1 w-full" :aria-label="t('admin.promptAudit.events.endAt')" @change="criteriaChanged" />
+          </KumoLabel>
           <p v-if="!canPreview" class="text-xs text-red-600 dark:text-red-400 sm:col-span-2">{{ t('admin.promptAudit.events.customRangeInvalid') }}</p>
         </div>
       </fieldset>
 
       <div class="grid gap-3 sm:grid-cols-2">
-        <label class="text-xs text-gray-600 dark:text-dark-200">
+        <KumoLabel class="text-xs text-gray-600 dark:text-dark-200">
           <span>{{ t('admin.promptAudit.events.decision') }}</span>
-          <select v-model="local.decision" class="input mt-1 w-full" :aria-label="t('admin.promptAudit.events.decision')" data-test="delete-decision" @change="criteriaChanged">
+          <KumoNativeSelect v-model="local.decision" class="input mt-1 w-full" :aria-label="t('admin.promptAudit.events.decision')" data-test="delete-decision" @change="criteriaChanged">
             <option value="">{{ t('common.all') }}</option>
             <option value="pass">{{ t('admin.promptAudit.decisions.pass') }}</option>
             <option value="flag">{{ t('admin.promptAudit.decisions.flag') }}</option>
             <option value="critical">{{ t('admin.promptAudit.decisions.critical') }}</option>
-          </select>
-        </label>
-        <label class="text-xs text-gray-600 dark:text-dark-200">
+          </KumoNativeSelect>
+        </KumoLabel>
+        <KumoLabel class="text-xs text-gray-600 dark:text-dark-200">
           <span>{{ t('admin.promptAudit.events.risk') }}</span>
-          <select v-model="local.risk_level" class="input mt-1 w-full" :aria-label="t('admin.promptAudit.events.risk')" data-test="delete-risk" @change="criteriaChanged">
+          <KumoNativeSelect v-model="local.risk_level" class="input mt-1 w-full" :aria-label="t('admin.promptAudit.events.risk')" data-test="delete-risk" @change="criteriaChanged">
             <option value="">{{ t('common.all') }}</option>
             <option value="low">{{ t('admin.promptAudit.riskLevels.low') }}</option>
             <option value="medium">{{ t('admin.promptAudit.riskLevels.medium') }}</option>
             <option value="high">{{ t('admin.promptAudit.riskLevels.high') }}</option>
             <option value="critical">{{ t('admin.promptAudit.riskLevels.critical') }}</option>
-          </select>
-        </label>
+          </KumoNativeSelect>
+        </KumoLabel>
       </div>
 
-      <details class="rounded-xl border border-gray-200 px-4 py-3 dark:border-dark-700/60" data-test="more-conditions">
-        <summary class="cursor-pointer select-none text-xs font-medium text-gray-600 dark:text-dark-200">{{ t('admin.promptAudit.events.moreConditions') }}</summary>
+      <KumoCollapsible class="rounded-xl border border-gray-200 px-4 py-3 dark:border-dark-700/60" data-test="more-conditions">
+            <KumoCollapsibleTrigger class="cursor-pointer select-none text-xs font-medium text-gray-600 dark:text-dark-200">{{ t('admin.promptAudit.events.moreConditions') }}</KumoCollapsibleTrigger>
+            <KumoCollapsiblePanel>
         <div class="mt-3 grid gap-3 sm:grid-cols-2">
-          <label class="text-xs text-gray-600 dark:text-dark-200">
+          <KumoLabel class="text-xs text-gray-600 dark:text-dark-200">
             <span>{{ t('admin.promptAudit.events.endpoint') }}</span>
-            <input v-model="local.endpoint" type="text" class="input mt-1 w-full" :aria-label="t('admin.promptAudit.events.endpoint')" @input="criteriaChanged" />
-          </label>
-          <label class="text-xs text-gray-600 dark:text-dark-200">
+            <KumoInput v-model="local.endpoint" type="text" class="input mt-1 w-full" :aria-label="t('admin.promptAudit.events.endpoint')" @input="criteriaChanged" />
+          </KumoLabel>
+          <KumoLabel class="text-xs text-gray-600 dark:text-dark-200">
             <span>{{ t('admin.promptAudit.events.keyword') }}</span>
-            <input v-model="local.keyword" type="text" class="input mt-1 w-full" :aria-label="t('admin.promptAudit.events.keyword')" @input="criteriaChanged" />
-          </label>
-          <label class="text-xs text-gray-600 dark:text-dark-200">
+            <KumoInput v-model="local.keyword" type="text" class="input mt-1 w-full" :aria-label="t('admin.promptAudit.events.keyword')" @input="criteriaChanged" />
+          </KumoLabel>
+          <KumoLabel class="text-xs text-gray-600 dark:text-dark-200">
             <span>{{ t('admin.promptAudit.events.groupId') }}</span>
-            <input v-model="local.group_id" type="number" class="input mt-1 w-full" :aria-label="t('admin.promptAudit.events.groupId')" @input="criteriaChanged" />
-          </label>
-          <label class="text-xs text-gray-600 dark:text-dark-200">
+            <KumoInput v-model="local.group_id" type="number" class="input mt-1 w-full" :aria-label="t('admin.promptAudit.events.groupId')" @input="criteriaChanged" />
+          </KumoLabel>
+          <KumoLabel class="text-xs text-gray-600 dark:text-dark-200">
             <span>{{ t('admin.promptAudit.events.userId') }}</span>
-            <input v-model="local.user_id" type="number" class="input mt-1 w-full" :aria-label="t('admin.promptAudit.events.userId')" @input="criteriaChanged" />
-          </label>
+            <KumoInput v-model="local.user_id" type="number" class="input mt-1 w-full" :aria-label="t('admin.promptAudit.events.userId')" @input="criteriaChanged" />
+          </KumoLabel>
         </div>
-      </details>
+      </KumoCollapsiblePanel>
+          </KumoCollapsible>
 
       <div v-if="preview" class="rounded-xl border border-red-200 bg-red-50/60 px-4 py-3 dark:border-red-900/60 dark:bg-red-950/20" data-test="delete-preview-result">
         <p class="text-sm font-semibold text-red-700 dark:text-red-300">{{ t('admin.promptAudit.events.filterDeleteCount', { count: preview.matched_count }) }}</p>
@@ -97,11 +101,11 @@
         <p v-if="confirmDisabledReason" class="mr-auto text-xs text-gray-500 dark:text-dark-400" data-test="confirm-disabled-reason">
           {{ t(confirmDisabledReason) }}
         </p>
-        <button type="button" class="btn btn-secondary" @click="$emit('close')">{{ t('common.cancel') }}</button>
-        <button type="button" class="btn btn-secondary" :disabled="!canPreview || previewing || deleting" data-test="run-delete-preview" @click="requestPreview">
+        <KumoButton type="button" class="btn btn-secondary" @click="$emit('close')">{{ t('common.cancel') }}</KumoButton>
+        <KumoButton type="button" class="btn btn-secondary" :disabled="!canPreview || previewing || deleting" data-test="run-delete-preview" @click="requestPreview">
           {{ previewing ? t('admin.promptAudit.events.filterDeletePreviewing') : t('admin.promptAudit.events.filterDeletePreviewAction') }}
-        </button>
-        <button
+        </KumoButton>
+        <KumoButton
           type="button"
           class="btn btn-danger"
           :disabled="confirmDisabled"
@@ -110,13 +114,15 @@
           @click="requestConfirm"
         >
           {{ deleting ? t('common.submitting') : t('admin.promptAudit.events.confirmFilterDelete') }}
-        </button>
+        </KumoButton>
       </div>
     </template>
   </BaseDialog>
 </template>
 
 <script setup lang="ts">
+import { KumoCollapsible, KumoCollapsibleTrigger, KumoCollapsiblePanel, KumoButton, KumoInput, KumoLabel, KumoNativeSelect, KumoRadio, KumoRadioGroup } from '@/components/kumo'
+
 import { computed, reactive, ref, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
 import BaseDialog from '@/components/common/BaseDialog.vue'

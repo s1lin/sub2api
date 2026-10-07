@@ -9,15 +9,15 @@
         :class="getPlatformTagClass(props.platform || '')"
       >
         {{ model }}
-        <button
+        <KumoButton
           type="button"
           @click="removeModel(idx)"
           class="ml-0.5 rounded-full p-0.5 hover:bg-primary-200 dark:hover:bg-primary-800"
         >
           <Icon name="x" size="xs" />
-        </button>
+        </KumoButton>
       </span>
-      <input
+      <KumoInput
         ref="inputRef"
         v-model="inputValue"
         type="text"
@@ -37,6 +37,8 @@
 </template>
 
 <script setup lang="ts">
+import { KumoButton, KumoInput } from '@/components/kumo'
+
 import { ref } from 'vue'
 import { useI18n } from 'vue-i18n'
 import Icon from '@/components/icons/Icon.vue'

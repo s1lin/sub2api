@@ -2,7 +2,7 @@
   <BaseDialog :show="show" :title="title" width="full" :close-on-click-outside="true" @close="close">
     <div v-if="loading" class="flex items-center justify-center py-16">
       <div class="flex flex-col items-center gap-3">
-        <div class="h-8 w-8 animate-spin rounded-full border-b-2 border-primary-600"></div>
+        <KumoLoader class="h-8 w-8" />
         <div class="text-sm font-medium text-gray-500 dark:text-gray-400">{{ t('admin.ops.errorDetail.loading') }}</div>
       </div>
     </div>
@@ -167,7 +167,7 @@
                 <div class="font-mono text-xs text-gray-500 dark:text-gray-400">
                   {{ ev.status_code ?? '—' }}
                 </div>
-                <button
+                <KumoButton
                   type="button"
                   class="inline-flex items-center gap-1.5 rounded-md px-1.5 py-1 text-[10px] font-bold text-primary-700 hover:bg-primary-50 disabled:cursor-not-allowed disabled:opacity-60 dark:text-primary-200 dark:hover:bg-dark-700"
                   :disabled="!getUpstreamResponsePreview(ev)"
@@ -186,7 +186,7 @@
                         : t('admin.ops.errorDetail.responsePreview.expand')
                     }}
                   </span>
-                </button>
+                </KumoButton>
               </div>
             </div>
 
@@ -212,19 +212,21 @@
       </div>
     </div>
     <template v-if="backToList" #footer>
-      <button
+      <KumoButton
         type="button"
         class="btn btn-secondary"
         data-testid="error-detail-back-to-list"
         @click="goBack"
       >
         {{ t('admin.ops.errorDetail.backToList') }}
-      </button>
+      </KumoButton>
     </template>
   </BaseDialog>
 </template>
 
 <script setup lang="ts">
+import { KumoButton, KumoLoader } from '@/components/kumo'
+
 import { computed, ref, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
 import BaseDialog from '@/components/common/BaseDialog.vue'

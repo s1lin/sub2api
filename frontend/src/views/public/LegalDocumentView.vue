@@ -12,8 +12,8 @@
             </span>
           </template>
           <template v-else>
-            <span class="h-10 w-10 flex-shrink-0 animate-pulse rounded-xl bg-gray-200 dark:bg-dark-700" aria-hidden="true"></span>
-            <span class="h-5 w-28 animate-pulse rounded bg-gray-200 dark:bg-dark-700" aria-hidden="true"></span>
+            <KumoSkeleton class="h-10 w-10 flex-shrink-0 animate-pulse rounded-xl bg-gray-200 dark:bg-dark-700" aria-hidden="true"></KumoSkeleton>
+            <KumoSkeleton class="h-5 w-28 animate-pulse rounded bg-gray-200 dark:bg-dark-700" aria-hidden="true"></KumoSkeleton>
           </template>
         </RouterLink>
         <RouterLink
@@ -27,7 +27,7 @@
 
     <main class="mx-auto max-w-4xl px-4 py-8 sm:px-6 lg:py-10">
       <div v-if="loading" class="flex min-h-[320px] items-center justify-center">
-        <div class="h-8 w-8 animate-spin rounded-full border-b-2 border-primary-600"></div>
+        <KumoLoader class="h-8 w-8" />
       </div>
 
       <section
@@ -90,6 +90,8 @@
 </template>
 
 <script setup lang="ts">
+import { KumoLoader, KumoSkeleton } from '@/components/kumo'
+
 import { computed, onMounted, ref } from 'vue'
 import { useRoute } from 'vue-router'
 import { marked } from 'marked'

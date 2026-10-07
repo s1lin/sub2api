@@ -11,132 +11,79 @@
 
         <!-- Auth Method Selection -->
         <div v-if="showMethodSelection" class="mb-4">
-          <label class="mb-2 block text-sm font-medium text-blue-800 dark:text-blue-300">
+          <KumoLabel class="mb-2 block text-sm font-medium text-blue-800 dark:text-blue-300">
             {{ methodLabel }}
-          </label>
-          <div class="flex flex-wrap gap-4">
-            <label v-if="showManualOption" class="flex cursor-pointer items-center gap-2">
-              <input
-                v-model="inputMethod"
-                type="radio"
-                value="manual"
-                class="text-blue-600 focus:ring-blue-500"
-              />
+          </KumoLabel>
+          <KumoRadioGroup v-model="inputMethod" class="contents">
+<div class="flex flex-wrap gap-4">
+            <KumoRadio value="manual" v-if="showManualOption" class="flex cursor-pointer items-center gap-2">
+
               <span class="text-sm text-blue-900 dark:text-blue-200">{{
                 t('admin.accounts.oauth.manualAuth')
               }}</span>
-            </label>
-            <label v-if="showCookieOption" class="flex cursor-pointer items-center gap-2">
-              <input
-                v-model="inputMethod"
-                type="radio"
-                value="cookie"
-                class="text-blue-600 focus:ring-blue-500"
-              />
+            </KumoRadio>
+            <KumoRadio value="cookie" v-if="showCookieOption" class="flex cursor-pointer items-center gap-2">
+
               <span class="text-sm text-blue-900 dark:text-blue-200">{{
                 t('admin.accounts.oauth.cookieAutoAuth')
               }}</span>
-            </label>
-            <label v-if="showRefreshTokenOption" class="flex cursor-pointer items-center gap-2">
-              <input
-                v-model="inputMethod"
-                type="radio"
-                value="refresh_token"
-                class="text-blue-600 focus:ring-blue-500"
-              />
+            </KumoRadio>
+            <KumoRadio value="refresh_token" v-if="showRefreshTokenOption" class="flex cursor-pointer items-center gap-2">
+
               <span class="text-sm text-blue-900 dark:text-blue-200">{{
                 t(getOAuthKey('refreshTokenAuth'))
               }}</span>
-            </label>
-            <label v-if="showSsoOption" class="flex cursor-pointer items-center gap-2">
-              <input
-                v-model="inputMethod"
-                type="radio"
-                value="sso_cookie"
-                class="text-blue-600 focus:ring-blue-500"
-              />
+            </KumoRadio>
+            <KumoRadio value="sso_cookie" v-if="showSsoOption" class="flex cursor-pointer items-center gap-2">
+
               <span class="text-sm text-blue-900 dark:text-blue-200">{{
                 t(getOAuthKey('ssoCookieAuth'))
               }}</span>
-            </label>
-            <label v-if="emailPasswordOptionEnabled" class="flex cursor-pointer items-center gap-2">
-              <input
-                v-model="inputMethod"
-                type="radio"
-                value="email_password"
-                class="text-blue-600 focus:ring-blue-500"
-              />
+            </KumoRadio>
+            <KumoRadio value="email_password" v-if="emailPasswordOptionEnabled" class="flex cursor-pointer items-center gap-2">
+
               <span class="text-sm text-blue-900 dark:text-blue-200">{{
                 t(getOAuthKey('emailPasswordAuth'))
               }}</span>
-            </label>
-            <label v-if="showMobileRefreshTokenOption" class="flex cursor-pointer items-center gap-2">
-              <input
-                v-model="inputMethod"
-                type="radio"
-                value="mobile_refresh_token"
-                class="text-blue-600 focus:ring-blue-500"
-              />
+            </KumoRadio>
+            <KumoRadio value="mobile_refresh_token" v-if="showMobileRefreshTokenOption" class="flex cursor-pointer items-center gap-2">
+
               <span class="text-sm text-blue-900 dark:text-blue-200">{{
                 t('admin.accounts.oauth.openai.mobileRefreshTokenAuth')
               }}</span>
-            </label>
-            <label v-if="showSessionTokenOption" class="flex cursor-pointer items-center gap-2">
-              <input
-                v-model="inputMethod"
-                type="radio"
-                value="session_token"
-                class="text-blue-600 focus:ring-blue-500"
-              />
+            </KumoRadio>
+            <KumoRadio value="session_token" v-if="showSessionTokenOption" class="flex cursor-pointer items-center gap-2">
+
               <span class="text-sm text-blue-900 dark:text-blue-200">{{
                 t(getOAuthKey('sessionTokenAuth'))
               }}</span>
-            </label>
-            <label v-if="showAccessTokenOption" class="flex cursor-pointer items-center gap-2">
-              <input
-                v-model="inputMethod"
-                type="radio"
-                value="access_token"
-                class="text-blue-600 focus:ring-blue-500"
-              />
+            </KumoRadio>
+            <KumoRadio value="access_token" v-if="showAccessTokenOption" class="flex cursor-pointer items-center gap-2">
+
               <span class="text-sm text-blue-900 dark:text-blue-200">{{
                 t('admin.accounts.oauth.openai.accessTokenAuth')
               }}</span>
-            </label>
-            <label v-if="showCodexSessionImportOption" class="flex cursor-pointer items-center gap-2">
-              <input
-                v-model="inputMethod"
-                type="radio"
-                value="codex_session"
-                class="text-blue-600 focus:ring-blue-500"
-              />
+            </KumoRadio>
+            <KumoRadio value="codex_session" v-if="showCodexSessionImportOption" class="flex cursor-pointer items-center gap-2">
+
               <span class="text-sm text-blue-900 dark:text-blue-200">{{
                 t('admin.accounts.oauth.openai.codexSessionAuth')
               }}</span>
-            </label>
-            <label v-if="showAgentIdentityOption" class="flex cursor-pointer items-center gap-2">
-              <input
-                v-model="inputMethod"
-                type="radio"
-                value="agent_identity"
-                class="text-blue-600 focus:ring-blue-500"
-              />
+            </KumoRadio>
+            <KumoRadio value="agent_identity" v-if="showAgentIdentityOption" class="flex cursor-pointer items-center gap-2">
+
               <span class="text-sm text-blue-900 dark:text-blue-200">{{
                 t('admin.accounts.oauth.openai.agentIdentityAuth')
               }}</span>
-            </label>
-            <label v-if="showCodexPatOption" class="flex cursor-pointer items-center gap-2">
-              <input
-                v-model="inputMethod"
-                type="radio"
-                value="codex_pat"
-                class="text-blue-600 focus:ring-blue-500"
-              />
+            </KumoRadio>
+            <KumoRadio value="codex_pat" v-if="showCodexPatOption" class="flex cursor-pointer items-center gap-2">
+
               <span class="text-sm text-blue-900 dark:text-blue-200">{{
                 t('admin.accounts.oauth.openai.codexPatAuth')
               }}</span>
-            </label>
+            </KumoRadio>
           </div>
+</KumoRadioGroup>
         </div>
 
         <!-- Refresh Token Input (OpenAI / Antigravity / Mobile RT) -->
@@ -150,7 +97,7 @@
 
             <!-- Refresh Token Input -->
             <div class="mb-4">
-              <label
+              <KumoLabel
                 class="mb-2 flex items-center gap-2 text-sm font-semibold text-gray-700 dark:text-gray-300"
               >
                 <Icon name="key" size="sm" class="text-blue-500" />
@@ -161,13 +108,13 @@
                 >
                   {{ t('admin.accounts.oauth.keysCount', { count: parsedRefreshTokenCount }) }}
                 </span>
-              </label>
-              <textarea
+              </KumoLabel>
+              <KumoTextarea
                 v-model="refreshTokenInput"
                 rows="3"
                 class="input w-full resize-y font-mono text-sm"
                 :placeholder="t(getOAuthKey('refreshTokenPlaceholder'))"
-              ></textarea>
+              ></KumoTextarea>
               <p
                 v-if="parsedRefreshTokenCount > 1"
                 class="mt-1 text-xs text-blue-600 dark:text-blue-400"
@@ -187,39 +134,20 @@
             </div>
 
             <!-- Validate Button -->
-            <button
+            <KumoButton
               type="button"
               class="btn btn-primary w-full"
               :disabled="loading || !refreshTokenInput.trim()"
               @click="handleValidateRefreshToken"
             >
-              <svg
-                v-if="loading"
-                class="-ml-1 mr-2 h-4 w-4 animate-spin"
-                fill="none"
-                viewBox="0 0 24 24"
-              >
-                <circle
-                  class="opacity-25"
-                  cx="12"
-                  cy="12"
-                  r="10"
-                  stroke="currentColor"
-                  stroke-width="4"
-                ></circle>
-                <path
-                  class="opacity-75"
-                  fill="currentColor"
-                  d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-                ></path>
-              </svg>
+              <KumoLoader v-if="loading" class="-ml-1 mr-2 h-4 w-4 animate-spin" />
               <Icon v-else name="sparkles" size="sm" class="mr-2" />
               {{
                 loading
                   ? t(getOAuthKey('validating'))
                   : t(getOAuthKey('validateAndCreate'))
               }}
-            </button>
+            </KumoButton>
           </div>
         </div>
 
@@ -233,7 +161,7 @@
             </p>
 
             <div class="mb-4">
-              <label
+              <KumoLabel
                 class="mb-2 flex items-center gap-2 text-sm font-semibold text-gray-700 dark:text-gray-300"
               >
                 <Icon name="key" size="sm" class="text-blue-500" />
@@ -244,14 +172,14 @@
                 >
                   {{ t('admin.accounts.oauth.keysCount', { count: parsedSSOCount }) }}
                 </span>
-              </label>
-              <textarea
+              </KumoLabel>
+              <KumoTextarea
                 v-model="ssoCookieInput"
                 rows="5"
                 class="input w-full resize-y font-mono text-sm"
                 :placeholder="t(getOAuthKey('ssoCookiePlaceholder'))"
                 spellcheck="false"
-              ></textarea>
+              ></KumoTextarea>
               <p class="mt-1 text-xs text-blue-600 dark:text-blue-400">
                 {{ t(getOAuthKey('ssoCookieHint')) }}
               </p>
@@ -266,35 +194,16 @@
               </p>
             </div>
 
-            <button
+            <KumoButton
               type="button"
               class="btn btn-primary w-full"
               :disabled="loading || !ssoCookieInput.trim()"
               @click="handleImportSSO"
             >
-              <svg
-                v-if="loading"
-                class="-ml-1 mr-2 h-4 w-4 animate-spin"
-                fill="none"
-                viewBox="0 0 24 24"
-              >
-                <circle
-                  class="opacity-25"
-                  cx="12"
-                  cy="12"
-                  r="10"
-                  stroke="currentColor"
-                  stroke-width="4"
-                ></circle>
-                <path
-                  class="opacity-75"
-                  fill="currentColor"
-                  d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-                ></path>
-              </svg>
+              <KumoLoader v-if="loading" class="-ml-1 mr-2 h-4 w-4 animate-spin" />
               <Icon v-else name="sparkles" size="sm" class="mr-2" />
               {{ loading ? t(getOAuthKey('convertingSSO')) : t(getOAuthKey('convertSSOAndCreate')) }}
-            </button>
+            </KumoButton>
           </div>
         </div>
 
@@ -307,7 +216,7 @@
               {{ t(getOAuthKey('emailPasswordDesc')) }}
             </p>
             <div class="mb-4">
-              <label
+              <KumoLabel
                 class="mb-2 flex items-center gap-2 text-sm font-semibold text-gray-700 dark:text-gray-300"
               >
                 <Icon name="user" size="sm" class="text-blue-500" />
@@ -318,15 +227,15 @@
                 >
                   {{ t('admin.accounts.oauth.keysCount', { count: parsedEmailPasswordCount }) }}
                 </span>
-              </label>
-              <textarea
+              </KumoLabel>
+              <KumoTextarea
                 v-model="emailPasswordInput"
                 rows="4"
                 class="input w-full resize-y font-mono text-sm"
                 :placeholder="t(getOAuthKey('emailPasswordPlaceholder'))"
                 spellcheck="false"
                 autocomplete="off"
-              ></textarea>
+              ></KumoTextarea>
               <p class="mt-1 text-xs text-blue-600 dark:text-blue-400">
                 {{ t(getOAuthKey('emailPasswordHint')) }}
               </p>
@@ -339,35 +248,16 @@
                 {{ error }}
               </p>
             </div>
-            <button
+            <KumoButton
               type="button"
               class="btn btn-primary w-full"
               :disabled="loading || !emailPasswordInput.trim()"
               @click="handleAuthorizePassword"
             >
-              <svg
-                v-if="loading"
-                class="-ml-1 mr-2 h-4 w-4 animate-spin"
-                fill="none"
-                viewBox="0 0 24 24"
-              >
-                <circle
-                  class="opacity-25"
-                  cx="12"
-                  cy="12"
-                  r="10"
-                  stroke="currentColor"
-                  stroke-width="4"
-                ></circle>
-                <path
-                  class="opacity-75"
-                  fill="currentColor"
-                  d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-                ></path>
-              </svg>
+              <KumoLoader v-if="loading" class="-ml-1 mr-2 h-4 w-4 animate-spin" />
               <Icon v-else name="sparkles" size="sm" class="mr-2" />
               {{ loading ? t(getOAuthKey('validating')) : t(getOAuthKey('validateAndCreate')) }}
-            </button>
+            </KumoButton>
           </div>
         </div>
 
@@ -381,7 +271,7 @@
             </p>
 
             <div class="mb-4">
-              <label
+              <KumoLabel
                 class="mb-2 flex items-center gap-2 text-sm font-semibold text-gray-700 dark:text-gray-300"
               >
                 <Icon name="key" size="sm" class="text-blue-500" />
@@ -392,14 +282,14 @@
                 >
                   {{ t('admin.accounts.oauth.keysCount', { count: parsedCodexSessionCount }) }}
                 </span>
-              </label>
-              <textarea
+              </KumoLabel>
+              <KumoTextarea
                 v-model="codexSessionInput"
                 rows="8"
                 class="input w-full resize-y font-mono text-sm"
                 :placeholder="t(isAgentIdentityInput ? 'admin.accounts.oauth.openai.agentIdentityPlaceholder' : 'admin.accounts.oauth.openai.codexSessionPlaceholder')"
                 spellcheck="false"
-              ></textarea>
+              ></KumoTextarea>
               <p class="mt-1 text-xs text-blue-600 dark:text-blue-400">
                 {{ t(isAgentIdentityInput ? 'admin.accounts.oauth.openai.agentIdentityHint' : 'admin.accounts.oauth.openai.codexSessionHint') }}
               </p>
@@ -414,39 +304,20 @@
               </p>
             </div>
 
-            <button
+            <KumoButton
               type="button"
               class="btn btn-primary w-full"
               :disabled="loading || !codexSessionInput.trim()"
               @click="handleImportCodexSession"
             >
-              <svg
-                v-if="loading"
-                class="-ml-1 mr-2 h-4 w-4 animate-spin"
-                fill="none"
-                viewBox="0 0 24 24"
-              >
-                <circle
-                  class="opacity-25"
-                  cx="12"
-                  cy="12"
-                  r="10"
-                  stroke="currentColor"
-                  stroke-width="4"
-                ></circle>
-                <path
-                  class="opacity-75"
-                  fill="currentColor"
-                  d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-                ></path>
-              </svg>
+              <KumoLoader v-if="loading" class="-ml-1 mr-2 h-4 w-4 animate-spin" />
               <Icon v-else name="sparkles" size="sm" class="mr-2" />
               {{
                 loading
                   ? t('admin.accounts.oauth.openai.validating')
                   : t('admin.accounts.oauth.openai.codexSessionImportAndCreate')
               }}
-            </button>
+            </KumoButton>
           </div>
         </div>
 
@@ -460,19 +331,19 @@
             </p>
 
             <div class="mb-4">
-              <label
+              <KumoLabel
                 class="mb-2 flex items-center gap-2 text-sm font-semibold text-gray-700 dark:text-gray-300"
               >
                 <Icon name="key" size="sm" class="text-blue-500" />
                 {{ t('admin.accounts.oauth.openai.codexPatInputLabel') }}
-              </label>
-              <textarea
+              </KumoLabel>
+              <KumoTextarea
                 v-model="codexPATInput"
                 rows="3"
                 class="input w-full resize-y font-mono text-sm"
                 :placeholder="t('admin.accounts.oauth.openai.codexPatPlaceholder')"
                 spellcheck="false"
-              ></textarea>
+              ></KumoTextarea>
               <p class="mt-1 text-xs text-blue-600 dark:text-blue-400">
                 {{ t('admin.accounts.oauth.openai.codexPatHint') }}
               </p>
@@ -487,39 +358,20 @@
               </p>
             </div>
 
-            <button
+            <KumoButton
               type="button"
               class="btn btn-primary w-full"
               :disabled="loading || !codexPATInput.trim()"
               @click="handleImportCodexPAT"
             >
-              <svg
-                v-if="loading"
-                class="-ml-1 mr-2 h-4 w-4 animate-spin"
-                fill="none"
-                viewBox="0 0 24 24"
-              >
-                <circle
-                  class="opacity-25"
-                  cx="12"
-                  cy="12"
-                  r="10"
-                  stroke="currentColor"
-                  stroke-width="4"
-                ></circle>
-                <path
-                  class="opacity-75"
-                  fill="currentColor"
-                  d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-                ></path>
-              </svg>
+              <KumoLoader v-if="loading" class="-ml-1 mr-2 h-4 w-4 animate-spin" />
               <Icon v-else name="sparkles" size="sm" class="mr-2" />
               {{
                 loading
                   ? t('admin.accounts.oauth.openai.validating')
                   : t('admin.accounts.oauth.openai.codexPatImportAndCreate')
               }}
-            </button>
+            </KumoButton>
           </div>
         </div>
 
@@ -534,7 +386,7 @@
 
             <!-- sessionKey Input -->
             <div class="mb-4">
-              <label
+              <KumoLabel
                 class="mb-2 flex items-center gap-2 text-sm font-semibold text-gray-700 dark:text-gray-300"
               >
                 <Icon name="key" size="sm" class="text-blue-500" />
@@ -545,7 +397,7 @@
                 >
                   {{ t('admin.accounts.oauth.keysCount', { count: parsedKeyCount }) }}
                 </span>
-                <button
+                <KumoButton
                   v-if="showHelp"
                   type="button"
                   class="text-blue-500 hover:text-blue-600"
@@ -564,9 +416,9 @@
                       d="M9.879 7.519c1.171-1.025 3.071-1.025 4.242 0 1.172 1.025 1.172 2.687 0 3.712-.203.179-.43.326-.67.442-.745.361-1.45.999-1.45 1.827v.75M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9 5.25h.008v.008H12v-.008z"
                     />
                   </svg>
-                </button>
-              </label>
-              <textarea
+                </KumoButton>
+              </KumoLabel>
+              <KumoTextarea
                 v-model="sessionKeyInput"
                 rows="3"
                 class="input w-full resize-y font-mono text-sm"
@@ -575,7 +427,7 @@
                     ? t('admin.accounts.oauth.sessionKeyPlaceholder')
                     : t('admin.accounts.oauth.sessionKeyPlaceholderSingle')
                 "
-              ></textarea>
+              ></KumoTextarea>
               <p
                 v-if="parsedKeyCount > 1 && allowMultiple"
                 class="mt-1 text-xs text-blue-600 dark:text-blue-400"
@@ -619,39 +471,20 @@
             </div>
 
             <!-- Auth Button -->
-            <button
+            <KumoButton
               type="button"
               class="btn btn-primary w-full"
               :disabled="loading || !sessionKeyInput.trim()"
               @click="handleCookieAuth"
             >
-              <svg
-                v-if="loading"
-                class="-ml-1 mr-2 h-4 w-4 animate-spin"
-                fill="none"
-                viewBox="0 0 24 24"
-              >
-                <circle
-                  class="opacity-25"
-                  cx="12"
-                  cy="12"
-                  r="10"
-                  stroke="currentColor"
-                  stroke-width="4"
-                ></circle>
-                <path
-                  class="opacity-75"
-                  fill="currentColor"
-                  d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-                ></path>
-              </svg>
+              <KumoLoader v-if="loading" class="-ml-1 mr-2 h-4 w-4 animate-spin" />
               <Icon v-else name="sparkles" size="sm" class="mr-2" />
               {{
                 loading
                   ? t('admin.accounts.oauth.authorizing')
                   : t('admin.accounts.oauth.startAutoAuth')
               }}
-            </button>
+            </KumoButton>
           </div>
         </div>
 
@@ -676,7 +509,7 @@
                   {{ oauthStep1GenerateUrl }}
                 </p>
                 <div v-if="showProjectId && platform === 'gemini'" class="mb-3">
-                  <label class="input-label flex items-center gap-2">
+                  <KumoLabel class="input-label flex items-center gap-2">
                     {{ t('admin.accounts.oauth.gemini.projectIdLabel') }}
                     <a
                       href="https://console.cloud.google.com/"
@@ -689,8 +522,8 @@
                       </svg>
                       {{ t('admin.accounts.oauth.gemini.howToGetProjectId') }}
                     </a>
-                  </label>
-                  <input
+                  </KumoLabel>
+                  <KumoInput
                     v-model="projectId"
                     type="text"
                     class="input w-full font-mono text-sm"
@@ -700,45 +533,26 @@
                     {{ t('admin.accounts.oauth.gemini.projectIdHint') }}
                   </p>
                 </div>
-                <button
+                <KumoButton
                   v-if="!authUrl"
                   type="button"
                   :disabled="loading"
                   class="btn btn-primary text-sm"
                   @click="handleGenerateUrl"
                 >
-                  <svg
-                    v-if="loading"
-                    class="-ml-1 mr-2 h-4 w-4 animate-spin"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                  >
-                    <circle
-                      class="opacity-25"
-                      cx="12"
-                      cy="12"
-                      r="10"
-                      stroke="currentColor"
-                      stroke-width="4"
-                    ></circle>
-                    <path
-                      class="opacity-75"
-                      fill="currentColor"
-                      d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-                    ></path>
-                  </svg>
+                  <KumoLoader v-if="loading" class="-ml-1 mr-2 h-4 w-4 animate-spin" />
                   <Icon v-else name="link" size="sm" class="mr-2" />
                   {{ loading ? t('admin.accounts.oauth.generating') : oauthGenerateAuthUrl }}
-                </button>
+                </KumoButton>
                 <div v-else class="space-y-3">
                   <div class="flex items-center gap-2">
-                    <input
+                    <KumoInput
                       :value="authUrl"
                       readonly
                       type="text"
                       class="input flex-1 bg-gray-50 font-mono text-xs dark:bg-gray-700"
                     />
-                    <button
+                    <KumoButton
                       type="button"
                       class="btn btn-secondary p-2"
                       title="Copy URL"
@@ -765,16 +579,16 @@
                         class="text-green-500"
                         :stroke-width="2"
                       />
-                    </button>
+                    </KumoButton>
                   </div>
-                  <button
+                  <KumoButton
                     type="button"
                     class="text-xs text-blue-600 hover:text-blue-700 dark:text-blue-400"
                     @click="handleRegenerate"
                   >
                     <Icon name="refresh" size="xs" class="mr-1 inline" />
                     {{ t('admin.accounts.oauth.regenerate') }}
-                  </button>
+                  </KumoButton>
                 </div>
               </div>
             </div>
@@ -840,16 +654,16 @@
                   v-text="oauthAuthCodeDesc"
                 ></p>
                 <div>
-                  <label class="input-label">
+                  <KumoLabel class="input-label">
                     <Icon name="key" size="sm" class="mr-1 inline text-blue-500" />
                     {{ oauthAuthCode }}
-                  </label>
-                  <textarea
+                  </KumoLabel>
+                  <KumoTextarea
                     v-model="authCodeInput"
                     rows="3"
                     class="input w-full resize-none font-mono text-sm"
                     :placeholder="oauthAuthCodePlaceholder"
-                  ></textarea>
+                  ></KumoTextarea>
                   <p class="mt-2 text-xs text-gray-500 dark:text-gray-400">
                     <Icon name="infoCircle" size="xs" class="mr-1 inline" />
                     {{ oauthAuthCodeHint }}
@@ -894,6 +708,8 @@
 </template>
 
 <script setup lang="ts">
+import { KumoButton, KumoInput, KumoLabel, KumoLoader, KumoRadio, KumoRadioGroup, KumoTextarea } from '@/components/kumo'
+
 import { ref, computed, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useClipboard } from '@/composables/useClipboard'

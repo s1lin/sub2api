@@ -1,5 +1,6 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
-import { flushPromises, shallowMount } from '@vue/test-utils'
+import { flushPromises, mount } from '@/__tests__/render'
+
 import ProxiesView from '../ProxiesView.vue'
 
 const { list, update, getAllWithCount } = vi.hoisted(() => ({ list: vi.fn(), update: vi.fn(), getAllWithCount: vi.fn() }))
@@ -9,7 +10,7 @@ vi.mock('vue-i18n', async () => ({
   ...await vi.importActual<typeof import('vue-i18n')>('vue-i18n'),
   useI18n: () => ({ t: (key: string) => key }),
 }))
-const mountView = () => shallowMount(ProxiesView, {
+const mountView = () => mountWithControls(ProxiesView, {
   global: { stubs: {
     AppLayout: { template: '<div><slot /></div>' },
     TablePageLayout: { template: '<div><slot name="table" /></div>' },
@@ -64,3 +65,12 @@ describe('proxy credential updates', () => {
     expect((await submit()).password).toBe('new-password')
   })
 })
+
+// Isolate page dependencies while exercising the shared Kumo controls.
+function mountWithControls(component: Parameters<typeof mount>[0], options: any = {}) {
+  return mount(component, { ...options, global: { ...options.global, stubs: {
+    AppLayout: true, TablePageLayout: true, Icon: true, Select: true, DataTable: true, EmptyState: true, Pagination: true, BaseDialog: true, ProxyAdBanner: true, ConfirmDialog: true, ImportDataModal: true, PlatformTypeBadge: true,
+    KumoSurface: { template: '<div><slot /></div>' },
+    ...options.global?.stubs,
+  } } })
+}

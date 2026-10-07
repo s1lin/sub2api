@@ -1,5 +1,8 @@
+import { enableAutoUnmount } from '@vue/test-utils'
+enableAutoUnmount(afterEach)
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
-import { flushPromises, mount } from '@vue/test-utils'
+import { mount, flushPromises, portal } from '@/__tests__/render'
+
 
 import BackupView from '../BackupView.vue'
 
@@ -81,7 +84,7 @@ const wrappers: ReturnType<typeof mount>[] = []
 function mountBackupView() {
   const wrapper = mount(BackupView, {
     global: {
-      stubs: {
+      stubs: { KumoSurface: { template: '<div><slot /></div>' },
         TotpStepUpDialog: true,
       },
     },
@@ -181,8 +184,8 @@ describe('admin BackupView', () => {
     await flushPromises()
     await wrapper.get('[data-testid="archive-enabled"]').setValue(true)
     await wrapper.get('#backup-archive-dates').trigger('click')
-    await wrapper.get('#backup-archive-options input[value="15"]').setValue(true)
-    await wrapper.get('#backup-archive-options input[value="last"]').setValue(true)
+    await portal().get('#backup-archive-options input[value="15"]').setValue(true)
+    await portal().get('#backup-archive-options input[value="last"]').setValue(true)
     expect(wrapper.get('#backup-archive-dates').attributes('aria-expanded')).toBe('true')
     expect(wrapper.find('[data-testid="archive-count"]').exists()).toBe(false)
     await wrapper.get('[data-testid="archive-forever"]').setValue(false)
@@ -205,10 +208,10 @@ describe('admin BackupView', () => {
     await flushPromises()
     await wrapper.get('[data-testid="archive-enabled"]').setValue(true)
     await wrapper.get('#backup-archive-dates').trigger('click')
-    await wrapper.get('#backup-archive-options input[value="1"]').setValue(false)
+    await portal().get('#backup-archive-options input[value="1"]').setValue(false)
     const save = wrapper.get('[data-testid="backup-schedule"] .btn-primary')
     expect(save.attributes('disabled')).toBeDefined()
-    await wrapper.get('#backup-archive-options input[value="15"]').setValue(true)
+    await portal().get('#backup-archive-options input[value="15"]').setValue(true)
     await wrapper.get('[data-testid="archive-forever"]').setValue(false)
     for (const value of ['0', '-1', '1.5', '']) {
       await wrapper.get('[data-testid="archive-count"]').setValue(value)
@@ -256,10 +259,10 @@ describe('admin BackupView', () => {
     expect((wrapper.get('[data-testid="archive-count"]').element as HTMLInputElement).value).toBe('23')
     await wrapper.get('#backup-archive-dates').trigger('keydown', { key: 'ArrowDown' })
     await flushPromises()
-    expect(wrapper.find('#backup-archive-options').exists()).toBe(true)
-    expect((wrapper.get('#backup-archive-options input[value="15"]').element as HTMLInputElement).checked).toBe(true)
-    await wrapper.get('#backup-archive-options').trigger('keydown', { key: 'Escape' })
-    expect(wrapper.find('#backup-archive-options').exists()).toBe(false)
+    expect(portal().find('#backup-archive-options').exists()).toBe(true)
+    expect((portal().get('#backup-archive-options input[value="15"]').element as HTMLInputElement).checked).toBe(true)
+    await portal().get('#backup-archive-options').trigger('keydown', { key: 'Escape' })
+    expect(portal().find('#backup-archive-options').exists()).toBe(false)
   })
 
   it('归档删除需要单独确认，有限归档不会显示永不过期', async () => {

@@ -15,7 +15,7 @@
         :wechat-mp-enabled="wechatOAuthMPEnabled"
       />
 
-      <div
+      <KumoSurface
         v-if="contactInfo"
         class="card border-primary-200 bg-primary-50 p-6 dark:bg-primary-900/20"
       >
@@ -30,13 +30,13 @@
             <p class="text-sm font-medium">{{ contactInfo }}</p>
           </div>
         </div>
-      </div>
+      </KumoSurface>
 
-      <div v-if="clerkEnabled" class="card p-6">
+      <KumoSurface v-if="clerkEnabled" class="card p-6">
         <h3 class="font-semibold">{{ t('clerkAuth.accountTitle') }}</h3>
         <p class="my-3 text-sm text-gray-500 dark:text-dark-300">{{ t('clerkAuth.accountDescription') }}</p>
-        <button class="btn btn-primary" @click="openClerkProfile">{{ t('clerkAuth.manageAccount') }}</button>
-      </div>
+        <KumoButton class="btn btn-primary" @click="openClerkProfile">{{ t('clerkAuth.manageAccount') }}</KumoButton>
+      </KumoSurface>
       <ProfilePasswordForm v-else />
 
       <ProfileBalanceNotifyCard
@@ -55,6 +55,8 @@
 </template>
 
 <script setup lang="ts">
+import { KumoButton, KumoSurface } from '@/components/kumo'
+
 import { computed, onMounted, ref } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { Icon } from '@/components/icons'

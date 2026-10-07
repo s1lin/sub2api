@@ -1,4 +1,5 @@
-import { flushPromises, mount } from '@vue/test-utils'
+import { mount, flushPromises, portal } from '@/__tests__/render'
+
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 
 import OpenAIFastPolicyUserSelector from '../OpenAIFastPolicyUserSelector.vue'
@@ -42,7 +43,7 @@ vi.mock('@/api/admin', () => ({
 
 describe('OpenAIFastPolicyUserSelector', () => {
   beforeEach(() => {
-    vi.useFakeTimers()
+    vi.useFakeTimers({ toFake: ['Date', 'setTimeout', 'clearTimeout', 'setInterval', 'clearInterval'] })
     mockSearchUsers.mockReset()
     mockGetUserById.mockReset()
   })
@@ -87,7 +88,7 @@ describe('OpenAIFastPolicyUserSelector', () => {
     await flushPromises()
 
     expect(mockSearchUsers).toHaveBeenCalledWith('a')
-    const result = wrapper.findAll('button').find((button) =>
+    const result = portal().findAll('[role=option]').find((button) =>
       button.text().includes('alice@example.com'),
     )
     expect(result).toBeDefined()

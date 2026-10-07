@@ -1,9 +1,6 @@
 <template>
-  <div v-if="controller.visible.value" class="fixed inset-0 z-[60] overflow-y-auto">
-    <div class="flex min-h-full items-center justify-center p-4">
-      <div class="fixed inset-0 bg-black/50 transition-opacity" @click="handleCancel"></div>
-
-      <div class="relative w-full max-w-md transform rounded-xl bg-white p-6 shadow-xl transition-all dark:bg-dark-800">
+  <KumoDialog v-if="controller.visible.value" :show="true" custom-layout width="narrow" :title="t('stepUp.title')" :close-on-click-outside="true" :z-index="60" :close-on-escape="!verifying" @close="handleCancel">
+    <div class="relative p-6">
         <div class="mb-6 text-center">
           <div class="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-primary-100 dark:bg-primary-900/30">
             <svg class="h-6 w-6 text-primary-600 dark:text-primary-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
@@ -19,7 +16,7 @@
         </div>
 
         <div class="mb-6">
-          <input
+          <KumoInput
             ref="hiddenOtpInputRef"
             type="text"
             inputmode="numeric"
@@ -31,10 +28,10 @@
             @input="handleHiddenOtpInput"
           />
           <div class="flex justify-center gap-2">
-            <input
+            <KumoInput
               v-for="(_, index) in 6"
               :key="index"
-              :ref="(el) => setInputRef(el, index)"
+              :ref="(el: any) => setInputRef(el, index)"
               type="text"
               maxlength="1"
               inputmode="numeric"
@@ -48,25 +45,27 @@
             />
           </div>
           <div v-if="verifying" class="mt-3 flex items-center justify-center gap-2 text-sm text-gray-500">
-            <div class="animate-spin rounded-full h-4 w-4 border-b-2 border-primary-500"></div>
+            <KumoLoader class="h-4 w-4" />
             {{ t('common.verifying') }}
           </div>
         </div>
 
-        <button
+        <KumoButton
           type="button"
           class="btn btn-secondary w-full"
           :disabled="verifying"
           @click="handleCancel"
         >
           {{ t('common.cancel') }}
-        </button>
-      </div>
+        </KumoButton>
+
     </div>
-  </div>
+  </KumoDialog>
 </template>
 
 <script setup lang="ts">
+import { KumoButton, KumoDialog, KumoInput, KumoLoader } from '@/components/kumo'
+
 import { ref, watch, nextTick } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useAppStore } from '@/stores'

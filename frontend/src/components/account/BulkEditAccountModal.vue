@@ -38,18 +38,18 @@
       >
         <div class="mb-3 flex items-center justify-between">
           <div class="flex-1 pr-4">
-            <label
+            <KumoLabel
               id="bulk-edit-openai-passthrough-label"
               class="input-label mb-0"
               for="bulk-edit-openai-passthrough-enabled"
             >
               {{ t('admin.accounts.openai.oauthPassthrough') }}
-            </label>
+            </KumoLabel>
             <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">
               {{ t('admin.accounts.openai.oauthPassthroughDesc') }}
             </p>
           </div>
-          <input
+          <KumoCheckbox
             v-model="enableOpenAIPassthrough"
             id="bulk-edit-openai-passthrough-enabled"
             type="checkbox"
@@ -63,22 +63,7 @@
           role="group"
           aria-labelledby="bulk-edit-openai-passthrough-label"
         >
-          <button
-            id="bulk-edit-openai-passthrough-toggle"
-            type="button"
-            :class="[
-              'relative inline-flex h-6 w-11 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2',
-              openaiPassthroughEnabled ? 'bg-primary-600' : 'bg-gray-200 dark:bg-dark-600'
-            ]"
-            @click="openaiPassthroughEnabled = !openaiPassthroughEnabled"
-          >
-            <span
-              :class="[
-                'pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out',
-                openaiPassthroughEnabled ? 'translate-x-5' : 'translate-x-0'
-              ]"
-            />
-          </button>
+          <KumoSwitch v-model="openaiPassthroughEnabled" id="bulk-edit-openai-passthrough-toggle" />
         </div>
       </div>
 
@@ -89,18 +74,18 @@
       >
         <div class="mb-3 flex items-center justify-between">
           <div class="flex-1 pr-4">
-            <label
+            <KumoLabel
               id="bulk-edit-openai-flatten-namespaces-label"
               class="input-label mb-0"
               for="bulk-edit-openai-flatten-namespaces-enabled"
             >
               {{ t('admin.accounts.openai.flattenNamespaces') }}
-            </label>
+            </KumoLabel>
             <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">
               {{ t('admin.accounts.openai.flattenNamespacesDesc') }}
             </p>
           </div>
-          <input
+          <KumoCheckbox
             v-model="enableOpenAIFlattenNamespaces"
             id="bulk-edit-openai-flatten-namespaces-enabled"
             type="checkbox"
@@ -114,22 +99,7 @@
           role="group"
           aria-labelledby="bulk-edit-openai-flatten-namespaces-label"
         >
-          <button
-            id="bulk-edit-openai-flatten-namespaces-toggle"
-            type="button"
-            :class="[
-              'relative inline-flex h-6 w-11 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2',
-              openaiFlattenNamespacesEnabled ? 'bg-primary-600' : 'bg-gray-200 dark:bg-dark-600'
-            ]"
-            @click="openaiFlattenNamespacesEnabled = !openaiFlattenNamespacesEnabled"
-          >
-            <span
-              :class="[
-                'pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out',
-                openaiFlattenNamespacesEnabled ? 'translate-x-5' : 'translate-x-0'
-              ]"
-            />
-          </button>
+          <KumoSwitch v-model="openaiFlattenNamespacesEnabled" id="bulk-edit-openai-flatten-namespaces-toggle" />
         </div>
       </div>
 
@@ -140,18 +110,18 @@
       >
         <div class="mb-3 flex items-center justify-between gap-4">
           <div class="flex-1">
-            <label
+            <KumoLabel
               id="bulk-edit-openai-long-context-billing-label"
               class="input-label mb-0"
               for="bulk-edit-openai-long-context-billing-enabled"
             >
               {{ t('admin.accounts.openai.longContextBilling') }}
-            </label>
+            </KumoLabel>
             <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">
               {{ t('admin.accounts.openai.longContextBillingDesc') }}
             </p>
           </div>
-          <input
+          <KumoCheckbox
             v-model="enableOpenAILongContextBilling"
             id="bulk-edit-openai-long-context-billing-enabled"
             type="checkbox"
@@ -165,25 +135,12 @@
           role="group"
           aria-labelledby="bulk-edit-openai-long-context-billing-label"
         >
-          <button
-            type="button"
+          <KumoSwitch
             data-testid="bulk-edit-openai-long-context-billing-toggle"
-            role="switch"
             :disabled="!enableOpenAILongContextBilling"
-            :aria-checked="openAILongContextBillingEnabled"
-            :class="[
-              'relative inline-flex h-6 w-11 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2',
-              openAILongContextBillingEnabled ? 'bg-primary-600' : 'bg-gray-200 dark:bg-dark-600'
-            ]"
-            @click="openAILongContextBillingEnabled = !openAILongContextBillingEnabled"
-          >
-            <span
-              :class="[
-                'pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out',
-                openAILongContextBillingEnabled ? 'translate-x-5' : 'translate-x-0'
-              ]"
-            />
-          </button>
+            :checked="openAILongContextBillingEnabled"
+            @update:model-value="openAILongContextBillingEnabled = !openAILongContextBillingEnabled"
+           />
         </div>
         <p
           class="mt-3 rounded-lg bg-amber-50 px-3 py-2 text-xs text-amber-700 dark:bg-amber-900/20 dark:text-amber-300"
@@ -196,14 +153,14 @@
       <!-- Base URL (API Key only) -->
       <div class="border-t border-gray-200 pt-4 dark:border-dark-600">
         <div class="mb-3 flex items-center justify-between">
-          <label
+          <KumoLabel
             id="bulk-edit-base-url-label"
             class="input-label mb-0"
             for="bulk-edit-base-url-enabled"
           >
             {{ t('admin.accounts.baseUrl') }}
-          </label>
-          <input
+          </KumoLabel>
+          <KumoCheckbox
             v-model="enableBaseUrl"
             id="bulk-edit-base-url-enabled"
             type="checkbox"
@@ -211,7 +168,7 @@
             class="rounded border-gray-300 text-primary-600 focus:ring-primary-500"
           />
         </div>
-        <input
+        <KumoInput
           v-model="baseUrl"
           id="bulk-edit-base-url"
           type="text"
@@ -234,14 +191,14 @@
       <!-- Model restriction -->
       <div class="border-t border-gray-200 pt-4 dark:border-dark-600">
         <div class="mb-3 flex items-center justify-between">
-          <label
+          <KumoLabel
             id="bulk-edit-model-restriction-label"
             class="input-label mb-0"
             for="bulk-edit-model-restriction-enabled"
           >
             {{ t('admin.accounts.modelRestriction') }}
-          </label>
-          <input
+          </KumoLabel>
+          <KumoCheckbox
             v-model="enableModelRestriction"
             id="bulk-edit-model-restriction-enabled"
             type="checkbox"
@@ -268,7 +225,7 @@
           <template v-else>
             <!-- Mode Toggle -->
             <div class="mb-4 flex gap-2">
-              <button
+              <KumoButton
                 type="button"
                 :class="[
                   'flex-1 rounded-lg px-4 py-2 text-sm font-medium transition-all',
@@ -292,8 +249,8 @@
                   />
                 </svg>
                 {{ t('admin.accounts.modelWhitelist') }}
-              </button>
-              <button
+              </KumoButton>
+              <KumoButton
                 type="button"
                 :class="[
                   'flex-1 rounded-lg px-4 py-2 text-sm font-medium transition-all',
@@ -317,7 +274,7 @@
                   />
                 </svg>
                 {{ t('admin.accounts.modelMapping') }}
-              </button>
+              </KumoButton>
             </div>
 
             <!-- Whitelist Mode -->
@@ -383,7 +340,7 @@
                   :key="index"
                   class="flex items-center gap-2"
                 >
-                  <input
+                  <KumoInput
                     v-model="mapping.from"
                     type="text"
                     class="input flex-1"
@@ -402,13 +359,13 @@
                       d="M14 5l7 7m0 0l-7 7m7-7H3"
                     />
                   </svg>
-                  <input
+                  <KumoInput
                     v-model="mapping.to"
                     type="text"
                     class="input flex-1"
                     :placeholder="t('admin.accounts.actualModel')"
                   />
-                  <button
+                  <KumoButton
                     type="button"
                     class="rounded-lg p-2 text-red-500 transition-colors hover:bg-red-50 hover:text-red-600 dark:hover:bg-red-900/20"
                     @click="removeModelMapping(index)"
@@ -421,11 +378,11 @@
                         d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
                       />
                     </svg>
-                  </button>
+                  </KumoButton>
                 </div>
               </div>
 
-              <button
+              <KumoButton
                 type="button"
                 class="mb-3 w-full rounded-lg border-2 border-dashed border-gray-300 px-4 py-2 text-gray-600 transition-colors hover:border-gray-400 hover:text-gray-700 dark:border-dark-500 dark:text-gray-400 dark:hover:border-dark-400 dark:hover:text-gray-300"
                 @click="addModelMapping"
@@ -444,11 +401,11 @@
                   />
                 </svg>
                 {{ t('admin.accounts.addMapping') }}
-              </button>
+              </KumoButton>
 
               <!-- Quick Add Buttons -->
               <div class="flex flex-wrap gap-2">
-                <button
+                <KumoButton
                   v-for="preset in filteredPresets"
                   :key="preset.label"
                   type="button"
@@ -456,7 +413,7 @@
                   @click="addPresetMapping(preset.from, preset.to)"
                 >
                   + {{ preset.label }}
-                </button>
+                </KumoButton>
               </div>
             </div>
           </template>
@@ -467,18 +424,18 @@
       <div class="border-t border-gray-200 pt-4 dark:border-dark-600">
         <div class="mb-3 flex items-center justify-between">
           <div>
-            <label
+            <KumoLabel
               id="bulk-edit-custom-error-codes-label"
               class="input-label mb-0"
               for="bulk-edit-custom-error-codes-enabled"
             >
               {{ t('admin.accounts.customErrorCodes') }}
-            </label>
+            </KumoLabel>
             <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">
               {{ t('admin.accounts.customErrorCodesHint') }}
             </p>
           </div>
-          <input
+          <KumoCheckbox
             v-model="enableCustomErrorCodes"
             id="bulk-edit-custom-error-codes-enabled"
             type="checkbox"
@@ -497,7 +454,7 @@
 
           <!-- Error Code Buttons -->
           <div class="flex flex-wrap gap-2">
-            <button
+            <KumoButton
               v-for="code in commonErrorCodes"
               :key="code.value"
               type="button"
@@ -510,12 +467,12 @@
               @click="toggleErrorCode(code.value)"
             >
               {{ code.value }} {{ code.label }}
-            </button>
+            </KumoButton>
           </div>
 
           <!-- Manual input -->
           <div class="flex items-center gap-2">
-            <input
+            <KumoInput
               v-model="customErrorCodeInput"
               id="bulk-edit-custom-error-code-input"
               type="number"
@@ -526,7 +483,7 @@
               aria-labelledby="bulk-edit-custom-error-codes-label"
               @keyup.enter="addCustomErrorCode"
             />
-            <button type="button" class="btn btn-secondary px-3" @click="addCustomErrorCode">
+            <KumoButton type="button" class="btn btn-secondary px-3" @click="addCustomErrorCode">
               <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path
                   stroke-linecap="round"
@@ -535,7 +492,7 @@
                   d="M12 4v16m8-8H4"
                 />
               </svg>
-            </button>
+            </KumoButton>
           </div>
 
           <!-- Selected codes summary -->
@@ -546,13 +503,13 @@
               class="inline-flex items-center gap-1 rounded-full bg-red-100 px-2.5 py-0.5 text-sm font-medium text-red-700 dark:bg-red-900/30 dark:text-red-400"
             >
               {{ code }}
-              <button
+              <KumoButton
                 type="button"
                 class="hover:text-red-900 dark:hover:text-red-300"
                 @click="removeErrorCode(code)"
               >
                 <Icon name="x" size="xs" class="h-3.5 w-3.5" :stroke-width="2" />
-              </button>
+              </KumoButton>
             </span>
             <span v-if="selectedErrorCodes.length === 0" class="text-xs text-gray-400">
               {{ t('admin.accounts.noneSelectedUsesDefault') }}
@@ -565,18 +522,18 @@
       <div class="border-t border-gray-200 pt-4 dark:border-dark-600">
         <div class="flex items-center justify-between">
           <div class="flex-1 pr-4">
-            <label
+            <KumoLabel
               id="bulk-edit-intercept-warmup-label"
               class="input-label mb-0"
               for="bulk-edit-intercept-warmup-enabled"
             >
               {{ t('admin.accounts.interceptWarmupRequests') }}
-            </label>
+            </KumoLabel>
             <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">
               {{ t('admin.accounts.interceptWarmupRequestsDesc') }}
             </p>
           </div>
-          <input
+          <KumoCheckbox
             v-model="enableInterceptWarmup"
             id="bulk-edit-intercept-warmup-enabled"
             type="checkbox"
@@ -585,21 +542,7 @@
           />
         </div>
         <div v-if="enableInterceptWarmup" id="bulk-edit-intercept-warmup-body" class="mt-3">
-          <button
-            type="button"
-            :class="[
-              'relative inline-flex h-6 w-11 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2',
-              interceptWarmupRequests ? 'bg-primary-600' : 'bg-gray-200 dark:bg-dark-600'
-            ]"
-            @click="interceptWarmupRequests = !interceptWarmupRequests"
-          >
-            <span
-              :class="[
-                'pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out',
-                interceptWarmupRequests ? 'translate-x-5' : 'translate-x-0'
-              ]"
-            />
-          </button>
+          <KumoSwitch v-model="interceptWarmupRequests"  />
         </div>
       </div>
 
@@ -607,18 +550,18 @@
       <div v-if="allHeaderOverrideCapable" class="border-t border-gray-200 pt-4 dark:border-dark-600">
         <div class="flex items-center justify-between">
           <div class="flex-1 pr-4">
-            <label
+            <KumoLabel
               id="bulk-edit-header-override-label"
               class="input-label mb-0"
               for="bulk-edit-header-override-enabled"
             >
               {{ t('admin.accounts.headerOverride.title') }}
-            </label>
+            </KumoLabel>
             <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">
               {{ t('admin.accounts.headerOverride.hint') }}
             </p>
           </div>
-          <input
+          <KumoCheckbox
             v-model="enableHeaderOverride"
             id="bulk-edit-header-override-enabled"
             type="checkbox"
@@ -627,21 +570,7 @@
           />
         </div>
         <div v-if="enableHeaderOverride" id="bulk-edit-header-override-body" class="mt-3 space-y-3">
-          <button
-            type="button"
-            :class="[
-              'relative inline-flex h-6 w-11 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2',
-              headerOverrideEnabled ? 'bg-primary-600' : 'bg-gray-200 dark:bg-dark-600'
-            ]"
-            @click="headerOverrideEnabled = !headerOverrideEnabled"
-          >
-            <span
-              :class="[
-                'pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out',
-                headerOverrideEnabled ? 'translate-x-5' : 'translate-x-0'
-              ]"
-            />
-          </button>
+          <KumoSwitch v-model="headerOverrideEnabled"  />
 
           <div v-if="headerOverrideEnabled" class="space-y-3">
             <div class="rounded-lg bg-blue-50 p-3 dark:bg-blue-900/20">
@@ -669,14 +598,14 @@
       <!-- Proxy -->
       <div class="border-t border-gray-200 pt-4 dark:border-dark-600">
         <div class="mb-3 flex items-center justify-between">
-          <label
+          <KumoLabel
             id="bulk-edit-proxy-label"
             class="input-label mb-0"
             for="bulk-edit-proxy-enabled"
           >
             {{ t('admin.accounts.proxy') }}
-          </label>
-          <input
+          </KumoLabel>
+          <KumoCheckbox
             v-model="enableProxy"
             id="bulk-edit-proxy-enabled"
             type="checkbox"
@@ -697,14 +626,14 @@
       <div class="grid grid-cols-2 gap-4 border-t border-gray-200 pt-4 dark:border-dark-600 lg:grid-cols-4">
         <div>
           <div class="mb-3 flex items-center justify-between">
-            <label
+            <KumoLabel
               id="bulk-edit-concurrency-label"
               class="input-label mb-0"
               for="bulk-edit-concurrency-enabled"
             >
               {{ t('admin.accounts.concurrency') }}
-            </label>
-            <input
+            </KumoLabel>
+            <KumoCheckbox
               v-model="enableConcurrency"
               id="bulk-edit-concurrency-enabled"
               type="checkbox"
@@ -712,7 +641,7 @@
               class="rounded border-gray-300 text-primary-600 focus:ring-primary-500"
             />
           </div>
-          <input
+          <KumoInput
             v-model.number="concurrency"
             id="bulk-edit-concurrency"
             type="number"
@@ -726,14 +655,14 @@
         </div>
         <div>
           <div class="mb-3 flex items-center justify-between">
-            <label
+            <KumoLabel
               id="bulk-edit-load-factor-label"
               class="input-label mb-0"
               for="bulk-edit-load-factor-enabled"
             >
               {{ t('admin.accounts.loadFactor') }}
-            </label>
-            <input
+            </KumoLabel>
+            <KumoCheckbox
               v-model="enableLoadFactor"
               id="bulk-edit-load-factor-enabled"
               type="checkbox"
@@ -741,7 +670,7 @@
               class="rounded border-gray-300 text-primary-600 focus:ring-primary-500"
             />
           </div>
-          <input
+          <KumoInput
             v-model.number="loadFactor"
             id="bulk-edit-load-factor"
             type="number"
@@ -756,14 +685,14 @@
         </div>
         <div>
           <div class="mb-3 flex items-center justify-between">
-            <label
+            <KumoLabel
               id="bulk-edit-priority-label"
               class="input-label mb-0"
               for="bulk-edit-priority-enabled"
             >
               {{ t('admin.accounts.priority') }}
-            </label>
-            <input
+            </KumoLabel>
+            <KumoCheckbox
               v-model="enablePriority"
               id="bulk-edit-priority-enabled"
               type="checkbox"
@@ -771,7 +700,7 @@
               class="rounded border-gray-300 text-primary-600 focus:ring-primary-500"
             />
           </div>
-          <input
+          <KumoInput
             v-model.number="priority"
             id="bulk-edit-priority"
             type="number"
@@ -784,14 +713,14 @@
         </div>
         <div>
           <div class="mb-3 flex items-center justify-between">
-            <label
+            <KumoLabel
               id="bulk-edit-rate-multiplier-label"
               class="input-label mb-0"
               for="bulk-edit-rate-multiplier-enabled"
             >
               {{ t('admin.accounts.billingRateMultiplier') }}
-            </label>
-            <input
+            </KumoLabel>
+            <KumoCheckbox
               v-model="enableRateMultiplier"
               id="bulk-edit-rate-multiplier-enabled"
               type="checkbox"
@@ -799,7 +728,7 @@
               class="rounded border-gray-300 text-primary-600 focus:ring-primary-500"
             />
           </div>
-          <input
+          <KumoInput
             v-model.number="rateMultiplier"
             id="bulk-edit-rate-multiplier"
             type="number"
@@ -825,14 +754,14 @@
       <!-- Status -->
       <div class="border-t border-gray-200 pt-4 dark:border-dark-600">
         <div class="mb-3 flex items-center justify-between">
-          <label
+          <KumoLabel
             id="bulk-edit-status-label"
             class="input-label mb-0"
             for="bulk-edit-status-enabled"
           >
             {{ t('common.status') }}
-          </label>
-          <input
+          </KumoLabel>
+          <KumoCheckbox
             v-model="enableStatus"
             id="bulk-edit-status-enabled"
             type="checkbox"
@@ -852,14 +781,14 @@
       <!-- OpenAI OAuth WS mode -->
       <div v-if="allOpenAIOAuth" class="border-t border-gray-200 pt-4 dark:border-dark-600">
         <div class="mb-3 flex items-center justify-between">
-          <label
+          <KumoLabel
             id="bulk-edit-openai-ws-mode-label"
             class="input-label mb-0"
             for="bulk-edit-openai-ws-mode-enabled"
           >
             {{ t('admin.accounts.openai.wsMode') }}
-          </label>
-          <input
+          </KumoLabel>
+          <KumoCheckbox
             v-model="enableOpenAIWSMode"
             id="bulk-edit-openai-ws-mode-enabled"
             type="checkbox"
@@ -889,14 +818,14 @@
       <!-- OpenAI OAuth Codex CLI only -->
       <div v-if="allOpenAIOAuth" class="border-t border-gray-200 pt-4 dark:border-dark-600">
         <div class="mb-3 flex items-center justify-between">
-          <label
+          <KumoLabel
             id="bulk-edit-openai-codex-cli-only-label"
             class="input-label mb-0"
             for="bulk-edit-openai-codex-cli-only-enabled"
           >
             {{ t('admin.accounts.openai.codexCLIOnly') }}
-          </label>
-          <input
+          </KumoLabel>
+          <KumoCheckbox
             v-model="enableCodexCLIOnly"
             id="bulk-edit-openai-codex-cli-only-enabled"
             type="checkbox"
@@ -911,36 +840,21 @@
           <p class="mb-3 text-xs text-gray-500 dark:text-gray-400">
             {{ t('admin.accounts.openai.codexCLIOnlyDesc') }}
           </p>
-          <button
-            id="bulk-edit-openai-codex-cli-only-toggle"
-            type="button"
-            :class="[
-              'relative inline-flex h-6 w-11 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2',
-              codexCLIOnlyEnabled ? 'bg-primary-600' : 'bg-gray-200 dark:bg-dark-600'
-            ]"
-            @click="codexCLIOnlyEnabled = !codexCLIOnlyEnabled"
-          >
-            <span
-              :class="[
-                'pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out',
-                codexCLIOnlyEnabled ? 'translate-x-5' : 'translate-x-0'
-              ]"
-            />
-          </button>
+          <KumoSwitch v-model="codexCLIOnlyEnabled" id="bulk-edit-openai-codex-cli-only-toggle" />
         </div>
       </div>
 
       <!-- OpenAI OAuth: Codex app-server -->
       <div v-if="allOpenAIOAuth" class="border-t border-gray-200 pt-4 dark:border-dark-600">
         <div class="mb-3 flex items-center justify-between">
-          <label
+          <KumoLabel
             id="bulk-edit-openai-codex-app-server-label"
             class="input-label mb-0"
             for="bulk-edit-openai-codex-app-server-enabled"
           >
             {{ t('admin.accounts.openai.codexCLIOnlyAppServer') }}
-          </label>
-          <input
+          </KumoLabel>
+          <KumoCheckbox
             v-model="enableCodexCLIOnlyAppServer"
             id="bulk-edit-openai-codex-app-server-enabled"
             type="checkbox"
@@ -955,30 +869,15 @@
           <p class="mb-3 text-xs text-gray-500 dark:text-gray-400">
             {{ t('admin.accounts.openai.codexCLIOnlyAppServerDesc') }}
           </p>
-          <button
-            id="bulk-edit-openai-codex-app-server-toggle"
-            type="button"
-            :class="[
-              'relative inline-flex h-6 w-11 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2',
-              codexCLIOnlyAppServerEnabled ? 'bg-primary-600' : 'bg-gray-200 dark:bg-dark-600'
-            ]"
-            @click="codexCLIOnlyAppServerEnabled = !codexCLIOnlyAppServerEnabled"
-          >
-            <span
-              :class="[
-                'pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out',
-                codexCLIOnlyAppServerEnabled ? 'translate-x-5' : 'translate-x-0'
-              ]"
-            />
-          </button>
+          <KumoSwitch v-model="codexCLIOnlyAppServerEnabled" id="bulk-edit-openai-codex-app-server-toggle" />
         </div>
       </div>
 
       <!-- Codex 指纹收敛模式（仅 OpenAI OAuth） -->
       <div v-if="allOpenAIOAuth" class="border-t border-gray-200 pt-4 dark:border-dark-600">
         <div class="mb-3 flex items-center justify-between">
-          <label class="input-label mb-0">{{ t('admin.accounts.openai.codexFingerprintMode') }}</label>
-          <input
+          <KumoLabel class="input-label mb-0">{{ t('admin.accounts.openai.codexFingerprintMode') }}</KumoLabel>
+          <KumoCheckbox
             id="bulk-edit-openai-codex-fingerprint-mode-enabled"
             v-model="enableCodexFingerprintMode"
             type="checkbox"
@@ -997,18 +896,18 @@
       <div v-if="allBillingProbeCapable" class="border-t border-gray-200 pt-4 dark:border-dark-600">
         <div class="mb-3 flex items-center justify-between">
           <div class="flex-1 pr-4">
-            <label
+            <KumoLabel
               id="bulk-edit-upstream-billing-auto-probe-label"
               class="input-label mb-0"
               for="bulk-edit-upstream-billing-auto-probe-enabled"
             >
               {{ t('admin.accounts.upstreamBilling.autoProbe') }}
-            </label>
+            </KumoLabel>
             <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">
               {{ t('admin.accounts.upstreamBilling.autoProbeHint') }}
             </p>
           </div>
-          <input
+          <KumoCheckbox
             v-model="enableUpstreamBillingAutoProbe"
             id="bulk-edit-upstream-billing-auto-probe-enabled"
             type="checkbox"
@@ -1036,18 +935,18 @@
       <div v-if="allOpenAIAPIKey" class="border-t border-gray-200 pt-4 dark:border-dark-600">
         <div class="mb-3 flex items-center justify-between gap-4">
           <div class="flex-1">
-            <label
+            <KumoLabel
               id="bulk-edit-openai-endpoint-capabilities-label"
               class="input-label mb-0"
               for="bulk-edit-openai-endpoint-capabilities-enabled"
             >
               {{ t('admin.accounts.openai.endpointCapabilities') }}
-            </label>
+            </KumoLabel>
             <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">
               {{ t('admin.accounts.openai.endpointCapabilitiesDesc') }}
             </p>
           </div>
-          <input
+          <KumoCheckbox
             v-model="enableOpenAIEndpointCapabilities"
             id="bulk-edit-openai-endpoint-capabilities-enabled"
             type="checkbox"
@@ -1062,12 +961,12 @@
           aria-labelledby="bulk-edit-openai-endpoint-capabilities-label"
         >
           <div class="grid grid-cols-1 gap-2 sm:grid-cols-2">
-            <label
+            <KumoLabel
               v-for="option in openAIEndpointCapabilityOptions"
               :key="option.value"
               class="flex cursor-pointer items-center gap-2 rounded-lg border border-gray-200 px-3 py-2 text-sm dark:border-dark-600"
             >
-              <input
+              <KumoCheckbox
                 type="checkbox"
                 :disabled="!enableOpenAIEndpointCapabilities"
                 class="rounded border-gray-300 text-primary-600 focus:ring-primary-500 dark:border-dark-500"
@@ -1076,7 +975,7 @@
                 @change="toggleOpenAIEndpointCapability(option.value, $event)"
               />
               <span class="text-gray-700 dark:text-gray-200">{{ option.label }}</span>
-            </label>
+            </KumoLabel>
           </div>
         </div>
       </div>
@@ -1085,18 +984,18 @@
       <div v-if="allOpenAIAPIKey" class="border-t border-gray-200 pt-4 dark:border-dark-600">
         <div class="mb-3 flex items-center justify-between gap-4">
           <div class="flex-1">
-            <label
+            <KumoLabel
               id="bulk-edit-openai-responses-mode-label"
               class="input-label mb-0"
               for="bulk-edit-openai-responses-mode-enabled"
             >
               {{ t('admin.accounts.openai.responsesMode') }}
-            </label>
+            </KumoLabel>
             <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">
               {{ t('admin.accounts.openai.responsesModeDesc') }}
             </p>
           </div>
-          <input
+          <KumoCheckbox
             v-model="enableOpenAIResponsesMode"
             id="bulk-edit-openai-responses-mode-enabled"
             type="checkbox"
@@ -1130,14 +1029,14 @@
       <!-- OpenAI API Key WS mode -->
       <div v-if="allOpenAIAPIKey" class="border-t border-gray-200 pt-4 dark:border-dark-600">
         <div class="mb-3 flex items-center justify-between">
-          <label
+          <KumoLabel
             id="bulk-edit-openai-apikey-ws-mode-label"
             class="input-label mb-0"
             for="bulk-edit-openai-apikey-ws-mode-enabled"
           >
             {{ t('admin.accounts.openai.wsMode') }}
-          </label>
-          <input
+          </KumoLabel>
+          <KumoCheckbox
             v-model="enableOpenAIAPIKeyWSMode"
             id="bulk-edit-openai-apikey-ws-mode-enabled"
             type="checkbox"
@@ -1168,18 +1067,18 @@
       <div v-if="allOpenAIPassthroughCapable" class="border-t border-gray-200 pt-4 dark:border-dark-600">
         <div class="mb-3 flex items-center justify-between">
           <div class="flex-1 pr-4">
-            <label
+            <KumoLabel
               id="bulk-edit-openai-compact-mode-label"
               class="input-label mb-0"
               for="bulk-edit-openai-compact-mode-enabled"
             >
               {{ t('admin.accounts.openai.compactMode') }}
-            </label>
+            </KumoLabel>
             <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">
               {{ t('admin.accounts.openai.compactModeDesc') }}
             </p>
           </div>
-          <input
+          <KumoCheckbox
             v-model="enableOpenAICompactMode"
             id="bulk-edit-openai-compact-mode-enabled"
             type="checkbox"
@@ -1204,18 +1103,18 @@
       <div v-if="allOpenAIPassthroughCapable" class="border-t border-gray-200 pt-4 dark:border-dark-600">
         <div class="mb-3 flex items-center justify-between">
           <div class="flex-1 pr-4">
-            <label
+            <KumoLabel
               id="bulk-edit-openai-compact-model-mapping-label"
               class="input-label mb-0"
               for="bulk-edit-openai-compact-model-mapping-enabled"
             >
               {{ t('admin.accounts.openai.compactModelMapping') }}
-            </label>
+            </KumoLabel>
             <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">
               {{ t('admin.accounts.openai.compactModelMappingDesc') }}
             </p>
           </div>
-          <input
+          <KumoCheckbox
             v-model="enableOpenAICompactModelMapping"
             id="bulk-edit-openai-compact-model-mapping-enabled"
             type="checkbox"
@@ -1233,7 +1132,7 @@
               :key="index"
               class="flex items-center gap-2"
             >
-              <input
+              <KumoInput
                 v-model="mapping.from"
                 type="text"
                 class="input flex-1"
@@ -1241,44 +1140,44 @@
                 data-testid="bulk-edit-openai-compact-model-mapping-input"
               />
               <span class="text-gray-400">→</span>
-              <input
+              <KumoInput
                 v-model="mapping.to"
                 type="text"
                 class="input flex-1"
                 :placeholder="t('admin.accounts.toModel')"
                 data-testid="bulk-edit-openai-compact-model-mapping-input"
               />
-              <button
+              <KumoButton
                 type="button"
                 class="rounded-lg p-2 text-red-500 transition-colors hover:bg-red-50 hover:text-red-600 dark:hover:bg-red-900/20"
                 @click="removeOpenAICompactModelMapping(index)"
               >
                 <Icon name="trash" size="sm" />
-              </button>
+              </KumoButton>
             </div>
           </div>
-          <button
+          <KumoButton
             type="button"
             class="mb-3 w-full rounded-lg border-2 border-dashed border-gray-300 px-4 py-2 text-gray-600 transition-colors hover:border-gray-400 hover:text-gray-700 dark:border-dark-500 dark:text-gray-400 dark:hover:border-dark-400 dark:hover:text-gray-300"
             data-testid="bulk-edit-openai-compact-model-mapping-add"
             @click="addOpenAICompactModelMapping"
           >
             + {{ t('admin.accounts.addMapping') }}
-          </button>
+          </KumoButton>
         </div>
       </div>
 
       <!-- RPM Limit (仅全部为 Anthropic OAuth/SetupToken 时显示) -->
       <div v-if="allAnthropicOAuthOrSetupToken" class="border-t border-gray-200 pt-4 dark:border-dark-600">
         <div class="mb-3 flex items-center justify-between">
-          <label
+          <KumoLabel
             id="bulk-edit-rpm-limit-label"
             class="input-label mb-0"
             for="bulk-edit-rpm-limit-enabled"
           >
             {{ t('admin.accounts.quotaControl.rpmLimit.label') }}
-          </label>
-          <input
+          </KumoLabel>
+          <KumoCheckbox
             v-model="enableRpmLimit"
             id="bulk-edit-rpm-limit-enabled"
             type="checkbox"
@@ -1295,27 +1194,13 @@
         >
           <div class="mb-3 flex items-center justify-between">
             <span class="text-sm text-gray-700 dark:text-gray-300">{{ t('admin.accounts.quotaControl.rpmLimit.hint') }}</span>
-            <button
-              type="button"
-              @click="rpmLimitEnabled = !rpmLimitEnabled"
-              :class="[
-                'relative inline-flex h-6 w-11 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2',
-                rpmLimitEnabled ? 'bg-primary-600' : 'bg-gray-200 dark:bg-dark-600'
-              ]"
-            >
-              <span
-                :class="[
-                  'pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out',
-                  rpmLimitEnabled ? 'translate-x-5' : 'translate-x-0'
-                ]"
-              />
-            </button>
+            <KumoSwitch v-model="rpmLimitEnabled"  />
           </div>
 
           <div v-if="rpmLimitEnabled" class="space-y-3">
             <div>
-              <label class="input-label text-xs">{{ t('admin.accounts.quotaControl.rpmLimit.baseRpm') }}</label>
-              <input
+              <KumoLabel class="input-label text-xs">{{ t('admin.accounts.quotaControl.rpmLimit.baseRpm') }}</KumoLabel>
+              <KumoInput
                 v-model.number="bulkBaseRpm"
                 type="number"
                 min="1"
@@ -1328,9 +1213,9 @@
             </div>
 
             <div>
-              <label class="input-label text-xs">{{ t('admin.accounts.quotaControl.rpmLimit.strategy') }}</label>
+              <KumoLabel class="input-label text-xs">{{ t('admin.accounts.quotaControl.rpmLimit.strategy') }}</KumoLabel>
               <div class="flex gap-2">
-                <button
+                <KumoButton
                   type="button"
                   @click="bulkRpmStrategy = 'tiered'"
                   :class="[
@@ -1341,8 +1226,8 @@
                   ]"
                 >
                   {{ t('admin.accounts.quotaControl.rpmLimit.strategyTiered') }}
-                </button>
-                <button
+                </KumoButton>
+                <KumoButton
                   type="button"
                   @click="bulkRpmStrategy = 'sticky_exempt'"
                   :class="[
@@ -1353,13 +1238,13 @@
                   ]"
                 >
                   {{ t('admin.accounts.quotaControl.rpmLimit.strategyStickyExempt') }}
-                </button>
+                </KumoButton>
               </div>
             </div>
 
             <div v-if="bulkRpmStrategy === 'tiered'">
-              <label class="input-label text-xs">{{ t('admin.accounts.quotaControl.rpmLimit.stickyBuffer') }}</label>
-              <input
+              <KumoLabel class="input-label text-xs">{{ t('admin.accounts.quotaControl.rpmLimit.stickyBuffer') }}</KumoLabel>
+              <KumoInput
                 v-model.number="bulkRpmStickyBuffer"
                 type="number"
                 min="1"
@@ -1375,12 +1260,12 @@
 
         <!-- 用户消息限速模式（独立于 RPM 开关，始终可见） -->
         <div class="mt-4">
-          <label class="input-label">{{ t('admin.accounts.quotaControl.rpmLimit.userMsgQueue') }}</label>
+          <KumoLabel class="input-label">{{ t('admin.accounts.quotaControl.rpmLimit.userMsgQueue') }}</KumoLabel>
           <p class="mt-1 text-xs text-gray-500 dark:text-gray-400 mb-2">
             {{ t('admin.accounts.quotaControl.rpmLimit.userMsgQueueHint') }}
           </p>
           <div class="flex space-x-2">
-            <button type="button" v-for="opt in umqModeOptions" :key="opt.value"
+            <KumoButton type="button" v-for="opt in umqModeOptions" :key="opt.value"
               @click="userMsgQueueMode = userMsgQueueMode === opt.value ? null : opt.value"
               :class="[
                 'px-3 py-1.5 text-sm rounded-md border transition-colors',
@@ -1389,7 +1274,7 @@
                   : 'bg-white dark:bg-dark-700 text-gray-700 dark:text-gray-300 border-gray-300 dark:border-dark-500 hover:bg-gray-50 dark:hover:bg-dark-600'
               ]">
               {{ opt.label }}
-            </button>
+            </KumoButton>
           </div>
         </div>
       </div>
@@ -1397,14 +1282,14 @@
       <!-- Groups -->
       <div class="border-t border-gray-200 pt-4 dark:border-dark-600">
         <div class="mb-3 flex items-center justify-between">
-          <label
+          <KumoLabel
             id="bulk-edit-groups-label"
             class="input-label mb-0"
             for="bulk-edit-groups-enabled"
           >
             {{ t('nav.groups') }}
-          </label>
-          <input
+          </KumoLabel>
+          <KumoCheckbox
             v-model="enableGroups"
             id="bulk-edit-groups-enabled"
             type="checkbox"
@@ -1424,39 +1309,20 @@
 
     <template #footer>
       <div class="flex justify-end gap-3">
-        <button type="button" class="btn btn-secondary" @click="handleClose">
+        <KumoButton type="button" class="btn btn-secondary" @click="handleClose">
           {{ t('common.cancel') }}
-        </button>
-        <button
+        </KumoButton>
+        <KumoButton
           type="submit"
           form="bulk-edit-account-form"
           :disabled="submitting"
           class="btn btn-primary"
         >
-          <svg
-            v-if="submitting"
-            class="-ml-1 mr-2 h-4 w-4 animate-spin"
-            fill="none"
-            viewBox="0 0 24 24"
-          >
-            <circle
-              class="opacity-25"
-              cx="12"
-              cy="12"
-              r="10"
-              stroke="currentColor"
-              stroke-width="4"
-            />
-            <path
-              class="opacity-75"
-              fill="currentColor"
-              d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-            />
-          </svg>
+          <KumoLoader v-if="submitting" class="-ml-1 mr-2 h-4 w-4 animate-spin" />
           {{
             submitting ? t('admin.accounts.bulkEdit.updating') : t('admin.accounts.bulkEdit.submit')
           }}
-        </button>
+        </KumoButton>
       </div>
     </template>
   </BaseDialog>
@@ -1474,6 +1340,8 @@
 </template>
 
 <script setup lang="ts">
+import { KumoButton, KumoCheckbox, KumoInput, KumoLabel, KumoLoader, KumoSwitch } from '@/components/kumo'
+
 import { ref, watch, computed } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useAppStore } from '@/stores/app'

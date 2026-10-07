@@ -11,13 +11,13 @@
         <p class="text-sm text-gray-500 dark:text-gray-400">
           {{ t('admin.scheduledTests.title') }}
         </p>
-        <button
+        <KumoButton
           @click="showAddForm = !showAddForm"
           class="btn btn-primary flex items-center gap-1.5 text-sm"
         >
           <Icon name="plus" size="sm" :stroke-width="2" />
           {{ t('admin.scheduledTests.addPlan') }}
-        </button>
+        </KumoButton>
       </div>
 
       <!-- Add Plan Form -->
@@ -30,9 +30,9 @@
         </div>
         <div class="grid grid-cols-1 gap-3 sm:grid-cols-2">
           <div>
-            <label class="mb-1 block text-xs font-medium text-gray-600 dark:text-gray-400">
+            <KumoLabel class="mb-1 block text-xs font-medium text-gray-600 dark:text-gray-400">
               {{ t('admin.scheduledTests.model') }}
-            </label>
+            </KumoLabel>
             <Select
               v-model="newPlan.model_id"
               :options="modelOptions"
@@ -41,7 +41,7 @@
             />
           </div>
           <div>
-            <label class="mb-1 flex items-center gap-1 text-xs font-medium text-gray-600 dark:text-gray-400">
+            <KumoLabel class="mb-1 flex items-center gap-1 text-xs font-medium text-gray-600 dark:text-gray-400">
               {{ t('admin.scheduledTests.cronExpression') }}
               <HelpTooltip>
                 <template #trigger>
@@ -59,7 +59,7 @@
                   <p>{{ t('admin.scheduledTests.cronTooltipRange') }}</p>
                 </div>
               </HelpTooltip>
-            </label>
+            </KumoLabel>
             <Input
               v-model="newPlan.cron_expression"
               :placeholder="'*/30 * * * *'"
@@ -67,7 +67,7 @@
             />
           </div>
           <div>
-            <label class="mb-1 flex items-center gap-1 text-xs font-medium text-gray-600 dark:text-gray-400">
+            <KumoLabel class="mb-1 flex items-center gap-1 text-xs font-medium text-gray-600 dark:text-gray-400">
               {{ t('admin.scheduledTests.maxResults') }}
               <HelpTooltip>
                 <template #trigger>
@@ -83,7 +83,7 @@
                   <p>{{ t('admin.scheduledTests.maxResultsTooltipRange') }}</p>
                 </div>
               </HelpTooltip>
-            </label>
+            </KumoLabel>
             <Input
               v-model="newPlan.max_results"
               type="number"
@@ -91,17 +91,17 @@
             />
           </div>
           <div class="flex items-end">
-            <label class="flex items-center gap-2 text-sm text-gray-700 dark:text-gray-300">
+            <KumoLabel class="flex items-center gap-2 text-sm text-gray-700 dark:text-gray-300">
               <Toggle v-model="newPlan.enabled" />
               {{ t('admin.scheduledTests.enabled') }}
-            </label>
+            </KumoLabel>
           </div>
           <div class="flex items-end">
             <div>
-              <label class="flex items-center gap-2 text-sm text-gray-700 dark:text-gray-300">
+              <KumoLabel class="flex items-center gap-2 text-sm text-gray-700 dark:text-gray-300">
                 <Toggle v-model="newPlan.auto_recover" />
                 {{ t('admin.scheduledTests.autoRecover') }}
-              </label>
+              </KumoLabel>
               <p class="mt-0.5 text-xs text-gray-400 dark:text-gray-500">
                 {{ t('admin.scheduledTests.autoRecoverHelp') }}
               </p>
@@ -109,20 +109,20 @@
           </div>
         </div>
         <div class="mt-3 flex justify-end gap-2">
-          <button
+          <KumoButton
             @click="showAddForm = false; resetNewPlan()"
             class="rounded-lg bg-gray-100 px-3 py-1.5 text-sm font-medium text-gray-700 transition-colors hover:bg-gray-200 dark:bg-dark-600 dark:text-gray-300 dark:hover:bg-dark-500"
           >
             {{ t('common.cancel') }}
-          </button>
-          <button
+          </KumoButton>
+          <KumoButton
             @click="handleCreate"
             :disabled="!newPlan.model_id || !newPlan.cron_expression || creating"
             class="flex items-center gap-1.5 rounded-lg bg-primary-500 px-3 py-1.5 text-sm font-medium text-white transition-colors hover:bg-primary-600 disabled:cursor-not-allowed disabled:opacity-50"
           >
             <Icon v-if="creating" name="refresh" size="sm" class="animate-spin" :stroke-width="2" />
             {{ t('common.save') }}
-          </button>
+          </KumoButton>
         </div>
       </div>
 
@@ -201,20 +201,20 @@
 
               <!-- Actions -->
               <div class="flex items-center gap-1" @click.stop>
-                <button
+                <KumoButton
                   @click="startEdit(plan)"
                   class="rounded-lg p-1.5 text-gray-400 transition-colors hover:bg-blue-50 hover:text-blue-500 dark:hover:bg-blue-900/20"
                   :title="t('admin.scheduledTests.editPlan')"
                 >
                   <Icon name="edit" size="sm" :stroke-width="2" />
-                </button>
-                <button
+                </KumoButton>
+                <KumoButton
                   @click="confirmDeletePlan(plan)"
                   class="rounded-lg p-1.5 text-gray-400 transition-colors hover:bg-red-50 hover:text-red-500 dark:hover:bg-red-900/20"
                   :title="t('admin.scheduledTests.deletePlan')"
                 >
                   <Icon name="trash" size="sm" :stroke-width="2" />
-                </button>
+                </KumoButton>
               </div>
 
               <!-- Expand indicator -->
@@ -240,9 +240,9 @@
             </div>
             <div class="grid grid-cols-1 gap-3 sm:grid-cols-2">
               <div>
-                <label class="mb-1 block text-xs font-medium text-gray-600 dark:text-gray-400">
+                <KumoLabel class="mb-1 block text-xs font-medium text-gray-600 dark:text-gray-400">
                   {{ t('admin.scheduledTests.model') }}
-                </label>
+                </KumoLabel>
                 <Select
                   v-model="editForm.model_id"
                   :options="modelOptions"
@@ -251,7 +251,7 @@
                 />
               </div>
               <div>
-                <label class="mb-1 flex items-center gap-1 text-xs font-medium text-gray-600 dark:text-gray-400">
+                <KumoLabel class="mb-1 flex items-center gap-1 text-xs font-medium text-gray-600 dark:text-gray-400">
                   {{ t('admin.scheduledTests.cronExpression') }}
                   <HelpTooltip>
                     <template #trigger>
@@ -269,7 +269,7 @@
                       <p>{{ t('admin.scheduledTests.cronTooltipRange') }}</p>
                     </div>
                   </HelpTooltip>
-                </label>
+                </KumoLabel>
                 <Input
                   v-model="editForm.cron_expression"
                   :placeholder="'*/30 * * * *'"
@@ -277,7 +277,7 @@
                 />
               </div>
               <div>
-                <label class="mb-1 flex items-center gap-1 text-xs font-medium text-gray-600 dark:text-gray-400">
+                <KumoLabel class="mb-1 flex items-center gap-1 text-xs font-medium text-gray-600 dark:text-gray-400">
                   {{ t('admin.scheduledTests.maxResults') }}
                   <HelpTooltip>
                     <template #trigger>
@@ -293,7 +293,7 @@
                       <p>{{ t('admin.scheduledTests.maxResultsTooltipRange') }}</p>
                     </div>
                   </HelpTooltip>
-                </label>
+                </KumoLabel>
                 <Input
                   v-model="editForm.max_results"
                   type="number"
@@ -301,17 +301,17 @@
                 />
               </div>
               <div class="flex items-end">
-                <label class="flex items-center gap-2 text-sm text-gray-700 dark:text-gray-300">
+                <KumoLabel class="flex items-center gap-2 text-sm text-gray-700 dark:text-gray-300">
                   <Toggle v-model="editForm.enabled" />
                   {{ t('admin.scheduledTests.enabled') }}
-                </label>
+                </KumoLabel>
               </div>
               <div class="flex items-end">
                 <div>
-                  <label class="flex items-center gap-2 text-sm text-gray-700 dark:text-gray-300">
+                  <KumoLabel class="flex items-center gap-2 text-sm text-gray-700 dark:text-gray-300">
                     <Toggle v-model="editForm.auto_recover" />
                     {{ t('admin.scheduledTests.autoRecover') }}
-                  </label>
+                  </KumoLabel>
                   <p class="mt-0.5 text-xs text-gray-400 dark:text-gray-500">
                     {{ t('admin.scheduledTests.autoRecoverHelp') }}
                   </p>
@@ -319,20 +319,20 @@
               </div>
             </div>
             <div class="mt-3 flex justify-end gap-2">
-              <button
+              <KumoButton
                 @click="cancelEdit"
                 class="rounded-lg bg-gray-100 px-3 py-1.5 text-sm font-medium text-gray-700 transition-colors hover:bg-gray-200 dark:bg-dark-600 dark:text-gray-300 dark:hover:bg-dark-500"
               >
                 {{ t('common.cancel') }}
-              </button>
-              <button
+              </KumoButton>
+              <KumoButton
                 @click="handleEdit"
                 :disabled="!editForm.model_id || !editForm.cron_expression || updating"
                 class="flex items-center gap-1.5 rounded-lg bg-primary-500 px-3 py-1.5 text-sm font-medium text-white transition-colors hover:bg-primary-600 disabled:cursor-not-allowed disabled:opacity-50"
               >
                 <Icon v-if="updating" name="refresh" size="sm" class="animate-spin" :stroke-width="2" />
                 {{ t('common.save') }}
-              </button>
+              </KumoButton>
             </div>
           </div>
 
@@ -463,6 +463,8 @@
 </template>
 
 <script setup lang="ts">
+import { KumoButton, KumoLabel } from '@/components/kumo'
+
 import { ref, reactive, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
 import BaseDialog from '@/components/common/BaseDialog.vue'

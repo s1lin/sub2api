@@ -3,13 +3,13 @@
     <div class="space-y-6">
       <!-- Loading State -->
       <div v-if="loading" class="flex justify-center py-12">
-        <div
-          class="h-8 w-8 animate-spin rounded-full border-2 border-primary-500 border-t-transparent"
-        ></div>
+        <KumoLoader
+          class="h-8 w-8"
+         />
       </div>
 
       <!-- Empty State -->
-      <div v-else-if="subscriptions.length === 0" class="card p-12 text-center">
+      <KumoSurface v-else-if="subscriptions.length === 0" class="card p-12 text-center">
         <div
           class="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-gray-100 dark:bg-dark-700"
         >
@@ -21,7 +21,7 @@
         <p class="text-gray-500 dark:text-dark-400">
           {{ t('userSubscriptions.noActiveSubscriptionsDesc') }}
         </p>
-      </div>
+      </KumoSurface>
 
       <!-- Subscriptions Grid -->
       <div v-else class="grid gap-6 lg:grid-cols-2">
@@ -70,13 +70,13 @@
               >
                 {{ t(`userSubscriptions.status.${subscription.status}`) }}
               </span>
-              <button
+              <KumoButton
                 v-if="subscription.status === 'active'"
                 :class="['rounded-lg px-3 py-1.5 text-xs font-semibold text-white transition-colors', platformButtonClass(subscription.group?.platform || '')]"
                 @click="router.push({ path: '/purchase', query: { tab: 'subscription', group: String(subscription.group_id) } })"
               >
                 {{ t('payment.renewNow') }}
-              </button>
+              </KumoButton>
             </div>
           </div>
 
@@ -112,23 +112,15 @@
                   }}
                 </span>
               </div>
-              <div class="relative h-2 overflow-hidden rounded-full bg-gray-200 dark:bg-dark-600">
-                <div
-                  class="absolute inset-y-0 left-0 rounded-full transition-all duration-300"
-                  :class="
+              <KumoMeter  compact :label="t('common.usage')" :value="Number.parseFloat(String(getProgressWidth(
+                      subscription.daily_usage_usd,
+                      subscription.group.daily_limit_usd
+                    ))) || 0" class="relative h-2 overflow-hidden rounded-full bg-gray-200 dark:bg-dark-600" track-class-name="h-full min-h-[inherit]" :indicator-class-name="['absolute inset-y-0 left-0 rounded-full transition-all duration-300', (
                     getProgressBarClass(
                       subscription.daily_usage_usd,
                       subscription.group.daily_limit_usd
                     )
-                  "
-                  :style="{
-                    width: getProgressWidth(
-                      subscription.daily_usage_usd,
-                      subscription.group.daily_limit_usd
-                    )
-                  }"
-                ></div>
-              </div>
+                  )]" />
               <p
                 v-if="subscription.daily_window_start"
                 class="text-xs text-gray-500 dark:text-dark-400"
@@ -149,23 +141,15 @@
                   }}
                 </span>
               </div>
-              <div class="relative h-2 overflow-hidden rounded-full bg-gray-200 dark:bg-dark-600">
-                <div
-                  class="absolute inset-y-0 left-0 rounded-full transition-all duration-300"
-                  :class="
+              <KumoMeter  compact :label="t('common.usage')" :value="Number.parseFloat(String(getProgressWidth(
+                      subscription.weekly_usage_usd,
+                      subscription.group.weekly_limit_usd
+                    ))) || 0" class="relative h-2 overflow-hidden rounded-full bg-gray-200 dark:bg-dark-600" track-class-name="h-full min-h-[inherit]" :indicator-class-name="['absolute inset-y-0 left-0 rounded-full transition-all duration-300', (
                     getProgressBarClass(
                       subscription.weekly_usage_usd,
                       subscription.group.weekly_limit_usd
                     )
-                  "
-                  :style="{
-                    width: getProgressWidth(
-                      subscription.weekly_usage_usd,
-                      subscription.group.weekly_limit_usd
-                    )
-                  }"
-                ></div>
-              </div>
+                  )]" />
               <p
                 v-if="subscription.weekly_window_start"
                 class="text-xs text-gray-500 dark:text-dark-400"
@@ -190,23 +174,15 @@
                   }}
                 </span>
               </div>
-              <div class="relative h-2 overflow-hidden rounded-full bg-gray-200 dark:bg-dark-600">
-                <div
-                  class="absolute inset-y-0 left-0 rounded-full transition-all duration-300"
-                  :class="
+              <KumoMeter  compact :label="t('common.usage')" :value="Number.parseFloat(String(getProgressWidth(
+                      subscription.monthly_usage_usd,
+                      subscription.group.monthly_limit_usd
+                    ))) || 0" class="relative h-2 overflow-hidden rounded-full bg-gray-200 dark:bg-dark-600" track-class-name="h-full min-h-[inherit]" :indicator-class-name="['absolute inset-y-0 left-0 rounded-full transition-all duration-300', (
                     getProgressBarClass(
                       subscription.monthly_usage_usd,
                       subscription.group.monthly_limit_usd
                     )
-                  "
-                  :style="{
-                    width: getProgressWidth(
-                      subscription.monthly_usage_usd,
-                      subscription.group.monthly_limit_usd
-                    )
-                  }"
-                ></div>
-              </div>
+                  )]" />
               <p
                 v-if="subscription.monthly_window_start"
                 class="text-xs text-gray-500 dark:text-dark-400"
@@ -248,6 +224,8 @@
 </template>
 
 <script setup lang="ts">
+import { KumoButton, KumoLoader, KumoMeter, KumoSurface } from '@/components/kumo'
+
 import { ref, onMounted } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useRouter } from 'vue-router'

@@ -1,5 +1,6 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
-import { enableAutoUnmount, flushPromises, mount } from '@vue/test-utils'
+import { mount, flushPromises, portal } from '@/__tests__/render'
+import { enableAutoUnmount } from '@vue/test-utils'
 import TotpSetupModal from '../TotpSetupModal.vue'
 import TotpDisableDialog from '../TotpDisableDialog.vue'
 
@@ -38,7 +39,7 @@ describe.each([
     mocks.totpAPI.sendVerifyCode.mockRejectedValue({ status: 429, message: 'Please wait before requesting another code' })
     const wrapper = mount(component)
     await flushPromises()
-    await wrapper.findAll('button').find(button => button.text() === 'profile.totp.sendCode')!.trigger('click')
+    await portal().findAll('button').find(button => button.text() === 'profile.totp.sendCode')!.trigger('click')
     await flushPromises()
     expect(mocks.showError).toHaveBeenCalledWith('Please wait before requesting another code')
   })
@@ -51,9 +52,9 @@ describe.each([
     action.mockRejectedValue(error)
     const wrapper = mount(component)
     await flushPromises()
-    await wrapper.get('input[type="password"]').setValue('incorrect-password')
-    if (name === 'setup') await wrapper.get('.btn-primary').trigger('click')
-    else await wrapper.get('form').trigger('submit')
+    await portal().get('input[type="password"]').setValue('incorrect-password')
+    if (name === 'setup') await portal().get('.btn-primary').trigger('click')
+    else await portal().get('form').trigger('submit')
     await flushPromises()
     expect(mocks.showError).toHaveBeenCalledWith(expected)
     expect(wrapper.emitted('success')).toBeUndefined()
@@ -65,12 +66,12 @@ it('shows the reason a TOTP code was rejected', async () => {
   mocks.totpAPI.enable.mockRejectedValue({ status: 400, message: 'Invalid TOTP code' })
   const wrapper = mount(TotpSetupModal)
   await flushPromises()
-  await wrapper.get('input[type="password"]').setValue('password')
-  await wrapper.get('.btn-primary').trigger('click')
+  await portal().get('input[type="password"]').setValue('password')
+  await portal().get('.btn-primary').trigger('click')
   await flushPromises()
-  await wrapper.get('.btn-primary').trigger('click')
-  for (const input of wrapper.findAll('input[maxlength="1"]')) await input.setValue('1')
-  await wrapper.get('form').trigger('submit')
+  await portal().get('.btn-primary').trigger('click')
+  for (const input of portal().findAll('input[maxlength="1"]')) await input.setValue('1')
+  await portal().get('form').trigger('submit')
   await flushPromises()
   expect(mocks.totpAPI.enable).toHaveBeenCalledWith({ totp_code: '111111', setup_token: 'setup-token' })
   expect(mocks.showError).toHaveBeenCalledWith('Invalid TOTP code')

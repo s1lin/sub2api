@@ -1,15 +1,15 @@
 <template>
   <div class="space-y-4">
     <div v-if="loading" class="flex items-center justify-center py-12">
-      <div class="h-8 w-8 animate-spin rounded-full border-4 border-primary-500 border-t-transparent"></div>
+      <KumoLoader class="h-8 w-8" />
     </div>
-    <div v-else-if="initError" class="card p-6 text-center">
+    <KumoSurface v-else-if="initError" class="card p-6 text-center">
       <p class="text-sm text-red-600 dark:text-red-400">{{ initError }}</p>
-      <button class="btn btn-secondary mt-4" @click="$emit('back')">{{ t('payment.result.backToRecharge') }}</button>
-    </div>
+      <KumoButton class="btn btn-secondary mt-4" @click="$emit('back')">{{ t('payment.result.backToRecharge') }}</KumoButton>
+    </KumoSurface>
     <!-- Success -->
     <template v-else-if="success">
-      <div class="card p-6">
+      <KumoSurface class="card p-6">
         <div class="flex flex-col items-center space-y-4 py-4">
           <div class="flex h-16 w-16 items-center justify-center rounded-full bg-green-100 dark:bg-green-900/30">
             <Icon name="check" size="lg" class="text-green-500" />
@@ -31,39 +31,41 @@
               </div>
             </div>
           </div>
-          <button class="btn btn-primary" @click="$emit('done')">{{ t('common.confirm') }}</button>
+          <KumoButton class="btn btn-primary" @click="$emit('done')">{{ t('common.confirm') }}</KumoButton>
         </div>
-      </div>
+      </KumoSurface>
     </template>
     <template v-else>
       <!-- Amount -->
-      <div class="card overflow-hidden">
+      <KumoSurface class="card overflow-hidden">
         <div class="bg-gradient-to-br from-[#635bff] to-[#4f46e5] px-6 py-5 text-center">
           <p class="text-sm font-medium text-indigo-200">{{ t('payment.actualPay') }}</p>
           <p class="mt-1 text-3xl font-bold text-white">{{ paymentAmountSymbol }}{{ payAmount.toFixed(2) }}</p>
         </div>
-      </div>
+      </KumoSurface>
       <!-- Stripe Payment Element -->
-      <div class="card p-6">
+      <KumoSurface class="card p-6">
         <div ref="stripeMount" class="min-h-[200px]"></div>
         <p v-if="error" class="mt-4 text-sm text-red-600 dark:text-red-400">{{ error }}</p>
-        <button class="btn btn-stripe mt-6 w-full py-3 text-base" :disabled="submitting || !ready" @click="handlePay">
+        <KumoButton class="btn btn-stripe mt-6 w-full py-3 text-base" :disabled="submitting || !ready" @click="handlePay">
           <span v-if="submitting" class="flex items-center justify-center gap-2">
-            <span class="h-4 w-4 animate-spin rounded-full border-2 border-white border-t-transparent"></span>
+            <KumoLoader class="h-4 w-4" />
             {{ t('common.processing') }}
           </span>
           <span v-else>{{ t('payment.stripePay') }}</span>
-        </button>
-      </div>
+        </KumoButton>
+      </KumoSurface>
       <!-- Cancel order -->
-      <button class="btn btn-secondary w-full" :disabled="cancelling" @click="handleCancel">
+      <KumoButton class="btn btn-secondary w-full" :disabled="cancelling" @click="handleCancel">
         {{ cancelling ? t('common.processing') : t('payment.qr.cancelOrder') }}
-      </button>
+      </KumoButton>
     </template>
   </div>
 </template>
 
 <script setup lang="ts">
+import { KumoButton, KumoLoader, KumoSurface } from '@/components/kumo'
+
 import { computed, ref, onMounted, nextTick } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useRouter } from 'vue-router'

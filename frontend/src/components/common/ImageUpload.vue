@@ -42,8 +42,8 @@
     <!-- Controls -->
     <div class="flex-1 space-y-2">
       <div class="flex items-center gap-2">
-        <label class="btn btn-secondary btn-sm cursor-pointer">
-          <input
+        <KumoLabel class="btn btn-secondary btn-sm cursor-pointer">
+          <KumoInput
             type="file"
             :accept="acceptTypes"
             class="hidden"
@@ -51,8 +51,8 @@
           />
           <Icon name="upload" size="sm" class="mr-1.5" :stroke-width="2" />
           {{ resolvedUploadLabel }}
-        </label>
-        <button
+        </KumoLabel>
+        <KumoButton
           v-if="modelValue"
           type="button"
           class="btn btn-secondary btn-sm text-red-600 hover:text-red-700 dark:text-red-400"
@@ -60,7 +60,7 @@
         >
           <Icon name="trash" size="sm" class="mr-1.5" :stroke-width="2" />
           {{ resolvedRemoveLabel }}
-        </button>
+        </KumoButton>
       </div>
       <p v-if="hint" class="text-xs text-gray-500 dark:text-gray-400">{{ hint }}</p>
       <p v-if="error" class="text-xs text-red-500">{{ error }}</p>
@@ -69,6 +69,8 @@
 </template>
 
 <script setup lang="ts">
+import { KumoButton, KumoInput, KumoLabel } from '@/components/kumo'
+
 import { ref, computed, onBeforeUnmount } from 'vue'
 import { useI18n } from 'vue-i18n'
 import Icon from '@/components/icons/Icon.vue'

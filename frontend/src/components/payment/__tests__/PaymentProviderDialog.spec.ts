@@ -1,5 +1,5 @@
 import { describe, expect, it, vi } from 'vitest'
-import { mount } from '@vue/test-utils'
+import { mount } from '@/__tests__/render'
 import { nextTick } from 'vue'
 import PaymentProviderDialog from '@/components/payment/PaymentProviderDialog.vue'
 import { STRIPE_SDK_API_VERSION } from '@/components/payment/providerConfig'
@@ -127,7 +127,7 @@ describe('PaymentProviderDialog payment guide', () => {
 
     expect(wrapper.text()).not.toContain(messages['admin.settings.payment.alipayGuideSummary'])
     expect(wrapper.text()).not.toContain(messages['admin.settings.payment.wxpayGuideSummary'])
-    expect(wrapper.find('button[title="View payment guide"]').exists()).toBe(false)
+    expect(wrapper.find('button[aria-label="View payment guide"]').exists()).toBe(false)
   })
 
   it.each([
@@ -141,7 +141,7 @@ describe('PaymentProviderDialog payment guide', () => {
     await nextTick()
 
     expect(wrapper.text()).toContain(messages[summaryKey])
-    expect(wrapper.find('button[title="View payment guide"]').exists()).toBe(true)
+    expect(wrapper.find('button[aria-label="View payment guide"]').exists()).toBe(true)
   })
 
   it('shows Airwallex webhook event and API version guidance with the webhook URL', async () => {

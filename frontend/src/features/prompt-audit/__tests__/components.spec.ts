@@ -1,6 +1,6 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 import { defineComponent } from 'vue'
-import { mount } from '@vue/test-utils'
+import { mount, selectOption } from '@/__tests__/render'
 import EndpointPool from '../components/EndpointPool.vue'
 import PolicyPanel from '../components/PolicyPanel.vue'
 import EventWorkspace from '../components/EventWorkspace.vue'
@@ -75,10 +75,10 @@ describe('Prompt Audit components', () => {
       props: { draft, groups: [{ id: 1, name: 'Alpha', platform: 'openai', status: 'active' }, { id: 2, name: 'Beta', platform: 'claude', status: 'inactive' }] },
     })
     expect(wrapper.text()).toContain('99')
-    expect(wrapper.findAll('input[type="checkbox"]').filter((input) => SCANNER_CATALOG.some((scanner) => input.attributes('aria-label') === `admin.promptAudit.scanners.${scanner.id}`))).toHaveLength(9)
+    expect(wrapper.findAll('[role="checkbox"]').filter((input) => SCANNER_CATALOG.some((scanner) => input.attributes('aria-label') === `admin.promptAudit.scanners.${scanner.id}`))).toHaveLength(9)
     await wrapper.get('[aria-label="admin.promptAudit.policy.searchGroups"]').setValue('Beta')
     expect(wrapper.text()).toContain('Beta')
-    expect(wrapper.text()).not.toContain('Alpha')
+    await vi.waitFor(() => expect(wrapper.text()).not.toContain('Alpha'))
     await wrapper.get('[aria-label="admin.promptAudit.policy.workerCount"]').setValue('6')
     const emitted = wrapper.emitted('update:draft')?.at(-1)?.[0] as PromptAuditDraft
     expect(emitted.worker_count).toBe(6)
@@ -122,7 +122,7 @@ describe('Prompt Audit components', () => {
       props: { show: true, initialFilters: emptyEventFilters(), preview: null, previewing: false, deleting: false },
       global: { stubs: { BaseDialog: DialogStub } },
     })
-    expect(wrapper.get<HTMLInputElement>('[data-test="range-preset-7d"]').element.checked).toBe(true)
+    expect(wrapper.get('[data-test="range-preset-7d"]').attributes('aria-checked')).toBe('true')
     expect(wrapper.find('[data-test="custom-range"]').exists()).toBe(false)
     expect(wrapper.get('[data-test="delete-preview-empty"]').exists()).toBeTruthy()
     // A valid preset is enough: confirm is armed immediately (one-click flow)
@@ -136,7 +136,7 @@ describe('Prompt Audit components', () => {
 
     await wrapper.get('[data-test="range-preset-30d"]').setValue()
     expect(wrapper.emitted('criteria-change')?.length).toBeGreaterThan(0)
-    await wrapper.get('[data-test="delete-risk"]').setValue('high')
+    await selectOption(wrapper.get('[data-test="delete-risk"]'), 'admin.promptAudit.riskLevels.high')
     await wrapper.get('[data-test="run-delete-preview"]').trigger('click')
     const presetPreview = wrapper.emitted('preview')?.at(-1)?.[0] as PromptEventFilters
     expect(presetPreview.risk_level).toBe('high')
@@ -148,7 +148,7 @@ describe('Prompt Audit components', () => {
     expect(wrapper.get('[data-test="run-delete-preview"]').attributes()).toHaveProperty('disabled')
     expect(wrapper.get('[data-test="confirm-filter-delete"]').attributes()).toHaveProperty('disabled')
     expect(wrapper.get('[data-test="confirm-disabled-reason"]').text()).toBe('admin.promptAudit.events.filterDeleteConfirmInvalidRange')
-    expect(wrapper.get('[data-test="confirm-filter-delete"]').attributes('title')).toBe('admin.promptAudit.events.filterDeleteConfirmInvalidRange')
+    expect(wrapper.get('[data-test="confirm-filter-delete"]').attributes('aria-label')).toBe('admin.promptAudit.events.filterDeleteConfirmInvalidRange')
     await wrapper.get('[data-test="custom-range"] [aria-label="admin.promptAudit.events.startAt"]').setValue('2026-07-01T00:00')
     await wrapper.get('[data-test="custom-range"] [aria-label="admin.promptAudit.events.endAt"]').setValue('2026-07-02T00:00')
     expect(wrapper.get('[data-test="run-delete-preview"]').attributes()).not.toHaveProperty('disabled')
@@ -195,7 +195,7 @@ describe('Prompt Audit components', () => {
       props: { show: true, initialFilters, preview: null, previewing: false, deleting: false },
       global: { stubs: { BaseDialog: DialogStub } },
     })
-    expect(wrapper.get<HTMLInputElement>('[data-test="range-preset-custom"]').element.checked).toBe(true)
+    expect(wrapper.get('[data-test="range-preset-custom"]').attributes('aria-checked')).toBe('true')
     expect(wrapper.get<HTMLInputElement>('[data-test="custom-range"] [aria-label="admin.promptAudit.events.startAt"]').element.value).toBe('2026-07-01T00:00')
     expect(wrapper.get<HTMLSelectElement>('[data-test="delete-decision"]').element.value).toBe('critical')
     expect(wrapper.get('[data-test="run-delete-preview"]').attributes()).not.toHaveProperty('disabled')

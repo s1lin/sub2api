@@ -11,20 +11,20 @@
       <div v-if="loading" class="space-y-1.5">
         <!-- OAuth: 3 rows, Setup Token: 1 row -->
         <div class="flex items-center gap-1">
-          <div class="h-3 w-[32px] animate-pulse rounded bg-gray-200 dark:bg-gray-700"></div>
-          <div class="h-1.5 w-8 animate-pulse rounded-full bg-gray-200 dark:bg-gray-700"></div>
-          <div class="h-3 w-[32px] animate-pulse rounded bg-gray-200 dark:bg-gray-700"></div>
+          <KumoSkeleton class="h-3 w-[32px] animate-pulse rounded bg-gray-200 dark:bg-gray-700"></KumoSkeleton>
+          <KumoSkeleton class="h-1.5 w-8 animate-pulse rounded-full bg-gray-200 dark:bg-gray-700"></KumoSkeleton>
+          <KumoSkeleton class="h-3 w-[32px] animate-pulse rounded bg-gray-200 dark:bg-gray-700"></KumoSkeleton>
         </div>
         <template v-if="account.type === 'oauth'">
           <div class="flex items-center gap-1">
-            <div class="h-3 w-[32px] animate-pulse rounded bg-gray-200 dark:bg-gray-700"></div>
-            <div class="h-1.5 w-8 animate-pulse rounded-full bg-gray-200 dark:bg-gray-700"></div>
-            <div class="h-3 w-[32px] animate-pulse rounded bg-gray-200 dark:bg-gray-700"></div>
+            <KumoSkeleton class="h-3 w-[32px] animate-pulse rounded bg-gray-200 dark:bg-gray-700"></KumoSkeleton>
+            <KumoSkeleton class="h-1.5 w-8 animate-pulse rounded-full bg-gray-200 dark:bg-gray-700"></KumoSkeleton>
+            <KumoSkeleton class="h-3 w-[32px] animate-pulse rounded bg-gray-200 dark:bg-gray-700"></KumoSkeleton>
           </div>
           <div class="flex items-center gap-1">
-            <div class="h-3 w-[32px] animate-pulse rounded bg-gray-200 dark:bg-gray-700"></div>
-            <div class="h-1.5 w-8 animate-pulse rounded-full bg-gray-200 dark:bg-gray-700"></div>
-            <div class="h-3 w-[32px] animate-pulse rounded bg-gray-200 dark:bg-gray-700"></div>
+            <KumoSkeleton class="h-3 w-[32px] animate-pulse rounded bg-gray-200 dark:bg-gray-700"></KumoSkeleton>
+            <KumoSkeleton class="h-1.5 w-8 animate-pulse rounded-full bg-gray-200 dark:bg-gray-700"></KumoSkeleton>
+            <KumoSkeleton class="h-3 w-[32px] animate-pulse rounded bg-gray-200 dark:bg-gray-700"></KumoSkeleton>
           </div>
         </template>
       </div>
@@ -96,7 +96,7 @@
           >
             {{ t('admin.accounts.usageWindow.passiveSampled') }}
           </span>
-          <button
+          <KumoButton
             type="button"
             class="inline-flex items-center gap-0.5 rounded px-1.5 py-0.5 text-[10px] font-medium text-blue-600 hover:bg-blue-50 dark:text-blue-400 dark:hover:bg-blue-900/30 transition-colors disabled:cursor-not-allowed disabled:opacity-50"
             :disabled="activeQueryLoading"
@@ -117,7 +117,7 @@
               />
             </svg>
             {{ t('admin.accounts.usageWindow.activeQuery') }}
-          </button>
+          </KumoButton>
         </template>
       </ClaudeResetCreditsCell>
     </template>
@@ -151,7 +151,7 @@
         -->
         <OpenAIQuotaResetCell :account="account" @account-updated="handleQuotaResetAccountUpdated">
           <template #pre-actions>
-            <button
+            <KumoButton
               type="button"
               class="inline-flex items-center gap-0.5 rounded px-1.5 py-0.5 text-[10px] font-medium text-blue-600 hover:bg-blue-50 dark:text-blue-400 dark:hover:bg-blue-900/30 transition-colors disabled:cursor-not-allowed disabled:opacity-50"
               :disabled="activeQueryLoading"
@@ -172,20 +172,20 @@
                 />
               </svg>
               {{ t('admin.accounts.usageWindow.activeQuery') }}
-            </button>
+            </KumoButton>
           </template>
         </OpenAIQuotaResetCell>
       </div>
       <div v-else-if="loading" class="space-y-1.5">
         <div class="flex items-center gap-1">
-          <div class="h-3 w-[32px] animate-pulse rounded bg-gray-200 dark:bg-gray-700"></div>
-          <div class="h-1.5 w-8 animate-pulse rounded-full bg-gray-200 dark:bg-gray-700"></div>
-          <div class="h-3 w-[32px] animate-pulse rounded bg-gray-200 dark:bg-gray-700"></div>
+          <KumoSkeleton class="h-3 w-[32px] animate-pulse rounded bg-gray-200 dark:bg-gray-700"></KumoSkeleton>
+          <KumoSkeleton class="h-1.5 w-8 animate-pulse rounded-full bg-gray-200 dark:bg-gray-700"></KumoSkeleton>
+          <KumoSkeleton class="h-3 w-[32px] animate-pulse rounded bg-gray-200 dark:bg-gray-700"></KumoSkeleton>
         </div>
         <div class="flex items-center gap-1">
-          <div class="h-3 w-[32px] animate-pulse rounded bg-gray-200 dark:bg-gray-700"></div>
-          <div class="h-1.5 w-8 animate-pulse rounded-full bg-gray-200 dark:bg-gray-700"></div>
-          <div class="h-3 w-[32px] animate-pulse rounded bg-gray-200 dark:bg-gray-700"></div>
+          <KumoSkeleton class="h-3 w-[32px] animate-pulse rounded bg-gray-200 dark:bg-gray-700"></KumoSkeleton>
+          <KumoSkeleton class="h-1.5 w-8 animate-pulse rounded-full bg-gray-200 dark:bg-gray-700"></KumoSkeleton>
+          <KumoSkeleton class="h-3 w-[32px] animate-pulse rounded bg-gray-200 dark:bg-gray-700"></KumoSkeleton>
         </div>
       </div>
       <div v-else>
@@ -212,11 +212,7 @@
           {{ antigravityTierLabel }}
         </span>
         <!-- 不合格账户警告图标 -->
-        <span
-          v-if="hasIneligibleTiers"
-          class="group relative cursor-help"
-        >
-          <svg
+        <KumoTooltip v-if="hasIneligibleTiers" :label="t('common.help')" class="w-80 whitespace-normal break-words text-xs leading-relaxed max-w-[calc(100vw-2rem)]" trigger-class="h-auto p-0 cursor-help"><template #trigger><svg
             class="h-3.5 w-3.5 text-red-500"
             fill="currentColor"
             viewBox="0 0 20 20"
@@ -226,13 +222,7 @@
               d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z"
               clip-rule="evenodd"
             />
-          </svg>
-          <span
-            class="pointer-events-none absolute left-0 top-full z-50 mt-1 w-80 whitespace-normal break-words rounded bg-gray-900 px-3 py-2 text-xs leading-relaxed text-white opacity-0 shadow-lg transition-opacity group-hover:opacity-100 dark:bg-gray-700"
-          >
-            {{ t('admin.accounts.ineligibleWarning') }}
-          </span>
-        </span>
+          </svg></template>{{ t('admin.accounts.ineligibleWarning') }}</KumoTooltip>
       </div>
 
       <!-- Forbidden state (403) -->
@@ -255,14 +245,14 @@
           >
             {{ t('admin.accounts.openVerification') }}
           </a>
-          <button
+          <KumoButton
             type="button"
             class="text-[10px] text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200"
             :title="t('admin.accounts.copyLink')"
             @click="copyValidationURL"
           >
             {{ linkCopied ? t('admin.accounts.linkCopied') : t('admin.accounts.copyLink') }}
-          </button>
+          </KumoButton>
         </div>
       </div>
 
@@ -283,9 +273,9 @@
       <!-- Loading state -->
       <div v-else-if="loading" class="space-y-1.5">
         <div class="flex items-center gap-1">
-          <div class="h-3 w-[32px] animate-pulse rounded bg-gray-200 dark:bg-gray-700"></div>
-          <div class="h-1.5 w-8 animate-pulse rounded-full bg-gray-200 dark:bg-gray-700"></div>
-          <div class="h-3 w-[32px] animate-pulse rounded bg-gray-200 dark:bg-gray-700"></div>
+          <KumoSkeleton class="h-3 w-[32px] animate-pulse rounded bg-gray-200 dark:bg-gray-700"></KumoSkeleton>
+          <KumoSkeleton class="h-1.5 w-8 animate-pulse rounded-full bg-gray-200 dark:bg-gray-700"></KumoSkeleton>
+          <KumoSkeleton class="h-3 w-[32px] animate-pulse rounded bg-gray-200 dark:bg-gray-700"></KumoSkeleton>
         </div>
       </div>
 
@@ -346,9 +336,9 @@
     <template v-else-if="account.platform === 'grok' && account.type === 'oauth'">
       <div v-if="loading" class="space-y-1.5">
         <div class="flex items-center gap-1">
-          <div class="h-3 w-[32px] animate-pulse rounded bg-gray-200 dark:bg-gray-700"></div>
-          <div class="h-1.5 w-8 animate-pulse rounded-full bg-gray-200 dark:bg-gray-700"></div>
-          <div class="h-3 w-[32px] animate-pulse rounded bg-gray-200 dark:bg-gray-700"></div>
+          <KumoSkeleton class="h-3 w-[32px] animate-pulse rounded bg-gray-200 dark:bg-gray-700"></KumoSkeleton>
+          <KumoSkeleton class="h-1.5 w-8 animate-pulse rounded-full bg-gray-200 dark:bg-gray-700"></KumoSkeleton>
+          <KumoSkeleton class="h-3 w-[32px] animate-pulse rounded bg-gray-200 dark:bg-gray-700"></KumoSkeleton>
         </div>
       </div>
       <div v-else-if="error" class="text-xs text-red-500">
@@ -487,10 +477,7 @@
           {{ geminiAuthTypeLabel }}
         </span>
         <!-- Help icon -->
-        <span
-          class="group relative cursor-help"
-        >
-          <svg
+        <KumoTooltip  :label="t('common.help')" class="w-80 whitespace-normal break-words text-xs leading-relaxed max-w-[calc(100vw-2rem)]" trigger-class="h-auto p-0 cursor-help"><template #trigger><svg
             class="h-3.5 w-3.5 text-gray-400 hover:text-gray-600 dark:text-gray-500 dark:hover:text-gray-300"
             fill="currentColor"
             viewBox="0 0 20 20"
@@ -500,13 +487,7 @@
               d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-8-3a1 1 0 00-.867.5 1 1 0 11-1.731-1A3 3 0 0113 8a3.001 3.001 0 01-2 2.83V11a1 1 0 11-2 0v-1a1 1 0 011-1 1 1 0 100-2zm0 8a1 1 0 100-2 1 1 0 000 2z"
               clip-rule="evenodd"
             />
-          </svg>
-          <span
-            class="pointer-events-none absolute left-0 top-full z-50 mt-1 w-80 whitespace-normal break-words rounded bg-gray-900 px-3 py-2 text-xs leading-relaxed text-white opacity-0 shadow-lg transition-opacity group-hover:opacity-100 dark:bg-gray-700"
-          >
-            <div class="font-semibold mb-1">{{ t('admin.accounts.gemini.quotaPolicy.title') }}</div>
-            <div class="mb-2 text-gray-300">{{ t('admin.accounts.gemini.quotaPolicy.note') }}</div>
-            <div class="space-y-1">
+          </svg></template><div class="font-semibold mb-1">{{ t('admin.accounts.gemini.quotaPolicy.title') }}</div><div class="mb-2 text-gray-600 dark:text-gray-300">{{ t('admin.accounts.gemini.quotaPolicy.note') }}</div><div class="space-y-1">
               <div><strong>{{ geminiQuotaPolicyChannel }}:</strong></div>
               <div class="pl-2">• {{ geminiQuotaPolicyLimits }}</div>
               <div class="mt-2">
@@ -514,9 +495,7 @@
                   {{ t('admin.accounts.gemini.quotaPolicy.columns.docs') }} →
                 </a>
               </div>
-            </div>
-          </span>
-        </span>
+            </div></KumoTooltip>
       </div>
 
       <!-- Usage data or unlimited flow -->
@@ -548,15 +527,15 @@
           v-else-if="showGeminiTodayStats && todayStatsLoading"
           class="mb-0.5 flex items-center gap-1"
         >
-          <div class="h-3 w-10 animate-pulse rounded bg-gray-200 dark:bg-gray-700"></div>
-          <div class="h-3 w-8 animate-pulse rounded bg-gray-200 dark:bg-gray-700"></div>
-          <div class="h-3 w-12 animate-pulse rounded bg-gray-200 dark:bg-gray-700"></div>
+          <KumoSkeleton class="h-3 w-10 animate-pulse rounded bg-gray-200 dark:bg-gray-700"></KumoSkeleton>
+          <KumoSkeleton class="h-3 w-8 animate-pulse rounded bg-gray-200 dark:bg-gray-700"></KumoSkeleton>
+          <KumoSkeleton class="h-3 w-12 animate-pulse rounded bg-gray-200 dark:bg-gray-700"></KumoSkeleton>
         </div>
         <div v-if="loading" class="space-y-1">
           <div class="flex items-center gap-1">
-            <div class="h-3 w-[32px] animate-pulse rounded bg-gray-200 dark:bg-gray-700"></div>
-            <div class="h-1.5 w-8 animate-pulse rounded-full bg-gray-200 dark:bg-gray-700"></div>
-            <div class="h-3 w-[32px] animate-pulse rounded bg-gray-200 dark:bg-gray-700"></div>
+            <KumoSkeleton class="h-3 w-[32px] animate-pulse rounded bg-gray-200 dark:bg-gray-700"></KumoSkeleton>
+            <KumoSkeleton class="h-1.5 w-8 animate-pulse rounded-full bg-gray-200 dark:bg-gray-700"></KumoSkeleton>
+            <KumoSkeleton class="h-3 w-[32px] animate-pulse rounded bg-gray-200 dark:bg-gray-700"></KumoSkeleton>
           </div>
         </div>
         <div v-else-if="error" class="text-xs text-red-500">
@@ -637,9 +616,9 @@
         v-else-if="todayStatsLoading"
         class="mb-0.5 flex items-center gap-1"
       >
-        <div class="h-3 w-10 animate-pulse rounded bg-gray-200 dark:bg-gray-700"></div>
-        <div class="h-3 w-8 animate-pulse rounded bg-gray-200 dark:bg-gray-700"></div>
-        <div class="h-3 w-12 animate-pulse rounded bg-gray-200 dark:bg-gray-700"></div>
+        <KumoSkeleton class="h-3 w-10 animate-pulse rounded bg-gray-200 dark:bg-gray-700"></KumoSkeleton>
+        <KumoSkeleton class="h-3 w-8 animate-pulse rounded bg-gray-200 dark:bg-gray-700"></KumoSkeleton>
+        <KumoSkeleton class="h-3 w-12 animate-pulse rounded bg-gray-200 dark:bg-gray-700"></KumoSkeleton>
       </div>
 
       <!-- API Key accounts with quota limits: show progress bars -->
@@ -674,6 +653,8 @@
 </template>
 
 <script setup lang="ts">
+import { KumoButton, KumoSkeleton, KumoTooltip } from '@/components/kumo'
+
 import { ref, computed, onMounted, onBeforeUnmount, onUnmounted, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { adminAPI } from '@/api/admin'

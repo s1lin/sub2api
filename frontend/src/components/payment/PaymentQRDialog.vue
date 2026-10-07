@@ -14,11 +14,11 @@
       <!-- Popup window waiting mode (no QR code) -->
       <template v-else>
         <div class="flex flex-col items-center py-4">
-          <div class="h-10 w-10 animate-spin rounded-full border-4 border-primary-500 border-t-transparent"></div>
+          <KumoLoader class="h-10 w-10" />
           <p class="mt-4 text-sm text-gray-500 dark:text-gray-400">{{ t('payment.qr.payInNewWindowHint') }}</p>
-          <button v-if="payUrl" class="btn btn-secondary mt-3 text-sm" @click="reopenPopup">
+          <KumoButton v-if="payUrl" class="btn btn-secondary mt-3 text-sm" @click="reopenPopup">
             {{ t('payment.qr.openPayWindow') }}
-          </button>
+          </KumoButton>
         </div>
       </template>
       <!-- Countdown -->
@@ -56,21 +56,23 @@
     </div>
     <template #footer>
       <div class="flex justify-end gap-3">
-        <button v-if="!success && !expired" class="btn btn-secondary" :disabled="cancelling" @click="handleCancel">
+        <KumoButton v-if="!success && !expired" class="btn btn-secondary" :disabled="cancelling" @click="handleCancel">
           {{ cancelling ? t('common.processing') : t('payment.qr.cancelOrder') }}
-        </button>
-        <button v-if="success" class="btn btn-primary" @click="handleDone">
+        </KumoButton>
+        <KumoButton v-if="success" class="btn btn-primary" @click="handleDone">
           {{ t('common.confirm') }}
-        </button>
-        <button v-if="expired" class="btn btn-primary" @click="handleClose">
+        </KumoButton>
+        <KumoButton v-if="expired" class="btn btn-primary" @click="handleClose">
           {{ t('payment.result.backToRecharge') }}
-        </button>
+        </KumoButton>
       </div>
     </template>
   </BaseDialog>
 </template>
 
 <script setup lang="ts">
+import { KumoButton, KumoLoader } from '@/components/kumo'
+
 import { ref, computed, watch, onUnmounted, nextTick } from 'vue'
 import { useI18n } from 'vue-i18n'
 import BaseDialog from '@/components/common/BaseDialog.vue'

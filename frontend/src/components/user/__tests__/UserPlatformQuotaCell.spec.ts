@@ -1,5 +1,5 @@
 import { describe, it, expect, vi } from 'vitest'
-import { mount } from '@vue/test-utils'
+import { mount } from '@/__tests__/render'
 
 // t() 回显 key，便于断言文案键
 vi.mock('vue-i18n', async () => {

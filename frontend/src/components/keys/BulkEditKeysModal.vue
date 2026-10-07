@@ -17,10 +17,10 @@
 
       <fieldset :disabled="submitting" class="space-y-5">
         <div class="space-y-2">
-          <label class="flex items-center gap-2 text-sm font-medium">
-            <input v-model="enabled.group_id" type="checkbox" class="checkbox" data-test="enable-group" />
+          <KumoLabel class="flex items-center gap-2 text-sm font-medium">
+            <KumoCheckbox v-model="enabled.group_id" type="checkbox" class="checkbox" data-test="enable-group" />
             {{ t('keys.groupLabel') }}
-          </label>
+          </KumoLabel>
           <Select
             v-if="enabled.group_id"
             v-model="groupId"
@@ -34,10 +34,10 @@
         </div>
 
         <div class="space-y-2">
-          <label class="flex items-center gap-2 text-sm font-medium">
-            <input v-model="enabled.status" type="checkbox" class="checkbox" data-test="enable-status" />
+          <KumoLabel class="flex items-center gap-2 text-sm font-medium">
+            <KumoCheckbox v-model="enabled.status" type="checkbox" class="checkbox" data-test="enable-status" />
             {{ t('keys.statusLabel') }}
-          </label>
+          </KumoLabel>
           <Select
             v-if="enabled.status"
             v-model="status"
@@ -49,17 +49,17 @@
         </div>
 
         <div v-for="field in limitFields" :key="field.key" class="space-y-2">
-          <label class="flex items-center gap-2 text-sm font-medium">
-            <input
+          <KumoLabel class="flex items-center gap-2 text-sm font-medium">
+            <KumoCheckbox
               v-model="enabled[field.key]"
               type="checkbox"
               class="checkbox"
               :data-test="`enable-${field.key}`"
             />
             {{ t(field.label) }}
-          </label>
+          </KumoLabel>
           <div v-if="enabled[field.key]">
-            <input
+            <KumoInput
               v-model="limits[field.key]"
               type="number"
               min="0"
@@ -74,16 +74,16 @@
         </div>
 
         <div class="space-y-2">
-          <label class="flex items-center gap-2 text-sm font-medium">
-            <input v-model="enabled.expires_at" type="checkbox" class="checkbox" data-test="enable-expiration" />
+          <KumoLabel class="flex items-center gap-2 text-sm font-medium">
+            <KumoCheckbox v-model="enabled.expires_at" type="checkbox" class="checkbox" data-test="enable-expiration" />
             {{ t('keys.expiration') }}
-          </label>
+          </KumoLabel>
           <div v-if="enabled.expires_at" class="space-y-2">
-            <label class="flex items-center gap-2 text-sm">
-              <input v-model="neverExpires" type="checkbox" class="checkbox" data-test="never-expires" />
+            <KumoLabel class="flex items-center gap-2 text-sm">
+              <KumoCheckbox v-model="neverExpires" type="checkbox" class="checkbox" data-test="never-expires" />
               {{ t('keys.noExpiration') }}
-            </label>
-            <input
+            </KumoLabel>
+            <KumoInput
               v-if="!neverExpires"
               v-model="expirationDate"
               type="datetime-local"
@@ -96,17 +96,17 @@
         </div>
 
         <div v-for="field in ipFields" :key="field.key" class="space-y-2">
-          <label class="flex items-center gap-2 text-sm font-medium">
-            <input
+          <KumoLabel class="flex items-center gap-2 text-sm font-medium">
+            <KumoCheckbox
               v-model="enabled[field.key]"
               type="checkbox"
               class="checkbox"
               :data-test="`enable-${field.key}`"
             />
             {{ t(field.label) }}
-          </label>
+          </KumoLabel>
           <div v-if="enabled[field.key]">
-            <textarea
+            <KumoTextarea
               v-model="ipLists[field.key]"
               rows="3"
               class="input font-mono text-sm"
@@ -132,10 +132,10 @@
     </form>
 
     <template #footer>
-      <button type="button" class="btn btn-secondary" :disabled="submitting" @click="close">
+      <KumoButton type="button" class="btn btn-secondary" :disabled="submitting" @click="close">
         {{ t('common.cancel') }}
-      </button>
-      <button
+      </KumoButton>
+      <KumoButton
         type="submit"
         form="bulk-edit-keys-form"
         class="btn btn-primary"
@@ -143,12 +143,14 @@
         data-test="submit"
       >
         {{ submitting ? t('keys.saving') : t('keys.bulkEdit.apply', { count: pendingKeys.length }) }}
-      </button>
+      </KumoButton>
     </template>
   </BaseDialog>
 </template>
 
 <script setup lang="ts">
+import { KumoButton, KumoCheckbox, KumoInput, KumoLabel, KumoTextarea } from '@/components/kumo'
+
 import { computed, reactive, ref, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { keysAPI } from '@/api'

@@ -2,7 +2,7 @@
   <div class="flex flex-col gap-1">
     <!-- 并发槽位 -->
     <div class="flex items-center gap-1">
-      <span
+      <KumoBadge
         :class="[
           'inline-flex items-center gap-1 rounded-md px-1.5 py-0.5 text-[10px] font-medium',
           capacityClass(concurrencyUsed, concurrencyMax)
@@ -14,12 +14,12 @@
         <span class="font-mono">{{ concurrencyUsed }}</span>
         <span class="text-gray-400 dark:text-gray-500">/</span>
         <span class="font-mono">{{ concurrencyMax }}</span>
-      </span>
+      </KumoBadge>
     </div>
 
     <!-- 会话数 -->
     <div v-if="sessionsMax > 0" class="flex items-center gap-1">
-      <span
+      <KumoBadge
         :class="[
           'inline-flex items-center gap-1 rounded-md px-1.5 py-0.5 text-[10px] font-medium',
           capacityClass(sessionsUsed, sessionsMax)
@@ -31,12 +31,12 @@
         <span class="font-mono">{{ sessionsUsed }}</span>
         <span class="text-gray-400 dark:text-gray-500">/</span>
         <span class="font-mono">{{ sessionsMax }}</span>
-      </span>
+      </KumoBadge>
     </div>
 
     <!-- RPM -->
     <div v-if="rpmMax > 0" class="flex items-center gap-1">
-      <span
+      <KumoBadge
         :class="[
           'inline-flex items-center gap-1 rounded-md px-1.5 py-0.5 text-[10px] font-medium',
           capacityClass(rpmUsed, rpmMax)
@@ -48,12 +48,13 @@
         <span class="font-mono">{{ rpmUsed }}</span>
         <span class="text-gray-400 dark:text-gray-500">/</span>
         <span class="font-mono">{{ rpmMax }}</span>
-      </span>
+      </KumoBadge>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
+import { KumoBadge } from '@/components/kumo'
 interface Props {
   concurrencyUsed: number
   concurrencyMax: number

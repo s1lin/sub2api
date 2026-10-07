@@ -15,27 +15,11 @@
 
       <div v-if="loadErrors.config && !draft" role="alert" class="rounded-xl border border-red-200 bg-red-50 p-5 dark:border-red-900 dark:bg-red-950/30">
         <p class="text-sm text-red-700 dark:text-red-300">{{ loadErrors.config }}</p>
-        <button type="button" class="btn btn-secondary btn-sm mt-3" @click="loadConfig">{{ t('admin.promptAudit.actions.retry') }}</button>
+        <KumoButton type="button" class="btn btn-secondary btn-sm mt-3" @click="loadConfig">{{ t('admin.promptAudit.actions.retry') }}</KumoButton>
       </div>
 
       <template v-else>
-        <div class="mb-4" role="tablist" :aria-label="t('admin.promptAudit.title')">
-          <div class="tabs inline-flex">
-            <button
-              v-for="tab in pageTabs"
-              :key="tab.id"
-              type="button"
-              role="tab"
-              class="tab"
-              :class="{ 'tab-active': activeTab === tab.id }"
-              :aria-selected="activeTab === tab.id"
-              :data-test="`tab-${tab.id}`"
-              @click="activeTab = tab.id"
-            >
-              {{ tab.label }}
-            </button>
-          </div>
-        </div>
+        <KumoTabs v-model="activeTab" class="mb-4" :tabs="pageTabs.map(tab => ({ value: tab.id, label: tab.label, dataTest: 'tab-' + tab.id }))" />
 
         <main class="card px-4 sm:px-6 lg:px-8">
           <div v-show="activeTab === 'config'" data-test="tab-panel-config">
@@ -62,9 +46,9 @@
               class="mt-6 flex flex-wrap items-center justify-between gap-3 rounded-xl border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-900 dark:border-amber-900/70 dark:bg-amber-950/30 dark:text-amber-200"
             >
               <span>{{ t('admin.promptAudit.events.passEventsDisabled') }}</span>
-              <button type="button" class="btn btn-secondary btn-sm" @click="activeTab = 'config'">
+              <KumoButton type="button" class="btn btn-secondary btn-sm" @click="activeTab = 'config'">
                 {{ t('admin.promptAudit.events.openConfiguration') }}
-              </button>
+              </KumoButton>
             </div>
             <EventWorkspace
               :events="events.items"
@@ -102,10 +86,10 @@
           <span class="text-sm" :class="dirty ? 'text-amber-700 dark:text-amber-300' : 'text-gray-500 dark:text-dark-400'">
             {{ dirty ? t('admin.promptAudit.saveBar.dirty') : t('admin.promptAudit.saveBar.synced') }}
           </span>
-          <button type="button" class="btn btn-secondary" :disabled="!dirty || loading.saving" @click="resetDraft">{{ t('common.reset') }}</button>
-          <button type="button" class="btn btn-primary" :disabled="!dirty || loading.saving" data-test="save-config" @click="saveConfig">
+          <KumoButton type="button" class="btn btn-secondary" :disabled="!dirty || loading.saving" @click="resetDraft">{{ t('common.reset') }}</KumoButton>
+          <KumoButton type="button" class="btn btn-primary" :disabled="!dirty || loading.saving" data-test="save-config" @click="saveConfig">
             {{ loading.saving ? t('common.saving') : t('common.save') }}
-          </button>
+          </KumoButton>
         </div>
       </div>
     </div>
@@ -144,6 +128,8 @@
 </template>
 
 <script setup lang="ts">
+import { KumoButton, KumoTabs } from '@/components/kumo'
+
 import { computed, defineComponent, h, onMounted, reactive, ref } from 'vue'
 import { useI18n } from 'vue-i18n'
 import AppLayout from '@/components/layout/AppLayout.vue'

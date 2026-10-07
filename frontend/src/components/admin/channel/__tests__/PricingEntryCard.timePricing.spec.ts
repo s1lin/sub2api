@@ -1,4 +1,5 @@
-import { flushPromises, shallowMount } from '@vue/test-utils'
+import { flushPromises, mount } from '@/__tests__/render'
+
 import { describe, expect, it, vi } from 'vitest'
 import PricingEntryCard from '../PricingEntryCard.vue'
 import type { PricingFormEntry } from '../types'
@@ -38,7 +39,7 @@ function createEntry(billingMode: PricingFormEntry['billing_mode'] = 'token'): P
 
 describe('PricingEntryCard time pricing visibility', () => {
   it('is hidden by default', () => {
-    const wrapper = shallowMount(PricingEntryCard, {
+    const wrapper = mountWithControls(PricingEntryCard, {
       props: { entry: createEntry() },
     })
 
@@ -46,7 +47,7 @@ describe('PricingEntryCard time pricing visibility', () => {
   })
 
   it('is shown for token pricing when explicitly enabled', () => {
-    const wrapper = shallowMount(PricingEntryCard, {
+    const wrapper = mountWithControls(PricingEntryCard, {
       props: { entry: createEntry(), enableTimePricing: true },
     })
 
@@ -54,7 +55,7 @@ describe('PricingEntryCard time pricing visibility', () => {
   })
 
   it('is hidden for non-token pricing even when explicitly enabled', () => {
-    const wrapper = shallowMount(PricingEntryCard, {
+    const wrapper = mountWithControls(PricingEntryCard, {
       props: { entry: createEntry('per_request'), enableTimePricing: true },
     })
 
@@ -63,7 +64,7 @@ describe('PricingEntryCard time pricing visibility', () => {
 
   it('clears time periods when changing billing mode', () => {
     const entry = createEntry()
-    const wrapper = shallowMount(PricingEntryCard, {
+    const wrapper = mountWithControls(PricingEntryCard, {
       props: { entry, enableTimePricing: true },
     })
 
@@ -81,10 +82,10 @@ describe('PricingEntryCard time pricing visibility', () => {
 
 describe('PricingEntryCard request multipliers', () => {
   it('shows Fast and Flex controls only when explicitly enabled', () => {
-    const hidden = shallowMount(PricingEntryCard, { props: { entry: createEntry() } })
+    const hidden = mountWithControls(PricingEntryCard, { props: { entry: createEntry() } })
     expect(hidden.text()).not.toContain('admin.channels.form.fastMultiplier')
 
-    const shown = shallowMount(PricingEntryCard, {
+    const shown = mountWithControls(PricingEntryCard, {
       props: { entry: createEntry(), enableTierMultipliers: true },
     })
     expect(shown.text()).toContain('admin.channels.form.fastMultiplier')
@@ -93,14 +94,14 @@ describe('PricingEntryCard request multipliers', () => {
   })
 
   it.each(['token', 'per_request', 'image', 'video'] as const)('supports every reasoning level for %s pricing and account statistics', billingMode => {
-    const wrapper = shallowMount(PricingEntryCard, { props: { entry: createEntry(billingMode) } })
+    const wrapper = mountWithControls(PricingEntryCard, { props: { entry: createEntry(billingMode) } })
     expect(wrapper.findAll('[data-reasoning-effort]').map(input => input.attributes('data-reasoning-effort')))
       .toEqual(['none', 'minimal', 'low', 'medium', 'high', 'xhigh', 'max'])
   })
 
   it('edits levels independently, then clears individual and all overrides', async () => {
     const entry = { ...createEntry(), reasoning_effort_multipliers: { high: 1.5, max: 3 } }
-    const wrapper = shallowMount(PricingEntryCard, { props: { entry } })
+    const wrapper = mountWithControls(PricingEntryCard, { props: { entry } })
     const update = () => wrapper.emitted('update')!.at(-1)![0] as PricingFormEntry
 
     await wrapper.get('[data-reasoning-effort="high"]').setValue('0.75')
@@ -119,7 +120,7 @@ describe('PricingEntryCard request multipliers', () => {
   })
 
   it('clearing the last configured level restores default billing', async () => {
-    const wrapper = shallowMount(PricingEntryCard, {
+    const wrapper = mountWithControls(PricingEntryCard, {
       props: { entry: { ...createEntry(), reasoning_effort_multipliers: { max: 3 } } },
     })
     await wrapper.get('[data-reasoning-effort="max"]').setValue('')
@@ -127,7 +128,7 @@ describe('PricingEntryCard request multipliers', () => {
   })
 
   it('marks invalid multipliers and shows a validation error', () => {
-    const wrapper = shallowMount(PricingEntryCard, {
+    const wrapper = mountWithControls(PricingEntryCard, {
       props: { entry: { ...createEntry(), reasoning_effort_multipliers: { high: 0, max: 2 } } },
     })
     expect(wrapper.get('[data-reasoning-effort="high"]').attributes('aria-invalid')).toBe('true')
@@ -136,7 +137,7 @@ describe('PricingEntryCard request multipliers', () => {
   })
 
   it('does not assign a model-specific multiplier to Fable', () => {
-    const wrapper = shallowMount(PricingEntryCard, {
+    const wrapper = mountWithControls(PricingEntryCard, {
       props: { entry: { ...createEntry(), models: ['claude-fable-5-1'] } },
     })
     expect(wrapper.get<HTMLInputElement>('[data-reasoning-effort="max"]').element.value).toBe('')
@@ -148,7 +149,7 @@ describe('PricingEntryCard request multipliers', () => {
     vi.mocked(channelsAPI.getModelDefaultPricing).mockResolvedValue({
       found: true, input_price: 3e-6, output_price: 15e-6,
     })
-    const wrapper = shallowMount(PricingEntryCard, {
+    const wrapper = mountWithControls(PricingEntryCard, {
       props: { entry: { ...createEntry(), reasoning_effort_multipliers: { high: 0.5 } } },
     })
     wrapper.findComponent({ name: 'ModelTagInput' }).vm.$emit('update:models', ['example-model'])
@@ -159,3 +160,12 @@ describe('PricingEntryCard request multipliers', () => {
     })
   })
 })
+
+// Isolate page dependencies while exercising the shared Kumo controls.
+function mountWithControls(component: Parameters<typeof mount>[0], options: any = {}) {
+  return mount(component, { ...options, global: { ...options.global, stubs: {
+    Icon: true, ModelTagInput: true, Select: true, IntervalRow: true, TimePricingSection: true,
+    KumoSurface: { template: '<div><slot /></div>' },
+    ...options.global?.stubs,
+  } } })
+}

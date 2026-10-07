@@ -1,5 +1,8 @@
 export default {
   common: {
+    help: 'Help',
+    preview: 'Preview',
+    usage: 'Usage',
     skipToContent: 'Skip to content',
     loading: 'Loading...',
     submitting: 'Submitting...',

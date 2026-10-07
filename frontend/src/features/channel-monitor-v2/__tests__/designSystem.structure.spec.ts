@@ -21,7 +21,7 @@ describe('channel-monitor-v2 design system structure', () => {
     expect(src).toContain('class="card')
     expect(src).toContain('btn btn-secondary')
     expect(src).toContain('class="tab')
-    expect(src).toContain('tab-active')
+    expect(src).toContain('<KumoTabs')
     expect(src).toContain('badge badge-warning')
     // Compact single-row toolbar
     expect(src).toContain('monitor-toolbar')
@@ -53,7 +53,7 @@ describe('channel-monitor-v2 design system structure', () => {
     expect(src).toContain('matrix-scroll')
     expect(src).toMatch(/max-h-\[min\(42vh/)
     expect(src).toContain('overflow-auto')
-    expect(src).toContain('pulse-tooltip')
+    expect(src).toContain('<KumoTooltip')
     expect(src).toContain('rounded-3xl')
     expect(src).toContain('ring-1 ring-gray-900/5')
     expect(src).not.toContain('modal-overlay')
@@ -79,9 +79,9 @@ describe('channel-monitor-v2 design system structure', () => {
 
   it('FilterMultiSelect uses rounded-xl input chrome and dropdown utility', () => {
     const src = read('features/channel-monitor-v2/FilterMultiSelect.vue')
-    expect(src).toContain('rounded-xl')
-    expect(src).toContain('dropdown')
-    expect(src).toContain('dropdown-item')
+    expect(src).toContain('<KumoMultiSelect')
+    expect(src).toContain(':options="options"')
+    expect(src).toContain(':all-label="allLabel"')
   })
 
   it('MonitorSettingsPanel uses page-header, card, btn-primary, tabs', () => {
@@ -89,7 +89,7 @@ describe('channel-monitor-v2 design system structure', () => {
     expect(src).toContain('page-header')
     expect(src).toContain('btn btn-primary')
     expect(src).toContain('class="card')
-    expect(src).toContain('tab-active')
+    expect(src).toContain('<KumoTabs')
     expect(src).toMatch(/max-h-\[min\(40vh/)
   })
 
@@ -97,8 +97,8 @@ describe('channel-monitor-v2 design system structure', () => {
     const src = read('views/admin/ChannelMonitorView.vue')
     expect(src).toContain('page-header')
     expect(src).toContain('page-title')
-    expect(src).toContain('class="tabs')
-    expect(src).toContain('tab-active')
+    expect(src).toContain('<KumoTabs')
+    expect(src).toContain('<KumoTabs')
     expect(src).toContain('MonitorSettingsPanel')
   })
 })

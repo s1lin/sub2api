@@ -10,7 +10,7 @@
               size="md"
               class="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 dark:text-gray-500"
             />
-            <input
+            <KumoInput
               v-model="searchQuery"
               type="text"
               :placeholder="t('admin.proxies.searchProxies')"
@@ -38,15 +38,15 @@
 
           <!-- Right: All action buttons -->
           <div class="flex flex-1 flex-wrap items-center justify-end gap-2">
-            <button
+            <KumoButton
               @click="loadProxies"
               :disabled="loading"
               class="btn btn-secondary"
               :title="t('common.refresh')"
             >
               <Icon name="refresh" size="md" :class="loading ? 'animate-spin' : ''" />
-            </button>
-            <button
+            </KumoButton>
+            <KumoButton
               @click="handleBatchTest"
               :disabled="batchTesting || loading"
               class="btn btn-secondary"
@@ -54,8 +54,8 @@
             >
               <Icon name="play" size="md" class="mr-2" />
               {{ t('admin.proxies.testConnection') }}
-            </button>
-            <button
+            </KumoButton>
+            <KumoButton
               @click="handleBatchQualityCheck"
               :disabled="batchQualityChecking || loading"
               class="btn btn-secondary"
@@ -63,8 +63,8 @@
             >
               <Icon name="shield" size="md" class="mr-2" :class="batchQualityChecking ? 'animate-pulse' : ''" />
               {{ t('admin.proxies.batchQualityCheck') }}
-            </button>
-            <button
+            </KumoButton>
+            <KumoButton
               @click="openBatchDelete"
               :disabled="selectedCount === 0"
               class="btn btn-danger"
@@ -72,17 +72,17 @@
             >
               <Icon name="trash" size="md" class="mr-2" />
               {{ t('admin.proxies.batchDeleteAction') }}
-            </button>
-            <button @click="showImportData = true" class="btn btn-secondary">
+            </KumoButton>
+            <KumoButton @click="showImportData = true" class="btn btn-secondary">
               {{ t('admin.proxies.dataImport') }}
-            </button>
-            <button @click="showExportDataDialog = true" class="btn btn-secondary">
+            </KumoButton>
+            <KumoButton @click="showExportDataDialog = true" class="btn btn-secondary">
               {{ selectedCount > 0 ? t('admin.proxies.dataExportSelected') : t('admin.proxies.dataExport') }}
-            </button>
-            <button @click="showCreateModal = true" class="btn btn-primary">
+            </KumoButton>
+            <KumoButton @click="showCreateModal = true" class="btn btn-primary">
               <Icon name="plus" size="md" class="mr-2" />
               {{ t('admin.proxies.createProxy') }}
-            </button>
+            </KumoButton>
           </div>
         </div>
       </template>
@@ -99,7 +99,7 @@
           @sort="handleSort"
         >
           <template #header-select>
-            <input
+            <KumoCheckbox
               type="checkbox"
               class="h-4 w-4 cursor-pointer rounded border-gray-300 text-primary-600 focus:ring-primary-500"
               :checked="allVisibleSelected"
@@ -109,7 +109,7 @@
           </template>
 
           <template #cell-select="{ row }">
-            <input
+            <KumoCheckbox
               type="checkbox"
               class="h-4 w-4 cursor-pointer rounded border-gray-300 text-primary-600 focus:ring-primary-500"
               :checked="selectedProxyIds.has(row.id)"
@@ -135,31 +135,29 @@
           <template #cell-address="{ row }">
             <div class="flex items-center gap-1.5">
               <code class="code text-xs">{{ row.host }}:{{ row.port }}</code>
-              <div class="relative">
-                <button
+              <KumoContextMenu :model-value="copyMenuProxyId === row.id" @update:model-value="copyMenuProxyId = $event ? row.id : null">
+                <KumoContextMenuTrigger
                   type="button"
                   class="rounded p-0.5 text-gray-400 hover:text-primary-600 dark:hover:text-primary-400"
-                  :title="t('admin.proxies.copyProxyUrl')"
+                  :aria-label="t('admin.proxies.copyProxyUrl')"
                   @click.stop="copyProxyUrl(row)"
-                  @contextmenu.prevent="toggleCopyMenu(row.id)"
                 >
                   <Icon name="copy" size="sm" />
-                </button>
+                </KumoContextMenuTrigger>
                 <!-- 右键展开格式选择菜单 -->
-                <div
-                  v-if="copyMenuProxyId === row.id"
-                  class="absolute left-0 top-full z-50 mt-1 w-auto min-w-[180px] rounded-lg border border-gray-200 bg-white py-1 shadow-lg dark:border-dark-500 dark:bg-dark-700"
+                <KumoDropdownContent
+                  class="min-w-[180px] max-w-[calc(100vw-2rem)]"
                 >
-                  <button
+                  <KumoDropdownItem
                     v-for="fmt in getCopyFormats(row)"
                     :key="fmt.label"
                     class="flex w-full items-center gap-2 px-3 py-1.5 text-left text-xs hover:bg-gray-100 dark:hover:bg-dark-600"
                     @click.stop="copyFormat(fmt.value)"
                   >
                     <span class="truncate font-mono text-gray-600 dark:text-gray-300">{{ fmt.label }}</span>
-                  </button>
-                </div>
-              </div>
+                  </KumoDropdownItem>
+                </KumoDropdownContent>
+              </KumoContextMenu>
             </div>
           </template>
 
@@ -171,14 +169,14 @@
                   {{ visiblePasswordIds.has(row.id) ? row.password : '••••••' }}
                 </span>
               </div>
-              <button
+              <KumoButton
                 v-if="row.password"
                 type="button"
                 class="ml-1 rounded p-0.5 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300"
                 @click.stop="visiblePasswordIds.has(row.id) ? visiblePasswordIds.delete(row.id) : visiblePasswordIds.add(row.id)"
               >
                 <Icon :name="visiblePasswordIds.has(row.id) ? 'eyeOff' : 'eye'" size="sm" />
-              </button>
+              </KumoButton>
             </div>
             <span v-else class="text-sm text-gray-400">-</span>
           </template>
@@ -199,14 +197,14 @@
           </template>
 
           <template #cell-account_count="{ row, value }">
-            <button
+            <KumoButton
               v-if="(value || 0) > 0"
               type="button"
               class="inline-flex items-center rounded bg-gray-100 px-2 py-0.5 text-xs font-medium text-primary-700 hover:bg-gray-200 dark:bg-dark-600 dark:text-primary-300 dark:hover:bg-dark-500"
               @click="openAccountsModal(row)"
             >
               {{ t('admin.groups.accountsCount', { count: value || 0 }) }}
-            </button>
+            </KumoButton>
             <span
               v-else
               class="inline-flex items-center rounded bg-gray-100 px-2 py-0.5 text-xs font-medium text-gray-800 dark:bg-dark-600 dark:text-gray-300"
@@ -217,13 +215,13 @@
 
           <template #cell-latency="{ row }">
             <div class="flex flex-col gap-1">
-              <span
+              <KumoBadge
                 v-if="row.latency_status === 'failed'"
                 class="badge badge-danger"
                 :title="row.latency_message || undefined"
               >
                 {{ t('admin.proxies.latencyFailed') }}
-              </span>
+              </KumoBadge>
               <span
                 v-else-if="typeof row.latency_ms === 'number'"
                 :class="['badge', row.latency_ms < 200 ? 'badge-success' : 'badge-warning']"
@@ -237,9 +235,9 @@
                 :title="row.quality_summary || undefined"
               >
                 <span>{{ t('admin.proxies.qualityInline', { grade: row.quality_grade || '-', score: row.quality_score ?? '-' }) }}</span>
-                <span class="badge" :class="qualityOverallClass(row.quality_status)">
+                <KumoBadge class="badge" :class="qualityOverallClass(row.quality_status)">
                   {{ qualityOverallLabel(row.quality_status) }}
-                </span>
+                </KumoBadge>
               </div>
             </div>
           </template>
@@ -269,76 +267,38 @@
 
           <template #cell-actions="{ row }">
             <div class="flex items-center gap-1">
-              <button
+              <KumoButton
                 @click="handleTestConnection(row)"
                 :disabled="testingProxyIds.has(row.id)"
                 class="flex flex-col items-center gap-0.5 rounded-lg p-1.5 text-gray-500 transition-colors hover:bg-emerald-50 hover:text-emerald-600 disabled:cursor-not-allowed disabled:opacity-50 dark:hover:bg-emerald-900/20 dark:hover:text-emerald-400"
               >
-                <svg
-                  v-if="testingProxyIds.has(row.id)"
-                  class="h-4 w-4 animate-spin"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                >
-                  <circle
-                    class="opacity-25"
-                    cx="12"
-                    cy="12"
-                    r="10"
-                    stroke="currentColor"
-                    stroke-width="4"
-                  ></circle>
-                  <path
-                    class="opacity-75"
-                    fill="currentColor"
-                    d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-                  ></path>
-                </svg>
+                <KumoLoader v-if="testingProxyIds.has(row.id)" class="h-4 w-4 animate-spin" />
                 <Icon v-else name="checkCircle" size="sm" />
                 <span class="text-xs">{{ t('admin.proxies.testConnection') }}</span>
-              </button>
-              <button
+              </KumoButton>
+              <KumoButton
                 @click="handleQualityCheck(row)"
                 :disabled="qualityCheckingProxyIds.has(row.id)"
                 class="flex flex-col items-center gap-0.5 rounded-lg p-1.5 text-gray-500 transition-colors hover:bg-blue-50 hover:text-blue-600 disabled:cursor-not-allowed disabled:opacity-50 dark:hover:bg-blue-900/20 dark:hover:text-blue-400"
               >
-                <svg
-                  v-if="qualityCheckingProxyIds.has(row.id)"
-                  class="h-4 w-4 animate-spin"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                >
-                  <circle
-                    class="opacity-25"
-                    cx="12"
-                    cy="12"
-                    r="10"
-                    stroke="currentColor"
-                    stroke-width="4"
-                  ></circle>
-                  <path
-                    class="opacity-75"
-                    fill="currentColor"
-                    d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-                  ></path>
-                </svg>
+                <KumoLoader v-if="qualityCheckingProxyIds.has(row.id)" class="h-4 w-4 animate-spin" />
                 <Icon v-else name="shield" size="sm" />
                 <span class="text-xs">{{ t('admin.proxies.qualityCheck') }}</span>
-              </button>
-              <button
+              </KumoButton>
+              <KumoButton
                 @click="handleEdit(row)"
                 class="flex flex-col items-center gap-0.5 rounded-lg p-1.5 text-gray-500 transition-colors hover:bg-gray-100 hover:text-primary-600 dark:hover:bg-dark-700 dark:hover:text-primary-400"
               >
                 <Icon name="edit" size="sm" />
                 <span class="text-xs">{{ t('common.edit') }}</span>
-              </button>
-              <button
+              </KumoButton>
+              <KumoButton
                 @click="handleDelete(row)"
                 class="flex flex-col items-center gap-0.5 rounded-lg p-1.5 text-gray-500 transition-colors hover:bg-red-50 hover:text-red-600 dark:hover:bg-red-900/20 dark:hover:text-red-400"
               >
                 <Icon name="trash" size="sm" />
                 <span class="text-xs">{{ t('common.delete') }}</span>
-              </button>
+              </KumoButton>
             </div>
           </template>
 
@@ -378,7 +338,7 @@
         class="mb-6 flex items-center justify-between gap-3 border-b border-gray-200 dark:border-dark-600"
       >
         <div class="flex min-w-0 shrink-0">
-          <button
+          <KumoButton
             type="button"
             @click="createMode = 'standard'"
             :class="[
@@ -390,8 +350,8 @@
           >
             <Icon name="plus" size="sm" class="mr-1.5 inline" />
             {{ t('admin.proxies.standardAdd') }}
-          </button>
-          <button
+          </KumoButton>
+          <KumoButton
             type="button"
             @click="createMode = 'batch'"
             :class="[
@@ -415,7 +375,7 @@
               />
             </svg>
             {{ t('admin.proxies.batchAdd') }}
-          </button>
+          </KumoButton>
         </div>
         <ProxyAdBanner />
       </div>
@@ -428,8 +388,8 @@
         class="space-y-5"
       >
         <div>
-          <label class="input-label">{{ t('admin.proxies.name') }}</label>
-          <input
+          <KumoLabel class="input-label">{{ t('admin.proxies.name') }}</KumoLabel>
+          <KumoInput
             v-model="createForm.name"
             type="text"
             required
@@ -438,13 +398,13 @@
           />
         </div>
         <div>
-          <label class="input-label">{{ t('admin.proxies.protocol') }}</label>
+          <KumoLabel class="input-label">{{ t('admin.proxies.protocol') }}</KumoLabel>
           <Select v-model="createForm.protocol" :options="protocolSelectOptions" />
         </div>
         <div class="grid grid-cols-2 gap-4">
           <div>
-            <label class="input-label">{{ t('admin.proxies.host') }}</label>
-            <input
+            <KumoLabel class="input-label">{{ t('admin.proxies.host') }}</KumoLabel>
+            <KumoInput
               v-model="createForm.host"
               type="text"
               required
@@ -453,8 +413,8 @@
             />
           </div>
           <div>
-            <label class="input-label">{{ t('admin.proxies.port') }}</label>
-            <input
+            <KumoLabel class="input-label">{{ t('admin.proxies.port') }}</KumoLabel>
+            <KumoInput
               v-model.number="createForm.port"
               type="number"
               required
@@ -466,8 +426,8 @@
           </div>
         </div>
         <div>
-          <label class="input-label">{{ t('admin.proxies.username') }}</label>
-          <input
+          <KumoLabel class="input-label">{{ t('admin.proxies.username') }}</KumoLabel>
+          <KumoInput
             v-model="createForm.username"
             type="text"
             class="input"
@@ -475,27 +435,27 @@
           />
         </div>
         <div>
-          <label class="input-label">{{ t('admin.proxies.password') }}</label>
+          <KumoLabel class="input-label">{{ t('admin.proxies.password') }}</KumoLabel>
           <div class="relative">
-            <input
+            <KumoInput
               v-model="createForm.password"
               :type="createPasswordVisible ? 'text' : 'password'"
               class="input pr-10"
               :placeholder="t('admin.proxies.optionalAuth')"
             />
-            <button
+            <KumoButton
               type="button"
               class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300"
               @click="createPasswordVisible = !createPasswordVisible"
             >
               <Icon :name="createPasswordVisible ? 'eyeOff' : 'eye'" size="md" />
-            </button>
+            </KumoButton>
           </div>
         </div>
         <div>
-          <label class="input-label">{{ t('admin.proxies.expiresAt') }}</label>
+          <KumoLabel class="input-label">{{ t('admin.proxies.expiresAt') }}</KumoLabel>
           <div class="mb-2 flex flex-wrap gap-2">
-            <button
+            <KumoButton
               v-for="d in EXPIRY_PRESETS"
               :key="d"
               type="button"
@@ -504,19 +464,19 @@
               @click="createExpiresDays = d"
             >
               {{ t('admin.proxies.nDays', { days: d }) }}
-            </button>
+            </KumoButton>
           </div>
-          <input
+          <KumoInput
             v-model.number="createExpiresDays"
             type="number"
             min="0"
             class="input mb-2"
             :placeholder="t('admin.proxies.expiryDaysPlaceholder')"
           />
-          <input v-model="createForm.expires_at" type="date" max="9999-12-31" class="input" />
+          <KumoInput v-model="createForm.expires_at" type="date" max="9999-12-31" class="input" />
         </div>
         <div>
-          <label class="input-label">{{ t('admin.proxies.fallbackMode') }}</label>
+          <KumoLabel class="input-label">{{ t('admin.proxies.fallbackMode') }}</KumoLabel>
           <Select v-model="createForm.fallback_mode" :options="[
             { label: t('admin.proxies.fallbackNone'), value: 'none' },
             { label: t('admin.proxies.fallbackProxy'), value: 'proxy' },
@@ -524,7 +484,7 @@
           ]" />
         </div>
         <div v-if="createForm.fallback_mode === 'proxy'">
-          <label class="input-label">{{ t('admin.proxies.backupProxy') }}</label>
+          <KumoLabel class="input-label">{{ t('admin.proxies.backupProxy') }}</KumoLabel>
           <Select v-model="createForm.backup_proxy_id" :options="backupProxyOptions()" />
         </div>
 
@@ -533,14 +493,14 @@
       <!-- Batch Add Form -->
       <div v-else class="space-y-5">
         <div>
-          <label class="input-label">{{ t('admin.proxies.batchInput') }}</label>
-          <textarea
+          <KumoLabel class="input-label">{{ t('admin.proxies.batchInput') }}</KumoLabel>
+          <KumoTextarea
             v-model="batchInput"
             rows="10"
             class="input font-mono text-sm"
             :placeholder="t('admin.proxies.batchInputPlaceholder')"
             @input="parseBatchInput"
-          ></textarea>
+          ></KumoTextarea>
           <p class="input-hint mt-2">
             {{ t('admin.proxies.batchInputHint') }}
           </p>
@@ -591,71 +551,33 @@
 
       <template #footer>
         <div class="flex justify-end gap-3">
-          <button @click="closeCreateModal" type="button" class="btn btn-secondary">
+          <KumoButton @click="closeCreateModal" type="button" class="btn btn-secondary">
             {{ t('common.cancel') }}
-          </button>
-          <button
+          </KumoButton>
+          <KumoButton
             v-if="createMode === 'standard'"
             type="submit"
             form="create-proxy-form"
             :disabled="submitting"
             class="btn btn-primary"
           >
-            <svg
-              v-if="submitting"
-              class="-ml-1 mr-2 h-4 w-4 animate-spin"
-              fill="none"
-              viewBox="0 0 24 24"
-            >
-              <circle
-                class="opacity-25"
-                cx="12"
-                cy="12"
-                r="10"
-                stroke="currentColor"
-                stroke-width="4"
-              ></circle>
-              <path
-                class="opacity-75"
-                fill="currentColor"
-                d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-              ></path>
-            </svg>
+            <KumoLoader v-if="submitting" class="-ml-1 mr-2 h-4 w-4 animate-spin" />
             {{ submitting ? t('admin.proxies.creating') : t('common.create') }}
-          </button>
-          <button
+          </KumoButton>
+          <KumoButton
             v-else
             @click="handleBatchCreate"
             type="button"
             :disabled="submitting || batchParseResult.valid === 0"
             class="btn btn-primary"
           >
-            <svg
-              v-if="submitting"
-              class="-ml-1 mr-2 h-4 w-4 animate-spin"
-              fill="none"
-              viewBox="0 0 24 24"
-            >
-              <circle
-                class="opacity-25"
-                cx="12"
-                cy="12"
-                r="10"
-                stroke="currentColor"
-                stroke-width="4"
-              ></circle>
-              <path
-                class="opacity-75"
-                fill="currentColor"
-                d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-              ></path>
-            </svg>
+            <KumoLoader v-if="submitting" class="-ml-1 mr-2 h-4 w-4 animate-spin" />
             {{
               submitting
                 ? t('admin.proxies.importing')
                 : t('admin.proxies.importProxies', { count: batchParseResult.valid })
             }}
-          </button>
+          </KumoButton>
         </div>
       </template>
     </BaseDialog>
@@ -674,21 +596,21 @@
         class="space-y-5"
       >
         <div>
-          <label class="input-label">{{ t('admin.proxies.name') }}</label>
-          <input v-model="editForm.name" type="text" required class="input" />
+          <KumoLabel class="input-label">{{ t('admin.proxies.name') }}</KumoLabel>
+          <KumoInput v-model="editForm.name" type="text" required class="input" />
         </div>
         <div>
-          <label class="input-label">{{ t('admin.proxies.protocol') }}</label>
+          <KumoLabel class="input-label">{{ t('admin.proxies.protocol') }}</KumoLabel>
           <Select v-model="editForm.protocol" :options="protocolSelectOptions" />
         </div>
         <div class="grid grid-cols-2 gap-4">
           <div>
-            <label class="input-label">{{ t('admin.proxies.host') }}</label>
-            <input v-model="editForm.host" type="text" required class="input" />
+            <KumoLabel class="input-label">{{ t('admin.proxies.host') }}</KumoLabel>
+            <KumoInput v-model="editForm.host" type="text" required class="input" />
           </div>
           <div>
-            <label class="input-label">{{ t('admin.proxies.port') }}</label>
-            <input
+            <KumoLabel class="input-label">{{ t('admin.proxies.port') }}</KumoLabel>
+            <KumoInput
               v-model.number="editForm.port"
               type="number"
               required
@@ -699,36 +621,36 @@
           </div>
         </div>
         <div>
-          <label class="input-label">{{ t('admin.proxies.username') }}</label>
-          <input v-model="editForm.username" type="text" class="input" />
+          <KumoLabel class="input-label">{{ t('admin.proxies.username') }}</KumoLabel>
+          <KumoInput v-model="editForm.username" type="text" class="input" />
         </div>
         <div>
-          <label class="input-label">{{ t('admin.proxies.password') }}</label>
+          <KumoLabel class="input-label">{{ t('admin.proxies.password') }}</KumoLabel>
           <div class="relative">
-            <input
+            <KumoInput
               v-model="editForm.password"
               :type="editPasswordVisible ? 'text' : 'password'"
               :placeholder="t('admin.proxies.leaveEmptyToKeep')"
               class="input pr-10"
               @input="editPasswordDirty = true"
             />
-            <button
+            <KumoButton
               type="button"
               class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300"
               @click="editPasswordVisible = !editPasswordVisible"
             >
               <Icon :name="editPasswordVisible ? 'eyeOff' : 'eye'" size="md" />
-            </button>
+            </KumoButton>
           </div>
         </div>
         <div>
-          <label class="input-label">{{ t('admin.proxies.status') }}</label>
+          <KumoLabel class="input-label">{{ t('admin.proxies.status') }}</KumoLabel>
           <Select v-model="editForm.status" :options="editStatusOptions" />
         </div>
         <div>
-          <label class="input-label">{{ t('admin.proxies.expiresAt') }}</label>
+          <KumoLabel class="input-label">{{ t('admin.proxies.expiresAt') }}</KumoLabel>
           <div class="mb-2 flex flex-wrap gap-2">
-            <button
+            <KumoButton
               v-for="d in EXPIRY_PRESETS"
               :key="d"
               type="button"
@@ -737,19 +659,19 @@
               @click="editExpiresDays = d"
             >
               {{ t('admin.proxies.nDays', { days: d }) }}
-            </button>
+            </KumoButton>
           </div>
-          <input
+          <KumoInput
             v-model.number="editExpiresDays"
             type="number"
             min="0"
             class="input mb-2"
             :placeholder="t('admin.proxies.expiryDaysPlaceholder')"
           />
-          <input v-model="editForm.expires_at" type="date" max="9999-12-31" class="input" />
+          <KumoInput v-model="editForm.expires_at" type="date" max="9999-12-31" class="input" />
         </div>
         <div>
-          <label class="input-label">{{ t('admin.proxies.fallbackMode') }}</label>
+          <KumoLabel class="input-label">{{ t('admin.proxies.fallbackMode') }}</KumoLabel>
           <Select v-model="editForm.fallback_mode" :options="[
             { label: t('admin.proxies.fallbackNone'), value: 'none' },
             { label: t('admin.proxies.fallbackProxy'), value: 'proxy' },
@@ -757,7 +679,7 @@
           ]" />
         </div>
         <div v-if="editForm.fallback_mode === 'proxy'">
-          <label class="input-label">{{ t('admin.proxies.backupProxy') }}</label>
+          <KumoLabel class="input-label">{{ t('admin.proxies.backupProxy') }}</KumoLabel>
           <Select v-model="editForm.backup_proxy_id" :options="backupProxyOptions(editingProxy?.id)" />
         </div>
 
@@ -765,38 +687,19 @@
 
       <template #footer>
         <div class="flex justify-end gap-3">
-          <button @click="closeEditModal" type="button" class="btn btn-secondary">
+          <KumoButton @click="closeEditModal" type="button" class="btn btn-secondary">
             {{ t('common.cancel') }}
-          </button>
-          <button
+          </KumoButton>
+          <KumoButton
             v-if="editingProxy"
             type="submit"
             form="edit-proxy-form"
             :disabled="submitting"
             class="btn btn-primary"
           >
-            <svg
-              v-if="submitting"
-              class="-ml-1 mr-2 h-4 w-4 animate-spin"
-              fill="none"
-              viewBox="0 0 24 24"
-            >
-              <circle
-                class="opacity-25"
-                cx="12"
-                cy="12"
-                r="10"
-                stroke="currentColor"
-                stroke-width="4"
-              ></circle>
-              <path
-                class="opacity-75"
-                fill="currentColor"
-                d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-              ></path>
-            </svg>
+            <KumoLoader v-if="submitting" class="-ml-1 mr-2 h-4 w-4 animate-spin" />
             {{ submitting ? t('admin.proxies.updating') : t('common.update') }}
-          </button>
+          </KumoButton>
         </div>
       </template>
     </BaseDialog>
@@ -878,40 +781,40 @@
         </div>
 
         <div class="max-h-80 overflow-auto rounded-lg border border-gray-200 dark:border-dark-600">
-          <table class="min-w-full divide-y divide-gray-200 text-sm dark:divide-dark-700">
-            <thead class="bg-gray-50 text-xs uppercase text-gray-500 dark:bg-dark-800 dark:text-dark-400">
-              <tr>
-                <th class="whitespace-nowrap px-3 py-2 text-left">{{ t('admin.proxies.qualityTableTarget') }}</th>
-                <th class="whitespace-nowrap px-3 py-2 text-left">{{ t('admin.proxies.qualityTableStatus') }}</th>
-                <th class="whitespace-nowrap px-3 py-2 text-left">HTTP</th>
-                <th class="whitespace-nowrap px-3 py-2 text-left">{{ t('admin.proxies.qualityTableLatency') }}</th>
-                <th class="px-3 py-2 text-left">{{ t('admin.proxies.qualityTableMessage') }}</th>
-              </tr>
-            </thead>
-            <tbody class="divide-y divide-gray-200 bg-white dark:divide-dark-700 dark:bg-dark-900">
-              <tr v-for="item in qualityReport.items" :key="item.target">
-                <td class="whitespace-nowrap px-3 py-2 text-gray-900 dark:text-white">{{ qualityTargetLabel(item.target) }}</td>
-                <td class="whitespace-nowrap px-3 py-2">
-                  <span class="badge whitespace-nowrap" :class="qualityStatusClass(item.status)">{{ qualityStatusLabel(item.status) }}</span>
-                </td>
-                <td class="whitespace-nowrap px-3 py-2 text-gray-600 dark:text-gray-300">{{ item.http_status ?? '-' }}</td>
-                <td class="whitespace-nowrap px-3 py-2 text-gray-600 dark:text-gray-300">
+          <KumoTable class="min-w-full divide-y divide-gray-200 text-sm dark:divide-dark-700">
+            <KumoTableHeader class="bg-gray-50 text-xs uppercase text-gray-500 dark:bg-dark-800 dark:text-dark-400">
+              <KumoTableRow>
+                <KumoTableHead class="whitespace-nowrap px-3 py-2 text-left">{{ t('admin.proxies.qualityTableTarget') }}</KumoTableHead>
+                <KumoTableHead class="whitespace-nowrap px-3 py-2 text-left">{{ t('admin.proxies.qualityTableStatus') }}</KumoTableHead>
+                <KumoTableHead class="whitespace-nowrap px-3 py-2 text-left">HTTP</KumoTableHead>
+                <KumoTableHead class="whitespace-nowrap px-3 py-2 text-left">{{ t('admin.proxies.qualityTableLatency') }}</KumoTableHead>
+                <KumoTableHead class="px-3 py-2 text-left">{{ t('admin.proxies.qualityTableMessage') }}</KumoTableHead>
+              </KumoTableRow>
+            </KumoTableHeader>
+            <KumoTableBody class="divide-y divide-gray-200 bg-white dark:divide-dark-700 dark:bg-dark-900">
+              <KumoTableRow v-for="item in qualityReport.items" :key="item.target">
+                <KumoTableCell class="whitespace-nowrap px-3 py-2 text-gray-900 dark:text-white">{{ qualityTargetLabel(item.target) }}</KumoTableCell>
+                <KumoTableCell class="whitespace-nowrap px-3 py-2">
+                  <KumoBadge class="badge whitespace-nowrap" :class="qualityStatusClass(item.status)">{{ qualityStatusLabel(item.status) }}</KumoBadge>
+                </KumoTableCell>
+                <KumoTableCell class="whitespace-nowrap px-3 py-2 text-gray-600 dark:text-gray-300">{{ item.http_status ?? '-' }}</KumoTableCell>
+                <KumoTableCell class="whitespace-nowrap px-3 py-2 text-gray-600 dark:text-gray-300">
                   {{ typeof item.latency_ms === 'number' ? `${item.latency_ms}ms` : '-' }}
-                </td>
-                <td class="px-3 py-2 text-gray-600 dark:text-gray-300">
+                </KumoTableCell>
+                <KumoTableCell class="px-3 py-2 text-gray-600 dark:text-gray-300">
                   <span>{{ item.message || '-' }}</span>
                   <span v-if="item.cf_ray" class="ml-1 text-xs text-gray-400">(cf-ray: {{ item.cf_ray }})</span>
-                </td>
-              </tr>
-            </tbody>
-          </table>
+                </KumoTableCell>
+              </KumoTableRow>
+            </KumoTableBody>
+          </KumoTable>
         </div>
       </div>
       <template #footer>
         <div class="flex justify-end">
-          <button @click="closeQualityReportDialog" class="btn btn-secondary">
+          <KumoButton @click="closeQualityReportDialog" class="btn btn-secondary">
             {{ t('common.close') }}
-          </button>
+          </KumoButton>
         </div>
       </template>
     </BaseDialog>
@@ -931,32 +834,32 @@
         {{ t('admin.proxies.accountsEmpty') }}
       </div>
       <div v-else class="max-h-80 overflow-auto">
-        <table class="min-w-full divide-y divide-gray-200 text-sm dark:divide-dark-700">
-          <thead class="bg-gray-50 text-xs uppercase text-gray-500 dark:bg-dark-800 dark:text-dark-400">
-            <tr>
-              <th class="px-4 py-2 text-left">{{ t('admin.proxies.accountName') }}</th>
-              <th class="px-4 py-2 text-left">{{ t('admin.accounts.columns.platformType') }}</th>
-              <th class="px-4 py-2 text-left">{{ t('admin.proxies.accountNotes') }}</th>
-            </tr>
-          </thead>
-          <tbody class="divide-y divide-gray-200 bg-white dark:divide-dark-700 dark:bg-dark-900">
-            <tr v-for="account in proxyAccounts" :key="account.id">
-              <td class="px-4 py-2 font-medium text-gray-900 dark:text-white">{{ account.name }}</td>
-              <td class="px-4 py-2">
+        <KumoTable class="min-w-full divide-y divide-gray-200 text-sm dark:divide-dark-700">
+          <KumoTableHeader class="bg-gray-50 text-xs uppercase text-gray-500 dark:bg-dark-800 dark:text-dark-400">
+            <KumoTableRow>
+              <KumoTableHead class="px-4 py-2 text-left">{{ t('admin.proxies.accountName') }}</KumoTableHead>
+              <KumoTableHead class="px-4 py-2 text-left">{{ t('admin.accounts.columns.platformType') }}</KumoTableHead>
+              <KumoTableHead class="px-4 py-2 text-left">{{ t('admin.proxies.accountNotes') }}</KumoTableHead>
+            </KumoTableRow>
+          </KumoTableHeader>
+          <KumoTableBody class="divide-y divide-gray-200 bg-white dark:divide-dark-700 dark:bg-dark-900">
+            <KumoTableRow v-for="account in proxyAccounts" :key="account.id">
+              <KumoTableCell class="px-4 py-2 font-medium text-gray-900 dark:text-white">{{ account.name }}</KumoTableCell>
+              <KumoTableCell class="px-4 py-2">
                 <PlatformTypeBadge :platform="account.platform" :type="account.type" />
-              </td>
-              <td class="px-4 py-2 text-gray-600 dark:text-gray-300">
+              </KumoTableCell>
+              <KumoTableCell class="px-4 py-2 text-gray-600 dark:text-gray-300">
                 {{ account.notes || '-' }}
-              </td>
-            </tr>
-          </tbody>
-        </table>
+              </KumoTableCell>
+            </KumoTableRow>
+          </KumoTableBody>
+        </KumoTable>
       </div>
       <template #footer>
         <div class="flex justify-end">
-          <button @click="closeAccountsModal" class="btn btn-secondary">
+          <KumoButton @click="closeAccountsModal" class="btn btn-secondary">
             {{ t('common.close') }}
-          </button>
+          </KumoButton>
         </div>
       </template>
     </BaseDialog>
@@ -964,6 +867,8 @@
 </template>
 
 <script setup lang="ts">
+import { KumoBadge, KumoButton, KumoCheckbox, KumoContextMenu, KumoContextMenuTrigger, KumoDropdownContent, KumoDropdownItem, KumoInput, KumoLabel, KumoLoader, KumoTable, KumoTableBody, KumoTableCell, KumoTableHead, KumoTableHeader, KumoTableRow, KumoTextarea } from '@/components/kumo'
+
 import { ref, reactive, computed, onMounted, onUnmounted } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useAppStore } from '@/stores/app'
@@ -2062,28 +1967,18 @@ function copyProxyUrl(row: any) {
   copyMenuProxyId.value = null
 }
 
-function toggleCopyMenu(id: number) {
-  copyMenuProxyId.value = copyMenuProxyId.value === id ? null : id
-}
-
 function copyFormat(value: string) {
   copyToClipboard(value, t('admin.proxies.urlCopied'))
-  copyMenuProxyId.value = null
-}
-
-function closeCopyMenu() {
   copyMenuProxyId.value = null
 }
 
 onMounted(() => {
   loadProxies()
   loadBackupProxyOptions()
-  document.addEventListener('click', closeCopyMenu)
 })
 
 onUnmounted(() => {
   clearTimeout(searchTimeout)
   abortController?.abort()
-  document.removeEventListener('click', closeCopyMenu)
 })
 </script>

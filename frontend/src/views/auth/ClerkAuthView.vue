@@ -5,8 +5,8 @@
       <div v-else-if="session" class="w-full space-y-4 text-center">
         <p v-if="auth.clerkError" role="alert" class="text-sm text-red-600 dark:text-red-400">{{ auth.clerkError }}</p>
         <p v-else role="status" class="text-sm text-gray-500 dark:text-dark-400">{{ t('clerkAuth.connecting') }}</p>
-        <button class="btn btn-primary" @click="retry">{{ t('clerkAuth.retry') }}</button>
-        <button class="btn btn-secondary ml-3" @click="auth.logout">{{ t('clerkAuth.signOut') }}</button>
+        <KumoButton class="btn btn-primary" @click="retry">{{ t('clerkAuth.retry') }}</KumoButton>
+        <KumoButton class="btn btn-secondary ml-3" @click="auth.logout">{{ t('clerkAuth.signOut') }}</KumoButton>
       </div>
       <SignUp v-else-if="signUp" routing="hash" :sign-in-url="signInURL" :force-redirect-url="returnURL" :appearance="appearance" />
       <SignIn v-else routing="hash" :sign-up-url="signUpURL" :force-redirect-url="returnURL" :sign-up-force-redirect-url="returnURL" :appearance="appearance" />
@@ -16,6 +16,8 @@
 </template>
 
 <script setup lang="ts">
+import { KumoButton } from '@/components/kumo'
+
 import { computed, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { useI18n } from 'vue-i18n'

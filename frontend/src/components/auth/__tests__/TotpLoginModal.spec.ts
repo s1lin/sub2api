@@ -1,4 +1,4 @@
-import { mount } from '@vue/test-utils'
+import { mount, portal, flushPromises } from '@/__tests__/render'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 import TotpLoginModal from '@/components/auth/TotpLoginModal.vue'
 
@@ -32,10 +32,11 @@ describe('TotpLoginModal', () => {
     })
 
     ;(wrapper.vm as unknown as { setError: (message: string) => void }).setError('Invalid code')
-    await wrapper.vm.$nextTick()
+    await flushPromises()
 
     expect(showErrorMock).toHaveBeenCalledWith('Invalid code')
-    expect(wrapper.text()).not.toContain('Invalid code')
-    expect(wrapper.find('.bg-red-50').exists()).toBe(false)
+    expect(portal().text()).not.toContain('Invalid code')
+    expect(portal().find('.bg-red-50').exists()).toBe(false)
+    wrapper.unmount()
   })
 })

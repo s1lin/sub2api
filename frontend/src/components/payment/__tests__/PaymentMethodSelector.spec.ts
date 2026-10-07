@@ -1,5 +1,5 @@
 import { describe, expect, it, vi } from 'vitest'
-import { mount } from '@vue/test-utils'
+import { mount } from '@/__tests__/render'
 import PaymentMethodSelector from '@/components/payment/PaymentMethodSelector.vue'
 
 vi.mock('vue-i18n', () => ({
@@ -31,7 +31,7 @@ describe('PaymentMethodSelector', () => {
     const buttons = wrapper.findAll('button')
     expect(buttons).toHaveLength(methods.length)
     expect(buttons.every(button => button.classes().includes('min-w-0'))).toBe(true)
-    expect(buttons.every((button, index) => button.attributes('title') === methods[index].display_name)).toBe(true)
+    expect(buttons.every((button, index) => button.attributes('aria-label') === methods[index].display_name)).toBe(true)
     expect(wrapper.findAll('[data-testid="payment-method-label"]').every(label => label.classes().includes('truncate'))).toBe(true)
   })
 

@@ -1,8 +1,7 @@
 <template>
-  <div class="relative" ref="containerRef">
-    <button
+  <KumoPopoverRoot v-model="isOpen">
+    <KumoPopoverTrigger
       type="button"
-      @click="toggle"
       :disabled="disabled"
       :class="[
         'select-trigger',
@@ -20,15 +19,14 @@
           :class="['transition-transform duration-200', isOpen && 'rotate-180']"
         />
       </span>
-    </button>
+    </KumoPopoverTrigger>
 
-    <Transition name="select-dropdown">
-      <div v-if="isOpen" class="select-dropdown">
+    <KumoPopoverContent class="select-dropdown" align="start">
         <!-- Search and Batch Test Header -->
         <div class="select-header">
           <div class="select-search">
             <Icon name="search" size="sm" class="text-gray-400" />
-            <input
+            <KumoInput
               ref="searchInputRef"
               v-model="searchQuery"
               type="text"
@@ -37,7 +35,7 @@
               @click.stop
             />
           </div>
-          <button
+          <KumoButton
             v-if="proxies.length > 0"
             type="button"
             @click.stop="handleBatchTest"
@@ -45,44 +43,28 @@
             class="batch-test-btn"
             :title="t('admin.proxies.batchTest')"
           >
-            <svg v-if="batchTesting" class="h-4 w-4 animate-spin" fill="none" viewBox="0 0 24 24">
-              <circle
-                class="opacity-25"
-                cx="12"
-                cy="12"
-                r="10"
-                stroke="currentColor"
-                stroke-width="4"
-              ></circle>
-              <path
-                class="opacity-75"
-                fill="currentColor"
-                d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-              ></path>
-            </svg>
+            <KumoLoader v-if="batchTesting" class="h-4 w-4 animate-spin" />
             <Icon v-else name="play" size="sm" />
-          </button>
+          </KumoButton>
         </div>
 
         <!-- Options list -->
-        <div class="select-options">
+        <KumoRadioGroup :model-value="modelValue ?? 'none'" :aria-label="t('admin.proxies.searchProxies')" class="select-options">
           <!-- No Proxy option -->
-          <div
-            @click="selectOption(null)"
+          <KumoRadio value="none"
+            @change="selectOption(null)"
             :class="['select-option', modelValue === null && 'select-option-selected']"
           >
             <span class="select-option-label">{{ t('admin.accounts.noProxy') }}</span>
-            <Icon v-if="modelValue === null" name="check" size="sm" class="text-primary-500" />
-          </div>
+          </KumoRadio>
 
           <!-- Proxy options -->
           <div
             v-for="proxy in filteredProxies"
             :key="proxy.id"
-            @click="selectOption(proxy.id)"
             :class="['select-option', modelValue === proxy.id && 'select-option-selected']"
           >
-            <div class="min-w-0 flex-1">
+            <KumoRadio :value="proxy.id" class="min-w-0 flex-1" @change="selectOption(proxy.id)">
               <div class="flex items-center gap-2">
                 <span class="truncate font-medium">{{ proxy.name }}</span>
                 <!-- Account count badge -->
@@ -116,59 +98,35 @@
               <div class="truncate text-xs text-gray-500 dark:text-gray-400">
                 {{ proxy.protocol }}://{{ proxy.host }}:{{ proxy.port }}
               </div>
-            </div>
+            </KumoRadio>
 
             <!-- Individual test button -->
-            <button
+            <KumoButton
               type="button"
               @click.stop="handleTestProxy(proxy)"
               :disabled="testingProxyIds.has(proxy.id)"
               class="test-btn"
               :title="t('admin.proxies.testConnection')"
             >
-              <svg
-                v-if="testingProxyIds.has(proxy.id)"
-                class="h-3.5 w-3.5 animate-spin"
-                fill="none"
-                viewBox="0 0 24 24"
-              >
-                <circle
-                  class="opacity-25"
-                  cx="12"
-                  cy="12"
-                  r="10"
-                  stroke="currentColor"
-                  stroke-width="4"
-                ></circle>
-                <path
-                  class="opacity-75"
-                  fill="currentColor"
-                  d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-                ></path>
-              </svg>
+              <KumoLoader v-if="testingProxyIds.has(proxy.id)" class="h-3.5 w-3.5 animate-spin" />
               <Icon v-else name="play" size="xs" />
-            </button>
+            </KumoButton>
 
-            <Icon
-              v-if="modelValue === proxy.id"
-              name="check"
-              size="sm"
-              class="flex-shrink-0 text-primary-500"
-            />
           </div>
 
           <!-- Empty state -->
           <div v-if="filteredProxies.length === 0 && searchQuery" class="select-empty">
             {{ t('common.noOptionsFound') }}
           </div>
-        </div>
-      </div>
-    </Transition>
-  </div>
+        </KumoRadioGroup>
+    </KumoPopoverContent>
+  </KumoPopoverRoot>
 </template>
 
 <script setup lang="ts">
-import { ref, reactive, computed, onMounted, onUnmounted, nextTick } from 'vue'
+import { KumoButton, KumoInput, KumoLoader, KumoPopoverContent, KumoPopoverRoot, KumoPopoverTrigger, KumoRadio, KumoRadioGroup } from '@/components/kumo'
+
+import { ref, reactive, computed, watch, nextTick } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { adminAPI } from '@/api/admin'
 import Icon from '@/components/icons/Icon.vue'
@@ -202,7 +160,6 @@ const emit = defineEmits<{
 
 const isOpen = ref(false)
 const searchQuery = ref('')
-const containerRef = ref<HTMLElement | null>(null)
 const searchInputRef = ref<HTMLInputElement | null>(null)
 
 // Test state
@@ -235,15 +192,11 @@ const filteredProxies = computed(() => {
   })
 })
 
-const toggle = () => {
-  if (props.disabled) return
-  isOpen.value = !isOpen.value
-  if (isOpen.value) {
-    nextTick(() => {
-      searchInputRef.value?.focus()
-    })
-  }
-}
+watch(isOpen, async open => {
+  if (!open) { searchQuery.value = ''; return }
+  await nextTick()
+  searchInputRef.value?.focus()
+})
 
 const selectOption = (value: number | null) => {
   emit('update:modelValue', value)
@@ -280,29 +233,6 @@ const handleBatchTest = async () => {
   batchTesting.value = false
 }
 
-const handleClickOutside = (event: MouseEvent) => {
-  if (containerRef.value && !containerRef.value.contains(event.target as Node)) {
-    isOpen.value = false
-    searchQuery.value = ''
-  }
-}
-
-const handleEscape = (event: KeyboardEvent) => {
-  if (event.key === 'Escape' && isOpen.value) {
-    isOpen.value = false
-    searchQuery.value = ''
-  }
-}
-
-onMounted(() => {
-  document.addEventListener('click', handleClickOutside)
-  document.addEventListener('keydown', handleEscape)
-})
-
-onUnmounted(() => {
-  document.removeEventListener('click', handleClickOutside)
-  document.removeEventListener('keydown', handleEscape)
-})
 </script>
 
 <style scoped>
@@ -335,7 +265,8 @@ onUnmounted(() => {
 }
 
 .select-dropdown {
-  @apply absolute z-[100] mt-2 w-full;
+  width: min(var(--anchor-width), calc(100vw - 2rem));
+  min-width: min(320px, calc(100vw - 2rem));
   @apply bg-white dark:bg-dark-800;
   @apply rounded-xl;
   @apply border border-gray-200 dark:border-dark-700;

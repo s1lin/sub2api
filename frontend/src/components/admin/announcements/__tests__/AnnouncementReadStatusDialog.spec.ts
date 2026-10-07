@@ -1,5 +1,6 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest'
-import { flushPromises, mount } from '@vue/test-utils'
+import { mount, flushPromises } from '@/__tests__/render'
+
 
 import AnnouncementReadStatusDialog from '../AnnouncementReadStatusDialog.vue'
 
@@ -46,7 +47,7 @@ describe('AnnouncementReadStatusDialog', () => {
   beforeEach(() => {
     getReadStatus.mockReset()
     showError.mockReset()
-    vi.useFakeTimers()
+    vi.useFakeTimers({ toFake: ['Date', 'setTimeout', 'clearTimeout', 'setInterval', 'clearInterval'] })
   })
 
   it('closes by aborting active requests and clearing debounced reloads', async () => {

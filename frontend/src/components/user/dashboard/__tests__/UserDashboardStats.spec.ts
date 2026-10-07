@@ -1,5 +1,6 @@
 import { describe, it, expect, vi } from 'vitest'
-import { mount, type VueWrapper } from '@vue/test-utils'
+import { mount } from '@/__tests__/render'
+import { type VueWrapper } from '@vue/test-utils'
 
 // t() 回显 key；带参数时附上 JSON，便于断言计数
 vi.mock('vue-i18n', async () => {

@@ -11,16 +11,16 @@
         {{ t('admin.accounts.bulkEdit.title') }}
       </span>
       <template v-if="selectedIds.length > 0">
-        <button
+        <KumoButton
           @click="$emit('select-page')"
           class="text-xs font-medium text-primary-700 hover:text-primary-800 dark:text-primary-300 dark:hover:text-primary-200"
         >
           {{ t('admin.accounts.bulkActions.selectCurrentPage') }}
-        </button>
+        </KumoButton>
       </template>
       <template v-if="!allResultsSelected && totalResults > selectedIds.length">
         <span v-if="selectedIds.length > 0" class="text-gray-300 dark:text-primary-800">•</span>
-        <button
+        <KumoButton
           :disabled="selectingAll"
           @click="$emit('select-all-results')"
           class="text-xs font-medium text-primary-700 hover:text-primary-800 disabled:cursor-not-allowed disabled:opacity-60 dark:text-primary-300 dark:hover:text-primary-200"
@@ -30,36 +30,38 @@
               ? t('admin.accounts.bulkActions.selectingAll')
               : t('admin.accounts.bulkActions.selectAllResults', { count: totalResults })
           }}
-        </button>
+        </KumoButton>
       </template>
       <template v-if="selectedIds.length > 0">
         <span class="text-gray-300 dark:text-primary-800">•</span>
-        <button
+        <KumoButton
           @click="$emit('clear')"
           class="text-xs font-medium text-primary-700 hover:text-primary-800 dark:text-primary-300 dark:hover:text-primary-200"
         >
           {{ t('admin.accounts.bulkActions.clear') }}
-        </button>
+        </KumoButton>
       </template>
     </div>
     <div class="flex gap-2">
       <template v-if="selectedIds.length > 0">
-        <button @click="$emit('delete')" class="btn btn-danger btn-sm">{{ t('admin.accounts.bulkActions.delete') }}</button>
-        <button @click="$emit('reset-status')" class="btn btn-secondary btn-sm">{{ t('admin.accounts.bulkActions.resetStatus') }}</button>
-        <button @click="$emit('refresh-token')" class="btn btn-secondary btn-sm">{{ t('admin.accounts.bulkActions.refreshToken') }}</button>
-        <button @click="$emit('probe-upstream-billing')" class="btn btn-secondary btn-sm">{{ t('admin.accounts.bulkActions.probeUpstreamBilling') }}</button>
-        <button @click="$emit('toggle-schedulable', true)" class="btn btn-success btn-sm">{{ t('admin.accounts.bulkActions.enableScheduling') }}</button>
-        <button @click="$emit('toggle-schedulable', false)" class="btn btn-warning btn-sm">{{ t('admin.accounts.bulkActions.disableScheduling') }}</button>
-        <button @click="$emit('edit-selected')" class="btn btn-primary btn-sm">{{ t('admin.accounts.bulkActions.edit') }}</button>
+        <KumoButton @click="$emit('delete')" class="btn btn-danger btn-sm">{{ t('admin.accounts.bulkActions.delete') }}</KumoButton>
+        <KumoButton @click="$emit('reset-status')" class="btn btn-secondary btn-sm">{{ t('admin.accounts.bulkActions.resetStatus') }}</KumoButton>
+        <KumoButton @click="$emit('refresh-token')" class="btn btn-secondary btn-sm">{{ t('admin.accounts.bulkActions.refreshToken') }}</KumoButton>
+        <KumoButton @click="$emit('probe-upstream-billing')" class="btn btn-secondary btn-sm">{{ t('admin.accounts.bulkActions.probeUpstreamBilling') }}</KumoButton>
+        <KumoButton @click="$emit('toggle-schedulable', true)" class="btn btn-success btn-sm">{{ t('admin.accounts.bulkActions.enableScheduling') }}</KumoButton>
+        <KumoButton @click="$emit('toggle-schedulable', false)" class="btn btn-warning btn-sm">{{ t('admin.accounts.bulkActions.disableScheduling') }}</KumoButton>
+        <KumoButton @click="$emit('edit-selected')" class="btn btn-primary btn-sm">{{ t('admin.accounts.bulkActions.edit') }}</KumoButton>
       </template>
-      <button @click="$emit('edit-filtered')" class="btn btn-primary btn-sm">
+      <KumoButton @click="$emit('edit-filtered')" class="btn btn-primary btn-sm">
         {{ t('admin.accounts.bulkEdit.submit') }}
-      </button>
+      </KumoButton>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
+import { KumoButton } from '@/components/kumo'
+
 import { useI18n } from 'vue-i18n'
 
 defineProps<{

@@ -1,5 +1,5 @@
 <template>
-  <div class="card">
+  <KumoSurface class="card">
     <div
       class="flex flex-col gap-3 border-b border-gray-100 px-6 py-4 dark:border-dark-700 lg:flex-row lg:items-start lg:justify-between"
     >
@@ -12,30 +12,30 @@
         </p>
       </div>
       <div class="flex flex-wrap gap-2">
-        <button
+        <KumoButton
           type="button"
           class="btn btn-secondary btn-sm"
           :disabled="loadingTemplate || previewing || !canPreview"
           @click="refreshPreview"
         >
           {{ previewing ? t("admin.settings.emailTemplates.previewing") : t("admin.settings.emailTemplates.preview") }}
-        </button>
-        <button
+        </KumoButton>
+        <KumoButton
           type="button"
           class="btn btn-secondary btn-sm"
           :disabled="loadingTemplate || restoring || !selectedEvent || !selectedLocale"
           @click="restoreOfficial"
         >
           {{ restoring ? t("admin.settings.emailTemplates.restoring") : t("admin.settings.emailTemplates.restoreOfficial") }}
-        </button>
-        <button
+        </KumoButton>
+        <KumoButton
           type="button"
           class="btn btn-primary btn-sm"
           :disabled="loadingTemplate || saving || !canSave"
           @click="saveTemplate"
         >
           {{ saving ? t("admin.settings.emailTemplates.saving") : t("admin.settings.emailTemplates.save") }}
-        </button>
+        </KumoButton>
       </div>
     </div>
 
@@ -44,19 +44,19 @@
         v-if="loadingList"
         class="flex items-center gap-2 text-sm text-gray-500 dark:text-gray-400"
       >
-        <span
-          class="h-4 w-4 animate-spin rounded-full border-b-2 border-primary-600"
-        ></span>
+        <KumoLoader
+          class="h-4 w-4"
+         />
         {{ t("common.loading") }}
       </div>
 
       <template v-else>
         <div class="grid grid-cols-1 gap-4 md:grid-cols-2">
           <div>
-            <label class="input-label" for="email-template-event">
+            <KumoLabel class="input-label" for="email-template-event">
               {{ t("admin.settings.emailTemplates.event") }}
-            </label>
-            <select
+            </KumoLabel>
+            <KumoNativeSelect
               id="email-template-event"
               v-model="selectedEvent"
               class="input"
@@ -69,13 +69,13 @@
               >
                 {{ formatEventOptionLabel(option) }}
               </option>
-            </select>
+            </KumoNativeSelect>
           </div>
           <div>
-            <label class="input-label" for="email-template-locale">
+            <KumoLabel class="input-label" for="email-template-locale">
               {{ t("admin.settings.emailTemplates.locale") }}
-            </label>
-            <select
+            </KumoLabel>
+            <KumoNativeSelect
               id="email-template-locale"
               v-model="selectedLocale"
               class="input"
@@ -88,7 +88,7 @@
               >
                 {{ formatLocale(localeOption) }}
               </option>
-            </select>
+            </KumoNativeSelect>
           </div>
         </div>
 
@@ -137,10 +137,10 @@
         <div v-else class="grid grid-cols-1 gap-6 xl:grid-cols-2">
           <div class="space-y-4">
             <div>
-              <label class="input-label" for="email-template-subject">
+              <KumoLabel class="input-label" for="email-template-subject">
                 {{ t("admin.settings.emailTemplates.subject") }}
-              </label>
-              <input
+              </KumoLabel>
+              <KumoInput
                 id="email-template-subject"
                 v-model="subject"
                 type="text"
@@ -151,17 +151,17 @@
             </div>
 
             <div>
-              <label class="input-label" for="email-template-html">
+              <KumoLabel class="input-label" for="email-template-html">
                 {{ t("admin.settings.emailTemplates.html") }}
-              </label>
-              <textarea
+              </KumoLabel>
+              <KumoTextarea
                 id="email-template-html"
                 v-model="html"
                 rows="18"
                 class="input min-h-[28rem] resize-y font-mono text-sm leading-6"
                 :disabled="loadingTemplate"
                 :placeholder="t('admin.settings.emailTemplates.htmlPlaceholder')"
-              ></textarea>
+              ></KumoTextarea>
             </div>
 
             <div
@@ -174,7 +174,7 @@
                 {{ t("admin.settings.emailTemplates.placeholdersHelp") }}
               </p>
               <div class="mt-3 flex flex-wrap gap-2">
-                <button
+                <KumoButton
                   v-for="placeholder in placeholderList"
                   :key="placeholder"
                   type="button"
@@ -182,7 +182,7 @@
                   @click="copyPlaceholder(placeholder)"
                 >
                   {{ placeholder }}
-                </button>
+                </KumoButton>
               </div>
             </div>
           </div>
@@ -226,10 +226,12 @@
         </div>
       </template>
     </div>
-  </div>
+  </KumoSurface>
 </template>
 
 <script setup lang="ts">
+import { KumoButton, KumoInput, KumoLabel, KumoLoader, KumoNativeSelect, KumoSurface, KumoTextarea } from '@/components/kumo'
+
 import { computed, onMounted, ref, watch } from "vue";
 import { useI18n } from "vue-i18n";
 import { adminAPI } from "@/api";

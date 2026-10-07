@@ -1,5 +1,6 @@
 import { defineComponent } from 'vue'
-import { flushPromises, mount } from '@vue/test-utils'
+import { mount, flushPromises } from '@/__tests__/render'
+
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 
 const {

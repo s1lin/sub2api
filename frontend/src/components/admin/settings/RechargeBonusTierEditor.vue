@@ -1,5 +1,5 @@
 <template>
-  <div class="card" data-testid="recharge-bonus-tier-editor">
+  <KumoSurface class="card" data-testid="recharge-bonus-tier-editor">
     <!-- Header：与服务商管理卡片同款 -->
     <div class="border-b border-gray-100 px-4 py-3 dark:border-dark-700">
       <div class="flex items-center justify-between gap-3">
@@ -11,7 +11,7 @@
             {{ t('admin.settings.payment.rechargeBonus.hint') }}
           </p>
         </div>
-        <button
+        <KumoButton
           type="button"
           class="btn btn-primary btn-sm shrink-0"
           :disabled="tiers.length >= MAX_RECHARGE_BONUS_TIERS"
@@ -20,7 +20,7 @@
         >
           <Icon name="plus" size="sm" class="mr-1" />
           {{ t('admin.settings.payment.rechargeBonus.addTier') }}
-        </button>
+        </KumoButton>
       </div>
     </div>
 
@@ -34,7 +34,7 @@
           class="inline-flex rounded-lg border border-gray-200 bg-gray-50 p-0.5 dark:border-dark-600 dark:bg-dark-800"
           role="group"
         >
-          <button
+          <KumoButton
             v-for="option in modeOptions"
             :key="option.value"
             type="button"
@@ -49,7 +49,7 @@
             @click="setMode(option.value)"
           >
             {{ option.label }}
-          </button>
+          </KumoButton>
         </div>
         <span class="text-xs text-gray-400 dark:text-gray-500">
           {{ currentMode === 'discount'
@@ -84,7 +84,7 @@
             class="grid grid-cols-[minmax(0,1fr)_minmax(0,1fr)_2rem] items-center gap-3 px-3 py-2"
             data-testid="recharge-bonus-tier-row"
           >
-            <input
+            <KumoInput
               :value="tier.min_amount ?? ''"
               type="number"
               step="0.01"
@@ -95,7 +95,7 @@
               @input="onMinAmountInput(index, $event)"
             />
             <div class="relative">
-              <input
+              <KumoInput
                 :value="tier.bonus_percent ?? ''"
                 type="number"
                 step="0.01"
@@ -111,7 +111,7 @@
                 :class="currentMode === 'discount' ? 'text-red-600 dark:text-red-400' : 'text-gray-400'"
               >{{ currentMode === 'discount' ? '% OFF' : '%' }}</span>
             </div>
-            <button
+            <KumoButton
               type="button"
               class="flex h-8 w-8 items-center justify-center rounded-lg text-gray-400 hover:bg-red-50 hover:text-red-600 dark:hover:bg-dark-700 dark:hover:text-red-400"
               :title="t('admin.settings.payment.rechargeBonus.removeTier')"
@@ -119,7 +119,7 @@
               @click="removeTier(index)"
             >
               <Icon name="x" size="sm" />
-            </button>
+            </KumoButton>
             <p
               v-if="rowError(index)"
               class="col-span-3 -mt-1 text-xs text-red-600 dark:text-red-400"
@@ -156,26 +156,28 @@
 
       <!-- 活动文案 -->
       <div class="border-t border-gray-100 pt-4 dark:border-dark-700">
-        <label class="input-label">
+        <KumoLabel class="input-label">
           {{ t('admin.settings.payment.rechargeBonus.noticeLabel') }}
-        </label>
-        <textarea
+        </KumoLabel>
+        <KumoTextarea
           :value="notice ?? ''"
           rows="3"
           class="input"
           :placeholder="t('admin.settings.payment.rechargeBonus.noticePlaceholder')"
           data-testid="recharge-bonus-notice-input"
           @input="emit('update:notice', ($event.target as HTMLTextAreaElement).value)"
-        ></textarea>
+        ></KumoTextarea>
         <p class="mt-1 text-xs text-gray-400">
           {{ t('admin.settings.payment.rechargeBonus.noticeHint') }}
         </p>
       </div>
     </div>
-  </div>
+  </KumoSurface>
 </template>
 
 <script setup lang="ts">
+import { KumoButton, KumoInput, KumoLabel, KumoSurface, KumoTextarea } from '@/components/kumo'
+
 import { computed } from 'vue'
 import { useI18n } from 'vue-i18n'
 

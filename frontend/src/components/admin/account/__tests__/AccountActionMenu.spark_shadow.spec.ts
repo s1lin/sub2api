@@ -1,5 +1,5 @@
 import { describe, expect, it, vi } from 'vitest'
-import { mount } from '@vue/test-utils'
+import { mount } from '@/__tests__/render'
 import AccountActionMenu from '../AccountActionMenu.vue'
 import type { Account } from '@/types'
 
@@ -46,7 +46,7 @@ const anchorRect = new DOMRect(100, 100, 24, 24)
 
 // AccountActionMenu uses <Teleport to="body">; content is rendered in document.body, not in wrapper.
 const getBodyText = () => document.body.textContent ?? ''
-const getBodyButtons = () => Array.from(document.body.querySelectorAll('button'))
+const getBodyButtons = () => Array.from(document.body.querySelectorAll('[role=menuitem]'))
 
 describe('AccountActionMenu — spark shadow 按钮可见性', () => {
   it('普通账号显示「复制账号」按钮', () => {

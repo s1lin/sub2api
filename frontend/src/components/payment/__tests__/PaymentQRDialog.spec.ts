@@ -1,5 +1,6 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
-import { flushPromises, mount } from '@vue/test-utils'
+import { mount, flushPromises } from '@/__tests__/render'
+
 import PaymentQRDialog from '../PaymentQRDialog.vue'
 
 const pollOrderStatus = vi.hoisted(() => vi.fn())
@@ -61,7 +62,7 @@ const paidOrder = {
 
 describe('PaymentQRDialog currency display', () => {
   beforeEach(() => {
-    vi.useFakeTimers()
+    vi.useFakeTimers({ toFake: ['Date', 'setTimeout', 'clearTimeout', 'setInterval', 'clearInterval'] })
     pollOrderStatus.mockReset().mockResolvedValue(paidOrder)
     cancelOrder.mockReset()
     verifyOrder.mockReset()

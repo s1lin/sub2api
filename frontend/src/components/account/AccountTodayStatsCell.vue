@@ -2,9 +2,9 @@
   <div>
     <!-- Loading state -->
     <div v-if="props.loading && !props.stats" class="space-y-0.5">
-      <div class="h-3 w-12 animate-pulse rounded bg-gray-200 dark:bg-gray-700"></div>
-      <div class="h-3 w-16 animate-pulse rounded bg-gray-200 dark:bg-gray-700"></div>
-      <div class="h-3 w-10 animate-pulse rounded bg-gray-200 dark:bg-gray-700"></div>
+      <KumoSkeleton class="h-3 w-12 animate-pulse rounded bg-gray-200 dark:bg-gray-700"></KumoSkeleton>
+      <KumoSkeleton class="h-3 w-16 animate-pulse rounded bg-gray-200 dark:bg-gray-700"></KumoSkeleton>
+      <KumoSkeleton class="h-3 w-10 animate-pulse rounded bg-gray-200 dark:bg-gray-700"></KumoSkeleton>
     </div>
 
     <!-- Error state -->
@@ -54,6 +54,8 @@
 </template>
 
 <script setup lang="ts">
+import { KumoSkeleton } from '@/components/kumo'
+
 import { useI18n } from 'vue-i18n'
 import type { WindowStats } from '@/types'
 import { formatNumber, formatCurrency } from '@/utils/format'

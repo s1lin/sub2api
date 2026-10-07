@@ -1,15 +1,15 @@
 <template>
   <div>
-    <label class="input-label">
+    <KumoLabel class="input-label">
       {{ t('admin.users.groups') }}
       <span class="font-normal text-gray-400">{{ t('common.selectedCount', { count: modelValue.length }) }}</span>
-    </label>
+    </KumoLabel>
     <div
       v-if="isSearchable"
       class="flex items-center gap-2 rounded-t-lg border border-b-0 border-gray-200 bg-gray-50 px-3 py-2 dark:border-dark-600 dark:bg-dark-800"
     >
       <Icon name="search" size="sm" class="shrink-0 text-gray-400" />
-      <input
+      <KumoInput
         v-model="searchText"
         type="text"
         :placeholder="t('common.searchPlaceholder')"
@@ -24,13 +24,13 @@
           : 'rounded-lg border border-gray-200 bg-gray-50 dark:border-dark-600 dark:bg-dark-800'
       ]"
     >
-      <label
+      <KumoLabel
         v-for="group in filteredGroups"
         :key="group.id"
         class="flex cursor-pointer items-center gap-2 rounded px-2 py-1.5 transition-colors hover:bg-white dark:hover:bg-dark-700"
         :title="group.rate_multiplier == null ? group.name : t('admin.groups.rateAndAccounts', { rate: group.rate_multiplier, count: group.account_count || 0 })"
       >
-        <input
+        <KumoCheckbox
           type="checkbox"
           :value="group.id"
           :checked="modelValue.includes(group.id)"
@@ -45,7 +45,7 @@
           class="min-w-0 flex-1"
         />
         <span class="shrink-0 text-xs text-gray-400">{{ group.account_count || 0 }}</span>
-      </label>
+      </KumoLabel>
       <div
         v-if="filteredGroups.length === 0"
         class="col-span-2 py-2 text-center text-sm text-gray-500 dark:text-gray-400"
@@ -57,6 +57,8 @@
 </template>
 
 <script setup lang="ts">
+import { KumoCheckbox, KumoInput, KumoLabel } from '@/components/kumo'
+
 import { computed, ref, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
 import GroupBadge from './GroupBadge.vue'

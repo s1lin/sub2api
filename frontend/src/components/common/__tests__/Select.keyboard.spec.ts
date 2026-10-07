@@ -1,16 +1,10 @@
-import { mount } from '@vue/test-utils'
+import { mount, settleControls, pressKey as press } from '@/__tests__/render'
 import { afterEach, describe, expect, it, vi } from 'vitest'
-import { nextTick } from 'vue'
 import Select from '../Select.vue'
 
 vi.mock('vue-i18n', () => ({ useI18n: () => ({ t: (key: string) => key }) }))
 let wrapper: ReturnType<typeof mount>
 afterEach(() => { wrapper?.unmount(); document.body.innerHTML = '' })
-
-async function press(key: string) {
-  document.activeElement!.dispatchEvent(new KeyboardEvent('keydown', { key, bubbles: true, cancelable: true }))
-  await nextTick()
-}
 
 async function open(searchable: boolean | 'auto' = 'auto') {
   wrapper = mount(Select, {
@@ -23,13 +17,15 @@ async function open(searchable: boolean | 'auto' = 'auto') {
   })
   wrapper.get<HTMLButtonElement>('button').element.focus()
   await press('ArrowDown')
-  await nextTick()
+  await settleControls()
 }
 
 describe('Select keyboard focus', () => {
   it.each([false, 'auto'] as const)('selects an enabled option without a search input (%s)', async (searchable) => {
     await open(searchable)
-    expect(document.activeElement).toBe(document.querySelector('[role="listbox"]'))
+    expect(document.querySelector('[role="listbox"]')?.contains(document.activeElement)).toBe(true)
+    await press('ArrowDown')
+    expect(document.activeElement?.getAttribute('aria-disabled')).toBe('true')
     await press('ArrowDown')
     await press('Enter')
     expect(wrapper.emitted('update:modelValue')).toEqual([['beta']])
@@ -48,6 +44,7 @@ describe('Select keyboard focus', () => {
   it('keeps focus in the search input when search is enabled', async () => {
     await open(true)
     expect(document.activeElement).toBe(document.querySelector('.select-search-input'))
+    await press('ArrowDown')
     await press('ArrowDown')
     await press('Enter')
     expect(wrapper.emitted('update:modelValue')).toEqual([['beta']])

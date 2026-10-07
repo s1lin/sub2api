@@ -2,7 +2,7 @@
   <AppLayout>
     <div class="mx-auto max-w-2xl space-y-6">
       <!-- Current Balance Card -->
-      <div class="card overflow-hidden">
+      <KumoSurface class="card overflow-hidden">
         <div class="bg-gradient-to-br from-primary-500 to-primary-600 px-6 py-8 text-center">
           <div
             class="mb-4 inline-flex h-16 w-16 items-center justify-center rounded-2xl bg-white/20 backdrop-blur-sm"
@@ -17,21 +17,21 @@
             {{ t('redeem.concurrency') }}: {{ user?.concurrency || 0 }} {{ t('redeem.requests') }}
           </p>
         </div>
-      </div>
+      </KumoSurface>
 
       <!-- Redeem Form -->
-      <div class="card">
+      <KumoSurface class="card">
         <div class="p-6">
           <form @submit.prevent="handleRedeem" class="space-y-5">
             <div>
-              <label for="code" class="input-label">
+              <KumoLabel for="code" class="input-label">
                 {{ t('redeem.redeemCodeLabel') }}
-              </label>
+              </KumoLabel>
               <div class="relative mt-1">
                 <div class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-4">
                   <Icon name="gift" size="md" class="text-gray-400 dark:text-dark-500" />
                 </div>
-                <input
+                <KumoInput
                   id="code"
                   v-model="redeemCode"
                   type="text"
@@ -46,41 +46,22 @@
               </p>
             </div>
 
-            <button
+            <KumoButton
               type="submit"
               :disabled="!redeemCode || submitting"
               class="btn btn-primary w-full py-3"
             >
-              <svg
-                v-if="submitting"
-                class="-ml-1 mr-2 h-5 w-5 animate-spin"
-                fill="none"
-                viewBox="0 0 24 24"
-              >
-                <circle
-                  class="opacity-25"
-                  cx="12"
-                  cy="12"
-                  r="10"
-                  stroke="currentColor"
-                  stroke-width="4"
-                ></circle>
-                <path
-                  class="opacity-75"
-                  fill="currentColor"
-                  d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-                ></path>
-              </svg>
+              <KumoLoader v-if="submitting" class="-ml-1 mr-2 h-5 w-5 animate-spin" />
               <Icon v-else name="checkCircle" size="md" class="mr-2" />
               {{ submitting ? t('redeem.redeeming') : t('redeem.redeemButton') }}
-            </button>
+            </KumoButton>
           </form>
         </div>
-      </div>
+      </KumoSurface>
 
       <!-- Success Message -->
       <transition name="fade">
-        <div
+        <KumoSurface
           v-if="redeemResult"
           class="card border-emerald-200 bg-emerald-50 dark:border-emerald-800/50 dark:bg-emerald-900/20"
         >
@@ -129,12 +110,12 @@
               </div>
             </div>
           </div>
-        </div>
+        </KumoSurface>
       </transition>
 
       <!-- Error Message -->
       <transition name="fade">
-        <div
+        <KumoSurface
           v-if="errorMessage"
           class="card border-red-200 bg-red-50 dark:border-red-800/50 dark:bg-red-900/20"
         >
@@ -159,11 +140,11 @@
               </div>
             </div>
           </div>
-        </div>
+        </KumoSurface>
       </transition>
 
       <!-- Information Card -->
-      <div
+      <KumoSurface
         class="card border-primary-200 bg-primary-50 dark:border-primary-800/50 dark:bg-primary-900/20"
       >
         <div class="p-6">
@@ -196,10 +177,10 @@
             </div>
           </div>
         </div>
-      </div>
+      </KumoSurface>
 
       <!-- Recent Activity -->
-      <div class="card">
+      <KumoSurface class="card">
         <div class="border-b border-gray-100 px-6 py-4 dark:border-dark-700">
           <h2 class="text-lg font-semibold text-gray-900 dark:text-white">
             {{ t('redeem.recentActivity') }}
@@ -208,21 +189,7 @@
         <div class="p-6">
           <!-- Loading State -->
           <div v-if="loadingHistory" class="flex items-center justify-center py-8">
-            <svg class="h-6 w-6 animate-spin text-primary-500" fill="none" viewBox="0 0 24 24">
-              <circle
-                class="opacity-25"
-                cx="12"
-                cy="12"
-                r="10"
-                stroke="currentColor"
-                stroke-width="4"
-              ></circle>
-              <path
-                class="opacity-75"
-                fill="currentColor"
-                d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-              ></path>
-            </svg>
+            <KumoLoader class="h-6 w-6 animate-spin text-primary-500" />
           </div>
 
           <!-- History List -->
@@ -337,35 +304,37 @@
           </div>
           <div class="mt-4 flex flex-wrap items-center justify-between gap-3 text-sm">
             <span>{{ t('common.total') }}: {{ historyTotal }} {{ t('pagination.results') }}</span>
-            <label>
+            <KumoLabel>
               {{ t('pagination.perPage') }}
-              <select
+              <KumoNativeSelect
                 v-model="historyPageSize"
                 class="input w-20"
                 :disabled="loadingHistory || submitting"
                 @change="fetchHistory(1)"
               >
                 <option v-for="size in [20, 50, 100]" :key="size" :value="size">{{ size }}</option>
-              </select>
-            </label>
-            <button
+              </KumoNativeSelect>
+            </KumoLabel>
+            <KumoButton
               class="btn btn-secondary"
               :disabled="loadingHistory || submitting || historyPage <= 1"
               @click="fetchHistory(historyPage - 1)"
-            >{{ t('pagination.previous') }}</button>
-            <button
+            >{{ t('pagination.previous') }}</KumoButton>
+            <KumoButton
               class="btn btn-secondary"
               :disabled="loadingHistory || submitting || historyPage * historyPageSize >= historyTotal"
               @click="fetchHistory(historyPage + 1)"
-            >{{ t('pagination.next') }}</button>
+            >{{ t('pagination.next') }}</KumoButton>
           </div>
         </div>
-      </div>
+      </KumoSurface>
     </div>
   </AppLayout>
 </template>
 
 <script setup lang="ts">
+import { KumoButton, KumoInput, KumoLabel, KumoLoader, KumoNativeSelect, KumoSurface } from '@/components/kumo'
+
 import { ref, computed, onMounted } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useAuthStore } from '@/stores/auth'

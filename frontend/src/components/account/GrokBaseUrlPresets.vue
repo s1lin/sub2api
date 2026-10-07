@@ -1,6 +1,6 @@
 <template>
   <div class="flex flex-wrap gap-2">
-    <button
+    <KumoButton
       v-for="preset in GROK_BASE_URL_PRESETS"
       :key="preset.url"
       type="button"
@@ -9,11 +9,13 @@
       @click="emit('select', preset.url)"
     >
       {{ presetLabel(preset) }} ({{ displayUrl(preset.url) }})
-    </button>
+    </KumoButton>
   </div>
 </template>
 
 <script setup lang="ts">
+import { KumoButton } from '@/components/kumo'
+
 import { useI18n } from 'vue-i18n'
 import { GROK_BASE_URL_PRESETS, type GrokBaseUrlPreset } from './credentialsBuilder'
 

@@ -22,7 +22,7 @@
         </h4>
         <div class="flex items-end gap-2">
           <div class="relative flex-1">
-            <input
+            <KumoInput
               v-model="searchQuery"
               type="text"
               autocomplete="off"
@@ -35,7 +35,7 @@
               v-if="showDropdown && searchResults.length > 0"
               class="absolute left-0 right-0 top-full z-10 mt-1 max-h-48 overflow-y-auto rounded-lg border border-gray-200 bg-white shadow-lg dark:border-dark-500 dark:bg-dark-700"
             >
-              <button
+              <KumoButton
                 v-for="user in searchResults"
                 :key="user.id"
                 type="button"
@@ -45,11 +45,11 @@
                 <span class="text-gray-400">#{{ user.id }}</span>
                 <span class="text-gray-900 dark:text-white">{{ user.username || user.email }}</span>
                 <span v-if="user.username" class="text-xs text-gray-400">{{ user.email }}</span>
-              </button>
+              </KumoButton>
             </div>
           </div>
           <div class="w-24">
-            <input
+            <KumoInput
               v-model.number="newRpm"
               type="number"
               step="1"
@@ -59,18 +59,18 @@
               placeholder="100"
             />
           </div>
-          <button
+          <KumoButton
             type="button"
             class="btn btn-primary shrink-0"
             :disabled="!selectedUser || newRpm == null || !Number.isInteger(newRpm) || newRpm < 0"
             @click="handleAddLocal"
           >
             {{ t('common.add') }}
-          </button>
+          </KumoButton>
         </div>
 
         <div v-if="localEntries.length > 0" class="mt-3 flex items-center justify-end border-t border-gray-100 pt-3 dark:border-dark-600">
-          <button
+          <KumoButton
             type="button"
             :disabled="clearing"
             class="rounded-lg border border-red-200 bg-red-50 px-3 py-1.5 text-sm font-medium text-red-600 transition-colors hover:bg-red-100 disabled:opacity-50 dark:border-red-800 dark:bg-red-900/20 dark:text-red-400 dark:hover:bg-red-900/40"
@@ -78,16 +78,13 @@
           >
             <Icon v-if="clearing" name="refresh" size="sm" class="mr-1 inline animate-spin" />
             {{ t('admin.groups.clearAll') }}
-          </button>
+          </KumoButton>
         </div>
       </div>
 
       <!-- 加载状态 -->
       <div v-if="loading" class="flex justify-center py-6">
-        <svg class="h-6 w-6 animate-spin text-primary-500" fill="none" viewBox="0 0 24 24">
-          <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-          <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-        </svg>
+        <KumoLoader class="h-6 w-6 animate-spin text-primary-500" />
       </div>
 
       <!-- 列表 -->
@@ -103,29 +100,29 @@
         <div v-else>
           <div class="overflow-hidden rounded-lg border border-gray-200 dark:border-dark-600">
             <div class="max-h-[420px] overflow-auto">
-              <table class="w-full min-w-max text-sm">
-                <thead class="sticky top-0 z-[1]">
-                  <tr class="border-b border-gray-200 bg-gray-50 dark:border-dark-600 dark:bg-dark-700">
-                    <th class="px-3 py-2 text-left text-xs font-medium text-gray-500 dark:text-gray-400">{{ t('admin.groups.columns.userEmail') }}</th>
-                    <th class="px-3 py-2 text-left text-xs font-medium text-gray-500 dark:text-gray-400">ID</th>
-                    <th class="px-3 py-2 text-left text-xs font-medium text-gray-500 dark:text-gray-400">{{ t('admin.groups.columns.userName') }}</th>
-                    <th class="px-3 py-2 text-left text-xs font-medium text-gray-500 dark:text-gray-400">{{ t('admin.groups.columns.userNotes') }}</th>
-                    <th class="px-3 py-2 text-left text-xs font-medium text-gray-500 dark:text-gray-400">{{ t('admin.groups.columns.userStatus') }}</th>
-                    <th class="px-3 py-2 text-left text-xs font-medium text-gray-500 dark:text-gray-400" :title="t('admin.groups.columns.rpmOverrideHint')">{{ t('admin.groups.columns.rpmOverride') }}</th>
-                    <th class="w-10 px-2 py-2"></th>
-                  </tr>
-                </thead>
-                <tbody class="divide-y divide-gray-100 dark:divide-dark-600">
-                  <tr
+              <KumoTable class="w-full min-w-max text-sm">
+                <KumoTableHeader class="sticky top-0 z-[1]">
+                  <KumoTableRow class="border-b border-gray-200 bg-gray-50 dark:border-dark-600 dark:bg-dark-700">
+                    <KumoTableHead class="px-3 py-2 text-left text-xs font-medium text-gray-500 dark:text-gray-400">{{ t('admin.groups.columns.userEmail') }}</KumoTableHead>
+                    <KumoTableHead class="px-3 py-2 text-left text-xs font-medium text-gray-500 dark:text-gray-400">ID</KumoTableHead>
+                    <KumoTableHead class="px-3 py-2 text-left text-xs font-medium text-gray-500 dark:text-gray-400">{{ t('admin.groups.columns.userName') }}</KumoTableHead>
+                    <KumoTableHead class="px-3 py-2 text-left text-xs font-medium text-gray-500 dark:text-gray-400">{{ t('admin.groups.columns.userNotes') }}</KumoTableHead>
+                    <KumoTableHead class="px-3 py-2 text-left text-xs font-medium text-gray-500 dark:text-gray-400">{{ t('admin.groups.columns.userStatus') }}</KumoTableHead>
+                    <KumoTableHead class="px-3 py-2 text-left text-xs font-medium text-gray-500 dark:text-gray-400" :title="t('admin.groups.columns.rpmOverrideHint')">{{ t('admin.groups.columns.rpmOverride') }}</KumoTableHead>
+                    <KumoTableHead class="w-10 px-2 py-2"></KumoTableHead>
+                  </KumoTableRow>
+                </KumoTableHeader>
+                <KumoTableBody class="divide-y divide-gray-100 dark:divide-dark-600">
+                  <KumoTableRow
                     v-for="entry in paginatedLocalEntries"
                     :key="entry.user_id"
                     class="hover:bg-gray-50 dark:hover:bg-dark-700/50"
                   >
-                    <td class="px-3 py-2 text-gray-600 dark:text-gray-400">{{ entry.user_email }}</td>
-                    <td class="whitespace-nowrap px-3 py-2 text-gray-400 dark:text-gray-500">{{ entry.user_id }}</td>
-                    <td class="whitespace-nowrap px-3 py-2 text-gray-900 dark:text-white">{{ entry.user_name || '-' }}</td>
-                    <td class="max-w-[160px] truncate px-3 py-2 text-gray-500 dark:text-gray-400" :title="entry.user_notes">{{ entry.user_notes || '-' }}</td>
-                    <td class="whitespace-nowrap px-3 py-2">
+                    <KumoTableCell class="px-3 py-2 text-gray-600 dark:text-gray-400">{{ entry.user_email }}</KumoTableCell>
+                    <KumoTableCell class="whitespace-nowrap px-3 py-2 text-gray-400 dark:text-gray-500">{{ entry.user_id }}</KumoTableCell>
+                    <KumoTableCell class="whitespace-nowrap px-3 py-2 text-gray-900 dark:text-white">{{ entry.user_name || '-' }}</KumoTableCell>
+                    <KumoTableCell class="max-w-[160px] truncate px-3 py-2 text-gray-500 dark:text-gray-400" :title="entry.user_notes">{{ entry.user_notes || '-' }}</KumoTableCell>
+                    <KumoTableCell class="whitespace-nowrap px-3 py-2">
                       <span
                         :class="[
                           'inline-flex rounded-full px-2 py-0.5 text-xs font-medium',
@@ -136,9 +133,9 @@
                       >
                         {{ entry.user_status }}
                       </span>
-                    </td>
-                    <td class="whitespace-nowrap px-3 py-2">
-                      <input
+                    </KumoTableCell>
+                    <KumoTableCell class="whitespace-nowrap px-3 py-2">
+                      <KumoInput
                         type="number"
                         step="1"
                         min="0"
@@ -147,19 +144,19 @@
                         class="hide-spinner w-20 rounded border border-gray-200 bg-white px-2 py-1 text-center text-sm font-medium transition-colors focus:border-primary-500 focus:outline-none focus:ring-1 focus:ring-primary-500/20 dark:border-dark-500 dark:bg-dark-700 dark:focus:border-primary-500"
                         @change="updateLocalRpm(entry.user_id, ($event.target as HTMLInputElement).value)"
                       />
-                    </td>
-                    <td class="px-2 py-2">
-                      <button
+                    </KumoTableCell>
+                    <KumoTableCell class="px-2 py-2">
+                      <KumoButton
                         type="button"
                         class="rounded p-1 text-gray-400 transition-colors hover:bg-red-50 hover:text-red-600 dark:hover:bg-red-900/20 dark:hover:text-red-400"
                         @click="removeLocal(entry.user_id)"
                       >
                         <Icon name="trash" size="sm" />
-                      </button>
-                    </td>
-                  </tr>
-                </tbody>
-              </table>
+                      </KumoButton>
+                    </KumoTableCell>
+                  </KumoTableRow>
+                </KumoTableBody>
+              </KumoTable>
             </div>
           </div>
 
@@ -177,19 +174,19 @@
       <div class="flex items-center gap-3 border-t border-gray-200 pt-4 dark:border-dark-600">
         <template v-if="isDirty">
           <span class="text-xs text-amber-600 dark:text-amber-400">{{ t('admin.groups.unsavedChanges') }}</span>
-          <button
+          <KumoButton
             type="button"
             class="text-xs font-medium text-primary-600 hover:text-primary-700 dark:text-primary-400 dark:hover:text-primary-300"
             @click="handleCancel"
           >
             {{ t('admin.groups.revertChanges') }}
-          </button>
+          </KumoButton>
         </template>
         <div class="ml-auto flex items-center gap-3">
-          <button type="button" class="btn btn-sm px-4 py-1.5" @click="handleClose">
+          <KumoButton type="button" class="btn btn-sm px-4 py-1.5" @click="handleClose">
             {{ t('common.close') }}
-          </button>
-          <button
+          </KumoButton>
+          <KumoButton
             v-if="isDirty"
             type="button"
             class="btn btn-primary btn-sm px-4 py-1.5"
@@ -198,7 +195,7 @@
           >
             <Icon v-if="saving" name="refresh" size="sm" class="mr-1 animate-spin" />
             {{ t('common.save') }}
-          </button>
+          </KumoButton>
         </div>
       </div>
     </div>
@@ -206,6 +203,8 @@
 </template>
 
 <script setup lang="ts">
+import { KumoButton, KumoInput, KumoLoader, KumoTable, KumoTableBody, KumoTableCell, KumoTableHead, KumoTableHeader, KumoTableRow } from '@/components/kumo'
+
 import { ref, computed, watch, onUnmounted } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useAppStore } from '@/stores/app'

@@ -18,20 +18,20 @@
               <Select v-model="filters.downloaded" :options="downloadFilterOptions" class="w-full" @change="applyFilters" />
             </div>
             <div class="flex flex-wrap items-center justify-start gap-2 sm:justify-end 2xl:flex-shrink-0">
-              <button type="button" class="btn btn-secondary" :disabled="loadingJobs" @click="resetFilters">
+              <KumoButton type="button" class="btn btn-secondary" :disabled="loadingJobs" @click="resetFilters">
                 {{ t('common.reset') }}
-              </button>
-              <button type="button" class="btn btn-secondary" :disabled="loadingKeys || loadingJobs" :title="t('common.refresh')" @click="refreshPage">
+              </KumoButton>
+              <KumoButton type="button" class="btn btn-secondary" :disabled="loadingKeys || loadingJobs" :title="t('common.refresh')" @click="refreshPage">
                 <Icon name="refresh" size="md" :class="loadingKeys || loadingJobs ? 'animate-spin' : ''" />
-              </button>
-              <button type="button" class="btn btn-secondary" @click="showGuideModal = true">
+              </KumoButton>
+              <KumoButton type="button" class="btn btn-secondary" @click="showGuideModal = true">
                 <Icon name="book" size="md" class="mr-2" />
                 {{ t('batchImage.actions.usageGuide') }}
-              </button>
-              <button type="button" class="btn btn-primary" @click="openCreateModal">
+              </KumoButton>
+              <KumoButton type="button" class="btn btn-primary" @click="openCreateModal">
                 <Icon name="plus" size="md" class="mr-2" />
                 {{ t('batchImage.actions.createJob') }}
-              </button>
+              </KumoButton>
             </div>
           </div>
 
@@ -51,7 +51,7 @@
               </template>
             </i18n-t>
             <div class="flex flex-wrap items-center gap-2">
-              <button
+              <KumoButton
                 type="button"
                 class="btn btn-secondary btn-sm"
                 :disabled="bulkDownloading || selectedDownloadableRows.length === 0"
@@ -59,8 +59,8 @@
               >
                 <Icon :name="bulkDownloading ? 'refresh' : 'download'" size="sm" class="mr-1.5" :class="bulkDownloading ? 'animate-spin' : ''" />
                 {{ t('batchImage.actions.downloadSelected') }}
-              </button>
-              <button
+              </KumoButton>
+              <KumoButton
                 type="button"
                 class="btn btn-secondary btn-sm text-red-600 hover:text-red-700 dark:text-red-400"
                 :disabled="bulkDeleting"
@@ -68,7 +68,7 @@
               >
                 <Icon :name="bulkDeleting ? 'refresh' : 'trash'" size="sm" class="mr-1.5" :class="bulkDeleting ? 'animate-spin' : ''" />
                 {{ t('batchImage.actions.deleteRecords') }}
-              </button>
+              </KumoButton>
             </div>
           </div>
         </div>
@@ -83,7 +83,7 @@
           row-key="id"
         >
           <template #header-select>
-            <input
+            <KumoCheckbox
               type="checkbox"
               class="h-4 w-4 rounded border-gray-300 text-primary-600 focus:ring-primary-500"
               :checked="allVisibleSelected"
@@ -93,7 +93,7 @@
           </template>
 
           <template #cell-select="{ row }">
-            <input
+            <KumoCheckbox
               type="checkbox"
               class="h-4 w-4 rounded border-gray-300 text-primary-600 focus:ring-primary-500"
               :checked="selectedJobIds.has(row.id)"
@@ -104,7 +104,7 @@
 
           <template #cell-id="{ row }">
 	            <div class="flex w-[220px] items-start gap-1" :class="row.is_child ? 'pl-6' : ''">
-	              <button
+	              <KumoButton
 	                v-if="row.child_count > 0 && !row.is_child"
 	                type="button"
 	                class="mt-1 flex h-6 w-6 flex-shrink-0 items-center justify-center rounded-md text-gray-500 transition-colors hover:bg-gray-100 hover:text-gray-900 focus:outline-none focus-visible:ring-2 focus-visible:ring-primary-500/30 dark:text-gray-400 dark:hover:bg-dark-700 dark:hover:text-white"
@@ -112,9 +112,9 @@
 	                @click.stop="toggleChildRows(row.id)"
 	              >
 	                <Icon :name="expandedParentIds.has(row.id) ? 'chevronDown' : 'chevronRight'" size="xs" />
-	              </button>
+	              </KumoButton>
 	              <span v-else class="w-6 flex-shrink-0" />
-	              <button type="button" class="min-w-0 flex-1 rounded-lg py-1 text-left transition-colors hover:bg-gray-100 focus:outline-none focus-visible:ring-2 focus-visible:ring-primary-500/30 dark:hover:bg-dark-700" @click="selectJob(row.id)">
+	              <KumoButton type="button" class="min-w-0 flex-1 rounded-lg py-1 text-left transition-colors hover:bg-gray-100 focus:outline-none focus-visible:ring-2 focus-visible:ring-primary-500/30 dark:hover:bg-dark-700" @click="selectJob(row.id)">
 	                <span
 	                  class="flex min-w-0 items-center gap-2 text-sm font-medium"
 	                  :class="row.task_name ? 'text-gray-900 dark:text-white' : 'text-gray-500 dark:text-gray-400'"
@@ -130,7 +130,7 @@
 	                <span class="mt-1 flex flex-wrap items-center gap-x-2 gap-y-1 text-xs text-gray-500 dark:text-gray-400">
 	                  <span>{{ formatDate(row.created_at) }}</span>
 	                </span>
-	              </button>
+	              </KumoButton>
 	            </div>
 	          </template>
 
@@ -148,9 +148,9 @@
 
           <template #cell-status="{ row }">
             <div class="flex justify-center">
-              <span :class="statusBadgeClass(displayJob(row))" class="badge">
+              <KumoBadge :class="statusBadgeClass(displayJob(row))" class="badge">
                 {{ statusLabel(displayJob(row)) }}
-              </span>
+              </KumoBadge>
             </div>
           </template>
 
@@ -177,7 +177,7 @@
 
 	          <template #cell-actions="{ row }">
 	            <div class="flex items-center justify-center gap-1">
-              <button
+              <KumoButton
                 type="button"
                 class="batch-row-action flex flex-col items-center gap-0.5 rounded-lg p-1.5 text-gray-500 transition-colors hover:bg-gray-100 hover:text-primary-600 focus:outline-none focus-visible:ring-2 focus-visible:ring-primary-500/30 dark:hover:bg-dark-700 dark:hover:text-primary-400"
                 :title="t('batchImage.actions.viewDetail')"
@@ -185,8 +185,8 @@
               >
                 <Icon name="eye" size="sm" />
                 <span class="text-xs">{{ t('common.view') }}</span>
-              </button>
-              <button
+              </KumoButton>
+              <KumoButton
                 type="button"
                 class="batch-row-action flex flex-col items-center gap-0.5 rounded-lg p-1.5 transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-primary-500/30"
                 :class="canDownload(row) ? 'text-gray-500 hover:bg-green-50 hover:text-green-600 dark:hover:bg-green-900/20 dark:hover:text-green-400' : 'text-gray-300 dark:text-dark-500'"
@@ -200,18 +200,35 @@
 	                  :class="isDownloadingJob(row.id) ? 'animate-spin' : ''"
 	                />
                 <span class="text-xs">{{ t('batchImage.actions.download') }}</span>
-	              </button>
+	              </KumoButton>
               <div v-if="canRetry(row) || canDeleteRecord(row)">
-                <button
+                <KumoDropdown :model-value="openMoreJobId === row.id" @update:model-value="openMoreJobId = $event ? row.id : ''"><KumoDropdownTrigger
                   type="button"
                   class="batch-row-action flex flex-col items-center gap-0.5 rounded-lg p-1.5 text-gray-500 transition-colors hover:bg-gray-100 hover:text-gray-900 focus:outline-none focus-visible:ring-2 focus-visible:ring-primary-500/30 dark:hover:bg-dark-700 dark:hover:text-white"
                   :class="{ 'bg-gray-100 text-gray-900 dark:bg-dark-700 dark:text-white': openMoreJobId === row.id }"
-                  :title="t('batchImage.actions.moreActions')"
-                  @click.stop="toggleMoreMenu(row, $event)"
+                  :aria-label="t('batchImage.actions.moreActions')"
                 >
                   <Icon name="more" size="sm" />
                   <span class="text-xs">{{ t('common.more') }}</span>
-                </button>
+                </KumoDropdownTrigger><KumoDropdownContent class="w-44"><KumoDropdownItem
+              v-if="canRetry(row)"
+              type="button"
+              class="flex w-full items-center gap-2 px-3 py-2 text-left text-gray-700 transition-colors hover:bg-amber-50 hover:text-amber-700 disabled:opacity-60 dark:text-gray-200 dark:hover:bg-amber-900/20 dark:hover:text-amber-300"
+              :disabled="retryingBatchId === row.id"
+              @click="retryFailedJob(row)"
+            >
+              <Icon name="refresh" size="sm" :class="retryingBatchId === row.id ? 'animate-spin' : ''" />
+              {{ t('batchImage.actions.retryFailedItems') }}
+            </KumoDropdownItem><KumoDropdownItem
+              v-if="canDeleteRecord(row)"
+              type="button"
+              class="flex w-full items-center gap-2 px-3 py-2 text-left text-red-600 transition-colors hover:bg-red-50 disabled:opacity-60 dark:text-red-400 dark:hover:bg-red-900/20"
+              :disabled="deletingBatchId === row.id"
+              @click="deleteJob(row)"
+            >
+              <Icon :name="deletingBatchId === row.id ? 'refresh' : 'trash'" size="sm" :class="deletingBatchId === row.id ? 'animate-spin' : ''" />
+              {{ t('batchImage.actions.deleteRecords') }}
+            </KumoDropdownItem></KumoDropdownContent></KumoDropdown>
               </div>
 	            </div>
 	          </template>
@@ -255,7 +272,7 @@
             </div>
           </div>
           <div class="flex items-center justify-end gap-2">
-            <button
+            <KumoButton
               type="button"
               class="btn btn-secondary btn-sm"
               :disabled="pagination.page <= 1 || loadingJobs"
@@ -263,8 +280,8 @@
             >
               <Icon name="chevronLeft" size="sm" class="mr-1" />
               {{ t('pagination.previous') }}
-            </button>
-            <button
+            </KumoButton>
+            <KumoButton
               type="button"
               class="btn btn-secondary btn-sm"
               :disabled="!pagination.has_more || loadingJobs"
@@ -272,69 +289,15 @@
             >
               {{ t('pagination.next') }}
               <Icon name="chevronRight" size="sm" class="ml-1" />
-            </button>
+            </KumoButton>
           </div>
         </div>
       </template>
     </TablePageLayout>
 
-    <Teleport to="body">
-      <div
-        v-if="openMoreJobId"
-        class="fixed z-[9999] w-44 overflow-hidden rounded-xl bg-white py-1 text-sm shadow-lg ring-1 ring-black/5 dark:bg-dark-800 dark:ring-white/10"
-        :style="moreMenuStyle"
-        @click.stop
-      >
-        <template v-for="job in batchJobs" :key="job.id">
-          <template v-if="job.id === openMoreJobId">
-            <button
-              v-if="canRetry(job)"
-              type="button"
-              class="flex w-full items-center gap-2 px-3 py-2 text-left text-gray-700 transition-colors hover:bg-amber-50 hover:text-amber-700 disabled:opacity-60 dark:text-gray-200 dark:hover:bg-amber-900/20 dark:hover:text-amber-300"
-              :disabled="retryingBatchId === job.id"
-              @click="retryFailedJob(job)"
-            >
-              <Icon name="refresh" size="sm" :class="retryingBatchId === job.id ? 'animate-spin' : ''" />
-              {{ t('batchImage.actions.retryFailedItems') }}
-            </button>
-            <button
-              v-if="canDeleteRecord(job)"
-              type="button"
-              class="flex w-full items-center gap-2 px-3 py-2 text-left text-red-600 transition-colors hover:bg-red-50 disabled:opacity-60 dark:text-red-400 dark:hover:bg-red-900/20"
-              :disabled="deletingBatchId === job.id"
-              @click="deleteJob(job)"
-            >
-              <Icon :name="deletingBatchId === job.id ? 'refresh' : 'trash'" size="sm" :class="deletingBatchId === job.id ? 'animate-spin' : ''" />
-              {{ t('batchImage.actions.deleteRecords') }}
-            </button>
-          </template>
-        </template>
-      </div>
-    </Teleport>
 
-    <Teleport to="body">
-      <div
-        v-if="promptPopover.visible"
-        class="batch-prompt-popover fixed z-[9999] rounded-lg border border-gray-200 bg-white p-3 text-sm text-gray-800 shadow-xl ring-1 ring-black/5 dark:border-dark-700 dark:bg-dark-900 dark:text-gray-100 dark:ring-white/10"
-        :style="promptPopover.style"
-        @mouseenter="cancelPromptPopoverClose"
-        @mouseleave="schedulePromptPopoverClose"
-      >
-        <div class="mb-2 flex items-center justify-between gap-3">
-          <span class="text-xs font-medium text-gray-500 dark:text-gray-400">{{ t('batchImage.promptPopover.title') }}</span>
-          <button
-            type="button"
-            class="rounded-md px-2 py-1 text-xs font-medium text-primary-600 transition-colors hover:bg-primary-50 focus:outline-none focus-visible:ring-2 focus-visible:ring-primary-500/30 dark:text-primary-300 dark:hover:bg-primary-900/20"
-            @click="copyPromptPopover"
-          >
-            {{ t('common.copy') }}
-          </button>
-        </div>
-        <p class="max-h-48 overflow-y-auto whitespace-pre-wrap break-words leading-6 selection:bg-primary-100 selection:text-primary-900 dark:selection:bg-primary-900/60 dark:selection:text-primary-100">
-          {{ promptPopover.text }}
-        </p>
-      </div>
-    </Teleport>
+
+
 
     <BaseDialog :show="!!currentJob" :title="t('batchImage.detail.title')" width="extra-wide" @close="closeDetail">
       <div v-if="currentJob" class="space-y-4">
@@ -343,9 +306,9 @@
             <div class="min-w-0 text-center">
               <p class="text-xs text-gray-500 dark:text-gray-400">{{ t('common.status') }}</p>
               <div class="mt-1 flex justify-center">
-                <span :class="statusBadgeClass(currentDisplayJob || currentJob)" class="badge whitespace-nowrap">
+                <KumoBadge :class="statusBadgeClass(currentDisplayJob || currentJob)" class="badge whitespace-nowrap">
                   {{ statusLabel(currentDisplayJob || currentJob) }}
-                </span>
+                </KumoBadge>
               </div>
             </div>
             <div class="min-w-0 text-center">
@@ -371,14 +334,14 @@
 
         <div class="flex flex-wrap items-center justify-between gap-3">
           <h3 class="text-sm font-semibold text-gray-900 dark:text-white">{{ t('batchImage.detail.items') }}</h3>
-          <button type="button" class="btn btn-secondary btn-sm" :disabled="refreshing || loadingItems" @click="refreshDetail">
+          <KumoButton type="button" class="btn btn-secondary btn-sm" :disabled="refreshing || loadingItems" @click="refreshDetail">
             <Icon name="refresh" size="sm" class="mr-1.5" :class="refreshing || loadingItems ? 'animate-spin' : ''" />
             {{ t('common.refresh') }}
-          </button>
+          </KumoButton>
         </div>
 
         <div v-if="items.length" class="overflow-x-auto rounded-lg border border-gray-200 bg-white dark:border-dark-700 dark:bg-dark-900">
-          <table class="w-full min-w-[860px] table-fixed divide-y divide-gray-200 text-sm dark:divide-dark-700">
+          <KumoTable class="w-full min-w-[860px] table-fixed divide-y divide-gray-200 text-sm dark:divide-dark-700">
             <colgroup>
               <col class="w-[18%]" />
               <col class="w-[34%]" />
@@ -386,23 +349,23 @@
               <col class="w-[10%]" />
               <col class="w-[26%]" />
             </colgroup>
-            <thead class="bg-gray-50 dark:bg-dark-800/80">
-              <tr>
-                <th class="px-3 py-3 text-center text-sm font-medium text-gray-500 dark:text-gray-400">Custom ID</th>
-                <th class="px-3 py-3 text-left text-sm font-medium text-gray-500 dark:text-gray-400">Prompt</th>
-                <th class="px-3 py-3 text-center text-sm font-medium text-gray-500 dark:text-gray-400">{{ t('common.status') }}</th>
-                <th class="px-3 py-3 text-center text-sm font-medium text-gray-500 dark:text-gray-400">{{ t('batchImage.detail.preview') }}</th>
-                <th class="px-3 py-3 text-center text-sm font-medium text-gray-500 dark:text-gray-400">{{ t('batchImage.detail.result') }}</th>
-              </tr>
-            </thead>
-            <tbody class="divide-y divide-gray-100 dark:divide-dark-700">
-              <tr
+            <KumoTableHeader class="bg-gray-50 dark:bg-dark-800/80">
+              <KumoTableRow>
+                <KumoTableHead class="px-3 py-3 text-center text-sm font-medium text-gray-500 dark:text-gray-400">Custom ID</KumoTableHead>
+                <KumoTableHead class="px-3 py-3 text-left text-sm font-medium text-gray-500 dark:text-gray-400">Prompt</KumoTableHead>
+                <KumoTableHead class="px-3 py-3 text-center text-sm font-medium text-gray-500 dark:text-gray-400">{{ t('common.status') }}</KumoTableHead>
+                <KumoTableHead class="px-3 py-3 text-center text-sm font-medium text-gray-500 dark:text-gray-400">{{ t('batchImage.detail.preview') }}</KumoTableHead>
+                <KumoTableHead class="px-3 py-3 text-center text-sm font-medium text-gray-500 dark:text-gray-400">{{ t('batchImage.detail.result') }}</KumoTableHead>
+              </KumoTableRow>
+            </KumoTableHeader>
+            <KumoTableBody class="divide-y divide-gray-100 dark:divide-dark-700">
+              <KumoTableRow
                 v-for="item in items"
                 :key="itemPreviewKey(item)"
                 class="align-middle"
                 :class="detailItemRowClass(item)"
               >
-                <td class="px-3 py-2.5 text-center">
+                <KumoTableCell class="px-3 py-2.5 text-center">
                   <span
                     class="block min-w-0 truncate font-mono text-sm"
                     :class="isRecoveredOriginalFailure(item) ? 'text-gray-400 dark:text-gray-500' : 'text-gray-900 dark:text-white'"
@@ -410,31 +373,18 @@
                   >
                     {{ item.custom_id }}
                   </span>
-                </td>
-                <td class="px-3 py-2.5 text-left" :class="isRecoveredOriginalFailure(item) ? 'text-gray-400 dark:text-gray-500' : 'text-gray-700 dark:text-gray-300'">
-                  <div
-                    class="batch-prompt-trigger cursor-default truncate rounded px-1 text-sm leading-6 focus:outline-none"
-                    tabindex="0"
-                    @pointerenter="schedulePromptPopoverOpen($event, item.prompt_preview || '-')"
-                    @pointerleave="schedulePromptPopoverClose"
-                    @mouseenter="schedulePromptPopoverOpen($event, item.prompt_preview || '-')"
-                    @mouseleave="schedulePromptPopoverClose"
-                    @click="showPromptPopover($event, item.prompt_preview || '-')"
-                    @focus="showPromptPopover($event, item.prompt_preview || '-')"
-                    @focusin="showPromptPopover($event, item.prompt_preview || '-')"
-                    @blur="schedulePromptPopoverClose"
-                  >
-                    {{ item.prompt_preview || '-' }}
-                  </div>
-                </td>
-                <td class="px-3 py-2.5 text-center">
-                  <span :class="itemDisplayStatusBadgeClass(item)" class="badge max-w-full truncate whitespace-nowrap" :title="itemDisplayStatusLabel(item)">
+                </KumoTableCell>
+                <KumoTableCell class="px-3 py-2.5 text-left" :class="isRecoveredOriginalFailure(item) ? 'text-gray-400 dark:text-gray-500' : 'text-gray-700 dark:text-gray-300'">
+                  <KumoPopoverRoot :model-value="openPromptItem === item" @update:model-value="openPromptItem = $event ? item : null"><KumoPopoverTrigger class="batch-prompt-trigger block h-auto max-w-full truncate rounded px-1 text-left text-sm leading-6" :disabled="!item.prompt_preview || item.prompt_preview === '-'" :open-on-hover="true" :delay="520" :close-delay="180">{{ item.prompt_preview || '-' }}</KumoPopoverTrigger><KumoPopoverContent class="batch-prompt-popover w-[min(440px,calc(100vw-2rem))] p-3" align="start"><div class="mb-2 flex items-center justify-between gap-3"><span class="text-xs font-medium text-gray-500 dark:text-gray-400">{{ t('batchImage.promptPopover.title') }}</span><KumoButton @click="copyToClipboard(item.prompt_preview!, t('batchImage.promptPopover.copied'))">{{ t('common.copy') }}</KumoButton></div><p class="max-h-48 overflow-y-auto whitespace-pre-wrap break-words leading-6">{{ item.prompt_preview }}</p></KumoPopoverContent></KumoPopoverRoot>
+                </KumoTableCell>
+                <KumoTableCell class="px-3 py-2.5 text-center">
+                  <KumoBadge :class="itemDisplayStatusBadgeClass(item)" class="badge max-w-full truncate whitespace-nowrap" :title="itemDisplayStatusLabel(item)">
                     {{ itemDisplayStatusLabel(item) }}
-                  </span>
-                </td>
-                <td class="px-3 py-2.5 text-center">
+                  </KumoBadge>
+                </KumoTableCell>
+                <KumoTableCell class="px-3 py-2.5 text-center">
                   <div class="mx-auto h-12 w-12 overflow-hidden rounded-md border border-gray-200 bg-gray-50 dark:border-dark-700 dark:bg-dark-800">
-                    <button
+                    <KumoButton
                       v-if="itemPreviewUrls[itemPreviewKey(item)] && !previewErrorIds.has(itemPreviewKey(item))"
                       type="button"
                       class="block h-full w-full overflow-hidden"
@@ -447,8 +397,8 @@
                         alt=""
                         @error="handlePreviewError(itemPreviewKey(item))"
                       />
-                    </button>
-                    <button
+                    </KumoButton>
+                    <KumoButton
                       v-else-if="canLoadItemPreview(item)"
                       type="button"
                       class="flex h-full w-full items-center justify-center text-gray-500 transition-colors hover:bg-gray-100 hover:text-primary-600 disabled:cursor-wait disabled:opacity-70 dark:text-gray-400 dark:hover:bg-dark-700"
@@ -457,13 +407,13 @@
                       @click="loadItemPreview(item)"
                     >
                       <Icon :name="previewLoadingIds.has(itemPreviewKey(item)) ? 'refresh' : 'eye'" size="sm" :class="previewLoadingIds.has(itemPreviewKey(item)) ? 'animate-spin' : ''" />
-                    </button>
+                    </KumoButton>
                     <div v-else class="flex h-full w-full items-center justify-center text-gray-400" :title="item.image_count > 0 ? t('batchImage.detail.previewUnavailable') : t('batchImage.detail.noImage')">
                       <Icon name="document" size="sm" />
                     </div>
                   </div>
-                </td>
-                <td class="px-3 py-2.5 text-center">
+                </KumoTableCell>
+                <KumoTableCell class="px-3 py-2.5 text-center">
                   <span
                     class="inline-flex max-w-full items-center justify-center truncate rounded-md px-2.5 py-1 text-xs font-medium leading-5 ring-1 ring-inset"
                     :class="itemResultClass(item)"
@@ -471,10 +421,10 @@
                   >
                     {{ itemResultLabel(item) }}
                   </span>
-                </td>
-              </tr>
-            </tbody>
-          </table>
+                </KumoTableCell>
+              </KumoTableRow>
+            </KumoTableBody>
+          </KumoTable>
         </div>
         <div v-else class="rounded-lg border border-dashed border-gray-200 py-10 text-center dark:border-dark-700">
           <Icon name="refresh" size="lg" class="mx-auto mb-3 text-gray-400" :class="loadingItems ? 'animate-spin' : ''" />
@@ -489,11 +439,11 @@
 
       <template #footer>
         <div class="flex justify-end gap-3">
-	          <button type="button" class="btn btn-secondary" :disabled="!currentJob || !canCancel(currentJob) || cancelling" @click="cancelSelected">
+	          <KumoButton type="button" class="btn btn-secondary" :disabled="!currentJob || !canCancel(currentJob) || cancelling" @click="cancelSelected">
 	            <Icon v-if="cancelling" name="refresh" size="sm" class="mr-2 animate-spin" />
 	            {{ t('batchImage.actions.cancelJob') }}
-	          </button>
-	          <button
+	          </KumoButton>
+	          <KumoButton
 	            v-if="currentJob && currentDisplayJob && canRetry(currentDisplayJob)"
 	            type="button"
 	            class="btn btn-secondary inline-flex min-w-[116px] items-center justify-center"
@@ -502,8 +452,8 @@
 	          >
 	            <Icon name="refresh" size="sm" class="mr-2" :class="currentJob && retryingBatchId === currentJob.id ? 'animate-spin' : ''" />
 	            {{ t('batchImage.actions.retryFailedItems') }}
-	          </button>
-	          <button
+	          </KumoButton>
+	          <KumoButton
             type="button"
             class="btn btn-primary inline-flex min-w-[112px] items-center justify-center"
             :disabled="!currentJob || !canDownload(currentJob) || downloading"
@@ -516,7 +466,7 @@
               :class="currentJob && isDownloadingJob(currentJob.id) ? 'animate-spin' : ''"
             />
             {{ t('batchImage.actions.downloadZip') }}
-          </button>
+          </KumoButton>
         </div>
       </template>
     </BaseDialog>
@@ -541,8 +491,8 @@
       <form class="space-y-5" @submit.prevent="submitJob">
         <div class="grid gap-4 md:grid-cols-2">
           <div class="md:col-span-2">
-            <label class="input-label">{{ t('batchImage.create.taskName') }}</label>
-            <input
+            <KumoLabel class="input-label">{{ t('batchImage.create.taskName') }}</KumoLabel>
+            <KumoInput
               v-model="form.taskName"
               type="text"
               maxlength="255"
@@ -552,27 +502,27 @@
           </div>
 
           <div class="md:col-span-2">
-            <label class="input-label">API Key</label>
-            <select v-model.number="form.apiKeyId" class="input" :disabled="loadingKeys">
+            <KumoLabel class="input-label">API Key</KumoLabel>
+            <KumoNativeSelect v-model.number="form.apiKeyId" class="input" :disabled="loadingKeys">
               <option :value="0">{{ loadingKeys ? t('batchImage.create.loadingKeys') : t('batchImage.create.selectKeyPlaceholder') }}</option>
               <option v-for="key in geminiApiKeys" :key="key.id" :value="key.id">
                 {{ key.name }} · {{ key.group?.name || 'Gemini' }}
               </option>
-            </select>
+            </KumoNativeSelect>
             <p v-if="!loadingKeys && geminiApiKeys.length === 0" class="input-hint text-amber-600 dark:text-amber-400">
               {{ t('batchImage.create.noKeysHint') }}
             </p>
           </div>
 
           <div>
-            <label class="input-label">{{ t('batchImage.create.model') }}</label>
-            <select v-model="form.model" class="input" :disabled="loadingModels || availableBatchImageModels.length === 0">
+            <KumoLabel class="input-label">{{ t('batchImage.create.model') }}</KumoLabel>
+            <KumoNativeSelect v-model="form.model" class="input" :disabled="loadingModels || availableBatchImageModels.length === 0">
               <option v-if="loadingModels" value="">{{ batchImageText('loadingModels') }}</option>
               <option v-else-if="availableBatchImageModels.length === 0" value="">{{ batchImageText('noModels') }}</option>
               <option v-for="model in availableBatchImageModels" :key="model.value" :value="model.value">
                 {{ model.label }}
               </option>
-            </select>
+            </KumoNativeSelect>
             <p v-if="modelLoadError" class="input-hint text-amber-600 dark:text-amber-400">
               {{ modelLoadError }}
             </p>
@@ -582,7 +532,7 @@
           </div>
 
           <div>
-            <label class="input-label">{{ t('batchImage.create.imageSize') }}</label>
+            <KumoLabel class="input-label">{{ t('batchImage.create.imageSize') }}</KumoLabel>
             <div class="input flex items-center bg-gray-50 text-gray-600 dark:bg-dark-900 dark:text-gray-300">
               1K
             </div>
@@ -590,16 +540,16 @@
           </div>
 
           <div>
-            <label class="input-label">{{ t('batchImage.create.outputFormat') }}</label>
-            <select v-model="form.responseMimeType" class="input">
+            <KumoLabel class="input-label">{{ t('batchImage.create.outputFormat') }}</KumoLabel>
+            <KumoNativeSelect v-model="form.responseMimeType" class="input">
               <option value="image/png">PNG</option>
               <option value="image/jpeg">JPEG</option>
               <option value="image/webp">WebP</option>
-            </select>
+            </KumoNativeSelect>
           </div>
 
           <div>
-            <label class="input-label">{{ t('batchImage.create.estimatedOutput') }}</label>
+            <KumoLabel class="input-label">{{ t('batchImage.create.estimatedOutput') }}</KumoLabel>
             <div class="input flex items-center bg-gray-50 text-gray-600 dark:bg-dark-900 dark:text-gray-300">
               {{ t('batchImage.create.estimatedOutputValue', { images: estimatedOutputCount, prompts: promptRows.length }) }}
             </div>
@@ -608,25 +558,25 @@
 
         <div class="space-y-3">
           <div class="flex items-center justify-between gap-3">
-            <label class="input-label mb-0">Prompt</label>
+            <KumoLabel class="input-label mb-0">Prompt</KumoLabel>
             <span class="text-xs text-gray-500 dark:text-gray-400">{{ t('batchImage.create.promptAdded', { count: promptRows.length }) }}</span>
           </div>
           <div class="rounded-lg border border-gray-200 p-3 dark:border-dark-700">
-            <textarea
+            <KumoTextarea
               v-model="promptDraft"
               rows="3"
               class="h-[76px] w-full resize-y rounded-md border border-gray-300 px-3 py-2 text-sm leading-5 outline-none focus:border-primary-500 focus:ring-2 focus:ring-primary-100 dark:border-dark-600 dark:bg-dark-900 dark:text-gray-100 dark:focus:border-primary-500 dark:focus:ring-primary-900/40"
               :placeholder="t('batchImage.create.promptPlaceholder')"
             />
             <div class="mt-2 grid gap-2 md:grid-cols-[minmax(0,1fr)_112px_132px_112px] md:items-center">
-              <input
+              <KumoInput
                 v-model="customIdDraft"
                 type="text"
                 maxlength="255"
                 class="input h-9 text-sm"
                 :placeholder="t('batchImage.create.customIdPlaceholder')"
               />
-              <select
+              <KumoNativeSelect
                 v-model.number="outputCountDraft"
                 class="batch-output-count-select input h-9 text-sm"
                 :title="t('batchImage.create.outputCountPerPrompt')"
@@ -635,14 +585,14 @@
                 <option v-for="count in outputCountOptions" :key="count" :value="count">
                   {{ t('batchImage.create.outputCountOption', { n: count }, count) }}
                 </option>
-              </select>
-              <label
+              </KumoNativeSelect>
+              <KumoLabel
                 class="btn btn-secondary h-9 cursor-pointer justify-center text-sm"
                 :class="referenceImageDrafts.length >= selectedModelReferenceLimit ? 'pointer-events-none opacity-60' : ''"
               >
                 <Icon name="upload" size="sm" class="mr-1.5" />
                 {{ t('batchImage.create.referenceImage') }}
-                <input
+                <KumoInput
                   type="file"
                   accept="image/png,image/jpeg,image/webp"
                   multiple
@@ -650,11 +600,11 @@
                   :disabled="referenceImageDrafts.length >= selectedModelReferenceLimit"
                   @change="handleReferenceImageFiles"
                 />
-              </label>
-              <button type="button" class="btn btn-secondary h-9 justify-center whitespace-nowrap px-4 text-sm" :disabled="!promptDraft.trim()" @click="addPromptRow">
+              </KumoLabel>
+              <KumoButton type="button" class="btn btn-secondary h-9 justify-center whitespace-nowrap px-4 text-sm" :disabled="!promptDraft.trim()" @click="addPromptRow">
                 <Icon name="plus" size="sm" class="mr-1.5" />
                 {{ t('common.add') }}
-              </button>
+              </KumoButton>
             </div>
             <div v-if="referenceImageDrafts.length" class="mt-3 flex flex-wrap gap-2">
               <span
@@ -663,9 +613,9 @@
                 class="inline-flex max-w-full items-center gap-1 rounded-md border border-gray-200 bg-gray-50 px-2 py-1 text-xs text-gray-700 dark:border-dark-700 dark:bg-dark-900 dark:text-gray-200"
               >
                 <span class="max-w-[180px] truncate">{{ ref.name }}</span>
-                <button type="button" class="text-gray-400 hover:text-red-600" :title="t('batchImage.create.removeReferenceImage')" @click="removeReferenceImageDraft(refIndex)">
+                <KumoButton type="button" class="text-gray-400 hover:text-red-600" :title="t('batchImage.create.removeReferenceImage')" @click="removeReferenceImageDraft(refIndex)">
                   <Icon name="x" size="xs" />
-                </button>
+                </KumoButton>
               </span>
             </div>
             <p class="mt-2 text-xs text-gray-500 dark:text-gray-400">
@@ -686,9 +636,9 @@
               <span v-if="row.reference_images.length" class="flex-shrink-0 text-xs text-gray-500 dark:text-gray-400">
                 {{ t('batchImage.create.referenceCount', { n: row.reference_images.length }, row.reference_images.length) }}
               </span>
-              <button type="button" class="btn-ghost btn-icon flex-shrink-0 text-red-600 hover:bg-red-50 dark:text-red-400 dark:hover:bg-red-900/20" :title="t('common.delete')" @click="removePromptRow(index)">
+              <KumoButton type="button" class="btn-ghost btn-icon flex-shrink-0 text-red-600 hover:bg-red-50 dark:text-red-400 dark:hover:bg-red-900/20" :title="t('common.delete')" @click="removePromptRow(index)">
                 <Icon name="trash" size="sm" />
-              </button>
+              </KumoButton>
             </div>
           </div>
           <div v-else class="rounded-lg border border-dashed border-gray-200 px-3 py-6 text-center text-sm text-gray-500 dark:border-dark-700 dark:text-gray-400">
@@ -706,11 +656,11 @@
 
       <template #footer>
         <div class="flex justify-end gap-3">
-          <button type="button" class="btn btn-secondary" :disabled="submitting" @click="closeCreateModal">{{ t('common.cancel') }}</button>
-	          <button type="button" class="btn btn-primary inline-flex min-w-[120px] justify-center" :disabled="submitting || loadingModels || (parsedItems.length === 0 && !promptDraft.trim()) || !selectedApiKey || !form.model" @click="submitJob">
+          <KumoButton type="button" class="btn btn-secondary" :disabled="submitting" @click="closeCreateModal">{{ t('common.cancel') }}</KumoButton>
+	          <KumoButton type="button" class="btn btn-primary inline-flex min-w-[120px] justify-center" :disabled="submitting || loadingModels || (parsedItems.length === 0 && !promptDraft.trim()) || !selectedApiKey || !form.model" @click="submitJob">
             <Icon v-if="submitting" name="refresh" size="sm" class="mr-2 animate-spin" />
             {{ submitting ? t('common.submitting') : t('batchImage.actions.submitJob') }}
-          </button>
+          </KumoButton>
         </div>
       </template>
     </BaseDialog>
@@ -731,7 +681,7 @@
 	            <h3 class="text-sm font-semibold text-gray-900 dark:text-white">{{ t('batchImage.guide.skillTitle') }}</h3>
 	            <p class="text-xs text-gray-500 dark:text-gray-400">{{ t('batchImage.guide.skillDesc') }}</p>
 	          </div>
-	        <textarea
+	        <KumoTextarea
 	          :value="agentInstruction"
 	          readonly
 	          class="min-h-[420px] w-full resize-y rounded-md border border-gray-200 bg-gray-50 p-4 font-mono text-sm leading-6 text-gray-800 outline-none focus:border-primary-400 focus:ring-2 focus:ring-primary-100 dark:border-dark-600 dark:bg-dark-900 dark:text-gray-100 dark:focus:border-primary-500 dark:focus:ring-primary-900/40"
@@ -740,11 +690,11 @@
 	      </div>
       <template #footer>
         <div class="flex justify-end gap-3">
-          <button type="button" class="btn btn-secondary" @click="showGuideModal = false">{{ t('common.close') }}</button>
-          <button type="button" class="btn btn-primary" @click="copyInstruction">
+          <KumoButton type="button" class="btn btn-secondary" @click="showGuideModal = false">{{ t('common.close') }}</KumoButton>
+          <KumoButton type="button" class="btn btn-primary" @click="copyInstruction">
             <Icon name="copy" size="sm" class="mr-2" />
             {{ t('batchImage.actions.copyInstruction') }}
-          </button>
+          </KumoButton>
         </div>
       </template>
     </BaseDialog>
@@ -752,6 +702,8 @@
 </template>
 
 <script setup lang="ts">
+import { KumoBadge, KumoButton, KumoCheckbox, KumoDropdown, KumoDropdownContent, KumoDropdownItem, KumoDropdownTrigger, KumoInput, KumoLabel, KumoNativeSelect, KumoPopoverContent, KumoPopoverRoot, KumoPopoverTrigger, KumoTable, KumoTableBody, KumoTableCell, KumoTableHead, KumoTableHeader, KumoTableRow, KumoTextarea } from '@/components/kumo'
+
 import { computed, onBeforeUnmount, onMounted, reactive, ref, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
 import AppLayout from '@/components/layout/AppLayout.vue'
@@ -923,19 +875,11 @@ const previewImageItem = ref<BatchImageItem | null>(null)
 const availableBatchImageModels = ref<Array<{ value: string; label: string }>>([])
 const modelLoadError = ref('')
 const openMoreJobId = ref('')
-const moreMenuStyle = ref<Record<string, string>>({})
-const promptPopover = reactive({
-  visible: false,
-  text: '',
-  style: {} as Record<string, string>,
-})
+const openPromptItem = ref<BatchImageItem | null>(null)
 let modelRequestSeq = 0
 let pollTimer: ReturnType<typeof setInterval> | null = null
 let previewCacheDBPromise: Promise<IDBDatabase | null> | null = null
 let previewCacheCleanupTimer: ReturnType<typeof setInterval> | null = null
-let promptPopoverCloseTimer: ReturnType<typeof setTimeout> | null = null
-let promptPopoverOpenTimer: ReturnType<typeof setTimeout> | null = null
-let activePromptPopoverTarget: HTMLElement | null = null
 
 const geminiApiKeys = computed(() =>
   apiKeys.value.filter((key) =>
@@ -1395,104 +1339,7 @@ function closeMoreMenu() {
   openMoreJobId.value = ''
 }
 
-function toggleMoreMenu(job: BatchImageJobRow, event: MouseEvent) {
-  if (openMoreJobId.value === job.id) {
-    closeMoreMenu()
-    return
-  }
-  const trigger = event.currentTarget as HTMLElement | null
-  const rect = trigger?.getBoundingClientRect()
-  if (!rect) return
-  const menuWidth = 176
-  const margin = 8
-  const left = Math.max(margin, Math.min(rect.right - menuWidth, window.innerWidth - menuWidth - margin))
-  const top = Math.min(rect.bottom + margin, window.innerHeight - 96)
-  moreMenuStyle.value = {
-    left: `${left}px`,
-    top: `${Math.max(margin, top)}px`,
-  }
-  openMoreJobId.value = job.id
-}
-
-function cancelPromptPopoverClose() {
-  if (!promptPopoverCloseTimer) return
-  clearTimeout(promptPopoverCloseTimer)
-  promptPopoverCloseTimer = null
-}
-
-function cancelPromptPopoverOpen() {
-  if (!promptPopoverOpenTimer) return
-  clearTimeout(promptPopoverOpenTimer)
-  promptPopoverOpenTimer = null
-}
-
-function closePromptPopover() {
-  cancelPromptPopoverOpen()
-  cancelPromptPopoverClose()
-  promptPopover.visible = false
-  promptPopover.text = ''
-  promptPopover.style = {}
-  activePromptPopoverTarget = null
-}
-
-function schedulePromptPopoverClose() {
-  cancelPromptPopoverOpen()
-  cancelPromptPopoverClose()
-  promptPopoverCloseTimer = setTimeout(() => {
-    closePromptPopover()
-  }, 180)
-}
-
-function schedulePromptPopoverOpen(event: MouseEvent | PointerEvent, text: string) {
-  const target = event.currentTarget as HTMLElement | null
-  if (!target) return
-  const value = String(text || '').trim()
-  if (!value || value === '-') return
-  activePromptPopoverTarget = target
-  cancelPromptPopoverOpen()
-  cancelPromptPopoverClose()
-  promptPopoverOpenTimer = setTimeout(() => {
-    if (activePromptPopoverTarget !== target || !document.body.contains(target)) return
-    openPromptPopover(target, value)
-  }, 520)
-}
-
-function showPromptPopover(event: MouseEvent | FocusEvent, text: string) {
-  const value = String(text || '').trim()
-  if (!value || value === '-') return
-  const target = event.currentTarget as HTMLElement | null
-  cancelPromptPopoverClose()
-  cancelPromptPopoverOpen()
-  if (!target) return
-  activePromptPopoverTarget = target
-  openPromptPopover(target, value)
-}
-
-function openPromptPopover(target: HTMLElement, value: string) {
-  const rect = target.getBoundingClientRect()
-  if (!rect) return
-  const viewportWidth = window.innerWidth || 1280
-  const viewportHeight = window.innerHeight || 720
-  const width = Math.min(440, Math.max(320, viewportWidth - 32))
-  const left = Math.max(16, Math.min(rect.left, viewportWidth - width - 16))
-  const estimatedHeight = 178
-  const preferredTop = rect.bottom + 8
-  const top = preferredTop + estimatedHeight > viewportHeight
-    ? Math.max(16, rect.top - estimatedHeight - 8)
-    : preferredTop
-  promptPopover.text = value
-  promptPopover.style = {
-    left: `${left}px`,
-    top: `${top}px`,
-    width: `${width}px`,
-  }
-  promptPopover.visible = true
-}
-
-function copyPromptPopover() {
-  if (!promptPopover.text) return
-  void copyToClipboard(promptPopover.text, t('batchImage.promptPopover.copied'))
-}
+function closePromptPopover() { openPromptItem.value = null }
 
 async function loadBatchJobs() {
   const keys = filteredApiKeys.value
@@ -2606,7 +2453,6 @@ onMounted(() => {
   previewCacheCleanupTimer = setInterval(() => {
     void cleanupPreviewCache()
   }, 60 * 60 * 1000)
-  document.addEventListener('click', closeMoreMenu)
   window.addEventListener('resize', closeMoreMenu)
   window.addEventListener('scroll', closeMoreMenu, true)
   window.addEventListener('resize', closePromptPopover)
@@ -2641,7 +2487,6 @@ onBeforeUnmount(() => {
     previewCacheCleanupTimer = null
   }
   clearItemPreviews()
-  document.removeEventListener('click', closeMoreMenu)
   window.removeEventListener('resize', closeMoreMenu)
   window.removeEventListener('scroll', closeMoreMenu, true)
   window.removeEventListener('resize', closePromptPopover)

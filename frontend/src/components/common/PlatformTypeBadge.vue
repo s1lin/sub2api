@@ -2,11 +2,11 @@
   <div class="inline-flex flex-col gap-0.5 text-xs font-medium">
     <!-- Row 1: Platform + Type -->
     <div class="inline-flex items-center overflow-hidden rounded-md">
-      <span :class="['inline-flex items-center gap-1 px-2 py-1', platformClass]">
+      <KumoBadge :class="['inline-flex items-center gap-1 px-2 py-1', platformClass]">
         <PlatformIcon :platform="platform" size="xs" />
         <span>{{ platformLabel }}</span>
-      </span>
-      <span :class="['inline-flex items-center gap-1 px-1.5 py-1', typeClass]">
+      </KumoBadge>
+      <KumoBadge :class="['inline-flex items-center gap-1 px-1.5 py-1', typeClass]">
         <!-- OAuth icon -->
         <svg
           v-if="type === 'oauth'"
@@ -28,11 +28,11 @@
         <Icon v-else-if="type === 'service_account'" name="cloud" size="xs" />
         <Icon v-else name="key" size="xs" />
         <span>{{ typeLabel }}</span>
-      </span>
+      </KumoBadge>
     </div>
     <!-- Row 2: Plan type + Privacy mode (only if either exists) -->
     <div v-if="planLabel || privacyBadge" class="inline-flex items-center overflow-hidden rounded-md">
-      <span v-if="planLabel" :class="['inline-flex items-center gap-1 px-1.5 py-1', planBadgeClass]">
+      <KumoBadge v-if="planLabel" :class="['inline-flex items-center gap-1 px-1.5 py-1', planBadgeClass]">
         <GrokFreeIcon
           v-if="isGrokFreePlan"
           data-testid="grok-free-plan-icon"
@@ -45,8 +45,8 @@
           aria-hidden="true"
         />
         <span>{{ planLabel }}</span>
-      </span>
-      <span
+      </KumoBadge>
+      <KumoBadge
         v-if="privacyBadge"
         :class="['inline-flex items-center gap-1 px-1.5 py-1', privacyBadge.class]"
         :title="privacyBadge.title"
@@ -55,7 +55,7 @@
           <path stroke-linecap="round" stroke-linejoin="round" :d="privacyBadge.icon" />
         </svg>
         <span>{{ privacyBadge.label }}</span>
-      </span>
+      </KumoBadge>
     </div>
     <!-- Row 3: Subscription expiration (non-free paid accounts only) -->
     <div v-if="expiresLabel" class="text-[10px] leading-tight text-gray-400 dark:text-gray-500 pl-0.5" :title="subscriptionExpiresAt">
@@ -65,6 +65,7 @@
 </template>
 
 <script setup lang="ts">
+import { KumoBadge } from '@/components/kumo'
 import { computed } from 'vue'
 import { useI18n } from 'vue-i18n'
 import type { AccountPlatform, AccountType } from '@/types'

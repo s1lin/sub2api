@@ -10,6 +10,7 @@ import { updateFavicon } from '@/utils/branding'
 import { isIOSDevice } from '@/utils/device'
 import './style.css'
 import './styles/brand.css'
+import './styles/kumo.css'
 
 function initIOSViewportZoomFix() {
   // iOS Safari 在输入框字号小于 16px 时聚焦会自动放大页面，且失焦后不会恢复。
@@ -31,6 +32,11 @@ function initThemeClass() {
     savedTheme === 'dark' ||
     (!savedTheme && window.matchMedia('(prefers-color-scheme: dark)').matches)
   document.documentElement.classList.toggle('dark', shouldUseDark)
+  const syncKumoTheme = () => { document.documentElement.dataset.mode = document.documentElement.classList.contains('dark') ? 'dark' : 'light' }
+  syncKumoTheme()
+  const observer = new MutationObserver(syncKumoTheme)
+  observer.observe(document.documentElement, { attributes: true, attributeFilter: ['class'] })
+  if (import.meta.hot) import.meta.hot.dispose(() => observer.disconnect())
 }
 
 async function bootstrap() {

@@ -1,5 +1,5 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest'
-import { mount } from '@vue/test-utils'
+import { mount } from '@/__tests__/render'
 
 const mocks = vi.hoisted(() => ({
   getEntry: vi.fn(),
@@ -68,12 +68,17 @@ describe('IpGeoCell', () => {
         longitude: '114.0',
       },
     })
-    const wrapper = mount(IpGeoCell, { props: { ip: '121.35.47.43' } })
+    const wrapper = mount(IpGeoCell, { attachTo: document.body, props: { ip: '121.35.47.43' } })
     expect(wrapper.text()).toContain('CN · Guangdong · Shenzhen')
     const buttons = wrapper.findAll('button')
     expect(buttons.length).toBe(2)
-    expect(buttons[0].attributes('title')).toContain('AS4134 Chinanet')
-    expect(buttons[0].attributes('title')).toContain('Asia/Shanghai')
+    await buttons[0].trigger('pointerover', { pointerType: 'mouse' })
+    await buttons[0].trigger('pointermove', { pointerType: 'mouse' })
+    await buttons[0].trigger('mouseenter')
+    await buttons[0].trigger('mouseover')
+    await buttons[0].trigger('mousemove')
+    await vi.waitFor(() => expect(document.querySelector('[role=tooltip]')?.textContent).toContain('AS4134 Chinanet'))
+    expect(document.querySelector('[role=tooltip]')?.textContent).toContain('Asia/Shanghai')
     await buttons[1].trigger('click')
     expect(mocks.fetchOne).toHaveBeenCalledWith('121.35.47.43', true)
   })

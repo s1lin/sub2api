@@ -21,7 +21,7 @@
       data-testid="ollama-cloud-seven-day"
     />
     <div v-if="state.configured" class="flex items-center pt-0.5">
-      <button
+      <KumoButton
         type="button"
         class="inline-flex items-center gap-0.5 rounded px-1.5 py-0.5 text-[10px] font-medium text-blue-600 transition-colors hover:bg-blue-50 disabled:cursor-not-allowed disabled:opacity-50 dark:text-blue-400 dark:hover:bg-blue-900/30"
         :disabled="refreshing"
@@ -43,13 +43,15 @@
           />
         </svg>
         {{ t('admin.accounts.usageWindow.activeQuery') }}
-      </button>
+      </KumoButton>
     </div>
   </div>
   <span v-else class="text-sm text-gray-400 dark:text-dark-500">-</span>
 </template>
 
 <script setup lang="ts">
+import { KumoButton } from '@/components/kumo'
+
 import { computed, ref, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { adminAPI } from '@/api/admin'

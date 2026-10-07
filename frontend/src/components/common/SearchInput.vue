@@ -3,7 +3,7 @@
     <div class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
       <Icon name="search" size="md" class="text-gray-400" />
     </div>
-    <input
+    <KumoInput
       v-model="searchValue"
       type="text"
       class="input pl-10"
@@ -13,6 +13,8 @@
 </template>
 
 <script setup lang="ts">
+import { KumoInput } from '@/components/kumo'
+
 import { computed } from 'vue'
 import { useDebounceFn } from '@vueuse/core'
 import Icon from '@/components/icons/Icon.vue'

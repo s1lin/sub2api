@@ -1,9 +1,6 @@
 <template>
-  <div class="fixed inset-0 z-50 overflow-y-auto">
-    <div class="flex min-h-full items-center justify-center p-4">
-      <div class="fixed inset-0 bg-black/50 transition-opacity"></div>
-
-      <div class="relative w-full max-w-md transform rounded-xl bg-white p-6 shadow-xl transition-all dark:bg-dark-800">
+  <KumoDialog :show="true" custom-layout width="narrow" :title="t('profile.totp.loginTitle')" :close-on-click-outside="false" :close-on-escape="!verifying" @close="!verifying && $emit('cancel')">
+    <div class="relative p-6">
         <!-- Header -->
         <div class="mb-6 text-center">
           <div class="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-primary-100 dark:bg-primary-900/30">
@@ -25,7 +22,7 @@
         <!-- Code Input -->
         <div class="mb-6">
           <!-- Hidden input for password manager autofill (autocomplete="one-time-code") -->
-          <input
+          <KumoInput
             ref="hiddenOtpInputRef"
             type="text"
             inputmode="numeric"
@@ -37,10 +34,10 @@
             @input="handleHiddenOtpInput"
           />
           <div class="flex justify-center gap-2">
-            <input
+            <KumoInput
               v-for="(_, index) in 6"
               :key="index"
-              :ref="(el) => setInputRef(el, index)"
+              :ref="(el: any) => setInputRef(el, index)"
               type="text"
               maxlength="1"
               inputmode="numeric"
@@ -55,26 +52,28 @@
           </div>
           <!-- Loading indicator -->
           <div v-if="verifying" class="mt-3 flex items-center justify-center gap-2 text-sm text-gray-500">
-            <div class="animate-spin rounded-full h-4 w-4 border-b-2 border-primary-500"></div>
+            <KumoLoader class="h-4 w-4" />
             {{ t('common.verifying') }}
           </div>
         </div>
 
         <!-- Cancel button only -->
-        <button
+        <KumoButton
           type="button"
           class="btn btn-secondary w-full"
           :disabled="verifying"
           @click="$emit('cancel')"
         >
           {{ t('common.cancel') }}
-        </button>
-      </div>
+        </KumoButton>
+
     </div>
-  </div>
+  </KumoDialog>
 </template>
 
 <script setup lang="ts">
+import { KumoButton, KumoDialog, KumoInput, KumoLoader } from '@/components/kumo'
+
 import { ref, watch, nextTick, onMounted } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useAppStore } from '@/stores'

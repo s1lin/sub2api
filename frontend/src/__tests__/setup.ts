@@ -5,6 +5,22 @@
 import { config } from '@vue/test-utils'
 import { vi } from 'vitest'
 
+// Vue Test Utils commits synchronously. Give embedded React roots the same
+// contract so assertions cannot race a concurrent root's initial commit.
+vi.mock('react-dom/client', async importOriginal => {
+  const actual = await importOriginal<typeof import('react-dom/client')>()
+  const { flushSync } = await import('react-dom')
+  return {
+    ...actual,
+    createRoot: (...args: Parameters<typeof actual.createRoot>) => {
+      const root = actual.createRoot(...args)
+      const render = root.render.bind(root)
+      root.render = node => flushSync(() => render(node))
+      return root
+    },
+  }
+})
+
 function createMemoryStorage(): Storage {
   const values = new Map<string, string>()
 
@@ -96,3 +112,20 @@ config.global.stubs = {
 
 // 设置全局测试超时
 vi.setConfig({ testTimeout: 10000 })
+
+// Base UI uses PointerEvent to distinguish pointer and keyboard activation.
+if (!window.PointerEvent) {
+  window.PointerEvent = class extends MouseEvent {
+    pointerId: number
+    pointerType: string
+    isPrimary: boolean
+    constructor(type: string, init: PointerEventInit = {}) {
+      super(type, init)
+      this.pointerId = init.pointerId ?? 1
+      this.pointerType = init.pointerType ?? ''
+      this.isPrimary = init.isPrimary ?? true
+    }
+  } as typeof PointerEvent
+}
+if (!HTMLElement.prototype.scrollIntoView) HTMLElement.prototype.scrollIntoView = vi.fn()
+if (!HTMLElement.prototype.hasPointerCapture) HTMLElement.prototype.hasPointerCapture = () => false

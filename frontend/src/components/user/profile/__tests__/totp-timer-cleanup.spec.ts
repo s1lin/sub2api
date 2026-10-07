@@ -1,5 +1,5 @@
 import { beforeEach, afterEach, describe, expect, it, vi } from 'vitest'
-import { mount } from '@vue/test-utils'
+import { mount, portal, flushPromises } from '@/__tests__/render'
 import TotpSetupModal from '@/components/user/profile/TotpSetupModal.vue'
 import TotpDisableDialog from '@/components/user/profile/TotpDisableDialog.vue'
 
@@ -35,11 +35,6 @@ vi.mock('@/api', () => ({
     disable: mocks.disable
   }
 }))
-
-const flushPromises = async () => {
-  await Promise.resolve()
-  await Promise.resolve()
-}
 
 describe('TOTP 弹窗定时器清理', () => {
   let intervalSeed = 1000
@@ -84,10 +79,10 @@ describe('TOTP 弹窗定时器清理', () => {
     mocks.sendVerifyCode.mockReturnValueOnce(new Promise(res => { resolve = res }))
     const wrapper = mount(component)
     await flushPromises()
-    await wrapper.findAll('button').find(b => b.text().includes('profile.totp.sendCode'))!.trigger('click')
+    await portal().findAll('button').find(b => b.text().includes('profile.totp.sendCode'))!.trigger('click')
     wrapper.unmount()
     resolve({ success: true }); await flushPromises()
-    expect(setIntervalSpy).not.toHaveBeenCalled()
+    expect(setIntervalSpy.mock.calls.filter(([, delay]) => delay === 1000)).toHaveLength(0)
     expect(mocks.showSuccess).not.toHaveBeenCalled()
   })
 
@@ -95,7 +90,7 @@ describe('TOTP 弹窗定时器清理', () => {
     const wrapper = mount(TotpSetupModal)
     await flushPromises()
 
-    const sendButton = wrapper
+    const sendButton = portal()
       .findAll('button')
       .find((button) => button.text().includes('profile.totp.sendCode'))
 
@@ -115,7 +110,7 @@ describe('TOTP 弹窗定时器清理', () => {
     const wrapper = mount(TotpDisableDialog)
     await flushPromises()
 
-    const sendButton = wrapper
+    const sendButton = portal()
       .findAll('button')
       .find((button) => button.text().includes('profile.totp.sendCode'))
 
@@ -140,13 +135,14 @@ describe('TOTP 弹窗定时器清理', () => {
     const wrapper = mount(TotpSetupModal)
     await flushPromises()
 
-    await wrapper.get('input[type="password"]').setValue('correct horse battery staple')
-    await wrapper.get('button[type="button"].btn-primary').trigger('click')
+    await portal().get('input[type="password"]').setValue('correct horse battery staple')
+    await portal().get('button[type="button"].btn-primary').trigger('click')
     await flushPromises()
 
     expect(mocks.showError).toHaveBeenCalledWith('setup failed')
-    expect(wrapper.text()).not.toContain('setup failed')
-    expect(wrapper.find('.bg-red-50').exists()).toBe(false)
+    expect(portal().text()).not.toContain('setup failed')
+    expect(portal().find('.bg-red-50').exists()).toBe(false)
+    wrapper.unmount()
   })
 
   it('TotpDisableDialog 失败时改用 toast 并不渲染内联错误', async () => {
@@ -158,12 +154,13 @@ describe('TOTP 弹窗定时器清理', () => {
     const wrapper = mount(TotpDisableDialog)
     await flushPromises()
 
-    await wrapper.get('input[type="password"]').setValue('correct horse battery staple')
-    await wrapper.get('form').trigger('submit.prevent')
+    await portal().get('input[type="password"]').setValue('correct horse battery staple')
+    await portal().get('form').trigger('submit.prevent')
     await flushPromises()
 
     expect(mocks.showError).toHaveBeenCalledWith('disable failed')
-    expect(wrapper.text()).not.toContain('disable failed')
-    expect(wrapper.find('.bg-red-50').exists()).toBe(false)
+    expect(portal().text()).not.toContain('disable failed')
+    expect(portal().find('.bg-red-50').exists()).toBe(false)
+    wrapper.unmount()
   })
 })

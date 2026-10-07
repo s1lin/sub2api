@@ -1,7 +1,8 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 import { ref } from 'vue'
 import type { OpsDashboardOverview } from '@/api/admin/ops'
-import { flushPromises, mount, shallowMount } from '@vue/test-utils'
+import { mount, flushPromises } from '@/__tests__/render'
+
 import OpsDashboardHeader from '../OpsDashboardHeader.vue'
 import OpsRequestDetailsModal from '../OpsRequestDetailsModal.vue'
 
@@ -48,13 +49,13 @@ describe('Ops request latency details', () => {
   })
 
   it('opens the TTFT card with first-token sorting and successful requests', async () => {
-    const wrapper = shallowMount(OpsDashboardHeader, {
+    const wrapper = mountWithControls(OpsDashboardHeader, {
       props: { overview: {} as OpsDashboardOverview, platform: '', groupId: null, timeRange: '1h', queryMode: 'auto', loading: false, lastUpdated: null },
     })
     await flushPromises()
     const button = wrapper.findAll('button').find((item) =>
       item.text() === 'admin.ops.requestDetails.details' &&
-      item.element.parentElement?.textContent?.includes('TTFT'),
+      item.element.closest('.rounded-2xl')?.textContent?.includes('TTFT'),
     )
     expect(button).toBeDefined()
     await button!.trigger('click')
@@ -88,3 +89,12 @@ describe('Ops request latency details', () => {
     wrapper.unmount()
   })
 })
+
+// Isolate page dependencies while exercising the shared Kumo controls.
+function mountWithControls(component: Parameters<typeof mount>[0], options: any = {}) {
+  return mount(component, { ...options, global: { ...options.global, stubs: {
+    Select: true, HelpTooltip: true, Icon: true, BaseDialog: true,
+    KumoSurface: { template: '<div><slot /></div>' },
+    ...options.global?.stubs,
+  } } })
+}

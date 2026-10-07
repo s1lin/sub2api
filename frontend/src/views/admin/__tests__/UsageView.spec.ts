@@ -1,5 +1,8 @@
+import { enableAutoUnmount } from '@vue/test-utils'
+enableAutoUnmount(afterEach)
 import { describe, expect, it, vi, beforeEach, afterEach } from 'vitest'
-import { flushPromises, mount } from '@vue/test-utils'
+import { mount, flushPromises, portal } from '@/__tests__/render'
+
 import { defineComponent, ref } from 'vue'
 
 import UsageView from '../UsageView.vue'
@@ -165,7 +168,7 @@ const GroupDistributionChartStub = {
 }
 
 const mountRouteFilteredUsageView = () => mount(UsageView, {
-  global: { stubs: {
+  global: { stubs: { KumoSurface: { template: '<div><slot /></div>' },
     AppLayout: AppLayoutStub, UsageStatsCards: true, UsageFilters: UsageFiltersStub,
     UsageTable: true, UsageExportProgress: true, UsageCleanupDialog: true,
     UserBalanceHistoryModal: true, Pagination: true, Select: true,
@@ -177,7 +180,7 @@ const mountRouteFilteredUsageView = () => mount(UsageView, {
 
 describe('admin UsageView route filters', () => {
   beforeEach(() => {
-    vi.useFakeTimers()
+    vi.useFakeTimers({ toFake: ['Date', 'setTimeout', 'clearTimeout', 'setInterval', 'clearInterval'] })
     Object.keys(routeQuery).forEach((key) => delete routeQuery[key])
     list.mockReset().mockResolvedValue({ items: [], total: 0, pages: 0 })
     getStats.mockReset().mockResolvedValue({
@@ -274,7 +277,7 @@ describe('admin UsageView route filters', () => {
 
 describe('admin UsageView native compaction filter', () => {
   beforeEach(() => {
-    vi.useFakeTimers()
+    vi.useFakeTimers({ toFake: ['Date', 'setTimeout', 'clearTimeout', 'setInterval', 'clearInterval'] })
     list.mockReset().mockResolvedValue({ items: [], total: 0, pages: 0 })
     getStats.mockReset().mockResolvedValue({
       total_requests: 0,
@@ -339,7 +342,7 @@ describe('admin UsageView native compaction filter', () => {
 
 describe('admin UsageView distribution metric toggles', () => {
   beforeEach(() => {
-    vi.useFakeTimers()
+    vi.useFakeTimers({ toFake: ['Date', 'setTimeout', 'clearTimeout', 'setInterval', 'clearInterval'] })
     list.mockReset()
     getStats.mockReset()
     getSnapshotV2.mockReset()
@@ -378,7 +381,7 @@ describe('admin UsageView distribution metric toggles', () => {
     getModelStats.mockResolvedValueOnce({ models: [{ model: 'A', total_tokens: 10 }] })
 
     const wrapper = mount(UsageView, {
-      global: { stubs: {
+      global: { stubs: { KumoSurface: { template: '<div><slot /></div>' },
         AppLayout: AppLayoutStub, UsageStatsCards: true, UsageFilters: UsageFiltersStub,
         UsageTable: true, UsageExportProgress: true, UsageCleanupDialog: true,
         UserBalanceHistoryModal: true, AuditLogModal: true, Pagination: true, Select: true,
@@ -407,7 +410,7 @@ describe('admin UsageView distribution metric toggles', () => {
   it('keeps model and group metric toggles independent without refetching chart data', async () => {
     const wrapper = mount(UsageView, {
       global: {
-        stubs: {
+        stubs: { KumoSurface: { template: '<div><slot /></div>' },
           AppLayout: AppLayoutStub,
           UsageStatsCards: true,
           UsageFilters: UsageFiltersStub,
@@ -463,7 +466,7 @@ describe('admin UsageView distribution metric toggles', () => {
 
 describe('admin UsageView request ID column visibility', () => {
   beforeEach(() => {
-    vi.useFakeTimers()
+    vi.useFakeTimers({ toFake: ['Date', 'setTimeout', 'clearTimeout', 'setInterval', 'clearInterval'] })
     vi.mocked(localStorage.getItem).mockReset().mockReturnValue(null)
     vi.mocked(localStorage.setItem).mockReset()
     list.mockReset().mockResolvedValue({ items: [], total: 0, pages: 0 })
@@ -482,7 +485,7 @@ describe('admin UsageView request ID column visibility', () => {
   it('keeps request ID hidden by default and allows enabling it from column settings', async () => {
     const wrapper = mount(UsageView, {
       global: {
-        stubs: {
+        stubs: { KumoSurface: { template: '<div><slot /></div>' },
           AppLayout: AppLayoutStub,
           UsageStatsCards: true,
           UsageFilters: UsageFiltersStub,
@@ -510,8 +513,8 @@ describe('admin UsageView request ID column visibility', () => {
       expect.arrayContaining([expect.objectContaining({ key: 'request_id' })]),
     )
 
-    await wrapper.get('button[title="admin.users.columnSettings"]').trigger('click')
-    const requestIdToggle = wrapper.findAll('button').find((button) => button.text() === 'Request ID')
+    await wrapper.get('button[aria-label="admin.users.columnSettings"]').trigger('click')
+    const requestIdToggle = portal().findAll('label').find(button => button.text() === 'Request ID')?.get('[role=checkbox]')
     expect(requestIdToggle).toBeDefined()
     await requestIdToggle!.trigger('click')
 
@@ -527,7 +530,7 @@ describe('admin UsageView request ID column visibility', () => {
   it('keeps upstream ID hidden by default and allows enabling it from column settings', async () => {
     const wrapper = mount(UsageView, {
       global: {
-        stubs: {
+        stubs: { KumoSurface: { template: '<div><slot /></div>' },
           AppLayout: AppLayoutStub,
           UsageStatsCards: true,
           UsageFilters: UsageFiltersStub,
@@ -555,8 +558,8 @@ describe('admin UsageView request ID column visibility', () => {
       expect.arrayContaining([expect.objectContaining({ key: 'upstream_request_id' })]),
     )
 
-    await wrapper.get('button[title="admin.users.columnSettings"]').trigger('click')
-    const upstreamToggle = wrapper.findAll('button').find((button) => button.text() === 'Upstream ID')
+    await wrapper.get('button[aria-label="admin.users.columnSettings"]').trigger('click')
+    const upstreamToggle = portal().findAll('label').find(button => button.text() === 'Upstream ID')?.get('[role=checkbox]')
     expect(upstreamToggle).toBeDefined()
     await upstreamToggle!.trigger('click')
 
@@ -568,7 +571,7 @@ describe('admin UsageView request ID column visibility', () => {
 
 describe('admin UsageView handleUserClick', () => {
   beforeEach(() => {
-    vi.useFakeTimers()
+    vi.useFakeTimers({ toFake: ['Date', 'setTimeout', 'clearTimeout', 'setInterval', 'clearInterval'] })
     list.mockReset()
     getStats.mockReset()
     getSnapshotV2.mockReset()
@@ -591,7 +594,7 @@ describe('admin UsageView handleUserClick', () => {
 
     const wrapper = mount(UsageView, {
       global: {
-        stubs: {
+        stubs: { KumoSurface: { template: '<div><slot /></div>' },
           AppLayout: AppLayoutStub,
           UsageStatsCards: true,
           UsageFilters: UsageFiltersStub,
@@ -625,7 +628,7 @@ describe('admin UsageView handleUserClick', () => {
 
 describe('admin UsageView errors tab filter forwarding', () => {
   beforeEach(() => {
-    vi.useFakeTimers()
+    vi.useFakeTimers({ toFake: ['Date', 'setTimeout', 'clearTimeout', 'setInterval', 'clearInterval'] })
     list.mockReset()
     getStats.mockReset()
     getSnapshotV2.mockReset()
@@ -648,7 +651,7 @@ describe('admin UsageView errors tab filter forwarding', () => {
 
   it('forwards model/account_id/group_id to listErrorLogs on the errors tab', async () => {
     const wrapper = mount(UsageView, {
-      global: { stubs: {
+      global: { stubs: { KumoSurface: { template: '<div><slot /></div>' },
         AppLayout: AppLayoutStub, UsageStatsCards: true, UsageFilters: UsageFiltersStub,
         UsageTable: true, UsageExportProgress: true, UsageCleanupDialog: true,
         UserBalanceHistoryModal: true, AuditLogModal: true, Pagination: true, Select: true,
@@ -668,7 +671,7 @@ describe('admin UsageView errors tab filter forwarding', () => {
     await flushPromises()
 
     // 切换到「错误请求」标签（第二个 tab 按钮）触发 loadAdminErrors
-    const tabs = wrapper.findAll('[data-testid="usage-detail-tab"]')
+    const tabs = wrapper.findAll('[role="tab"]')
     await tabs[1].trigger('click')
     await flushPromises()
 
@@ -683,7 +686,7 @@ describe('admin UsageView errors tab filter forwarding', () => {
 
 describe('admin UsageView ranking tab', () => {
   beforeEach(() => {
-    vi.useFakeTimers()
+    vi.useFakeTimers({ toFake: ['Date', 'setTimeout', 'clearTimeout', 'setInterval', 'clearInterval'] })
     list.mockReset()
     getStats.mockReset()
     getSnapshotV2.mockReset()
@@ -704,7 +707,7 @@ describe('admin UsageView ranking tab', () => {
 
   it('mounts ranking lazily and drill-down sets user filter then jumps back to usage tab', async () => {
     const wrapper = mount(UsageView, {
-      global: { stubs: {
+      global: { stubs: { KumoSurface: { template: '<div><slot /></div>' },
         AppLayout: AppLayoutStub, UsageStatsCards: true, UsageFilters: UsageFiltersStub,
         UsageTable: true, UsageExportProgress: true, UsageCleanupDialog: true,
         UserBalanceHistoryModal: true, Pagination: true, Select: true,
@@ -719,7 +722,7 @@ describe('admin UsageView ranking tab', () => {
     // 懒挂载:切到排行 tab 前不渲染
     expect(wrapper.find('[data-test="ranking"]').exists()).toBe(false)
 
-    const tabs = wrapper.findAll('[data-testid="usage-detail-tab"]')
+    const tabs = wrapper.findAll('[role="tab"]')
     expect(tabs).toHaveLength(3)
     await tabs[2].trigger('click')
     await flushPromises()
@@ -738,7 +741,7 @@ describe('admin UsageView ranking tab', () => {
 
 describe('admin UsageView model audit export', () => {
 	beforeEach(() => {
-		vi.useFakeTimers()
+		vi.useFakeTimers({ toFake: ['Date', 'setTimeout', 'clearTimeout', 'setInterval', 'clearInterval'] })
 		list.mockReset().mockResolvedValue({ items: [], total: 0, pages: 0 })
 		exportList.mockReset().mockResolvedValue({
 			items: [{

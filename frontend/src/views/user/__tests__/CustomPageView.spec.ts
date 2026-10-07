@@ -1,5 +1,6 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
-import { flushPromises, mount } from '@vue/test-utils'
+import { mount, flushPromises } from '@/__tests__/render'
+
 import { nextTick } from 'vue'
 import CustomPageView from '../CustomPageView.vue'
 
@@ -55,7 +56,7 @@ async function pointer(button: HTMLElement, type: string, x: number, y: number, 
     pointerId: { value: 1 }, isPrimary: { value: true },
   })
   button.dispatchEvent(event)
-  await nextTick()
+  await flushPromises()
 }
 
 function click(button: HTMLElement, detail = 1) {
@@ -129,7 +130,7 @@ describe('custom page open button', () => {
     size.width = 300
     size.height = 200
     notifyResize()
-    await nextTick()
+    await flushPromises()
     expect([button.style.left, button.style.top]).toEqual(['200px', '168px'])
   })
 

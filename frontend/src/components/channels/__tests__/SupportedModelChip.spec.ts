@@ -1,6 +1,5 @@
-import { nextTick } from 'vue'
 import { describe, expect, it, vi } from 'vitest'
-import { mount } from '@vue/test-utils'
+import { mount, showTooltip } from '@/__tests__/render'
 import SupportedModelChip from '../SupportedModelChip.vue'
 
 vi.mock('vue-i18n', async () => {
@@ -40,8 +39,7 @@ describe('SupportedModelChip', () => {
         }
       })
       try {
-        await wrapper.find('[tabindex="0"]').trigger('mouseenter')
-        await nextTick()
+        await showTooltip(wrapper.get('button'))
         const tooltip = document.body.querySelector('[role="tooltip"]')
         expect(tooltip?.textContent).toContain(`${pricingKeyPrefix}.billingModeVideo`)
         expect(tooltip?.textContent).toContain(`${pricingKeyPrefix}.videoPrice`)
@@ -60,7 +58,7 @@ describe('SupportedModelChip', () => {
           model: { ...model, pricing: { ...model.pricing!, per_request_price: 0 } }
         })
         expect(tooltip?.textContent).toContain(`${pricingKeyPrefix}.videoPrice`)
-        expect(wrapper.findComponent({ name: 'PricingRow' }).text()).toContain(`$0 ${pricingKeyPrefix}.unitPerSecond`)
+        expect(tooltip?.textContent).toContain(`$0 ${pricingKeyPrefix}.unitPerSecond`)
       } finally {
         wrapper.unmount()
       }
@@ -100,8 +98,7 @@ describe('SupportedModelChip', () => {
       }
     })
 
-    await wrapper.find('[tabindex="0"]').trigger('mouseenter')
-    await nextTick()
+    await showTooltip(wrapper.get('button'))
 
     expect(document.body.textContent).toContain('$20 / $75')
     wrapper.unmount()

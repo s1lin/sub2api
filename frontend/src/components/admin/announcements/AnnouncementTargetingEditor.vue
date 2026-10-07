@@ -10,30 +10,18 @@
         </div>
       </div>
 
-      <div class="flex items-center gap-3">
-        <label class="flex items-center gap-2 text-sm text-gray-700 dark:text-gray-300">
-          <input
-            type="radio"
-            name="announcement-targeting-mode"
-            value="all"
-            :checked="mode === 'all'"
-            @change="setMode('all')"
-            class="h-4 w-4"
-          />
+      <KumoRadioGroup :model-value="(mode === 'all') ? 'all' : (mode === 'custom') ? 'custom' : null" name="announcement-targeting-mode" class="contents">
+<div class="flex items-center gap-3">
+        <KumoRadio value="all" :checked="mode === 'all'" @change="setMode('all')" class="flex items-center gap-2 text-sm text-gray-700 dark:text-gray-300">
+
           {{ t('admin.announcements.form.targetingAll') }}
-        </label>
-        <label class="flex items-center gap-2 text-sm text-gray-700 dark:text-gray-300">
-          <input
-            type="radio"
-            name="announcement-targeting-mode"
-            value="custom"
-            :checked="mode === 'custom'"
-            @change="setMode('custom')"
-            class="h-4 w-4"
-          />
+        </KumoRadio>
+        <KumoRadio value="custom" :checked="mode === 'custom'" @change="setMode('custom')" class="flex items-center gap-2 text-sm text-gray-700 dark:text-gray-300">
+
           {{ t('admin.announcements.form.targetingCustom') }}
-        </label>
+        </KumoRadio>
       </div>
+</KumoRadioGroup>
     </div>
 
     <div v-if="mode === 'custom'" class="mt-4 space-y-4">
@@ -44,7 +32,7 @@
             ({{ anyOf.length }}/50)
           </span>
         </div>
-        <button
+        <KumoButton
           type="button"
           class="btn btn-secondary"
           :disabled="anyOf.length >= 50"
@@ -52,7 +40,7 @@
         >
           <Icon name="plus" size="sm" class="mr-1" />
           {{ t('admin.announcements.form.addOrGroup') }}
-        </button>
+        </KumoButton>
       </div>
 
       <div v-if="anyOf.length === 0" class="rounded-xl border border-dashed border-gray-300 p-4 text-sm text-gray-500 dark:border-dark-600 dark:text-dark-400">
@@ -75,14 +63,14 @@
             </div>
           </div>
 
-          <button
+          <KumoButton
             type="button"
             class="btn btn-secondary"
             @click="removeOrGroup(groupIndex)"
           >
             <Icon name="trash" size="sm" class="mr-1" />
             {{ t('common.delete') }}
-          </button>
+          </KumoButton>
         </div>
 
         <div class="mt-4 space-y-3">
@@ -93,7 +81,7 @@
           >
             <div class="flex flex-col gap-3 md:flex-row md:items-end">
               <div class="w-full md:w-52">
-                <label class="input-label">{{ t('admin.announcements.form.conditionType') }}</label>
+                <KumoLabel class="input-label">{{ t('admin.announcements.form.conditionType') }}</KumoLabel>
                 <Select
                   :model-value="cond.type"
                   :options="conditionTypeOptions"
@@ -102,7 +90,7 @@
               </div>
 
               <div v-if="cond.type === 'subscription'" class="flex-1">
-                <label class="input-label">{{ t('admin.announcements.form.selectPackages') }}</label>
+                <KumoLabel class="input-label">{{ t('admin.announcements.form.selectPackages') }}</KumoLabel>
                 <GroupSelector
                   v-model="subscriptionSelections[groupIndex][condIndex]"
                   :groups="groups"
@@ -111,7 +99,7 @@
 
               <div v-else class="flex flex-1 flex-col gap-3 sm:flex-row">
                 <div class="w-full sm:w-44">
-                  <label class="input-label">{{ t('admin.announcements.form.operator') }}</label>
+                  <KumoLabel class="input-label">{{ t('admin.announcements.form.operator') }}</KumoLabel>
                   <Select
                     :model-value="cond.operator"
                     :options="balanceOperatorOptions"
@@ -119,8 +107,8 @@
                   />
                 </div>
                 <div class="w-full sm:flex-1">
-                  <label class="input-label">{{ t('admin.announcements.form.balanceValue') }}</label>
-                  <input
+                  <KumoLabel class="input-label">{{ t('admin.announcements.form.balanceValue') }}</KumoLabel>
+                  <KumoInput
                     :value="String(cond.value ?? '')"
                     type="number"
                     step="any"
@@ -131,20 +119,20 @@
               </div>
 
               <div class="flex justify-end">
-                <button
+                <KumoButton
                   type="button"
                   class="btn btn-secondary"
                   @click="removeAndCondition(groupIndex, condIndex)"
                 >
                   <Icon name="trash" size="sm" class="mr-1" />
                   {{ t('common.delete') }}
-                </button>
+                </KumoButton>
               </div>
             </div>
           </div>
 
           <div class="flex justify-end">
-            <button
+            <KumoButton
               type="button"
               class="btn btn-secondary"
               :disabled="(group.all_of?.length || 0) >= 50"
@@ -152,7 +140,7 @@
             >
               <Icon name="plus" size="sm" class="mr-1" />
               {{ t('admin.announcements.form.addAndCondition') }}
-            </button>
+            </KumoButton>
           </div>
         </div>
       </div>
@@ -165,6 +153,8 @@
 </template>
 
 <script setup lang="ts">
+import { KumoButton, KumoInput, KumoLabel, KumoRadio, KumoRadioGroup } from '@/components/kumo'
+
 import { computed, reactive, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
 import type {

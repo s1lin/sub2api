@@ -1,11 +1,11 @@
 <template>
   <div class="w-full">
-    <label v-if="label" :for="id" class="input-label mb-1.5 block">
+    <KumoLabel v-if="label" :for="id" class="input-label mb-1.5 block">
       {{ label }}
       <span v-if="required" class="text-red-500">*</span>
-    </label>
+    </KumoLabel>
     <div class="relative">
-      <textarea
+      <KumoTextarea
         :id="id"
         ref="textAreaRef"
         :value="modelValue"
@@ -23,7 +23,7 @@
         @change="$emit('change', ($event.target as HTMLTextAreaElement).value)"
         @blur="$emit('blur', $event)"
         @focus="$emit('focus', $event)"
-      ></textarea>
+      ></KumoTextarea>
     </div>
     <!-- Hint / Error Text -->
     <p v-if="error" class="input-error-text mt-1.5">
@@ -36,6 +36,8 @@
 </template>
 
 <script setup lang="ts">
+import { KumoLabel, KumoTextarea } from '@/components/kumo'
+
 import { computed, ref } from 'vue'
 
 interface Props {

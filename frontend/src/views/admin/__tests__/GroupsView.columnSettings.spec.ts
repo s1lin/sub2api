@@ -1,5 +1,8 @@
+import { enableAutoUnmount } from '@vue/test-utils'
+enableAutoUnmount(afterEach)
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
-import { flushPromises, mount } from '@vue/test-utils'
+import { mount, flushPromises, portal } from '@/__tests__/render'
+
 
 import type { AdminGroup } from '@/types'
 import GroupsView from '../GroupsView.vue'
@@ -221,13 +224,11 @@ const columnKeys = (wrapper: ReturnType<typeof mount>) =>
   wrapper.get('[data-test="columns"]').text().split(',').filter(Boolean)
 
 const openColumnSettings = async (wrapper: ReturnType<typeof mount>) => {
-  await wrapper.get('button[title="Column Settings"]').trigger('click')
+  await wrapper.get('button[aria-label="Column Settings"]').trigger('click')
 }
 
 const clickColumnToggle = async (wrapper: ReturnType<typeof mount>, label: string) => {
-  const button = wrapper
-    .findAll('button')
-    .find((item) => item.text().includes(label))
+  const button = portal().findAll('label').find(item => item.text().includes(label))?.find('[role=checkbox]')
   expect(button, `column toggle ${label}`).toBeTruthy()
   await button!.trigger('click')
   await flushPromises()

@@ -1,5 +1,6 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest'
-import { flushPromises, mount } from '@vue/test-utils'
+import { mount, flushPromises, portal } from '@/__tests__/render'
+
 import OpenAIReferralCell from '../OpenAIReferralCell.vue'
 import type { Account } from '@/types'
 import type { OpenAIReferralEligibility, OpenAIReferralRefreshResult } from '@/types/openaiReferrals'
@@ -18,15 +19,15 @@ const account = (overrides: Partial<Account> = {}) => ({
   ...overrides,
 }) as Account
 const mountCell = (value = account()) => mount(OpenAIReferralCell, {
-  props: { account: value }, global: { stubs: { teleport: true } },
+  props: { account: value }, attachTo: document.body,
 })
 const open = async (wrapper: ReturnType<typeof mountCell>) => {
   await wrapper.get('[data-testid="referral-open"]').trigger('click')
   await flushPromises()
 }
 const completeForm = async (wrapper: ReturnType<typeof mountCell>) => {
-  await wrapper.get('[data-testid="referral-email"]').setValue('friend@example.com')
-  await wrapper.get('[data-testid="referral-consent"]').setValue(true)
+  await portal().get('[data-testid="referral-email"]').setValue('friend@example.com')
+  await portal().get('[data-testid="referral-consent"]').setValue(true)
 }
 
 beforeEach(() => {
@@ -41,9 +42,9 @@ describe('OpenAIReferralCell', () => {
     expect(refreshOpenAIReferrals).not.toHaveBeenCalled()
     await open(wrapper)
     expect(refreshOpenAIReferrals).toHaveBeenCalledWith(1)
-    expect(wrapper.text()).toContain('Test account')
-    expect(wrapper.text()).toContain('Test eligibility rule')
-    expect(wrapper.get('[data-testid="referral-send"]').attributes('disabled')).toBeDefined()
+    expect(portal().text()).toContain('Test account')
+    expect(portal().text()).toContain('Test eligibility rule')
+    expect(portal().get('[data-testid="referral-send"]').attributes('disabled')).toBeDefined()
     expect(sendOpenAIReferralInvite).not.toHaveBeenCalled()
     wrapper.unmount()
   })
@@ -51,15 +52,15 @@ describe('OpenAIReferralCell', () => {
   it('requires a valid email and consent, and clears consent when the recipient changes', async () => {
     const wrapper = mountCell()
     await open(wrapper)
-    await wrapper.get('[data-testid="referral-email"]').setValue('invalid')
-    await wrapper.get('[data-testid="referral-consent"]').setValue(true)
-    await wrapper.get('form').trigger('submit')
+    await portal().get('[data-testid="referral-email"]').setValue('invalid')
+    await portal().get('[data-testid="referral-consent"]').setValue(true)
+    await portal().get('form').trigger('submit')
     expect(sendOpenAIReferralInvite).not.toHaveBeenCalled()
-    await wrapper.get('[data-testid="referral-email"]').setValue('friend@example.com')
-    expect((wrapper.get('[data-testid="referral-consent"]').element as HTMLInputElement).checked).toBe(false)
-    expect(wrapper.get('[data-testid="referral-send"]').attributes('disabled')).toBeDefined()
-    await wrapper.get('[data-testid="referral-consent"]').setValue(true)
-    expect(wrapper.get('[data-testid="referral-send"]').attributes('disabled')).toBeUndefined()
+    await portal().get('[data-testid="referral-email"]').setValue('friend@example.com')
+    expect((portal().get('[data-testid="referral-consent"]').element as HTMLInputElement).checked).toBe(false)
+    expect(portal().get('[data-testid="referral-send"]').attributes('disabled')).toBeDefined()
+    await portal().get('[data-testid="referral-consent"]').setValue(true)
+    expect(portal().get('[data-testid="referral-send"]').attributes('disabled')).toBeUndefined()
     wrapper.unmount()
   })
 
@@ -68,9 +69,9 @@ describe('OpenAIReferralCell', () => {
     const wrapper = mountCell()
     await open(wrapper)
     await completeForm(wrapper)
-    await wrapper.get('form').trigger('submit')
+    await portal().get('form').trigger('submit')
     expect(sendOpenAIReferralInvite).not.toHaveBeenCalled()
-    expect(wrapper.text()).toContain('admin.accounts.openaiReferral.unavailable')
+    expect(portal().text()).toContain('admin.accounts.openaiReferral.unavailable')
     wrapper.unmount()
   })
 
@@ -81,14 +82,14 @@ describe('OpenAIReferralCell', () => {
     const wrapper = mountCell()
     await open(wrapper)
     await completeForm(wrapper)
-    await wrapper.get('form').trigger('submit')
-    await wrapper.get('form').trigger('submit')
+    await portal().get('form').trigger('submit')
+    await portal().get('form').trigger('submit')
     await flushPromises()
     expect(sendOpenAIReferralInvite).toHaveBeenCalledTimes(1)
     expect(sendOpenAIReferralInvite).toHaveBeenCalledWith(1, { email: 'friend@example.com', program_id: 'codex_referral_consumer', confirmed: true })
-    expect(wrapper.text()).toContain('admin.accounts.openaiReferral.sent:friend@example.com')
+    expect(portal().text()).toContain('admin.accounts.openaiReferral.sent:friend@example.com')
     expect(wrapper.get('[data-testid="referral-count"]').text()).toContain('1')
-    expect((wrapper.get('[data-testid="referral-email"]').element as HTMLInputElement).value).toBe('')
+    expect((portal().get('[data-testid="referral-email"]').element as HTMLInputElement).value).toBe('')
     wrapper.unmount()
   })
 
@@ -97,13 +98,13 @@ describe('OpenAIReferralCell', () => {
     const wrapper = mountCell()
     await open(wrapper)
     await completeForm(wrapper)
-    await wrapper.get('form').trigger('submit')
+    await portal().get('form').trigger('submit')
     await flushPromises()
-    expect(wrapper.text()).toContain('admin.accounts.openaiReferral.sent:friend@example.com')
-    expect(wrapper.text()).toContain('admin.accounts.openaiReferral.refreshFailed')
+    expect(portal().text()).toContain('admin.accounts.openaiReferral.sent:friend@example.com')
+    expect(portal().text()).toContain('admin.accounts.openaiReferral.refreshFailed')
     expect(wrapper.get('[data-testid="referral-count"]').text()).toContain('—')
     await completeForm(wrapper)
-    expect(wrapper.get('[data-testid="referral-send"]').attributes('disabled')).toBeDefined()
+    expect(portal().get('[data-testid="referral-send"]').attributes('disabled')).toBeDefined()
     wrapper.unmount()
   })
 
@@ -112,18 +113,18 @@ describe('OpenAIReferralCell', () => {
     const wrapper = mountCell()
     await open(wrapper)
     await completeForm(wrapper)
-    await wrapper.get('form').trigger('submit')
+    await portal().get('form').trigger('submit')
     await flushPromises()
-    expect(wrapper.text()).toContain('admin.accounts.openaiReferral.sendUnknown')
+    expect(portal().text()).toContain('admin.accounts.openaiReferral.sendUnknown')
     expect(sendOpenAIReferralInvite).toHaveBeenCalledTimes(1)
-    expect(wrapper.get('[data-testid="referral-send"]').attributes('disabled')).toBeDefined()
+    expect(portal().get('[data-testid="referral-send"]').attributes('disabled')).toBeDefined()
     wrapper.unmount()
   })
 
   it('prevents sending from a shadow account', () => {
     const wrapper = mountCell(account({ parent_account_id: 100 }))
     expect(wrapper.get('[data-testid="referral-open"]').attributes('disabled')).toBeDefined()
-    expect(wrapper.get('[data-testid="referral-open"]').attributes('title')).toContain('shadowHint')
+    expect(wrapper.get('[data-testid="referral-open"]').attributes('aria-label')).toContain('shadowHint')
     wrapper.unmount()
   })
 

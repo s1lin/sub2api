@@ -1,5 +1,5 @@
 <template>
-  <span
+  <KumoBadge
     :class="[
       'inline-flex items-center gap-1.5 rounded-md px-2 py-0.5 text-xs font-medium transition-colors',
       badgeClass
@@ -23,10 +23,11 @@
     <span v-if="hasPeakRate" :class="peakRateClass" :title="peakRateTitle">
       {{ peakRateText }}
     </span>
-  </span>
+  </KumoBadge>
 </template>
 
 <script setup lang="ts">
+import { KumoBadge } from '@/components/kumo'
 import { computed } from 'vue'
 import { useI18n } from 'vue-i18n'
 import type { SubscriptionType, GroupPlatform } from '@/types'

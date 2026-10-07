@@ -1,7 +1,7 @@
 <template>
   <div class="grid grid-cols-2 gap-4 lg:grid-cols-4">
     <!-- Today Revenue -->
-    <div class="card p-4">
+    <KumoSurface class="card p-4">
       <div class="flex items-center gap-3">
         <div class="rounded-lg bg-green-100 p-2 dark:bg-green-900/30">
           <Icon name="dollar" size="md" class="text-green-600 dark:text-green-400" :stroke-width="2" />
@@ -16,10 +16,10 @@
           </p>
         </div>
       </div>
-    </div>
+    </KumoSurface>
 
     <!-- Total Revenue -->
-    <div class="card p-4">
+    <KumoSurface class="card p-4">
       <div class="flex items-center gap-3">
         <div class="rounded-lg bg-blue-100 p-2 dark:bg-blue-900/30">
           <Icon name="creditCard" size="md" class="text-blue-600 dark:text-blue-400" :stroke-width="2" />
@@ -34,10 +34,10 @@
           </p>
         </div>
       </div>
-    </div>
+    </KumoSurface>
 
     <!-- Today Orders -->
-    <div class="card p-4">
+    <KumoSurface class="card p-4">
       <div class="flex items-center gap-3">
         <div class="rounded-lg bg-purple-100 p-2 dark:bg-purple-900/30">
           <Icon name="chart" size="md" class="text-purple-600 dark:text-purple-400" :stroke-width="2" />
@@ -47,10 +47,10 @@
           <p class="text-xl font-bold text-gray-900 dark:text-white">{{ stats.today_count }}</p>
         </div>
       </div>
-    </div>
+    </KumoSurface>
 
     <!-- Average Amount -->
-    <div class="card p-4">
+    <KumoSurface class="card p-4">
       <div class="flex items-center gap-3">
         <div class="rounded-lg bg-amber-100 p-2 dark:bg-amber-900/30">
           <Icon name="chart" size="md" class="text-amber-600 dark:text-amber-400" :stroke-width="2" />
@@ -62,11 +62,13 @@
           </p>
         </div>
       </div>
-    </div>
+    </KumoSurface>
   </div>
 </template>
 
 <script setup lang="ts">
+import { KumoSurface } from '@/components/kumo'
+
 import { useI18n } from 'vue-i18n'
 import Icon from '@/components/icons/Icon.vue'
 import type { CurrencyAmounts, DashboardStats } from '@/types/payment'

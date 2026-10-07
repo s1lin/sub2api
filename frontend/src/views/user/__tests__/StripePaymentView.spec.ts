@@ -1,5 +1,6 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest'
-import { flushPromises, shallowMount } from '@vue/test-utils'
+import { flushPromises, mount } from '@/__tests__/render'
+
 
 const routeState = vi.hoisted(() => ({
   query: {} as Record<string, unknown>,
@@ -84,7 +85,7 @@ function orderFactory(overrides: Partial<PaymentOrder> = {}): PaymentOrder {
 }
 
 function mountView() {
-  return shallowMount(StripePaymentView, {
+  return mountWithControls(StripePaymentView, {
     global: {
       stubs: {
         AppLayout: { template: '<div><slot /></div>' },
@@ -132,3 +133,12 @@ describe('StripePaymentView', () => {
     expect(wrapper.text()).toContain(formatPaymentAmount(103, 'HKD', 'zh-CN'))
   })
 })
+
+// Isolate page dependencies while exercising the shared Kumo controls.
+function mountWithControls(component: Parameters<typeof mount>[0], options: any = {}) {
+  return mount(component, { ...options, global: { ...options.global, stubs: {
+    Icon: true,
+    KumoSurface: { template: '<div><slot /></div>' },
+    ...options.global?.stubs,
+  } } })
+}

@@ -14,7 +14,7 @@
     <div class="flex flex-wrap items-center gap-1.5">
       <slot name="pre-actions" />
 
-      <button
+      <KumoButton
         type="button"
         class="inline-flex items-center gap-0.5 rounded px-1.5 py-0.5 text-[10px] font-medium text-blue-600 transition-colors hover:bg-blue-50 disabled:cursor-not-allowed disabled:opacity-50 dark:text-blue-400 dark:hover:bg-blue-900/30"
         :disabled="loading || resetting"
@@ -36,9 +36,9 @@
           />
         </svg>
         {{ t('admin.accounts.openaiQuotaReset.count') }}<span v-if="data"> {{ availableResetCount }}</span>
-      </button>
+      </KumoButton>
 
-      <button
+      <KumoButton
         type="button"
         class="inline-flex items-center gap-0.5 rounded px-1.5 py-0.5 text-[10px] font-medium text-orange-600 transition-colors hover:bg-orange-50 disabled:cursor-not-allowed disabled:opacity-50 dark:text-orange-400 dark:hover:bg-orange-900/30"
         :disabled="resetting || loading || !canReset"
@@ -60,9 +60,9 @@
           />
         </svg>
         {{ t('admin.accounts.openaiQuotaReset.reset') }}
-      </button>
+      </KumoButton>
 
-      <button
+      <KumoButton
         type="button"
         data-testid="codex-credits"
         class="inline-flex max-w-full items-center gap-1 rounded px-1.5 py-0.5 text-[10px] font-medium text-emerald-700 transition-colors hover:bg-emerald-50 disabled:cursor-not-allowed disabled:opacity-50 dark:text-emerald-400 dark:hover:bg-emerald-900/30"
@@ -72,7 +72,7 @@
       >
         {{ t('admin.accounts.openaiQuotaReset.points') }}
         <span class="truncate tabular-nums">{{ creditsDisplay }}</span>
-      </button>
+      </KumoButton>
       <OpenAIReferralCell :account="account" />
     </div>
 
@@ -114,7 +114,7 @@
         >
           {{ t('admin.accounts.openaiQuotaReset.expiresAt', { time: formatResetCreditExpiry(primaryResetCreditExpiry, 'short') }) }}
         </span>
-        <button
+        <KumoButton
           v-if="hiddenResetCreditCount > 0"
           type="button"
           data-testid="reset-credit-expiry-toggle"
@@ -125,7 +125,7 @@
           @click="toggleResetCreditDetails"
         >
           +{{ hiddenResetCreditCount }}
-        </button>
+        </KumoButton>
       </div>
 
       <div
@@ -181,6 +181,8 @@
 </template>
 
 <script setup lang="ts">
+import { KumoButton } from '@/components/kumo'
+
 import { ref, computed, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
 import type { Account } from '@/types'

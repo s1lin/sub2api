@@ -1,4 +1,5 @@
-import { flushPromises, mount, type VueWrapper } from '@vue/test-utils'
+import { mount, flushPromises } from '@/__tests__/render'
+import { type VueWrapper } from '@vue/test-utils'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 
 import AffiliateOfflineWithdrawDialog from '../AffiliateOfflineWithdrawDialog.vue'
@@ -83,7 +84,7 @@ async function pickUser(wrapper: VueWrapper, availableQuota: number) {
 
 describe('AffiliateOfflineWithdrawDialog', () => {
   beforeEach(() => {
-    vi.useFakeTimers()
+    vi.useFakeTimers({ toFake: ['Date', 'setTimeout', 'clearTimeout', 'setInterval', 'clearInterval'] })
     vi.clearAllMocks()
   })
 

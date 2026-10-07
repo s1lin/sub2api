@@ -1,5 +1,6 @@
 import { afterEach, describe, expect, it, vi } from 'vitest'
-import { enableAutoUnmount, mount } from '@vue/test-utils'
+import { mount, flushPromises } from '@/__tests__/render'
+import { enableAutoUnmount } from '@vue/test-utils'
 import { nextTick } from 'vue'
 import ModelTagInput from '../ModelTagInput.vue'
 
@@ -58,7 +59,7 @@ describe('model tag keyboard navigation', () => {
     const input = wrapper.get('input')
     await input.setValue('gpt-4.1')
     expect(pressTab(input.element).defaultPrevented).toBe(true)
-    await nextTick()
+    await flushPromises()
     expect(wrapper.emitted('update:models')).toEqual([[['gpt-4o', 'gpt-4.1']]])
     expect((input.element as HTMLInputElement).value).toBe('')
     expect(pressTab(input.element).defaultPrevented).toBe(false)

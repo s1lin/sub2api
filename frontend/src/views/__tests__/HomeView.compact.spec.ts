@@ -1,5 +1,6 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest'
-import { mount, RouterLinkStub } from '@vue/test-utils'
+import { mount } from '@/__tests__/render'
+import { RouterLinkStub } from '@vue/test-utils'
 
 import HomeView from '../HomeView.vue'
 

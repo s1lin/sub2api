@@ -1,5 +1,8 @@
 export default {
   common: {
+    help: '帮助',
+    preview: '预览',
+    usage: '用量',
     skipToContent: '跳转到内容',
     loading: '加载中...',
     submitting: '提交中...',

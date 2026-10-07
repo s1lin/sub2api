@@ -1,6 +1,6 @@
 <template>
   <div class="plaza-pricing-table overflow-x-auto" :style="accentStyle">
-    <table class="w-full min-w-[1000px] table-auto border-collapse text-sm tabular-nums">
+    <KumoTable class="w-full min-w-[1000px] table-auto border-collapse text-sm tabular-nums">
       <colgroup>
         <col class="w-[25%]" />
         <col class="w-[11%]" />
@@ -11,23 +11,23 @@
         <col class="w-[14%]" />
         <col class="w-[8%]" />
       </colgroup>
-      <thead>
-        <tr
+      <KumoTableHeader>
+        <KumoTableRow
           class="text-xs font-semibold uppercase tracking-wider text-gray-500 dark:text-dark-400"
         >
-          <th
+          <KumoTableHead
             rowspan="2"
             class="border-r border-gray-100 py-2.5 pl-5 pr-4 text-left align-middle dark:border-dark-700/60"
           >
             {{ t('modelPlaza.table.model') }}
-          </th>
-          <th colspan="3" class="pz-bg pt-2 text-center">
+          </KumoTableHead>
+          <KumoTableHead colspan="3" class="pz-bg pt-2 text-center">
             <div class="pz-title border-b pb-2 font-semibold">
               {{ t('modelPlaza.table.paidPrice') }}
               <span class="pz-unit ml-1 normal-case font-normal">{{ t('modelPlaza.table.unitPerMillion') }}</span>
             </div>
-          </th>
-          <th
+          </KumoTableHead>
+          <KumoTableHead
             colspan="3"
             class="border-l border-gray-100 pt-2 text-center dark:border-dark-700/60"
           >
@@ -35,35 +35,35 @@
               {{ t('modelPlaza.table.officialPrice') }}
               <span class="ml-1 normal-case font-normal text-gray-400 dark:text-dark-500">{{ t('modelPlaza.table.unitPerMillion') }}</span>
             </div>
-          </th>
-          <th
+          </KumoTableHead>
+          <KumoTableHead
             rowspan="2"
             class="border-l border-gray-100 py-2.5 pl-3 pr-5 text-right align-middle dark:border-dark-700/60"
           >
             {{ t('modelPlaza.table.rate') }}
-          </th>
-        </tr>
-        <tr
+          </KumoTableHead>
+        </KumoTableRow>
+        <KumoTableRow
           class="border-b border-gray-200 text-left text-[11px] font-medium uppercase leading-4 tracking-wide text-gray-400 dark:border-dark-700 dark:text-dark-500"
         >
-          <th class="pz-bg px-3 py-2 font-medium">{{ t('modelPlaza.table.input') }}</th>
-          <th class="pz-bg px-3 py-2 font-medium">{{ t('modelPlaza.table.output') }}</th>
-          <th class="pz-bg px-3 py-2 font-medium">{{ t('modelPlaza.table.cache') }}</th>
-          <th class="border-l border-gray-100 px-3 py-2 font-medium dark:border-dark-700/60">
+          <KumoTableHead class="pz-bg px-3 py-2 font-medium">{{ t('modelPlaza.table.input') }}</KumoTableHead>
+          <KumoTableHead class="pz-bg px-3 py-2 font-medium">{{ t('modelPlaza.table.output') }}</KumoTableHead>
+          <KumoTableHead class="pz-bg px-3 py-2 font-medium">{{ t('modelPlaza.table.cache') }}</KumoTableHead>
+          <KumoTableHead class="border-l border-gray-100 px-3 py-2 font-medium dark:border-dark-700/60">
             {{ t('modelPlaza.table.input') }}
-          </th>
-          <th class="px-3 py-2 font-medium">{{ t('modelPlaza.table.output') }}</th>
-          <th class="px-3 py-2 font-medium">{{ t('modelPlaza.table.cache') }}</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr
+          </KumoTableHead>
+          <KumoTableHead class="px-3 py-2 font-medium">{{ t('modelPlaza.table.output') }}</KumoTableHead>
+          <KumoTableHead class="px-3 py-2 font-medium">{{ t('modelPlaza.table.cache') }}</KumoTableHead>
+        </KumoTableRow>
+      </KumoTableHeader>
+      <KumoTableBody>
+        <KumoTableRow
           v-for="{ model: m, period, key } in rows"
           :key="key"
           class="border-b border-gray-100 transition-colors last:border-b-0 hover:bg-gray-50/70 dark:border-dark-800 dark:hover:bg-dark-800/50"
         >
           <!-- 模型名 + 非 token 计费模式徽章;分时时段行额外标注时段 -->
-          <td class="border-r border-gray-100 py-2.5 pl-5 pr-4 align-middle dark:border-dark-700/60">
+          <KumoTableCell class="border-r border-gray-100 py-2.5 pl-5 pr-4 align-middle dark:border-dark-700/60">
             <div class="flex flex-wrap items-center gap-1.5">
               <span class="font-medium text-gray-900 dark:text-white">{{ m.name }}</span>
               <!-- 时段徽章紧跟模型名,其余徽章排在后面,空间不足时先换行的是它们 -->
@@ -109,11 +109,11 @@
                 {{ t('modelPlaza.table.reasoningMultiplierBadge', { effort, multiplier }) }}
               </span>
             </div>
-          </td>
+          </KumoTableCell>
 
           <!-- token 计费:输入 / 输出 / 缓存(写/读),有阶梯时每档一行;档位标签只放输入列,其余列按行对齐 -->
           <template v-if="billingMode(m) === BILLING_MODE_TOKEN">
-            <td class="pz-cell px-3 py-2.5 align-middle font-mono font-semibold text-gray-900 dark:text-gray-50">
+            <KumoTableCell class="pz-cell px-3 py-2.5 align-middle font-mono font-semibold text-gray-900 dark:text-gray-50">
               <template v-if="tokenIntervals(m).length">
                 <div
                   v-for="(iv, idx) in tokenIntervals(m)"
@@ -125,8 +125,8 @@
                 </div>
               </template>
               <template v-else>{{ paidPerMillion(m.pricing?.input_price, period) }}</template>
-            </td>
-            <td class="pz-cell px-3 py-2.5 align-middle font-mono font-semibold text-gray-900 dark:text-gray-50">
+            </KumoTableCell>
+            <KumoTableCell class="pz-cell px-3 py-2.5 align-middle font-mono font-semibold text-gray-900 dark:text-gray-50">
               <template v-if="tokenIntervals(m).length">
                 <div
                   v-for="(iv, idx) in tokenIntervals(m)"
@@ -138,8 +138,8 @@
                 </div>
               </template>
               <template v-else>{{ paidPerMillion(m.pricing?.output_price, period) }}</template>
-            </td>
-            <td class="pz-cell px-3 py-2.5 align-middle">
+            </KumoTableCell>
+            <KumoTableCell class="pz-cell px-3 py-2.5 align-middle">
               <template v-if="hasTierCachePricing(tokenIntervals(m))">
                 <div
                   v-for="(iv, idx) in tokenIntervals(m)"
@@ -178,12 +178,12 @@
                 </div>
               </div>
               <span v-else class="text-gray-400 dark:text-dark-500">-</span>
-            </td>
+            </KumoTableCell>
           </template>
 
           <!-- 按次 / 按图片计费:实付区整体合并,阶梯芯片或单一按次价 -->
           <template v-else>
-            <td colspan="3" class="pz-cell px-3 py-2.5 align-middle">
+            <KumoTableCell colspan="3" class="pz-cell px-3 py-2.5 align-middle">
               <div
                 v-if="requestIntervals(m).length"
                 class="flex flex-wrap items-center gap-1.5"
@@ -205,11 +205,11 @@
                 <span class="ml-1 text-xs text-gray-400 dark:text-dark-500">{{ perUnitSuffix(m) }}</span>
               </template>
               <span v-else class="text-gray-400 dark:text-dark-500">-</span>
-            </td>
+            </KumoTableCell>
           </template>
 
           <!-- 官方价格(参考价,不乘倍率;官方有阶梯时每档一行) -->
-          <td
+          <KumoTableCell
             class="border-l border-gray-100 px-3 py-2.5 align-middle font-mono text-xs text-gray-500 dark:border-dark-700/60 dark:text-dark-400"
           >
             <template v-if="officialIntervals(m).length">
@@ -223,8 +223,8 @@
               </div>
             </template>
             <template v-else>{{ official(m.official_pricing?.input_price) }}</template>
-          </td>
-          <td class="px-3 py-2.5 align-middle font-mono text-xs text-gray-500 dark:text-dark-400">
+          </KumoTableCell>
+          <KumoTableCell class="px-3 py-2.5 align-middle font-mono text-xs text-gray-500 dark:text-dark-400">
             <template v-if="officialIntervals(m).length">
               <div
                 v-for="(iv, idx) in officialIntervals(m)"
@@ -236,8 +236,8 @@
               </div>
             </template>
             <template v-else>{{ official(m.official_pricing?.output_price) }}</template>
-          </td>
-          <td class="px-3 py-2.5 align-middle">
+          </KumoTableCell>
+          <KumoTableCell class="px-3 py-2.5 align-middle">
             <template v-if="hasTierCachePricing(officialIntervals(m))">
               <div
                 v-for="(iv, idx) in officialIntervals(m)"
@@ -276,10 +276,10 @@
               </div>
             </div>
             <span v-else class="text-gray-400 dark:text-dark-500">-</span>
-          </td>
+          </KumoTableCell>
 
           <!-- 折扣倍率(分时时段行展示 生效倍率×时段倍率;生图独立倍率行展示独立倍率;专属倍率划线展示原倍率) -->
-          <td
+          <KumoTableCell
             class="border-l border-gray-100 py-2.5 pl-3 pr-5 text-right align-middle font-mono text-xs dark:border-dark-700/60"
           >
             <span
@@ -298,14 +298,16 @@
               <span class="font-bold text-primary-600 dark:text-primary-400">{{ effectiveRate }}x</span>
             </template>
             <span v-else class="font-bold text-gray-700 dark:text-gray-300">{{ effectiveRate }}x</span>
-          </td>
-        </tr>
-      </tbody>
-    </table>
+          </KumoTableCell>
+        </KumoTableRow>
+      </KumoTableBody>
+    </KumoTable>
   </div>
 </template>
 
 <script setup lang="ts">
+import { KumoTable, KumoTableBody, KumoTableCell, KumoTableHead, KumoTableHeader, KumoTableRow } from '@/components/kumo'
+
 import { computed } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { formatScaled, resolveIntervalPrices } from '@/utils/pricing'

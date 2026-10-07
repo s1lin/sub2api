@@ -1,6 +1,6 @@
 <template>
   <div class="flex flex-wrap gap-2">
-    <button
+    <KumoButton
       v-for="preset in presets"
       :key="preset.mode + ':' + preset.protocol + ':' + preset.url"
       type="button"
@@ -14,11 +14,13 @@
       @click="emit('select', preset)"
     >
       {{ preset.label }} ({{ displayUrl(preset.url) }})
-    </button>
+    </KumoButton>
   </div>
 </template>
 
 <script setup lang="ts">
+import { KumoButton } from '@/components/kumo'
+
 import { computed } from 'vue'
 import { CN_BASE_URL_PRESETS, type CnBaseUrlPreset } from './credentialsBuilder'
 

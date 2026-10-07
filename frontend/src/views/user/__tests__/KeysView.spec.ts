@@ -1,5 +1,9 @@
+import { enableAutoUnmount } from '@vue/test-utils'
+import { afterEach } from 'vitest'
+enableAutoUnmount(afterEach)
 import { beforeEach, describe, expect, it, vi } from 'vitest'
-import { flushPromises, mount, type VueWrapper } from '@vue/test-utils'
+import { mount, flushPromises, portal } from '@/__tests__/render'
+import { type VueWrapper } from '@vue/test-utils'
 import { nextTick } from 'vue'
 
 import type { ApiKey } from '@/types'
@@ -260,6 +264,7 @@ const visibleColumnMeta = (wrapper: VueWrapper): Array<{ key: string; sortable: 
 
 const getButtonByText = (wrapper: VueWrapper, text: string) => {
   const button = wrapper.findAll('button').find((item) => item.text().includes(text))
+    ?? portal().findAll('label').find(item => item.text().includes(text))?.find('[role=checkbox]')
   if (!button) {
     throw new Error(`Button not found: ${text}`)
   }
@@ -315,7 +320,7 @@ describe('user KeysView column settings', () => {
       .find((select) => select.props('options').length === 2 &&
         select.props('options')[0].value === 'active')!
     statusSelect.vm.$emit('update:modelValue', 'inactive')
-    await wrapper.get('button[title="keys.resetQuotaUsed"]').trigger('click')
+    await wrapper.get('button[aria-label="keys.resetQuotaUsed"]').trigger('click')
     const confirmation = wrapper.findAllComponents({ name: 'ConfirmDialog' })
       .find((dialog) => dialog.props('title') === 'keys.resetQuotaTitle')!
     confirmation.vm.$emit('confirm')
@@ -408,7 +413,7 @@ describe('user KeysView column settings', () => {
     table.vm.$emit('update:selectedKeys', [1])
     await nextTick()
     listKeys.mockResolvedValue({ items: [], total: 0, pages: 0 })
-    await wrapper.get('button[title="Refresh"]').trigger('click')
+    await wrapper.get('button[aria-label="Refresh"]').trigger('click')
     await flushPromises()
     expect(table.props('selectedKeys')).toEqual([])
     wrapper.unmount()
@@ -417,7 +422,7 @@ describe('user KeysView column settings', () => {
   it('shows a hidden column when toggled and persists the preference', async () => {
     const wrapper = await mountView()
 
-    await wrapper.get('button[title="Column Settings"]').trigger('click')
+    await wrapper.get('button[aria-label="Column Settings"]').trigger('click')
     await getButtonByText(wrapper, 'Rate Limit').trigger('click')
     await nextTick()
 
@@ -431,7 +436,7 @@ describe('user KeysView column settings', () => {
   it('shows the API key ID column when toggled', async () => {
     const wrapper = await mountView()
 
-    await wrapper.get('button[title="Column Settings"]').trigger('click')
+    await wrapper.get('button[aria-label="Column Settings"]').trigger('click')
     await getButtonByText(wrapper, 'ID').trigger('click')
     await nextTick()
 
@@ -450,7 +455,7 @@ describe('user KeysView column settings', () => {
     })
     const wrapper = await mountView()
 
-    await wrapper.get('button[title="Column Settings"]').trigger('click')
+    await wrapper.get('button[aria-label="Column Settings"]').trigger('click')
     await getButtonByText(wrapper, 'Last Used IP').trigger('click')
     await nextTick()
 
@@ -484,10 +489,10 @@ describe('user KeysView column settings', () => {
   it('does not include always-visible columns in the toggleable menu', async () => {
     const wrapper = await mountView()
 
-    await wrapper.get('button[title="Column Settings"]').trigger('click')
+    await wrapper.get('button[aria-label="Column Settings"]').trigger('click')
     await nextTick()
 
-    const columnMenuText = wrapper.text()
+    const columnMenuText = portal().get('[role=dialog]').text()
     expect(columnMenuText).toContain('API Key')
     expect(columnMenuText).toContain('ID')
     expect(columnMenuText).toContain('Current Concurrency')

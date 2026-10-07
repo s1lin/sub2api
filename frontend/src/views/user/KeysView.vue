@@ -32,67 +32,58 @@
             <span class="text-gray-600 dark:text-gray-300">
               {{ t('keys.bulkEdit.selectedCount', { count: selectedIds.length }) }}
             </span>
-            <button
+            <KumoButton
               class="btn btn-primary btn-sm"
               :disabled="loading"
               data-test="bulk-edit-keys"
               @click="showBulkEditModal = true"
             >
               {{ t('keys.bulkEdit.title') }}
-            </button>
-            <button class="btn btn-secondary btn-sm" @click="selectedIds = []">
+            </KumoButton>
+            <KumoButton class="btn btn-secondary btn-sm" @click="selectedIds = []">
               {{ t('keys.bulkEdit.clearSelection') }}
-            </button>
+            </KumoButton>
           </div>
         </div>
       </template>
 
       <template #actions>
         <div class="flex justify-end gap-3">
-          <button
+          <KumoButton
             @click="loadApiKeys"
             :disabled="loading"
             class="btn btn-secondary"
             :title="t('common.refresh')"
           >
             <Icon name="refresh" size="md" :class="loading ? 'animate-spin' : ''" />
-          </button>
-          <div class="relative" ref="columnDropdownRef">
-            <button
-              @click="showColumnDropdown = !showColumnDropdown"
+          </KumoButton>
+          <KumoPopoverRoot v-model="showColumnDropdown">
+            <KumoPopoverTrigger
               class="btn btn-secondary px-2 md:px-3"
-              :title="t('keys.columnSettings')"
+              :aria-label="t('keys.columnSettings')"
             >
               <svg class="h-4 w-4 md:mr-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M9 4.5v15m6-15v15m-10.875 0h15.75c.621 0 1.125-.504 1.125-1.125V5.625c0-.621-.504-1.125-1.125-1.125H4.125C3.504 4.5 3 5.004 3 5.625v12.75c0 .621.504 1.125 1.125 1.125z" />
               </svg>
               <span class="hidden md:inline">{{ t('keys.columnSettings') }}</span>
-            </button>
-            <div
-              v-if="showColumnDropdown"
-              class="absolute right-0 top-full z-50 mt-1 max-h-80 w-48 overflow-y-auto rounded-lg border border-gray-200 bg-white py-1 shadow-lg dark:border-dark-600 dark:bg-dark-800"
+            </KumoPopoverTrigger>
+            <KumoPopoverContent
+              class="max-h-80 w-48 overflow-y-auto py-1"
             >
-              <button
+              <KumoLabel
                 v-for="col in toggleableColumns"
                 :key="col.key"
-                @click="toggleColumn(col.key)"
-                class="flex w-full items-center justify-between px-4 py-2 text-left text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-dark-700"
+                class="flex w-full cursor-pointer items-center gap-2 px-3 py-2 text-sm"
               >
+                <KumoCheckbox :checked="isColumnVisible(col.key)" @change="toggleColumn(col.key)" />
                 <span>{{ col.label }}</span>
-                <Icon
-                  v-if="isColumnVisible(col.key)"
-                  name="check"
-                  size="sm"
-                  class="text-primary-500"
-                  :stroke-width="2"
-                />
-              </button>
-            </div>
-          </div>
-          <button @click="showCreateModal = true" class="btn btn-primary" data-tour="keys-create-btn">
+              </KumoLabel>
+            </KumoPopoverContent>
+          </KumoPopoverRoot>
+          <KumoButton @click="showCreateModal = true" class="btn btn-primary" data-tour="keys-create-btn">
             <Icon name="plus" size="md" class="mr-2" />
             {{ t('keys.createKey') }}
-          </button>
+          </KumoButton>
         </div>
       </template>
 
@@ -120,7 +111,7 @@
               <code class="code text-xs">
                 {{ maskApiKey(value) }}
               </code>
-              <button
+              <KumoButton
                 @click="copyToClipboard(value, row.id)"
                 class="rounded-lg p-1 transition-colors hover:bg-gray-100 dark:hover:bg-dark-700"
                 :class="
@@ -137,7 +128,7 @@
                   :stroke-width="2"
                 />
                 <Icon v-else name="clipboard" size="sm" />
-              </button>
+              </KumoButton>
             </div>
           </template>
 
@@ -156,13 +147,8 @@
 
           <template #cell-group="{ row }">
             <div class="group/dropdown relative">
-              <button
-                :ref="(el) => setGroupButtonRef(row.id, el)"
-                @click="openGroupSelector(row)"
-                class="-mx-2 -my-1 flex cursor-pointer items-center gap-2 rounded-lg px-2 py-1 transition-all duration-200 hover:bg-gray-100 dark:hover:bg-dark-700"
-                :title="t('keys.clickToChangeGroup')"
-              >
-                <GroupBadge
+              <Select :model-value="row.group_id ?? null" :options="groupOptions" searchable class="min-w-48 max-w-80" :aria-label="t('keys.clickToChangeGroup')" :search-placeholder="t('keys.searchGroup')" :empty-text="t('keys.noGroupFound')" @change="value => changeGroup(row, value as number | null)">
+<template #selected><GroupBadge
                   v-if="row.group"
                   :name="row.group.name"
                   :platform="row.group.platform"
@@ -174,24 +160,9 @@
                   :peak-end="row.group.peak_end"
                   :peak-rate-multiplier="row.group.peak_rate_multiplier"
                 />
-                <span v-else class="text-sm text-gray-400 dark:text-dark-500">{{
-                  t('keys.noGroup')
-                }}</span>
-                <span class="text-xs text-gray-500 dark:text-gray-400">{{ t('keys.selectGroup') }}</span>
-                <svg
-                  class="h-3.5 w-3.5 text-gray-400 opacity-60 transition-opacity group-hover/dropdown:opacity-100"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                  stroke-width="2"
-                >
-                  <path
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    d="M8.25 15L12 18.75 15.75 15m-7.5-6L12 5.25 15.75 9"
-                  />
-                </svg>
-              </button>
+<span v-else class="text-sm text-gray-400">{{ t('keys.noGroup') }}</span></template>
+<template #option="{ option, selected }"><GroupOptionItem :name="option.label" :platform="option.platform" :subscription-type="option.subscriptionType" :rate-multiplier="option.rate" :user-rate-multiplier="option.userRate" :peak-rate-enabled="option.peakRateEnabled" :peak-start="option.peakStart" :peak-end="option.peakEnd" :peak-rate-multiplier="option.peakRateMultiplier" :description="option.description" :selected="selected" /></template>
+</Select>
             </div>
           </template>
 
@@ -235,17 +206,12 @@
                     ${{ row.quota_used?.toFixed(2) || '0.00' }} / ${{ row.quota?.toFixed(2) }}
                   </span>
                 </div>
-                <div class="mt-1 h-1.5 w-full overflow-hidden rounded-full bg-gray-200 dark:bg-dark-600">
-                  <div
-                    :class="[
+                <KumoMeter  compact :label="t('keys.quota')" :value="Number.parseFloat(String(Math.min((row.quota_used / row.quota) * 100, 100) + '%')) || 0" class="mt-1 h-1.5 w-full overflow-hidden rounded-full bg-gray-200 dark:bg-dark-600" track-class-name="h-full min-h-[inherit]" :indicator-class-name="['', ([
                       'h-full rounded-full transition-all',
                       row.quota_used >= row.quota ? 'bg-red-500' :
                       row.quota_used >= row.quota * 0.8 ? 'bg-yellow-500' :
                       'bg-primary-500'
-                    ]"
-                    :style="{ width: Math.min((row.quota_used / row.quota) * 100, 100) + '%' }"
-                  />
-                </div>
+                    ])]" />
               </div>
             </div>
           </template>
@@ -265,17 +231,12 @@
                     ${{ row.usage_5h?.toFixed(2) || '0.00' }}/${{ row.rate_limit_5h?.toFixed(2) }}
                   </span>
                 </div>
-                <div class="h-1 w-full overflow-hidden rounded-full bg-gray-200 dark:bg-dark-600">
-                  <div
-                    :class="[
+                <KumoMeter  compact :label="t('keys.quota')" :value="Number.parseFloat(String(Math.min((row.usage_5h / row.rate_limit_5h) * 100, 100) + '%')) || 0" class="h-1 w-full overflow-hidden rounded-full bg-gray-200 dark:bg-dark-600" track-class-name="h-full min-h-[inherit]" :indicator-class-name="['', ([
                       'h-full rounded-full transition-all',
                       row.usage_5h >= row.rate_limit_5h ? 'bg-red-500' :
                       row.usage_5h >= row.rate_limit_5h * 0.8 ? 'bg-yellow-500' :
                       'bg-emerald-500'
-                    ]"
-                    :style="{ width: Math.min((row.usage_5h / row.rate_limit_5h) * 100, 100) + '%' }"
-                  />
-                </div>
+                    ])]" />
                 <div v-if="row.reset_5h_at && formatResetTime(row.reset_5h_at)" class="text-[10px] text-gray-400 dark:text-gray-500 tabular-nums">
                   ⟳ {{ formatResetTime(row.reset_5h_at) }}
                 </div>
@@ -293,17 +254,12 @@
                     ${{ row.usage_1d?.toFixed(2) || '0.00' }}/${{ row.rate_limit_1d?.toFixed(2) }}
                   </span>
                 </div>
-                <div class="h-1 w-full overflow-hidden rounded-full bg-gray-200 dark:bg-dark-600">
-                  <div
-                    :class="[
+                <KumoMeter  compact :label="t('keys.quota')" :value="Number.parseFloat(String(Math.min((row.usage_1d / row.rate_limit_1d) * 100, 100) + '%')) || 0" class="h-1 w-full overflow-hidden rounded-full bg-gray-200 dark:bg-dark-600" track-class-name="h-full min-h-[inherit]" :indicator-class-name="['', ([
                       'h-full rounded-full transition-all',
                       row.usage_1d >= row.rate_limit_1d ? 'bg-red-500' :
                       row.usage_1d >= row.rate_limit_1d * 0.8 ? 'bg-yellow-500' :
                       'bg-emerald-500'
-                    ]"
-                    :style="{ width: Math.min((row.usage_1d / row.rate_limit_1d) * 100, 100) + '%' }"
-                  />
-                </div>
+                    ])]" />
                 <div v-if="row.reset_1d_at && formatResetTime(row.reset_1d_at)" class="text-[10px] text-gray-400 dark:text-gray-500 tabular-nums">
                   ⟳ {{ formatResetTime(row.reset_1d_at) }}
                 </div>
@@ -321,23 +277,18 @@
                     ${{ row.usage_7d?.toFixed(2) || '0.00' }}/${{ row.rate_limit_7d?.toFixed(2) }}
                   </span>
                 </div>
-                <div class="h-1 w-full overflow-hidden rounded-full bg-gray-200 dark:bg-dark-600">
-                  <div
-                    :class="[
+                <KumoMeter  compact :label="t('keys.quota')" :value="Number.parseFloat(String(Math.min((row.usage_7d / row.rate_limit_7d) * 100, 100) + '%')) || 0" class="h-1 w-full overflow-hidden rounded-full bg-gray-200 dark:bg-dark-600" track-class-name="h-full min-h-[inherit]" :indicator-class-name="['', ([
                       'h-full rounded-full transition-all',
                       row.usage_7d >= row.rate_limit_7d ? 'bg-red-500' :
                       row.usage_7d >= row.rate_limit_7d * 0.8 ? 'bg-yellow-500' :
                       'bg-emerald-500'
-                    ]"
-                    :style="{ width: Math.min((row.usage_7d / row.rate_limit_7d) * 100, 100) + '%' }"
-                  />
-                </div>
+                    ])]" />
                 <div v-if="row.reset_7d_at && formatResetTime(row.reset_7d_at)" class="text-[10px] text-gray-400 dark:text-gray-500 tabular-nums">
                   ⟳ {{ formatResetTime(row.reset_7d_at) }}
                 </div>
               </div>
               <!-- Reset button -->
-              <button
+              <KumoButton
                 v-if="row.usage_5h > 0 || row.usage_1d > 0 || row.usage_7d > 0"
                 @click.stop="confirmResetRateLimitFromTable(row)"
                 class="mt-0.5 inline-flex items-center gap-1 rounded px-1.5 py-0.5 text-xs text-gray-500 transition-colors hover:bg-gray-100 hover:text-primary-600 dark:hover:bg-dark-700 dark:hover:text-primary-400"
@@ -345,7 +296,7 @@
               >
                 <Icon name="refresh" size="xs" />
                 {{ t('keys.resetUsage') }}
-              </button>
+              </KumoButton>
             </div>
             <span v-else class="text-sm text-gray-400 dark:text-dark-500">-</span>
           </template>
@@ -393,24 +344,24 @@
           <template #cell-actions="{ row }">
             <div class="flex items-center gap-1">
               <!-- Use Key Button -->
-              <button
+              <KumoButton
                 @click="openUseKeyModal(row)"
                 class="flex flex-col items-center gap-0.5 rounded-lg p-1.5 text-gray-500 transition-colors hover:bg-green-50 hover:text-green-600 dark:hover:bg-green-900/20 dark:hover:text-green-400"
               >
                 <Icon name="terminal" size="sm" />
                 <span class="text-xs">{{ t('keys.useKey') }}</span>
-              </button>
+              </KumoButton>
               <!-- Import to CC Switch Button -->
-              <button
+              <KumoButton
                 v-if="!publicSettings?.hide_ccs_import_button"
                 @click="importToCcswitch(row)"
                 class="flex flex-col items-center gap-0.5 rounded-lg p-1.5 text-gray-500 transition-colors hover:bg-blue-50 hover:text-blue-600 dark:hover:bg-blue-900/20 dark:hover:text-blue-400"
               >
                 <Icon name="upload" size="sm" />
                 <span class="text-xs">{{ t('keys.importToCcSwitch') }}</span>
-              </button>
+              </KumoButton>
               <!-- Toggle Status Button -->
-              <button
+              <KumoButton
                 @click="toggleKeyStatus(row)"
                 :class="[
                   'flex flex-col items-center gap-0.5 rounded-lg p-1.5 transition-colors',
@@ -422,23 +373,23 @@
                 <Icon v-if="row.status === 'active'" name="ban" size="sm" />
                 <Icon v-else name="checkCircle" size="sm" />
                 <span class="text-xs">{{ row.status === 'active' ? t('keys.disable') : t('keys.enable') }}</span>
-              </button>
+              </KumoButton>
               <!-- Edit Button -->
-              <button
+              <KumoButton
                 @click="editKey(row)"
                 class="flex flex-col items-center gap-0.5 rounded-lg p-1.5 text-gray-500 transition-colors hover:bg-gray-100 hover:text-primary-600 dark:hover:bg-dark-700 dark:hover:text-primary-400"
               >
                 <Icon name="edit" size="sm" />
                 <span class="text-xs">{{ t('common.edit') }}</span>
-              </button>
+              </KumoButton>
               <!-- Delete Button -->
-              <button
+              <KumoButton
                 @click="confirmDelete(row)"
                 class="flex flex-col items-center gap-0.5 rounded-lg p-1.5 text-gray-500 transition-colors hover:bg-red-50 hover:text-red-600 dark:hover:bg-red-900/20 dark:hover:text-red-400"
               >
                 <Icon name="trash" size="sm" />
                 <span class="text-xs">{{ t('common.delete') }}</span>
-              </button>
+              </KumoButton>
             </div>
           </template>
 
@@ -474,8 +425,8 @@
     >
       <form id="key-form" @submit.prevent="handleSubmit" class="space-y-5">
         <div>
-          <label class="input-label">{{ t('keys.nameLabel') }}</label>
-          <input
+          <KumoLabel class="input-label">{{ t('keys.nameLabel') }}</KumoLabel>
+          <KumoInput
             v-model="formData.name"
             type="text"
             required
@@ -487,25 +438,17 @@
 
         <fieldset v-if="!showEditModal" data-tour="key-form-provider">
           <legend class="input-label">{{ t('keys.providerLabel') }}</legend>
-          <div class="grid grid-cols-2 gap-2 sm:grid-cols-4">
-            <label
+          <KumoRadioGroup :model-value="createProvider" name="key-provider" class="contents">
+<div class="grid grid-cols-2 gap-2 sm:grid-cols-4">
+            <KumoRadio :value="provider.value" :checked="createProvider === provider.value" :disabled="provider.count === 0" @change="selectCreateProvider(provider.value)" appearance="card"
               v-for="provider in createProviderOptions"
               :key="provider.value"
               class="relative min-w-0"
               :class="provider.count === 0 ? 'cursor-not-allowed' : 'cursor-pointer'"
             >
-              <input
-                type="radio"
-                name="key-provider"
-                :value="provider.value"
-                :checked="createProvider === provider.value"
-                :disabled="provider.count === 0"
-                class="peer sr-only"
-                @change="selectCreateProvider(provider.value)"
-              />
+
               <span
-                class="flex h-full flex-col items-center gap-2 rounded-xl border border-gray-200 bg-white px-2 py-3 text-center transition-colors peer-checked:border-primary-500 peer-checked:bg-primary-50/60 peer-checked:ring-1 peer-checked:ring-primary-500 peer-focus-visible:outline peer-focus-visible:outline-2 peer-focus-visible:outline-offset-2 peer-focus-visible:outline-primary-500 peer-disabled:opacity-40 dark:border-dark-600 dark:bg-dark-800 dark:peer-checked:border-primary-500 dark:peer-checked:bg-primary-500/10"
-                :class="provider.count > 0 && 'hover:border-primary-300 dark:hover:border-primary-700'"
+                class="flex h-full flex-col items-center gap-2 text-center"
               >
                 <span class="flex h-8 items-center justify-center gap-1.5" aria-hidden="true">
                   <span
@@ -526,15 +469,16 @@
               >
                 <Icon name="check" size="xs" :stroke-width="3" />
               </span>
-            </label>
+            </KumoRadio>
           </div>
+</KumoRadioGroup>
           <p class="mt-2 text-xs leading-5 text-gray-500 dark:text-gray-400" aria-live="polite">
             {{ groups.length === 0 ? t('common.noGroupsAvailable') : t(`keys.providerHints.${createProvider}`) }}
           </p>
         </fieldset>
 
         <div>
-          <label class="input-label" for="key-form-group">{{ t('keys.groupLabel') }}</label>
+          <KumoLabel class="input-label" for="key-form-group">{{ t('keys.groupLabel') }}</KumoLabel>
           <Select
             :key="showEditModal ? 'edit' : createProvider"
             id="key-form-group"
@@ -583,25 +527,11 @@
         <!-- Custom Key Section (only for create) -->
         <div v-if="!showEditModal" class="space-y-3">
           <div class="flex items-center justify-between">
-            <label class="input-label mb-0">{{ t('keys.customKeyLabel') }}</label>
-            <button
-              type="button"
-              @click="formData.use_custom_key = !formData.use_custom_key"
-              :class="[
-                'relative inline-flex h-5 w-9 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none',
-                formData.use_custom_key ? 'bg-primary-600' : 'bg-gray-200 dark:bg-dark-600'
-              ]"
-            >
-              <span
-                :class="[
-                  'pointer-events-none inline-block h-4 w-4 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out',
-                  formData.use_custom_key ? 'translate-x-4' : 'translate-x-0'
-                ]"
-              />
-            </button>
+            <KumoLabel class="input-label mb-0">{{ t('keys.customKeyLabel') }}</KumoLabel>
+            <KumoSwitch v-model="formData.use_custom_key"  />
           </div>
           <div v-if="formData.use_custom_key">
-            <input
+            <KumoInput
               v-model="formData.custom_key"
               type="text"
               class="input font-mono"
@@ -614,7 +544,7 @@
         </div>
 
         <div v-if="showEditModal">
-          <label class="input-label">{{ t('keys.statusLabel') }}</label>
+          <KumoLabel class="input-label">{{ t('keys.statusLabel') }}</KumoLabel>
           <Select
             v-model="formData.status"
             :options="statusOptions"
@@ -625,28 +555,14 @@
         <!-- IP Restriction Section -->
         <div class="space-y-3">
           <div class="flex items-center justify-between">
-            <label class="input-label mb-0">{{ t('keys.ipRestriction') }}</label>
-            <button
-              type="button"
-              @click="formData.enable_ip_restriction = !formData.enable_ip_restriction"
-              :class="[
-                'relative inline-flex h-5 w-9 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none',
-                formData.enable_ip_restriction ? 'bg-primary-600' : 'bg-gray-200 dark:bg-dark-600'
-              ]"
-            >
-              <span
-                :class="[
-                  'pointer-events-none inline-block h-4 w-4 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out',
-                  formData.enable_ip_restriction ? 'translate-x-4' : 'translate-x-0'
-                ]"
-              />
-            </button>
+            <KumoLabel class="input-label mb-0">{{ t('keys.ipRestriction') }}</KumoLabel>
+            <KumoSwitch v-model="formData.enable_ip_restriction"  />
           </div>
 
           <div v-if="formData.enable_ip_restriction" class="space-y-4 pt-2">
             <div>
-              <label class="input-label">{{ t('keys.ipWhitelist') }}</label>
-              <textarea
+              <KumoLabel class="input-label">{{ t('keys.ipWhitelist') }}</KumoLabel>
+              <KumoTextarea
                 v-model="formData.ip_whitelist"
                 rows="3"
                 class="input font-mono text-sm"
@@ -656,8 +572,8 @@
             </div>
 
             <div>
-              <label class="input-label">{{ t('keys.ipBlacklist') }}</label>
-              <textarea
+              <KumoLabel class="input-label">{{ t('keys.ipBlacklist') }}</KumoLabel>
+              <KumoTextarea
                 v-model="formData.ip_blacklist"
                 rows="3"
                 class="input font-mono text-sm"
@@ -670,7 +586,7 @@
 
         <!-- Quota Limit Section -->
         <div class="space-y-3">
-          <label class="input-label">{{ t('keys.quotaLimit') }}</label>
+          <KumoLabel class="input-label">{{ t('keys.quotaLimit') }}</KumoLabel>
           <!-- Switch commented out - always show input, 0 = unlimited
           <div class="flex items-center justify-between">
             <label class="input-label mb-0">{{ t('keys.quotaLimit') }}</label>
@@ -696,7 +612,7 @@
             <div>
               <div class="relative">
                 <span class="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500">$</span>
-                <input
+                <KumoInput
                   v-model.number="formData.quota"
                   type="number"
                   step="0.01"
@@ -710,7 +626,7 @@
 
             <!-- Quota used display (only in edit mode) -->
             <div v-if="showEditModal && selectedKey && selectedKey.quota > 0">
-              <label class="input-label">{{ t('keys.quotaUsed') }}</label>
+              <KumoLabel class="input-label">{{ t('keys.quotaUsed') }}</KumoLabel>
               <div class="flex items-center gap-2">
                 <div class="flex-1 rounded-lg bg-gray-100 px-3 py-2 dark:bg-dark-700">
                   <span class="font-medium text-gray-900 dark:text-white">
@@ -721,14 +637,14 @@
                     ${{ selectedKey.quota?.toFixed(2) || '0.00' }}
                   </span>
                 </div>
-                <button
+                <KumoButton
                   type="button"
                   @click="confirmResetQuota"
                   class="btn btn-secondary text-sm"
                   :title="t('keys.resetQuotaUsed')"
                 >
                   {{ t('keys.reset') }}
-                </button>
+                </KumoButton>
               </div>
             </div>
           </div>
@@ -737,32 +653,18 @@
         <!-- Rate Limit Section -->
         <div class="space-y-3">
           <div class="flex items-center justify-between">
-            <label class="input-label mb-0">{{ t('keys.rateLimitSection') }}</label>
-            <button
-              type="button"
-              @click="formData.enable_rate_limit = !formData.enable_rate_limit"
-              :class="[
-                'relative inline-flex h-5 w-9 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none',
-                formData.enable_rate_limit ? 'bg-primary-600' : 'bg-gray-200 dark:bg-dark-600'
-              ]"
-            >
-              <span
-                :class="[
-                  'pointer-events-none inline-block h-4 w-4 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out',
-                  formData.enable_rate_limit ? 'translate-x-4' : 'translate-x-0'
-                ]"
-              />
-            </button>
+            <KumoLabel class="input-label mb-0">{{ t('keys.rateLimitSection') }}</KumoLabel>
+            <KumoSwitch v-model="formData.enable_rate_limit"  />
           </div>
 
           <div v-if="formData.enable_rate_limit" class="space-y-4 pt-2">
             <p class="input-hint -mt-2">{{ t('keys.rateLimitHint') }}</p>
             <!-- 5-Hour Limit -->
             <div>
-              <label class="input-label">{{ t('keys.rateLimit5h') }}</label>
+              <KumoLabel class="input-label">{{ t('keys.rateLimit5h') }}</KumoLabel>
               <div class="relative">
                 <span class="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500">$</span>
-                <input
+                <KumoInput
                   v-model.number="formData.rate_limit_5h"
                   type="number"
                   step="0.01"
@@ -789,26 +691,21 @@
                     </span>
                   </div>
                 </div>
-                <div class="mt-1 h-1.5 w-full overflow-hidden rounded-full bg-gray-200 dark:bg-dark-600">
-                  <div
-                    :class="[
+                <KumoMeter  compact :label="t('keys.quota')" :value="Number.parseFloat(String(Math.min((selectedKey.usage_5h / selectedKey.rate_limit_5h) * 100, 100) + '%')) || 0" class="mt-1 h-1.5 w-full overflow-hidden rounded-full bg-gray-200 dark:bg-dark-600" track-class-name="h-full min-h-[inherit]" :indicator-class-name="['', ([
                       'h-full rounded-full transition-all',
                       selectedKey.usage_5h >= selectedKey.rate_limit_5h ? 'bg-red-500' :
                       selectedKey.usage_5h >= selectedKey.rate_limit_5h * 0.8 ? 'bg-yellow-500' :
                       'bg-green-500'
-                    ]"
-                    :style="{ width: Math.min((selectedKey.usage_5h / selectedKey.rate_limit_5h) * 100, 100) + '%' }"
-                  />
-                </div>
+                    ])]" />
               </div>
             </div>
 
             <!-- Daily Limit -->
             <div>
-              <label class="input-label">{{ t('keys.rateLimit1d') }}</label>
+              <KumoLabel class="input-label">{{ t('keys.rateLimit1d') }}</KumoLabel>
               <div class="relative">
                 <span class="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500">$</span>
-                <input
+                <KumoInput
                   v-model.number="formData.rate_limit_1d"
                   type="number"
                   step="0.01"
@@ -835,26 +732,21 @@
                     </span>
                   </div>
                 </div>
-                <div class="mt-1 h-1.5 w-full overflow-hidden rounded-full bg-gray-200 dark:bg-dark-600">
-                  <div
-                    :class="[
+                <KumoMeter  compact :label="t('keys.quota')" :value="Number.parseFloat(String(Math.min((selectedKey.usage_1d / selectedKey.rate_limit_1d) * 100, 100) + '%')) || 0" class="mt-1 h-1.5 w-full overflow-hidden rounded-full bg-gray-200 dark:bg-dark-600" track-class-name="h-full min-h-[inherit]" :indicator-class-name="['', ([
                       'h-full rounded-full transition-all',
                       selectedKey.usage_1d >= selectedKey.rate_limit_1d ? 'bg-red-500' :
                       selectedKey.usage_1d >= selectedKey.rate_limit_1d * 0.8 ? 'bg-yellow-500' :
                       'bg-green-500'
-                    ]"
-                    :style="{ width: Math.min((selectedKey.usage_1d / selectedKey.rate_limit_1d) * 100, 100) + '%' }"
-                  />
-                </div>
+                    ])]" />
               </div>
             </div>
 
             <!-- 7-Day Limit -->
             <div>
-              <label class="input-label">{{ t('keys.rateLimit7d') }}</label>
+              <KumoLabel class="input-label">{{ t('keys.rateLimit7d') }}</KumoLabel>
               <div class="relative">
                 <span class="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500">$</span>
-                <input
+                <KumoInput
                   v-model.number="formData.rate_limit_7d"
                   type="number"
                   step="0.01"
@@ -881,29 +773,24 @@
                     </span>
                   </div>
                 </div>
-                <div class="mt-1 h-1.5 w-full overflow-hidden rounded-full bg-gray-200 dark:bg-dark-600">
-                  <div
-                    :class="[
+                <KumoMeter  compact :label="t('keys.quota')" :value="Number.parseFloat(String(Math.min((selectedKey.usage_7d / selectedKey.rate_limit_7d) * 100, 100) + '%')) || 0" class="mt-1 h-1.5 w-full overflow-hidden rounded-full bg-gray-200 dark:bg-dark-600" track-class-name="h-full min-h-[inherit]" :indicator-class-name="['', ([
                       'h-full rounded-full transition-all',
                       selectedKey.usage_7d >= selectedKey.rate_limit_7d ? 'bg-red-500' :
                       selectedKey.usage_7d >= selectedKey.rate_limit_7d * 0.8 ? 'bg-yellow-500' :
                       'bg-green-500'
-                    ]"
-                    :style="{ width: Math.min((selectedKey.usage_7d / selectedKey.rate_limit_7d) * 100, 100) + '%' }"
-                  />
-                </div>
+                    ])]" />
               </div>
             </div>
 
             <!-- Reset Rate Limit button (edit mode only) -->
             <div v-if="showEditModal && selectedKey && (selectedKey.rate_limit_5h > 0 || selectedKey.rate_limit_1d > 0 || selectedKey.rate_limit_7d > 0)">
-              <button
+              <KumoButton
                 type="button"
                 @click="confirmResetRateLimit"
                 class="btn btn-secondary text-sm"
               >
                 {{ t('keys.resetRateLimitUsage') }}
-              </button>
+              </KumoButton>
             </div>
           </div>
         </div>
@@ -911,28 +798,14 @@
         <!-- Expiration Section -->
         <div class="space-y-3">
           <div class="flex items-center justify-between">
-            <label class="input-label mb-0">{{ t('keys.expiration') }}</label>
-            <button
-              type="button"
-              @click="formData.enable_expiration = !formData.enable_expiration"
-              :class="[
-                'relative inline-flex h-5 w-9 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none',
-                formData.enable_expiration ? 'bg-primary-600' : 'bg-gray-200 dark:bg-dark-600'
-              ]"
-            >
-              <span
-                :class="[
-                  'pointer-events-none inline-block h-4 w-4 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out',
-                  formData.enable_expiration ? 'translate-x-4' : 'translate-x-0'
-                ]"
-              />
-            </button>
+            <KumoLabel class="input-label mb-0">{{ t('keys.expiration') }}</KumoLabel>
+            <KumoSwitch v-model="formData.enable_expiration"  />
           </div>
 
           <div v-if="formData.enable_expiration" class="space-y-4 pt-2">
             <!-- Quick select buttons (for both create and edit mode) -->
             <div class="flex flex-wrap gap-2">
-              <button
+              <KumoButton
                 v-for="days in ['7', '30', '90']"
                 :key="days"
                 type="button"
@@ -945,8 +818,8 @@
                 ]"
               >
                 {{ showEditModal ? t('keys.extendDays', { days }) : t('keys.expiresInDays', { days }) }}
-              </button>
-              <button
+              </KumoButton>
+              <KumoButton
                 type="button"
                 @click="formData.expiration_preset = 'custom'"
                 :class="[
@@ -957,13 +830,13 @@
                 ]"
               >
                 {{ t('keys.customDate') }}
-              </button>
+              </KumoButton>
             </div>
 
             <!-- Date picker (always show for precise adjustment) -->
             <div>
-              <label class="input-label">{{ t('keys.expirationDate') }}</label>
-              <input
+              <KumoLabel class="input-label">{{ t('keys.expirationDate') }}</KumoLabel>
+              <KumoInput
                 v-model="formData.expiration_date"
                 type="datetime-local"
                 class="input"
@@ -983,36 +856,17 @@
       </form>
       <template #footer>
         <div class="flex justify-end gap-3">
-          <button @click="closeModals" type="button" class="btn btn-secondary">
+          <KumoButton @click="closeModals" type="button" class="btn btn-secondary">
             {{ t('common.cancel') }}
-          </button>
-          <button
+          </KumoButton>
+          <KumoButton
             form="key-form"
             type="submit"
             :disabled="submitting"
             class="btn btn-primary"
             data-tour="key-form-submit"
           >
-            <svg
-              v-if="submitting"
-              class="-ml-1 mr-2 h-4 w-4 animate-spin"
-              fill="none"
-              viewBox="0 0 24 24"
-            >
-              <circle
-                class="opacity-25"
-                cx="12"
-                cy="12"
-                r="10"
-                stroke="currentColor"
-                stroke-width="4"
-              ></circle>
-              <path
-                class="opacity-75"
-                fill="currentColor"
-                d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-              ></path>
-            </svg>
+            <KumoLoader v-if="submitting" class="-ml-1 mr-2 h-4 w-4 animate-spin" />
             {{
               submitting
                 ? t('keys.saving')
@@ -1020,7 +874,7 @@
                   ? t('common.update')
                   : t('common.create')
             }}
-          </button>
+          </KumoButton>
         </div>
       </template>
     </BaseDialog>
@@ -1092,7 +946,7 @@
           {{ t('keys.ccsClientSelect.description') }}
 	        </p>
 	        <div class="grid grid-cols-2 gap-3">
-	          <button
+	          <KumoButton
 	            @click="handleCcsClientSelect('claude')"
 	            class="flex flex-col items-center gap-2 p-4 rounded-xl border-2 border-gray-200 dark:border-dark-600 hover:border-primary-500 dark:hover:border-primary-500 hover:bg-primary-50 dark:hover:bg-primary-900/20 transition-all"
 	          >
@@ -1103,8 +957,8 @@
 	            <span class="text-xs text-gray-500 dark:text-gray-400">{{
 	              t('keys.ccsClientSelect.claudeCodeDesc')
 	            }}</span>
-	          </button>
-	          <button
+	          </KumoButton>
+	          <KumoButton
 	            @click="handleCcsClientSelect('gemini')"
 	            class="flex flex-col items-center gap-2 p-4 rounded-xl border-2 border-gray-200 dark:border-dark-600 hover:border-primary-500 dark:hover:border-primary-500 hover:bg-primary-50 dark:hover:bg-primary-900/20 transition-all"
 	          >
@@ -1115,91 +969,27 @@
 	            <span class="text-xs text-gray-500 dark:text-gray-400">{{
 	              t('keys.ccsClientSelect.geminiCliDesc')
 	            }}</span>
-	          </button>
+	          </KumoButton>
 	        </div>
 	      </div>
       <template #footer>
         <div class="flex justify-end">
-          <button @click="closeCcsClientSelect" class="btn btn-secondary">
+          <KumoButton @click="closeCcsClientSelect" class="btn btn-secondary">
             {{ t('common.cancel') }}
-          </button>
+          </KumoButton>
         </div>
       </template>
     </BaseDialog>
 
     <!-- Group Selector Dropdown (Teleported to body to avoid overflow clipping) -->
-    <Teleport to="body">
-      <div
-        v-if="groupSelectorKeyId !== null && dropdownPosition"
-        ref="dropdownRef"
-        class="animate-in fade-in slide-in-from-top-2 fixed z-[100000020] w-max max-w-[calc(100vw-16px)] overflow-hidden rounded-xl bg-white shadow-lg ring-1 ring-black/5 duration-200 sm:min-w-[380px] dark:bg-dark-800 dark:ring-white/10"
-        style="pointer-events: auto !important;"
-        :style="{
-          top: dropdownPosition.top !== undefined ? dropdownPosition.top + 'px' : undefined,
-          bottom: dropdownPosition.bottom !== undefined ? dropdownPosition.bottom + 'px' : undefined,
-          left: dropdownPosition.left + 'px'
-        }"
-      >
-        <!-- Search box -->
-        <div class="border-b border-gray-100 p-2 dark:border-dark-700">
-          <div class="relative">
-            <svg class="absolute left-2.5 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
-              <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-            </svg>
-            <input
-              v-model="groupSearchQuery"
-              type="text"
-              class="w-full rounded-lg border border-gray-200 bg-gray-50 py-1.5 pl-8 pr-3 text-sm text-gray-900 placeholder-gray-400 outline-none focus:border-primary-300 focus:ring-1 focus:ring-primary-300 dark:border-dark-600 dark:bg-dark-700 dark:text-white dark:placeholder-gray-500 dark:focus:border-primary-600 dark:focus:ring-primary-600"
-              :placeholder="t('keys.searchGroup')"
-              @click.stop
-            />
-          </div>
-        </div>
-        <!-- Group list -->
-        <div class="max-h-80 overflow-y-auto p-1.5">
-          <button
-            v-for="option in filteredGroupOptions"
-            :key="option.value ?? 'null'"
-            @click="changeGroup(selectedKeyForGroup!, option.value)"
-            :class="[
-              'flex w-full items-center justify-between rounded-lg px-3 py-2.5 text-sm transition-colors',
-              'border-b border-gray-100 last:border-0 dark:border-dark-700',
-              selectedKeyForGroup?.group_id === option.value ||
-              (!selectedKeyForGroup?.group_id && option.value === null)
-                ? 'bg-primary-50 dark:bg-primary-900/20'
-                : 'hover:bg-gray-100 dark:hover:bg-dark-700'
-            ]"
-            :title="option.description || undefined"
-          >
-            <GroupOptionItem
-              :name="option.label"
-              :platform="option.platform"
-              :subscription-type="option.subscriptionType"
-              :rate-multiplier="option.rate"
-              :user-rate-multiplier="option.userRate"
-              :peak-rate-enabled="option.peakRateEnabled"
-              :peak-start="option.peakStart"
-              :peak-end="option.peakEnd"
-              :peak-rate-multiplier="option.peakRateMultiplier"
-              :description="option.description"
-              :selected="
-                selectedKeyForGroup?.group_id === option.value ||
-                (!selectedKeyForGroup?.group_id && option.value === null)
-              "
-            />
-          </button>
-          <!-- Empty state when search has no results -->
-          <div v-if="filteredGroupOptions.length === 0" class="py-4 text-center text-sm text-gray-400 dark:text-gray-500">
-            {{ t('keys.noGroupFound') }}
-          </div>
-        </div>
-      </div>
-    </Teleport>
+
   </AppLayout>
 </template>
 
 <script setup lang="ts">
-	import { ref, reactive, computed, watch, onMounted, onUnmounted, type ComponentPublicInstance } from 'vue'
+import { KumoButton, KumoCheckbox, KumoInput, KumoLabel, KumoLoader, KumoMeter, KumoPopoverContent, KumoPopoverRoot, KumoPopoverTrigger, KumoRadio, KumoRadioGroup, KumoSwitch, KumoTextarea } from '@/components/kumo'
+
+	import { ref, reactive, computed, watch, onMounted, onUnmounted } from 'vue'
 	import { useI18n } from 'vue-i18n'
 	import { useAppStore } from '@/stores/app'
 	import { useOnboardingStore } from '@/stores/onboarding'
@@ -1407,27 +1197,10 @@ const showColumnDropdown = ref(false)
 const pendingCcsRow = ref<ApiKey | null>(null)
 const selectedKey = ref<ApiKey | null>(null)
 const copiedKeyId = ref<number | null>(null)
-const groupSelectorKeyId = ref<number | null>(null)
 const publicSettings = ref<PublicSettings | null>(null)
-const dropdownRef = ref<HTMLElement | null>(null)
-const columnDropdownRef = ref<HTMLElement | null>(null)
-const dropdownPosition = ref<{ top?: number; bottom?: number; left: number } | null>(null)
-const groupButtonRefs = ref<Map<number, HTMLElement>>(new Map())
 let abortController: AbortController | null = null
 
-// Get the currently selected key for group change
-const selectedKeyForGroup = computed(() => {
-  if (groupSelectorKeyId.value === null) return null
-  return apiKeys.value.find((k) => k.id === groupSelectorKeyId.value) || null
-})
 
-const setGroupButtonRef = (keyId: number, el: Element | ComponentPublicInstance | null) => {
-  if (el instanceof HTMLElement) {
-    groupButtonRefs.value.set(keyId, el)
-  } else {
-    groupButtonRefs.value.delete(keyId)
-  }
-}
 
 const formData = ref({
   name: '',
@@ -1556,16 +1329,6 @@ watch([showCreateModal, createProviderOptions], ([isOpen, providers], [wasOpen])
   }
 })
 
-// Group dropdown search
-const groupSearchQuery = ref('')
-const filteredGroupOptions = computed(() => {
-  const query = groupSearchQuery.value.trim().toLowerCase()
-  if (!query) return groupOptions.value
-  return groupOptions.value.filter((opt) => {
-    return opt.label.toLowerCase().includes(query) ||
-      (opt.description && opt.description.toLowerCase().includes(query))
-  })
-})
 
 const copyToClipboard = async (text: string, keyId: number) => {
   const success = await clipboardCopy(text, t('keys.copied'))
@@ -1732,43 +1495,8 @@ const toggleKeyStatus = async (key: ApiKey) => {
   }
 }
 
-const openGroupSelector = (key: ApiKey) => {
-  if (groupSelectorKeyId.value === key.id) {
-    groupSelectorKeyId.value = null
-    dropdownPosition.value = null
-  } else {
-    const buttonEl = groupButtonRefs.value.get(key.id)
-    if (buttonEl) {
-      const rect = buttonEl.getBoundingClientRect()
-      const dropdownEstHeight = 400 // estimated max dropdown height
-      const dropdownEstWidth = Math.min(380, window.innerWidth - 16)
-      const spaceBelow = window.innerHeight - rect.bottom
-      const spaceAbove = rect.top
-      // 夹取 left，避免窄屏下浮层超出视口右缘
-      const left = Math.max(8, Math.min(rect.left, window.innerWidth - dropdownEstWidth - 8))
-
-      if (spaceBelow < dropdownEstHeight && spaceAbove > spaceBelow) {
-        // Not enough space below, pop upward
-        dropdownPosition.value = {
-          bottom: window.innerHeight - rect.top + 4,
-          left
-        }
-      } else {
-        // Default: pop downward
-        dropdownPosition.value = {
-          top: rect.bottom + 4,
-          left
-        }
-      }
-    }
-    groupSelectorKeyId.value = key.id
-    groupSearchQuery.value = ''
-  }
-}
 
 const changeGroup = async (key: ApiKey, newGroupId: number | null) => {
-  groupSelectorKeyId.value = null
-  dropdownPosition.value = null
   if (key.group_id === newGroupId) return
 
   try {
@@ -1777,18 +1505,6 @@ const changeGroup = async (key: ApiKey, newGroupId: number | null) => {
     loadApiKeys()
   } catch (error) {
     appStore.showError(t('keys.failedToChangeGroup'))
-  }
-}
-
-const closeGroupSelector = (event: MouseEvent) => {
-  const target = event.target as HTMLElement
-  // Check if click is inside the dropdown or the trigger button
-  if (!target.closest('.group\\/dropdown') && !dropdownRef.value?.contains(target)) {
-    groupSelectorKeyId.value = null
-    dropdownPosition.value = null
-  }
-  if (columnDropdownRef.value && !columnDropdownRef.value.contains(target)) {
-    showColumnDropdown.value = false
   }
 }
 
@@ -2084,12 +1800,10 @@ onMounted(() => {
   loadGroups()
   loadUserGroupRates()
   loadPublicSettings()
-  document.addEventListener('click', closeGroupSelector)
   resetTimer = setInterval(() => { now.value = new Date() }, 60000)
 })
 
 onUnmounted(() => {
-  document.removeEventListener('click', closeGroupSelector)
   if (resetTimer) clearInterval(resetTimer)
 })
 </script>

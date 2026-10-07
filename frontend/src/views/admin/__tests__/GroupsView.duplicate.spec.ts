@@ -1,5 +1,6 @@
 import { defineComponent } from 'vue'
-import { flushPromises, mount } from '@vue/test-utils'
+import { mount, flushPromises, portal, pressKey } from '@/__tests__/render'
+
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 
 import type { AdminGroup } from '@/types'
@@ -153,7 +154,7 @@ const BaseDialogStub = defineComponent({
 })
 
 function mountView() {
-  return mount(GroupsView, {
+  return mount(GroupsView, { attachTo: document.body,
     global: {
       stubs: {
         AppLayout: AppLayoutStub,
@@ -254,13 +255,13 @@ describe('GroupsView duplicate action', () => {
     await flushPromises()
 
     const button = wrapper.get('[data-testid="group-duplicate"]')
-    void button.trigger('click')
-    void button.trigger('click')
-    await wrapper.vm.$nextTick()
+    ;(button.element as HTMLElement).click()
+    ;(button.element as HTMLElement).click()
+    await flushPromises()
 
     expect(duplicateGroup).toHaveBeenCalledTimes(1)
-    expect(button.attributes('disabled')).toBeDefined()
-    expect(button.attributes('title')).toBe('admin.groups.duplicating')
+    expect(wrapper.get('[data-testid="group-duplicate"]').attributes('disabled')).toBeDefined()
+    expect(wrapper.get('[data-testid="group-duplicate"]').attributes('aria-label')).toBe('admin.groups.duplicating')
 
     resolveDuplicate({ ...sourceGroup, id: 43, name: 'Primary (Copy)', status: 'inactive' })
     await flushPromises()
@@ -385,7 +386,7 @@ describe('GroupsView duplicate action', () => {
   })
 
   it('updates manifest controls immediately and submits the displayed selection', async () => {
-    vi.useFakeTimers()
+    vi.useFakeTimers({ toFake: ['Date', 'setTimeout', 'clearTimeout', 'setInterval', 'clearInterval'] })
     vi.mocked(adminAPI.accounts.list).mockResolvedValue({
       items: [{ id: 5, name: 'Manifest account' }]
     } as never)
@@ -401,13 +402,13 @@ describe('GroupsView duplicate action', () => {
       await toggle.trigger('click')
       expect(toggle.attributes('aria-checked')).toBe('true')
       const search = wrapper.get('[data-testid="codex-manifest-search"]')
-      await search.trigger('focus')
+      ;(search.element as HTMLElement).blur(); (search.element as HTMLElement).focus(); await flushPromises()
       await vi.advanceTimersByTimeAsync(300)
       await flushPromises()
       expect(adminAPI.accounts.list).toHaveBeenCalledWith(
         1, 20, { search: '', platform: 'openai', group: '42' }, expect.anything()
       )
-      await wrapper.get('[data-testid="codex-manifest-dropdown"] button').trigger('click')
+      await portal().get('[role=option]').trigger('click')
       expect(wrapper.get('[data-testid="codex-manifest-selected-tags"]').text()).toContain('Manifest account')
 
       await wrapper.get('[aria-label="remove account 5"]').trigger('click')
@@ -416,8 +417,8 @@ describe('GroupsView duplicate action', () => {
       expect(updateGroup).not.toHaveBeenCalled()
       expect(wrapper.find('[data-testid="codex-manifest-validation-error"]').exists()).toBe(true)
 
-      await search.trigger('focus')
-      await wrapper.get('[data-testid="codex-manifest-dropdown"] button').trigger('click')
+      ;(search.element as HTMLElement).blur(); (search.element as HTMLElement).focus(); await flushPromises()
+      await portal().get('[role=option]').trigger('click')
       expect(wrapper.get('[data-testid="codex-manifest-selected-tags"]').text()).toContain('Manifest account')
       const fallback = wrapper.get('[data-testid="codex-manifest-fallback-toggle"]')
       await fallback.trigger('click')

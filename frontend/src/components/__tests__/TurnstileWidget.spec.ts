@@ -1,5 +1,6 @@
 import { afterEach, describe, expect, it, vi } from 'vitest'
-import { flushPromises, mount, type VueWrapper } from '@vue/test-utils'
+import { mount, flushPromises } from '@/__tests__/render'
+import { type VueWrapper } from '@vue/test-utils'
 import TurnstileWidget from '../TurnstileWidget.vue'
 
 vi.mock('vue-i18n', () => ({

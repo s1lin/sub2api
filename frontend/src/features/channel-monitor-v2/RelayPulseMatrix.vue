@@ -1,5 +1,5 @@
 <template>
-  <section
+  <KumoSurface
     class="card flex min-h-[360px] flex-col overflow-visible !rounded-3xl !border-0 !p-6 shadow-sm ring-1 ring-gray-900/5 dark:!bg-dark-800 dark:ring-dark-700"
   >
     <div class="card-header mb-4 flex shrink-0 flex-wrap items-start justify-between gap-3 !border-0 !p-0">
@@ -15,16 +15,16 @@
         </p>
       </div>
       <div class="flex w-full min-w-0 flex-wrap items-center justify-end gap-2 text-xs text-gray-500 dark:text-gray-400 sm:w-auto">
-        <span class="badge badge-gray shrink-0">{{ bucketLabel }}</span>
+        <KumoBadge class="badge badge-gray shrink-0">{{ bucketLabel }}</KumoBadge>
         <span class="hidden text-[11px] text-gray-400 dark:text-dark-400 sm:inline">{{ t('channelMonitorV2.matrix.wheelZoomX') }}</span>
-        <button
+        <KumoButton
           type="button"
           class="inline-flex shrink-0 items-center rounded-lg border border-gray-200 bg-white px-2 py-1 text-[11px] font-semibold text-gray-600 hover:bg-gray-50 disabled:opacity-50 dark:border-dark-700 dark:bg-dark-900 dark:text-gray-300 dark:hover:bg-dark-800"
           :disabled="!zoomed"
           @click="resetMatrixZoom"
         >
           {{ t('channelMonitorV2.matrix.resetZoom') }}
-        </button>
+        </KumoButton>
       </div>
     </div>
 
@@ -82,42 +82,7 @@
               {{ formatPercent(entry.row.metrics.cache_rate) }}
             </strong>
             <div class="pulse-track grid items-stretch" :style="pulseStyle">
-              <span
-                v-for="slot in entry.slots"
-                :key="slot.start"
-                class="pulse-cell relative rounded-sm border-0 p-0 outline-offset-1"
-                :class="[
-                  slot.bucket ? cellClass(slot.bucket.health, slot.bucket.metrics.request_count) : 'health-unknown',
-                  slot.bucket ? 'has-data' : 'is-empty',
-                ]"
-                tabindex="0"
-                role="img"
-                :title="slot.bucket ? bucketTooltip(slot.bucket) : t('channelMonitorV2.matrix.noTrafficAt', { time: formatBucketRange(slot.start) })"
-                :aria-label="slot.bucket ? bucketTooltip(slot.bucket) : t('channelMonitorV2.matrix.noTrafficAt', { time: formatBucketRange(slot.start) })"
-                @mouseenter="showTooltip($event, slot)"
-                @mousemove="moveTooltip($event)"
-                @mouseleave="hideTooltip"
-                @focus="showTooltip($event, slot)"
-                @blur="hideTooltip"
-              >
-                <span class="pulse-tooltip" role="tooltip">
-                  <template v-if="slot.bucket">
-                    <span class="pulse-tooltip-line pulse-tooltip-title">{{ formatBucketRange(slot.start) }}</span>
-                    <span class="pulse-tooltip-line">{{ t('channelMonitorV2.matrix.scoreLine', { score: formatScore(slot.bucket.health) }) }}</span>
-                    <span class="pulse-tooltip-line">{{ t('channelMonitorV2.metrics.successRateValue', { value: successRate(slot.bucket.metrics) }) }}</span>
-                    <span class="pulse-tooltip-line">{{ t('channelMonitorV2.metrics.ttftValue', { value: latencyPrivacy(slot.bucket.metrics.ttft) }) }}</span>
-                    <span v-if="showThroughput" class="pulse-tooltip-line">{{ t('channelMonitorV2.metrics.tpsValue', { value: formatTps(slot.bucket.metrics.tpm) }) }}</span>
-                    <span class="pulse-tooltip-line">{{ t('channelMonitorV2.metrics.cacheRateValue', { value: formatPercent(slot.bucket.metrics.cache_rate) }) }}</span>
-                    <span class="pulse-tooltip-line">{{ t('channelMonitorV2.metrics.errorRateValue', { value: formatPercent(slot.bucket.metrics.error_rate) }) }}</span>
-                    <span v-if="showThroughput" class="pulse-tooltip-line">{{ t('channelMonitorV2.metrics.rpmValue', { value: formatRate(slot.bucket.metrics.rpm) }) }}</span>
-                    <span class="pulse-tooltip-line">{{ t('channelMonitorV2.metrics.durationValue', { value: latencyPrivacy(slot.bucket.metrics.duration) }) }}</span>
-                  </template>
-                  <template v-else>
-                    <span class="pulse-tooltip-line pulse-tooltip-title">{{ formatBucketRange(slot.start) }}</span>
-                    <span class="pulse-tooltip-line">{{ t('channelMonitorV2.matrix.noTraffic') }}</span>
-                  </template>
-                </span>
-              </span>
+              <KumoTooltip v-for="slot in entry.slots" :key="slot.start" trigger-tag="span" role="img" :trigger-class="`pulse-cell relative rounded-sm border-0 p-0 outline-offset-1 ${slot.bucket ? cellClass(slot.bucket.health, slot.bucket.metrics.request_count) : 'health-unknown'} ${slot.bucket ? 'has-data' : 'is-empty'}`" :label="slot.bucket ? bucketTooltip(slot.bucket) : t('channelMonitorV2.matrix.noTrafficAt', { time: formatBucketRange(slot.start) })" class="max-w-[calc(100vw-2rem)]"><span v-for="(line, index) in (slot.bucket ? bucketTooltipLines(slot.bucket) : emptyTooltipLines(slot.start))" :key="index" class="block text-xs leading-relaxed" :class="index === 0 ? 'font-semibold' : ''">{{ line }}</span></KumoTooltip>
             </div>
           </div>
         </div>
@@ -144,29 +109,15 @@
       </div>
     </div>
 
-    <Teleport to="body">
-      <div
-        v-if="floatingTooltip.visible"
-        class="matrix-floating-tooltip"
-        :style="{ left: `${floatingTooltip.x}px`, top: `${floatingTooltip.y}px` }"
-        role="tooltip"
-      >
-        <span
-          v-for="(line, index) in floatingTooltip.lines"
-          :key="`${index}:${line}`"
-          class="matrix-floating-tooltip-line"
-          :class="index === 0 ? 'matrix-floating-tooltip-title' : ''"
-        >
-          {{ line }}
-        </span>
-      </div>
-    </Teleport>
-  </section>
+
+  </KumoSurface>
 </template>
 
 <script setup lang="ts">
+import { KumoBadge, KumoButton, KumoSurface, KumoTooltip } from '@/components/kumo'
+
 import { useI18n } from 'vue-i18n'
-import { computed, reactive, ref, watch } from 'vue'
+import { computed, ref, watch } from 'vue'
 import type {
   LatencyMetric,
   MonitorCoverage,
@@ -213,12 +164,6 @@ const props = withDefaults(
 
 type AlignedSlot = { start: string; bucket?: MonitorMatrixBucket }
 
-const floatingTooltip = reactive({
-  visible: false,
-  x: 0,
-  y: 0,
-  lines: [] as string[],
-})
 
 const scrollRef = ref<HTMLElement | null>(null)
 const zoom = ref<ZoomState>(resetZoom())
@@ -402,34 +347,6 @@ function emptyTooltipLines(start: string): string[] {
   return [formatBucketRange(start), t('channelMonitorV2.matrix.noTraffic')]
 }
 
-function showTooltip(event: MouseEvent | FocusEvent, slot: AlignedSlot) {
-  floatingTooltip.lines = slot.bucket ? bucketTooltipLines(slot.bucket) : emptyTooltipLines(slot.start)
-  floatingTooltip.visible = true
-  positionTooltip(event)
-}
-
-function moveTooltip(event: MouseEvent) {
-  if (!floatingTooltip.visible) return
-  positionTooltip(event)
-}
-
-function hideTooltip() {
-  floatingTooltip.visible = false
-}
-
-function positionTooltip(event: MouseEvent | FocusEvent) {
-  if ('clientX' in event) {
-    floatingTooltip.x = Math.min(window.innerWidth - 12, Math.max(12, event.clientX))
-    floatingTooltip.y = Math.min(window.innerHeight - 12, Math.max(12, event.clientY)) - 12
-    return
-  }
-  const target = event.target as HTMLElement | null
-  const rect = target?.getBoundingClientRect()
-  if (!rect) return
-  floatingTooltip.x = rect.left + rect.width / 2
-  floatingTooltip.y = rect.top - 10
-}
-
 function latencyPrivacy(metric: LatencyMetric) {
   return formatLatencyPrivacy(metric.p50_ms, metric.p90_ms, metric.avg_ms, metric.p95_ms)
 }
@@ -555,98 +472,6 @@ function formatBucketRange(value: string) {
   outline: 2px solid rgb(var(--color-primary-500, 99 102 241) / 0.55);
   outline-offset: 1px;
   z-index: 5;
-}
-
-/* CSS-only hover tooltip — no click modal, no absolute request counts.
-   Native title is also provided so dense/scrolling layouts can always show the
-   full content even when a browser clips transformed children. */
-.pulse-tooltip {
-  pointer-events: none;
-  position: absolute;
-  bottom: calc(100% + 8px);
-  left: 50%;
-  z-index: 40;
-  min-width: 11.5rem;
-  max-width: 16rem;
-  transform: translateX(-50%) translateY(4px);
-  border-radius: 0.75rem;
-  border: 1px solid rgb(229 231 235);
-  background: rgb(255 255 255);
-  padding: 0.5rem 0.625rem;
-  box-shadow: 0 10px 25px -5px rgb(0 0 0 / 0.15);
-  opacity: 0;
-  visibility: hidden;
-  transition: opacity 0.12s ease, transform 0.12s ease, visibility 0.12s;
-  white-space: nowrap;
-}
-:global(.dark) .pulse-tooltip {
-  border-color: rgb(55 65 81);
-  background: rgb(17 24 39);
-  color: rgb(229 231 235);
-}
-.pulse-tooltip-line {
-  display: block;
-  font-size: 11px;
-  line-height: 1.45;
-  color: rgb(75 85 99);
-}
-:global(.dark) .pulse-tooltip-line {
-  color: rgb(209 213 219);
-}
-.pulse-tooltip-title {
-  margin-bottom: 0.2rem;
-  font-weight: 600;
-  color: rgb(17 24 39);
-}
-:global(.dark) .pulse-tooltip-title {
-  color: rgb(243 244 246);
-}
-.pulse-cell:hover .pulse-tooltip,
-.pulse-cell:focus-visible .pulse-tooltip {
-  opacity: 1;
-  visibility: visible;
-  transform: translateX(-50%) translateY(0);
-}
-/* Keep semantic/test text in-cell, but render the visible tooltip through body
-   Teleport so it cannot be clipped by the matrix viewport. */
-.pulse-tooltip {
-  display: none;
-}
-.matrix-floating-tooltip {
-  pointer-events: none;
-  position: fixed;
-  z-index: 9999;
-  min-width: 11.5rem;
-  max-width: min(18rem, calc(100vw - 1.5rem));
-  transform: translate(-50%, -100%);
-  border-radius: 0.75rem;
-  border: 1px solid rgb(229 231 235);
-  background: rgb(255 255 255);
-  padding: 0.5rem 0.625rem;
-  box-shadow: 0 18px 40px -12px rgb(0 0 0 / 0.28);
-  white-space: nowrap;
-}
-:global(.dark) .matrix-floating-tooltip {
-  border-color: rgb(55 65 81);
-  background: rgb(17 24 39);
-  color: rgb(229 231 235);
-}
-.matrix-floating-tooltip-line {
-  display: block;
-  font-size: 11px;
-  line-height: 1.45;
-  color: rgb(75 85 99);
-}
-:global(.dark) .matrix-floating-tooltip-line {
-  color: rgb(209 213 219);
-}
-.matrix-floating-tooltip-title {
-  margin-bottom: 0.2rem;
-  font-weight: 600;
-  color: rgb(17 24 39);
-}
-:global(.dark) .matrix-floating-tooltip-title {
-  color: rgb(243 244 246);
 }
 
 @media (max-width: 640px) {

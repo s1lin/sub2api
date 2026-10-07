@@ -2,14 +2,14 @@
   <div class="space-y-4">
     <!-- Headers key-value rows -->
     <div>
-      <label class="input-label">{{ t('admin.channelMonitor.advanced.headers') }}</label>
+      <KumoLabel class="input-label">{{ t('admin.channelMonitor.advanced.headers') }}</KumoLabel>
       <div class="space-y-1.5">
         <div
           v-for="(row, i) in headerRows"
           :key="i"
           class="flex items-center gap-2"
         >
-          <input
+          <KumoInput
             v-model="row.name"
             type="text"
             spellcheck="false"
@@ -17,7 +17,7 @@
             class="input w-52 flex-none font-mono text-xs"
             @blur="commitHeaders"
           />
-          <input
+          <KumoInput
             v-model="row.value"
             type="text"
             spellcheck="false"
@@ -25,7 +25,7 @@
             class="input flex-1 font-mono text-xs"
             @blur="commitHeaders"
           />
-          <button
+          <KumoButton
             type="button"
             class="flex-none rounded p-1 text-gray-400 hover:bg-red-50 hover:text-red-600 dark:hover:bg-red-500/10 dark:hover:text-red-400"
             :title="t('common.delete')"
@@ -34,9 +34,9 @@
             <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
             </svg>
-          </button>
+          </KumoButton>
         </div>
-        <button
+        <KumoButton
           type="button"
           class="inline-flex items-center gap-1 rounded border border-dashed border-gray-300 px-2 py-1 text-xs text-gray-500 hover:border-primary-400 hover:text-primary-600 dark:border-dark-600 dark:text-gray-400 dark:hover:border-primary-500 dark:hover:text-primary-400"
           @click="addRow"
@@ -45,7 +45,7 @@
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
           </svg>
           {{ t('admin.channelMonitor.advanced.headerAddRow') }}
-        </button>
+        </KumoButton>
       </div>
       <p v-if="headersError" class="mt-1 text-xs text-red-500">{{ headersError }}</p>
       <p v-else class="mt-1 text-xs text-gray-400">
@@ -55,9 +55,9 @@
 
     <!-- Body mode radio -->
     <div>
-      <label class="input-label">{{ t('admin.channelMonitor.advanced.bodyMode') }}</label>
+      <KumoLabel class="input-label">{{ t('admin.channelMonitor.advanced.bodyMode') }}</KumoLabel>
       <div class="grid grid-cols-3 gap-3">
-        <button
+        <KumoButton
           v-for="opt in bodyModeOptions"
           :key="opt.value"
           type="button"
@@ -66,7 +66,7 @@
           @click="updateBodyMode(opt.value)"
         >
           {{ opt.label }}
-        </button>
+        </KumoButton>
       </div>
       <p class="mt-1 text-xs text-gray-400">
         {{ bodyModeHint }}
@@ -76,17 +76,17 @@
     <!-- Body JSON (仅当 mode != off) -->
     <div v-if="bodyOverrideMode !== 'off'">
       <div class="mb-1 flex items-center justify-between">
-        <label class="input-label !mb-0">{{ t('admin.channelMonitor.advanced.bodyJson') }}</label>
-        <button
+        <KumoLabel class="input-label !mb-0">{{ t('admin.channelMonitor.advanced.bodyJson') }}</KumoLabel>
+        <KumoButton
           type="button"
           class="text-xs text-primary-600 hover:underline disabled:cursor-not-allowed disabled:text-gray-400 disabled:no-underline dark:text-primary-400"
           :disabled="!bodyText.trim()"
           @click="formatBody"
         >
           {{ t('admin.channelMonitor.advanced.bodyJsonFormat') }}
-        </button>
+        </KumoButton>
       </div>
-      <textarea
+      <KumoTextarea
         v-model="bodyText"
         rows="10"
         :placeholder="bodyPlaceholder"
@@ -104,6 +104,8 @@
 </template>
 
 <script setup lang="ts">
+import { KumoButton, KumoInput, KumoLabel, KumoTextarea } from '@/components/kumo'
+
 import { computed, ref, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
 import type { APIMode, BodyOverrideMode, Provider } from '@/api/admin/channelMonitor'

@@ -7,14 +7,14 @@
 
     <template #footer>
       <div class="flex justify-end space-x-3">
-        <button
+        <KumoButton
           @click="handleCancel"
           type="button"
           class="rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 dark:border-dark-600 dark:bg-dark-700 dark:text-gray-200 dark:hover:bg-dark-600 dark:focus:ring-offset-dark-800"
         >
           {{ cancelText }}
-        </button>
-        <button
+        </KumoButton>
+        <KumoButton
           @click="handleConfirm"
           type="button"
           :class="[
@@ -25,13 +25,15 @@
           ]"
         >
           {{ confirmText }}
-        </button>
+        </KumoButton>
       </div>
     </template>
   </BaseDialog>
 </template>
 
 <script setup lang="ts">
+import { KumoButton } from '@/components/kumo'
+
 import { computed } from 'vue'
 import { useI18n } from 'vue-i18n'
 import BaseDialog from './BaseDialog.vue'

@@ -1,82 +1,39 @@
 <template>
-  <div class="relative" ref="containerRef">
-    <button
-      type="button"
-      @click="toggle"
-      :class="['date-picker-trigger', isOpen && 'date-picker-trigger-open']"
-    >
-      <span class="date-picker-icon">
-        <Icon name="calendar" size="sm" />
-      </span>
-      <span class="date-picker-value">
-        {{ displayValue }}
-      </span>
-      <span class="date-picker-chevron">
-        <Icon
-          name="chevronDown"
-          size="sm"
-          :class="['transition-transform duration-200', isOpen && 'rotate-180']"
-        />
-      </span>
-    </button>
-
-    <Transition name="date-picker-dropdown">
-      <div v-if="isOpen" class="date-picker-dropdown">
-        <!-- Quick presets -->
-        <div class="date-picker-presets">
-          <button
-            v-for="preset in presets"
-            :key="preset.value"
-            @click="selectPreset(preset)"
-            :class="['date-picker-preset', isPresetActive(preset) && 'date-picker-preset-active']"
-          >
-            {{ t(preset.labelKey) }}
-          </button>
-        </div>
-
-        <div class="date-picker-divider"></div>
-
-        <!-- Custom date range inputs -->
-        <div class="date-picker-custom">
-          <div class="date-picker-field">
-            <label class="date-picker-label">{{ t('dates.startDate') }}</label>
-            <input
-              type="date"
-              v-model="localStartDate"
-              :max="localEndDate || tomorrow()"
-              class="date-picker-input"
-              @change="onDateChange"
-            />
-          </div>
-          <div class="date-picker-separator">
-            <Icon name="arrowRight" size="sm" class="text-gray-400" />
-          </div>
-          <div class="date-picker-field">
-            <label class="date-picker-label">{{ t('dates.endDate') }}</label>
-            <input
-              type="date"
-              v-model="localEndDate"
-              :min="localStartDate"
-              :max="tomorrow()"
-              class="date-picker-input"
-              @change="onDateChange"
-            />
-          </div>
-        </div>
-
-        <!-- Apply button -->
-        <div class="date-picker-actions">
-          <button @click="apply" class="date-picker-apply">
-            {{ t('dates.apply') }}
-          </button>
-        </div>
-      </div>
-    </Transition>
-  </div>
+  <KumoPopover v-model="isOpen" :label="displayValue" trigger-class="date-picker-trigger" class="platform-date-picker">
+    <template #trigger>
+      <Icon name="calendar" size="sm" />
+      <span>{{ displayValue }}</span>
+      <Icon name="chevronDown" size="sm" />
+    </template>
+    <div class="grid grid-cols-2 gap-1 p-2">
+      <KumoButton v-for="preset in presets" :key="preset.value" size="sm"
+        :variant="isPresetActive(preset) ? 'secondary' : 'ghost'"
+        class="date-picker-preset w-full justify-start" @click="selectPreset(preset)">
+        {{ t(preset.labelKey) }}
+      </KumoButton>
+    </div>
+    <KumoDatePicker :locale="locale" :start-date="localStartDate" :end-date="localEndDate" :max="tomorrow()"
+      @range-change="onCalendarChange" class="mx-auto" />
+    <div class="flex gap-2 p-3">
+      <KumoLabel class="min-w-0 flex-1 text-xs">{{ t('dates.startDate') }}
+        <KumoInput type="date" v-model="localStartDate" :max="localEndDate || tomorrow()"
+          :aria-label="t('dates.startDate')" class="w-full" @change="onDateChange" />
+      </KumoLabel>
+      <KumoLabel class="min-w-0 flex-1 text-xs">{{ t('dates.endDate') }}
+        <KumoInput type="date" v-model="localEndDate" :min="localStartDate" :max="tomorrow()"
+          :aria-label="t('dates.endDate')" class="w-full" @change="onDateChange" />
+      </KumoLabel>
+    </div>
+    <div class="flex justify-end px-3 pb-3">
+      <KumoButton variant="primary" class="date-picker-apply" :disabled="!localStartDate || !localEndDate || localStartDate > localEndDate" @click="apply">{{ t('dates.apply') }}</KumoButton>
+    </div>
+  </KumoPopover>
 </template>
 
 <script setup lang="ts">
-import { ref, computed, watch, onMounted, onUnmounted } from 'vue'
+import { KumoButton, KumoDatePicker, KumoInput, KumoLabel, KumoPopover } from '@/components/kumo'
+
+import { ref, computed, watch, onMounted } from 'vue'
 import { useI18n } from 'vue-i18n'
 import Icon from '@/components/icons/Icon.vue'
 
@@ -103,7 +60,6 @@ const emit = defineEmits<Emits>()
 const { t, locale } = useI18n()
 
 const isOpen = ref(false)
-const containerRef = ref<HTMLElement | null>(null)
 const localStartDate = ref(props.startDate)
 const localEndDate = ref(props.endDate)
 const activePreset = ref<string | null>('last24Hours')
@@ -256,8 +212,10 @@ const onDateChange = () => {
   }
 }
 
-const toggle = () => {
-  isOpen.value = !isOpen.value
+const onCalendarChange = (range: { start: string; end: string }) => {
+  localStartDate.value = range.start
+  localEndDate.value = range.end
+  onDateChange()
 }
 
 const apply = () => {
@@ -269,18 +227,6 @@ const apply = () => {
     preset: activePreset.value
   })
   isOpen.value = false
-}
-
-const handleClickOutside = (event: MouseEvent) => {
-  if (containerRef.value && !containerRef.value.contains(event.target as Node)) {
-    isOpen.value = false
-  }
-}
-
-const handleEscape = (event: KeyboardEvent) => {
-  if (event.key === 'Escape' && isOpen.value) {
-    isOpen.value = false
-  }
 }
 
 // Restore the applied range after dismissal, including parent updates from Apply.
@@ -309,130 +255,9 @@ watch(
 )
 
 onMounted(() => {
-  document.addEventListener('click', handleClickOutside)
-  document.addEventListener('keydown', handleEscape)
   // Initialize active preset detection
   onDateChange()
 })
 
-onUnmounted(() => {
-  document.removeEventListener('click', handleClickOutside)
-  document.removeEventListener('keydown', handleEscape)
-})
+
 </script>
-
-<style scoped>
-.date-picker-trigger {
-  @apply flex items-center gap-2;
-  @apply rounded-lg px-3 py-2 text-sm;
-  @apply bg-white dark:bg-dark-800;
-  @apply border border-gray-200 dark:border-dark-600;
-  @apply text-gray-700 dark:text-gray-300;
-  @apply transition-all duration-200;
-  @apply focus:border-primary-500 focus:outline-none focus:ring-2 focus:ring-primary-500/30;
-  @apply hover:border-gray-300 dark:hover:border-dark-500;
-  @apply cursor-pointer;
-}
-
-.date-picker-trigger-open {
-  @apply border-primary-500 ring-2 ring-primary-500/30;
-}
-
-.date-picker-icon {
-  @apply text-gray-400 dark:text-dark-400;
-}
-
-.date-picker-value {
-  @apply font-medium;
-}
-
-.date-picker-chevron {
-  @apply text-gray-400 dark:text-dark-400;
-}
-
-.date-picker-dropdown {
-  @apply absolute left-0 z-[100] mt-2;
-  @apply bg-white dark:bg-dark-800;
-  @apply rounded-xl;
-  @apply border border-gray-200 dark:border-dark-700;
-  @apply shadow-lg shadow-black/10 dark:shadow-black/30;
-  @apply overflow-hidden;
-  @apply min-w-[320px];
-}
-
-.date-picker-presets {
-  @apply grid grid-cols-2 gap-1 p-2;
-}
-
-.date-picker-preset {
-  @apply rounded-md px-3 py-1.5 text-xs font-medium;
-  @apply text-gray-600 dark:text-gray-400;
-  @apply hover:bg-gray-100 dark:hover:bg-dark-700;
-  @apply transition-colors duration-150;
-}
-
-.date-picker-preset-active {
-  @apply bg-primary-100 dark:bg-primary-900/30;
-  @apply text-primary-700 dark:text-primary-300;
-}
-
-.date-picker-divider {
-  @apply border-t border-gray-100 dark:border-dark-700;
-}
-
-.date-picker-custom {
-  @apply flex items-end gap-2 p-3;
-}
-
-.date-picker-field {
-  @apply flex-1;
-}
-
-.date-picker-label {
-  @apply mb-1 block text-xs font-medium text-gray-500 dark:text-gray-400;
-}
-
-.date-picker-input {
-  @apply w-full rounded-md px-2 py-1.5 text-sm;
-  @apply bg-gray-50 dark:bg-dark-700;
-  @apply border border-gray-200 dark:border-dark-600;
-  @apply text-gray-900 dark:text-gray-100;
-  @apply focus:border-primary-500 focus:outline-none focus:ring-2 focus:ring-primary-500/30;
-}
-
-.date-picker-input::-webkit-calendar-picker-indicator {
-  @apply cursor-pointer opacity-60 hover:opacity-100;
-  filter: invert(0.5);
-}
-
-.dark .date-picker-input::-webkit-calendar-picker-indicator {
-  filter: none;
-}
-
-.date-picker-separator {
-  @apply flex items-center justify-center pb-1;
-}
-
-.date-picker-actions {
-  @apply flex justify-end p-2 pt-0;
-}
-
-.date-picker-apply {
-  @apply rounded-lg px-4 py-1.5 text-sm font-medium;
-  @apply bg-primary-600 text-white;
-  @apply hover:bg-primary-700;
-  @apply transition-colors duration-150;
-}
-
-/* Dropdown animation */
-.date-picker-dropdown-enter-active,
-.date-picker-dropdown-leave-active {
-  transition: all 0.2s ease;
-}
-
-.date-picker-dropdown-enter-from,
-.date-picker-dropdown-leave-to {
-  opacity: 0;
-  transform: translateY(-8px);
-}
-</style>

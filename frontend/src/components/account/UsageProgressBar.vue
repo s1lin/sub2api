@@ -41,12 +41,8 @@
       </span>
 
       <!-- Progress bar container -->
-      <div class="h-1.5 w-8 shrink-0 overflow-hidden rounded-full bg-gray-200 dark:bg-gray-700">
-        <div
-          :class="['h-full transition-all duration-300', barClass]"
-          :style="{ width: barWidth }"
-        ></div>
-      </div>
+      <KumoMeter compact :label="label" :value="utilization" class="w-8 shrink-0"
+        track-class-name="h-1.5 bg-gray-200 dark:bg-gray-700" :indicator-class-name="barClass" />
 
       <!-- Percentage -->
       <span :class="['w-[32px] shrink-0 text-right text-[10px] font-medium', textClass]">
@@ -62,6 +58,7 @@
 </template>
 
 <script setup lang="ts">
+import { KumoMeter } from '@/components/kumo'
 import { computed, ref, watch } from 'vue'
 import { useIntervalFn } from '@vueuse/core'
 import { useI18n } from 'vue-i18n'
@@ -164,11 +161,6 @@ const textClass = computed(() => {
   } else {
     return 'text-gray-600 dark:text-gray-400'
   }
-})
-
-// Bar width (capped at 100%)
-const barWidth = computed(() => {
-  return `${Math.min(Math.max(props.utilization, 0), 100)}%`
 })
 
 // Display percentage (cap at 999% for readability)

@@ -19,20 +19,20 @@
     <div v-else>
       <!-- 全选/全不选 -->
       <div class="mb-2 flex items-center gap-3 text-xs">
-        <button
+        <KumoButton
           type="button"
           class="text-primary-600 hover:underline dark:text-primary-400"
           @click="selectAll"
         >
           {{ t('common.selectAll') }}
-        </button>
-        <button
+        </KumoButton>
+        <KumoButton
           type="button"
           class="text-gray-500 hover:underline dark:text-gray-400"
           @click="selectNone"
         >
           {{ t('admin.channelMonitor.template.selectNone') }}
-        </button>
+        </KumoButton>
         <span class="ml-auto text-gray-500 dark:text-gray-400">
           {{ t('admin.channelMonitor.template.selectedCount', {
             n: selectedIds.length,
@@ -48,7 +48,7 @@
           class="flex cursor-pointer items-center gap-3 px-3 py-2 hover:bg-gray-50 dark:hover:bg-dark-800"
           @click="toggle(m.id)"
         >
-          <input
+          <KumoCheckbox
             type="checkbox"
             :checked="selectedSet.has(m.id)"
             class="h-4 w-4 rounded border-gray-300 text-primary-600 focus:ring-primary-500"
@@ -69,10 +69,10 @@
 
     <template #footer>
       <div class="flex justify-end gap-2">
-        <button class="btn btn-secondary" @click="$emit('close')">
+        <KumoButton class="btn btn-secondary" @click="$emit('close')">
           {{ t('common.cancel') }}
-        </button>
-        <button
+        </KumoButton>
+        <KumoButton
           class="btn btn-primary"
           :disabled="submitting || selectedIds.length === 0"
           @click="handleApply"
@@ -80,13 +80,15 @@
           {{ submitting
             ? t('common.submitting')
             : t('admin.channelMonitor.template.applyPickerConfirm', { n: selectedIds.length }) }}
-        </button>
+        </KumoButton>
       </div>
     </template>
   </BaseDialog>
 </template>
 
 <script setup lang="ts">
+import { KumoButton, KumoCheckbox } from '@/components/kumo'
+
 import { computed, onUnmounted, ref, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useAppStore } from '@/stores/app'

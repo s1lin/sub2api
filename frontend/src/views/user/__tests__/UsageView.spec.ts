@@ -1,5 +1,6 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
-import { flushPromises, mount } from '@vue/test-utils'
+import { mount, flushPromises } from '@/__tests__/render'
+
 
 import UsageView from '../UsageView.vue'
 import Select, { type SelectOption } from '@/components/common/Select.vue'
@@ -152,7 +153,7 @@ const usageLog = {
 function mountUsageView() {
   return mount(UsageView, {
     global: {
-      stubs: {
+      stubs: { KumoSurface: { template: '<div><slot /></div>' },
         AppLayout: simpleStub,
         Pagination: true,
         Select: true,

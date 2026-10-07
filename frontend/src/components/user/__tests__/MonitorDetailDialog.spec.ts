@@ -1,4 +1,5 @@
-import { enableAutoUnmount, flushPromises, mount } from '@vue/test-utils'
+import { mount, flushPromises } from '@/__tests__/render'
+import { enableAutoUnmount } from '@vue/test-utils'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import MonitorDetailDialog from '../MonitorDetailDialog.vue'
 const mocks = vi.hoisted(() => ({ status: vi.fn(), showError: vi.fn() }))

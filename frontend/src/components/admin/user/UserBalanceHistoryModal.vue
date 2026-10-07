@@ -56,16 +56,16 @@
           @change="loadHistory(1)"
         />
         <!-- Deposit button - matches menu style -->
-        <button
+        <KumoButton
           v-if="!hideActions"
           @click="emit('deposit')"
           class="flex items-center gap-2 rounded-lg border border-gray-200 bg-white px-3 py-2 text-sm text-gray-700 transition-colors hover:bg-gray-50 dark:border-dark-600 dark:bg-dark-800 dark:text-gray-300 dark:hover:bg-dark-700"
         >
           <Icon name="plus" size="sm" class="text-emerald-500" :stroke-width="2" />
           {{ t('admin.users.deposit') }}
-        </button>
+        </KumoButton>
         <!-- Withdraw button - matches menu style -->
-        <button
+        <KumoButton
           v-if="!hideActions"
           @click="emit('withdraw')"
           class="flex items-center gap-2 rounded-lg border border-gray-200 bg-white px-3 py-2 text-sm text-gray-700 transition-colors hover:bg-gray-50 dark:border-dark-600 dark:bg-dark-800 dark:text-gray-300 dark:hover:bg-dark-700"
@@ -74,15 +74,12 @@
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 12H4" />
           </svg>
           {{ t('admin.users.withdraw') }}
-        </button>
+        </KumoButton>
       </div>
 
       <!-- Loading -->
       <div v-if="loading" class="flex justify-center py-8">
-        <svg class="h-8 w-8 animate-spin text-primary-500" fill="none" viewBox="0 0 24 24">
-          <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4" />
-          <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
-        </svg>
+        <KumoLoader class="h-8 w-8 animate-spin text-primary-500" />
       </div>
 
       <!-- Empty state -->
@@ -149,29 +146,31 @@
 
       <!-- Pagination -->
       <div v-if="totalPages > 1" class="flex items-center justify-center gap-2 pt-2">
-        <button
+        <KumoButton
           :disabled="currentPage <= 1"
           class="btn btn-secondary px-3 py-1 text-sm"
           @click="loadHistory(currentPage - 1)"
         >
           {{ t('pagination.previous') }}
-        </button>
+        </KumoButton>
         <span class="text-sm text-gray-500 dark:text-dark-400">
           {{ currentPage }} / {{ totalPages }}
         </span>
-        <button
+        <KumoButton
           :disabled="currentPage >= totalPages"
           class="btn btn-secondary px-3 py-1 text-sm"
           @click="loadHistory(currentPage + 1)"
         >
           {{ t('pagination.next') }}
-        </button>
+        </KumoButton>
       </div>
     </div>
   </BaseDialog>
 </template>
 
 <script setup lang="ts">
+import { KumoButton, KumoLoader } from '@/components/kumo'
+
 import { ref, computed, watch, onUnmounted } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { adminAPI, type BalanceHistoryItem } from '@/api/admin'

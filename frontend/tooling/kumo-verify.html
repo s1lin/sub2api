@@ -1,0 +1,12 @@
+<!doctype html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Kumo interaction verification</title></head><body><div id="app"></div><script type="module">
+import { createApp } from 'vue'
+import { createI18n } from 'vue-i18n'
+import { createPinia } from 'pinia'
+import Harness from './KumoHarness.vue'
+import en from '../src/i18n/locales/en'
+import '../src/style.css'
+import '../src/styles/brand.css'
+import '../src/styles/kumo.css'
+document.documentElement.dataset.mode = 'light'
+createApp(Harness).use(createPinia()).use(createI18n({ legacy: false, locale: 'en', missingWarn: false, fallbackWarn: false, messages: { en: { admin: { settings: en.admin.settings, backup: en.admin.backup, groups: en.admin.groups } } } })).mount('#app')
+</script></body></html>

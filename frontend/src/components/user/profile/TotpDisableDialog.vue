@@ -1,9 +1,6 @@
 <template>
-  <div class="fixed inset-0 z-50 overflow-y-auto" @click.self="$emit('close')">
-    <div class="flex min-h-full items-center justify-center p-4">
-      <div class="fixed inset-0 bg-black/50 transition-opacity" @click="$emit('close')"></div>
-
-      <div class="relative w-full max-w-md transform rounded-xl bg-white p-6 shadow-xl transition-all dark:bg-dark-800">
+  <KumoDialog :show="true" custom-layout width="narrow" :title="t('profile.totp.disableTitle')" :close-on-click-outside="true"  @close="$emit('close')">
+    <div class="relative p-6">
         <!-- Header -->
         <div class="mb-6">
           <div class="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-red-100 dark:bg-red-900/30">
@@ -21,15 +18,15 @@
 
         <!-- Loading verification method -->
         <div v-if="methodLoading" class="flex items-center justify-center py-8">
-          <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-primary-500"></div>
+          <KumoLoader class="h-8 w-8" />
         </div>
 
         <form v-else @submit.prevent="handleDisable" class="space-y-4">
           <!-- Email verification -->
           <div v-if="verificationMethod === 'email'">
-            <label class="input-label">{{ t('profile.totp.emailCode') }}</label>
+            <KumoLabel class="input-label">{{ t('profile.totp.emailCode') }}</KumoLabel>
             <div class="flex gap-2">
-              <input
+              <KumoInput
                 v-model="form.emailCode"
                 type="text"
                 maxlength="6"
@@ -37,23 +34,23 @@
                 class="input flex-1"
                 :placeholder="t('profile.totp.enterEmailCode')"
               />
-              <button
+              <KumoButton
                 type="button"
                 class="btn btn-secondary whitespace-nowrap"
                 :disabled="sendingCode || codeCooldown > 0"
                 @click="handleSendCode"
               >
                 {{ codeCooldown > 0 ? `${codeCooldown}s` : (sendingCode ? t('common.sending') : t('profile.totp.sendCode')) }}
-              </button>
+              </KumoButton>
             </div>
           </div>
 
           <!-- Password verification -->
           <div v-else>
-            <label for="password" class="input-label">
+            <KumoLabel for="password" class="input-label">
               {{ t('profile.currentPassword') }}
-            </label>
-            <input
+            </KumoLabel>
+            <KumoInput
               id="password"
               v-model="form.password"
               type="password"
@@ -65,24 +62,26 @@
 
           <!-- Actions -->
           <div class="flex justify-end gap-3 pt-4">
-            <button type="button" class="btn btn-secondary" @click="$emit('close')">
+            <KumoButton type="button" class="btn btn-secondary" @click="$emit('close')">
               {{ t('common.cancel') }}
-            </button>
-            <button
+            </KumoButton>
+            <KumoButton
               type="submit"
               class="btn btn-danger"
               :disabled="loading || !canSubmit"
             >
               {{ loading ? t('common.processing') : t('profile.totp.confirmDisable') }}
-            </button>
+            </KumoButton>
           </div>
         </form>
-      </div>
+
     </div>
-  </div>
+  </KumoDialog>
 </template>
 
 <script setup lang="ts">
+import { KumoButton, KumoDialog, KumoInput, KumoLabel, KumoLoader } from '@/components/kumo'
+
 import { ref, onMounted, onUnmounted, computed } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useAppStore } from '@/stores/app'

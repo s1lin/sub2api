@@ -11,10 +11,10 @@
         <p class="text-sm text-gray-500 dark:text-gray-400">
           {{ t('admin.tlsFingerprintProfiles.description') }}
         </p>
-        <button @click="showCreateModal = true" class="btn btn-primary btn-sm">
+        <KumoButton @click="showCreateModal = true" class="btn btn-primary btn-sm">
           <Icon name="plus" size="sm" class="mr-1" />
           {{ t('admin.tlsFingerprintProfiles.createProfile') }}
-        </button>
+        </KumoButton>
       </div>
 
       <!-- Profiles Table -->
@@ -35,88 +35,88 @@
       </div>
 
       <div v-else class="max-h-96 overflow-auto rounded-lg border border-gray-200 dark:border-dark-600">
-        <table class="min-w-full divide-y divide-gray-200 dark:divide-dark-700">
-          <thead class="sticky top-0 bg-gray-50 dark:bg-dark-700">
-            <tr>
-              <th class="px-3 py-2 text-left text-xs font-medium uppercase text-gray-500 dark:text-gray-400">
+        <KumoTable class="min-w-full divide-y divide-gray-200 dark:divide-dark-700">
+          <KumoTableHeader class="sticky top-0 bg-gray-50 dark:bg-dark-700">
+            <KumoTableRow>
+              <KumoTableHead class="px-3 py-2 text-left text-xs font-medium uppercase text-gray-500 dark:text-gray-400">
                 {{ t('admin.tlsFingerprintProfiles.columns.name') }}
-              </th>
-              <th class="px-3 py-2 text-left text-xs font-medium uppercase text-gray-500 dark:text-gray-400">
+              </KumoTableHead>
+              <KumoTableHead class="px-3 py-2 text-left text-xs font-medium uppercase text-gray-500 dark:text-gray-400">
                 {{ t('admin.tlsFingerprintProfiles.columns.description') }}
-              </th>
-              <th class="px-3 py-2 text-left text-xs font-medium uppercase text-gray-500 dark:text-gray-400">
+              </KumoTableHead>
+              <KumoTableHead class="px-3 py-2 text-left text-xs font-medium uppercase text-gray-500 dark:text-gray-400">
                 {{ t('admin.tlsFingerprintProfiles.columns.grease') }}
-              </th>
-              <th class="px-3 py-2 text-left text-xs font-medium uppercase text-gray-500 dark:text-gray-400">
+              </KumoTableHead>
+              <KumoTableHead class="px-3 py-2 text-left text-xs font-medium uppercase text-gray-500 dark:text-gray-400">
                 {{ t('admin.tlsFingerprintProfiles.columns.alpn') }}
-              </th>
-              <th class="px-3 py-2 text-left text-xs font-medium uppercase text-gray-500 dark:text-gray-400">
+              </KumoTableHead>
+              <KumoTableHead class="px-3 py-2 text-left text-xs font-medium uppercase text-gray-500 dark:text-gray-400">
                 {{ t('admin.tlsFingerprintProfiles.columns.actions') }}
-              </th>
-            </tr>
-          </thead>
-          <tbody class="divide-y divide-gray-200 bg-white dark:divide-dark-700 dark:bg-dark-800">
-            <tr v-for="profile in profiles" :key="profile.id" class="hover:bg-gray-50 dark:hover:bg-dark-700">
-              <td class="px-3 py-2">
+              </KumoTableHead>
+            </KumoTableRow>
+          </KumoTableHeader>
+          <KumoTableBody class="divide-y divide-gray-200 bg-white dark:divide-dark-700 dark:bg-dark-800">
+            <KumoTableRow v-for="profile in profiles" :key="profile.id" class="hover:bg-gray-50 dark:hover:bg-dark-700">
+              <KumoTableCell class="px-3 py-2">
                 <div class="font-medium text-gray-900 dark:text-white text-sm">{{ profile.name }}</div>
-              </td>
-              <td class="px-3 py-2">
+              </KumoTableCell>
+              <KumoTableCell class="px-3 py-2">
                 <div v-if="profile.description" class="text-sm text-gray-500 dark:text-gray-400 max-w-xs truncate">
                   {{ profile.description }}
                 </div>
                 <div v-else class="text-xs text-gray-400 dark:text-gray-600">—</div>
-              </td>
-              <td class="px-3 py-2">
+              </KumoTableCell>
+              <KumoTableCell class="px-3 py-2">
                 <Icon
                   :name="profile.enable_grease ? 'check' : 'lock'"
                   size="sm"
                   :class="profile.enable_grease ? 'text-green-500' : 'text-gray-400'"
                 />
-              </td>
-              <td class="px-3 py-2">
+              </KumoTableCell>
+              <KumoTableCell class="px-3 py-2">
                 <div v-if="profile.alpn_protocols?.length" class="flex flex-wrap gap-1">
-                  <span
+                  <KumoBadge
                     v-for="proto in profile.alpn_protocols.slice(0, 3)"
                     :key="proto"
                     class="badge badge-primary text-xs"
                   >
                     {{ proto }}
-                  </span>
+                  </KumoBadge>
                   <span v-if="profile.alpn_protocols.length > 3" class="text-xs text-gray-500">
                     +{{ profile.alpn_protocols.length - 3 }}
                   </span>
                 </div>
                 <div v-else class="text-xs text-gray-400 dark:text-gray-600">—</div>
-              </td>
-              <td class="px-3 py-2">
+              </KumoTableCell>
+              <KumoTableCell class="px-3 py-2">
                 <div class="flex items-center gap-1">
-                  <button
+                  <KumoButton
                     @click="handleEdit(profile)"
                     class="p-1 text-gray-500 hover:text-primary-600 dark:hover:text-primary-400"
                     :title="t('common.edit')"
                   >
                     <Icon name="edit" size="sm" />
-                  </button>
-                  <button
+                  </KumoButton>
+                  <KumoButton
                     @click="handleDelete(profile)"
                     class="p-1 text-gray-500 hover:text-red-600 dark:hover:text-red-400"
                     :title="t('common.delete')"
                   >
                     <Icon name="trash" size="sm" />
-                  </button>
+                  </KumoButton>
                 </div>
-              </td>
-            </tr>
-          </tbody>
-        </table>
+              </KumoTableCell>
+            </KumoTableRow>
+          </KumoTableBody>
+        </KumoTable>
       </div>
     </div>
 
     <template #footer>
       <div class="flex justify-end">
-        <button @click="$emit('close')" class="btn btn-secondary">
+        <KumoButton @click="$emit('close')" class="btn btn-secondary">
           {{ t('common.close') }}
-        </button>
+        </KumoButton>
       </div>
     </template>
 
@@ -131,8 +131,8 @@
       <form @submit.prevent="handleSubmit" class="space-y-4">
         <!-- Paste YAML -->
         <div>
-          <label class="input-label">{{ t('admin.tlsFingerprintProfiles.form.pasteYaml') }}</label>
-          <textarea
+          <KumoLabel class="input-label">{{ t('admin.tlsFingerprintProfiles.form.pasteYaml') }}</KumoLabel>
+          <KumoTextarea
             v-model="yamlInput"
             rows="4"
             class="input font-mono text-xs"
@@ -140,9 +140,9 @@
             @paste="handleYamlPaste"
           />
           <div class="mt-1 flex items-center gap-2">
-            <button type="button" @click="parseYamlInput" class="btn btn-secondary btn-sm">
+            <KumoButton type="button" @click="parseYamlInput" class="btn btn-secondary btn-sm">
               {{ t('admin.tlsFingerprintProfiles.form.parseYaml') }}
-            </button>
+            </KumoButton>
             <p class="text-xs text-gray-500 dark:text-gray-400">
               {{ t('admin.tlsFingerprintProfiles.form.pasteYamlHint') }}
               <a href="https://tls.sub2api.org" target="_blank" rel="noopener noreferrer" class="text-primary-600 hover:text-primary-700 dark:text-primary-400 dark:hover:text-primary-300 underline">{{ t('admin.tlsFingerprintProfiles.form.openCollector') }}</a>
@@ -155,8 +155,8 @@
         <!-- Basic Info -->
         <div class="grid grid-cols-2 gap-4">
           <div>
-            <label class="input-label">{{ t('admin.tlsFingerprintProfiles.form.name') }}</label>
-            <input
+            <KumoLabel class="input-label">{{ t('admin.tlsFingerprintProfiles.form.name') }}</KumoLabel>
+            <KumoInput
               v-model="form.name"
               type="text"
               required
@@ -165,8 +165,8 @@
             />
           </div>
           <div>
-            <label class="input-label">{{ t('admin.tlsFingerprintProfiles.form.description') }}</label>
-            <input
+            <KumoLabel class="input-label">{{ t('admin.tlsFingerprintProfiles.form.description') }}</KumoLabel>
+            <KumoInput
               v-model="form.description"
               type="text"
               class="input"
@@ -177,21 +177,7 @@
 
         <!-- GREASE Toggle -->
         <div class="flex items-center gap-3">
-          <button
-            type="button"
-            @click="form.enable_grease = !form.enable_grease"
-            :class="[
-              'relative inline-flex h-5 w-9 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2',
-              form.enable_grease ? 'bg-primary-600' : 'bg-gray-200 dark:bg-dark-600'
-            ]"
-          >
-            <span
-              :class="[
-                'pointer-events-none inline-block h-4 w-4 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out',
-                form.enable_grease ? 'translate-x-4' : 'translate-x-0'
-              ]"
-            />
-          </button>
+          <KumoSwitch v-model="form.enable_grease"  />
           <div>
             <span class="text-sm font-medium text-gray-700 dark:text-gray-300">
               {{ t('admin.tlsFingerprintProfiles.form.enableGrease') }}
@@ -205,8 +191,8 @@
         <!-- TLS Array Fields - 2 column grid -->
         <div class="grid grid-cols-2 gap-4">
           <div>
-            <label class="input-label text-xs">{{ t('admin.tlsFingerprintProfiles.form.cipherSuites') }}</label>
-            <textarea
+            <KumoLabel class="input-label text-xs">{{ t('admin.tlsFingerprintProfiles.form.cipherSuites') }}</KumoLabel>
+            <KumoTextarea
               v-model="fieldInputs.cipher_suites"
               rows="2"
               class="input font-mono text-xs"
@@ -216,8 +202,8 @@
           </div>
 
           <div>
-            <label class="input-label text-xs">{{ t('admin.tlsFingerprintProfiles.form.curves') }}</label>
-            <textarea
+            <KumoLabel class="input-label text-xs">{{ t('admin.tlsFingerprintProfiles.form.curves') }}</KumoLabel>
+            <KumoTextarea
               v-model="fieldInputs.curves"
               rows="2"
               class="input font-mono text-xs"
@@ -227,8 +213,8 @@
           </div>
 
           <div>
-            <label class="input-label text-xs">{{ t('admin.tlsFingerprintProfiles.form.signatureAlgorithms') }}</label>
-            <textarea
+            <KumoLabel class="input-label text-xs">{{ t('admin.tlsFingerprintProfiles.form.signatureAlgorithms') }}</KumoLabel>
+            <KumoTextarea
               v-model="fieldInputs.signature_algorithms"
               rows="2"
               class="input font-mono text-xs"
@@ -237,8 +223,8 @@
           </div>
 
           <div>
-            <label class="input-label text-xs">{{ t('admin.tlsFingerprintProfiles.form.supportedVersions') }}</label>
-            <textarea
+            <KumoLabel class="input-label text-xs">{{ t('admin.tlsFingerprintProfiles.form.supportedVersions') }}</KumoLabel>
+            <KumoTextarea
               v-model="fieldInputs.supported_versions"
               rows="2"
               class="input font-mono text-xs"
@@ -247,8 +233,8 @@
           </div>
 
           <div>
-            <label class="input-label text-xs">{{ t('admin.tlsFingerprintProfiles.form.keyShareGroups') }}</label>
-            <textarea
+            <KumoLabel class="input-label text-xs">{{ t('admin.tlsFingerprintProfiles.form.keyShareGroups') }}</KumoLabel>
+            <KumoTextarea
               v-model="fieldInputs.key_share_groups"
               rows="2"
               class="input font-mono text-xs"
@@ -257,8 +243,8 @@
           </div>
 
           <div>
-            <label class="input-label text-xs">{{ t('admin.tlsFingerprintProfiles.form.extensions') }}</label>
-            <textarea
+            <KumoLabel class="input-label text-xs">{{ t('admin.tlsFingerprintProfiles.form.extensions') }}</KumoLabel>
+            <KumoTextarea
               v-model="fieldInputs.extensions"
               rows="2"
               class="input font-mono text-xs"
@@ -267,8 +253,8 @@
           </div>
 
           <div>
-            <label class="input-label text-xs">{{ t('admin.tlsFingerprintProfiles.form.pointFormats') }}</label>
-            <textarea
+            <KumoLabel class="input-label text-xs">{{ t('admin.tlsFingerprintProfiles.form.pointFormats') }}</KumoLabel>
+            <KumoTextarea
               v-model="fieldInputs.point_formats"
               rows="2"
               class="input font-mono text-xs"
@@ -277,8 +263,8 @@
           </div>
 
           <div>
-            <label class="input-label text-xs">{{ t('admin.tlsFingerprintProfiles.form.pskModes') }}</label>
-            <textarea
+            <KumoLabel class="input-label text-xs">{{ t('admin.tlsFingerprintProfiles.form.pskModes') }}</KumoLabel>
+            <KumoTextarea
               v-model="fieldInputs.psk_modes"
               rows="2"
               class="input font-mono text-xs"
@@ -289,8 +275,8 @@
 
         <!-- ALPN Protocols - full width -->
         <div>
-          <label class="input-label text-xs">{{ t('admin.tlsFingerprintProfiles.form.alpnProtocols') }}</label>
-          <textarea
+          <KumoLabel class="input-label text-xs">{{ t('admin.tlsFingerprintProfiles.form.alpnProtocols') }}</KumoLabel>
+          <KumoTextarea
             v-model="fieldInputs.alpn_protocols"
             rows="2"
             class="input font-mono text-xs"
@@ -301,13 +287,13 @@
 
       <template #footer>
         <div class="flex justify-end gap-3">
-          <button @click="closeFormModal" type="button" class="btn btn-secondary">
+          <KumoButton @click="closeFormModal" type="button" class="btn btn-secondary">
             {{ t('common.cancel') }}
-          </button>
-          <button @click="handleSubmit" :disabled="submitting" class="btn btn-primary">
+          </KumoButton>
+          <KumoButton @click="handleSubmit" :disabled="submitting" class="btn btn-primary">
             <Icon v-if="submitting" name="refresh" size="sm" class="mr-1 animate-spin" />
             {{ showEditModal ? t('common.update') : t('common.create') }}
-          </button>
+          </KumoButton>
         </div>
       </template>
     </BaseDialog>
@@ -327,6 +313,8 @@
 </template>
 
 <script setup lang="ts">
+import { KumoBadge, KumoButton, KumoInput, KumoLabel, KumoSwitch, KumoTable, KumoTableBody, KumoTableCell, KumoTableHead, KumoTableHeader, KumoTableRow, KumoTextarea } from '@/components/kumo'
+
 import { ref, reactive, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useAppStore } from '@/stores/app'

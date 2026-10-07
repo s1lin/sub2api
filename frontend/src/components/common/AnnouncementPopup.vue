@@ -1,13 +1,7 @@
 <template>
-  <Teleport to="body">
-    <Transition name="popup-fade">
-      <div
-        v-if="displayedAnnouncement"
-        class="fixed inset-0 z-[120] flex items-start justify-center overflow-y-auto bg-gradient-to-br from-black/70 via-black/60 to-black/70 p-4 pt-[8vh] backdrop-blur-md"
-      >
-        <div
+  <KumoDialog :show="!!(displayedAnnouncement)" :title="displayedAnnouncement?.title ?? ''" custom-layout :close-on-click-outside="false" :close-on-escape="false" :z-index="120" width="wide" @close="handleDismiss">
+<template v-if="displayedAnnouncement"><div
           class="w-full max-w-[680px] overflow-hidden rounded-3xl bg-white shadow-2xl ring-1 ring-black/5 dark:bg-dark-800 dark:ring-white/10"
-          @click.stop
         >
           <!-- Header with warm gradient -->
           <div class="relative overflow-hidden border-b border-amber-100/80 bg-gradient-to-br from-amber-50/80 via-orange-50/50 to-yellow-50/30 px-8 py-6 dark:border-dark-700/50 dark:from-amber-900/20 dark:via-orange-900/10 dark:to-yellow-900/5">
@@ -64,7 +58,7 @@
           <!-- Footer -->
           <div class="border-t border-gray-100 bg-gray-50/50 px-8 py-5 dark:border-dark-700 dark:bg-dark-900/30">
             <div class="flex items-center justify-end">
-              <button
+              <KumoButton
                 @click="handleDismiss"
                 data-testid="announcement-popup-dismiss"
                 class="rounded-xl bg-gradient-to-r from-amber-500 to-orange-600 px-6 py-2.5 text-sm font-medium text-white shadow-lg shadow-amber-500/30 transition-all hover:shadow-xl hover:scale-105"
@@ -78,17 +72,17 @@
                   </svg>
                   {{ preview ? t('common.close') : t('announcements.markRead') }}
                 </span>
-              </button>
+              </KumoButton>
             </div>
           </div>
-        </div>
-      </div>
-    </Transition>
-  </Teleport>
+        </div></template>
+</KumoDialog>
 </template>
 
 <script setup lang="ts">
-import { computed, onBeforeUnmount, watch } from 'vue'
+import { KumoButton, KumoDialog } from '@/components/kumo'
+
+import { computed } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { marked } from 'marked'
 import DOMPurify from 'dompurify'
@@ -137,24 +131,6 @@ function handleDismiss() {
   announcementStore.dismissPopup()
 }
 
-// Manage body overflow — only set, never unset (bell component handles restore)
-watch(
-  displayedAnnouncement,
-  (popup) => {
-    if (popup) {
-      document.body.style.overflow = 'hidden'
-    } else if (props.preview) {
-      document.body.style.overflow = ''
-    }
-  },
-  { immediate: true },
-)
-
-onBeforeUnmount(() => {
-  if (props.preview) {
-    document.body.style.overflow = ''
-  }
-})
 </script>
 
 <style scoped>

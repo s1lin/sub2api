@@ -1,5 +1,8 @@
 import { describe, expect, it, vi } from 'vitest'
-import { mount } from '@vue/test-utils'
+import { mount, showTooltip, portal } from '@/__tests__/render'
+import { enableAutoUnmount } from '@vue/test-utils'
+import { afterEach } from 'vitest'
+enableAutoUnmount(afterEach)
 import UpstreamRequestIdHeaderField from '../UpstreamRequestIdHeaderField.vue'
 
 vi.mock('vue-i18n', async () => {
@@ -15,7 +18,7 @@ vi.mock('vue-i18n', async () => {
 
 function mountField(props: { platform?: string; type?: string; modelValue?: string }) {
   return mount(UpstreamRequestIdHeaderField, {
-    props,
+    props, attachTo: document.body,
     global: {
       stubs: { Teleport: true },
     },
@@ -23,9 +26,9 @@ function mountField(props: { platform?: string; type?: string; modelValue?: stri
 }
 
 describe('UpstreamRequestIdHeaderField', () => {
-  it('lists relay and official header examples for API key accounts', () => {
+  it('lists relay and official header examples for API key accounts', async () => {
     const wrapper = mountField({ platform: 'openai', type: 'apikey' })
-    const text = wrapper.text()
+    const text = (await showTooltip(wrapper.get('button'))).text()
 
     expect(text).toContain('admin.accounts.upstreamRequestIdHeaderHelp.intro')
     expect(text).toContain('admin.accounts.upstreamRequestIdHeaderHelp.examplesTitle')
@@ -36,9 +39,9 @@ describe('UpstreamRequestIdHeaderField', () => {
     expect(text).toContain('x-request-id')
   })
 
-  it('lists only the official header for accounts that connect to the platform directly', () => {
+  it('lists only the official header for accounts that connect to the platform directly', async () => {
     const wrapper = mountField({ platform: 'anthropic', type: 'oauth' })
-    const text = wrapper.text()
+    const text = (await showTooltip(wrapper.get('button'))).text()
 
     expect(text).toContain('admin.accounts.upstreamRequestIdHeaderHelp.official:Anthropic')
     expect(text).toContain('request-id')
@@ -46,13 +49,13 @@ describe('UpstreamRequestIdHeaderField', () => {
     expect(text).not.toContain('X-Oneapi-Request-Id')
   })
 
-  it('omits the examples section when no header is known for the platform', () => {
+  it('omits the examples section when no header is known for the platform', async () => {
     const wrapper = mountField({ platform: 'kimi', type: 'oauth' })
-    const text = wrapper.text()
+    const text = (await showTooltip(wrapper.get('button'))).text()
 
     expect(text).toContain('admin.accounts.upstreamRequestIdHeaderHelp.intro')
     expect(text).not.toContain('admin.accounts.upstreamRequestIdHeaderHelp.examplesTitle')
-    expect(wrapper.findAll('code')).toHaveLength(0)
+    expect(portal().findAll('[role=tooltip] code')).toHaveLength(0)
   })
 
   it('binds the header name through v-model', async () => {

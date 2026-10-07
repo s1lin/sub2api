@@ -1,4 +1,4 @@
-import { mount } from '@vue/test-utils'
+import { mount } from '@/__tests__/render'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import ProfileAvatarCard from '@/components/user/profile/ProfileAvatarCard.vue'
 import type { User } from '@/types'

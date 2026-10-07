@@ -1,4 +1,5 @@
-import { mount } from "@vue/test-utils";
+import { mount, flushPromises } from '@/__tests__/render'
+
 import { describe, expect, it } from "vitest";
 import { createPinia } from "pinia";
 import { createI18n } from "vue-i18n";
@@ -78,8 +79,10 @@ describe("SubscriptionPlanCard", () => {
     expect(mountPlanCard("openai", { validity_days: 30, validity_unit: "day" }).text()).toContain("/ 30payment.days");
   });
 
-  it("uses the configured currency symbol while preserving USD for legacy plans", () => {
-    const cnyPlan = mountPlanCard("openai", { currency: "CNY", original_price: 20 }).text();
+  it("uses the configured currency symbol while preserving USD for legacy plans", async () => {
+    const cnyWrapper = mountPlanCard("openai", { currency: "CNY", original_price: 20 });
+    await flushPromises();
+    const cnyPlan = cnyWrapper.text();
 
     expect(cnyPlan).toContain("¥10CNY");
     expect(cnyPlan).toContain("¥20CNY");

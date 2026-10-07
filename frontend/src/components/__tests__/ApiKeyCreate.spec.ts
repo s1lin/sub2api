@@ -3,7 +3,8 @@
  * 通过封装组件测试 API Key 创建的核心流程
  */
 import { describe, it, expect, vi, beforeEach } from 'vitest'
-import { mount, flushPromises } from '@vue/test-utils'
+import { mount, flushPromises } from '@/__tests__/render'
+
 import { setActivePinia, createPinia } from 'pinia'
 import { defineComponent, ref, reactive } from 'vue'
 

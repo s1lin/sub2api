@@ -1,6 +1,6 @@
 <template>
   <div class="flex min-h-0 flex-1 flex-col">
-    <div class="card flex min-h-0 flex-1 flex-col overflow-hidden">
+    <KumoSurface class="card flex min-h-0 flex-1 flex-col overflow-hidden">
       <IpGeoBatchToolbar :ips="rows.map((r) => r.client_ip)" @failed="emit('ipGeoBatchFailed')" />
 
       <DataTable
@@ -103,7 +103,7 @@
 
         <template #empty><EmptyState :message="t('usage.errors.empty')" /></template>
       </DataTable>
-    </div>
+    </KumoSurface>
 
     <div class="flex-shrink-0">
       <Pagination
@@ -121,6 +121,8 @@
 </template>
 
 <script setup lang="ts">
+import { KumoSurface } from '@/components/kumo'
+
 import { ref, computed } from 'vue'
 import { useI18n } from 'vue-i18n'
 import DataTable from '@/components/common/DataTable.vue'
