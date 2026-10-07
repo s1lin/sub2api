@@ -31,7 +31,7 @@ config.plugins.DOMWrapper.install(wrapper => {
       await settleControls()
       return
     }
-    if (element instanceof HTMLInputElement || element instanceof HTMLTextAreaElement) {
+    if (element instanceof HTMLInputElement && !['checkbox', 'radio', 'file'].includes(element.type) || element instanceof HTMLTextAreaElement) {
       // VTU calls trigger after assigning value. Our asynchronous trigger drain
       // can let React restore a controlled value before that input event fires.
       // Set and dispatch together, as the browser does for a user edit.
