@@ -16,22 +16,36 @@
 </template>
 
 <script setup lang="ts">
-import { computed } from 'vue'
+import { computed, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { useI18n } from 'vue-i18n'
-import { SignIn, SignUp, useClerk, useSession } from '@clerk/vue'
+import { SignIn, SignUp, useClerk, useSession, updateClerkOptions } from '@clerk/vue'
 import AuthLayout from '@/components/layout/AuthLayout.vue'
 import { useAuthStore } from '@/stores/auth'
+import { useAppStore } from '@/stores/app'
 import { authRedirect } from '@/utils/authRedirect'
 import { useTheme } from '@/composables/useTheme'
 
 const route = useRoute()
 const router = useRouter()
-const { t } = useI18n()
+const { t, locale } = useI18n()
 const clerk = useClerk()
 const { isLoaded, session } = useSession()
 const auth = useAuthStore()
+const appStore = useAppStore()
 const { isDark } = useTheme()
+// Use the public site identity instead of the Clerk instance's internal name.
+// Keep Clerk's verification and recovery step headings intact.
+watch([isLoaded, locale, () => appStore.siteName], () => {
+  if (!isLoaded.value) return
+  const name = appStore.siteName
+  updateClerkOptions({
+    localization: {
+      signIn: { start: { title: t('clerkAuth.signInTitle', { name }), titleCombined: t('clerkAuth.signInTitle', { name }) } },
+      signUp: { start: { title: t('clerkAuth.signUpTitle', { name }) } },
+    },
+  })
+}, { immediate: true })
 const signUp = computed(() => route.path === '/register')
 const destination = computed(() => authRedirect(route.query.redirect, auth.isAdmin ? '/admin/dashboard' : '/dashboard'))
 // Both Clerk's OAuth return and email/MFA steps return through this route;

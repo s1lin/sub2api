@@ -1,5 +1,7 @@
 export default {
   clerkAuth: {
+    signInTitle: '登录 {name}',
+    signUpTitle: '创建 {name} 账户',
     loading: '正在加载安全登录…',
     connecting: '正在连接账户…',
     failed: '登录未能完成，请重试。',

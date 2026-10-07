@@ -1,5 +1,7 @@
 export default {
   clerkAuth: {
+    signInTitle: 'Sign in to {name}',
+    signUpTitle: 'Create your {name} account',
     loading: 'Loading secure sign-in…',
     connecting: 'Connecting your account…',
     failed: 'Sign-in could not be completed. Please try again.',
