@@ -134,6 +134,7 @@
 
         <section
           data-testid="profile-auth-bindings-panel"
+          v-if="!clerkEnabled"
           class="card border border-gray-100 bg-white/90 p-6 dark:border-dark-700 dark:bg-dark-900/50"
         >
           <ProfileIdentityBindingsSection
@@ -180,6 +181,7 @@
 </template>
 
 <script setup lang="ts">
+import { clerkEnabled } from '@/auth/clerk'
 import { computed } from 'vue'
 import { useI18n } from 'vue-i18n'
 import Icon from '@/components/icons/Icon.vue'

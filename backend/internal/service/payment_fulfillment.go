@@ -78,8 +78,10 @@ func parseLegacyPaymentOrderID(orderID string, lookupErr error) (int64, bool) {
 func (s *PaymentService) confirmPayment(ctx context.Context, oid int64, tradeNo string, paid float64, pk string, metadata map[string]string) error {
 	o, err := s.entClient.PaymentOrder.Get(ctx, oid)
 	if err != nil {
-		slog.Error("order not found", "orderID", oid)
-		return nil
+		if dbent.IsNotFound(err) {
+			return fmt.Errorf("%w: order_id=%d", ErrOrderNotFound, oid)
+		}
+		return fmt.Errorf("load order %d for payment confirmation: %w", oid, err)
 	}
 	instanceProviderKey := ""
 	if inst, instErr := s.getOrderProviderInstance(ctx, o); instErr == nil && inst != nil {
@@ -151,15 +153,18 @@ func (s *PaymentService) toPaid(ctx context.Context, o *dbent.PaymentOrder, trad
 	previousStatus := o.Status
 	now := time.Now()
 	grace := now.Add(-paymentGraceMinutes * time.Minute)
+	recoverableExpiry := paymentorder.And(paymentorder.StatusEQ(OrderStatusExpired), paymentorder.UpdatedAtGTE(grace))
+	// A signed, fully paid USDT invoice can finish after blockchain confirmation
+	// delays or delayed IPN delivery. Its original order must still be fulfilled.
+	if pk == payment.TypeNOWPayments {
+		recoverableExpiry = paymentorder.StatusEQ(OrderStatusExpired)
+	}
 	c, err := s.entClient.PaymentOrder.Update().Where(
 		paymentorder.IDEQ(o.ID),
 		paymentorder.Or(
 			paymentorder.StatusEQ(OrderStatusPending),
 			paymentorder.StatusEQ(OrderStatusCancelled),
-			paymentorder.And(
-				paymentorder.StatusEQ(OrderStatusExpired),
-				paymentorder.UpdatedAtGTE(grace),
-			),
+			recoverableExpiry,
 		),
 	).SetStatus(OrderStatusPaid).SetPayAmount(paid).SetPaymentTradeNo(tradeNo).SetPaidAt(now).ClearFailedAt().ClearFailedReason().Save(ctx)
 	if err != nil {
@@ -189,7 +194,10 @@ func (s *PaymentService) toPaid(ctx context.Context, o *dbent.PaymentOrder, trad
 func (s *PaymentService) alreadyProcessed(ctx context.Context, o *dbent.PaymentOrder) error {
 	cur, err := s.entClient.PaymentOrder.Get(ctx, o.ID)
 	if err != nil {
-		return nil
+		if dbent.IsNotFound(err) {
+			return fmt.Errorf("%w: order_id=%d", ErrOrderNotFound, o.ID)
+		}
+		return fmt.Errorf("reload order %d after payment confirmation: %w", o.ID, err)
 	}
 	switch cur.Status {
 	case OrderStatusCompleted, OrderStatusRefunded:

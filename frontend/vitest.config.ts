@@ -11,6 +11,8 @@ export default defineConfig({
     }
   },
   test: {
+    // Tests select their auth mode explicitly; never inherit a live local key.
+    env: { VITE_CLERK_PUBLISHABLE_KEY: '' },
     globals: true,
     environment: 'jsdom',
     setupFiles: ['./src/__tests__/setup.ts'],

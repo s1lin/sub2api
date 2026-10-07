@@ -14,6 +14,7 @@ import {
 } from './adminUIRequest'
 import { refreshAuthTokens } from './tokenRefresh'
 import { getAPIBaseURL } from './url'
+import { clerkEnabled, getClerkToken } from '@/auth/clerk'
 export { buildApiUrl, buildGatewayUrl } from './url'
 
 // ==================== Axios Instance Configuration ====================
@@ -39,12 +40,13 @@ const getUserTimezone = (): string => {
 }
 
 apiClient.interceptors.request.use(
-  (config: InternalAxiosRequestConfig) => {
+  async (config: InternalAxiosRequestConfig) => {
     // Attach token from localStorage
-    const token = localStorage.getItem('auth_token')
+    const token = clerkEnabled ? await getClerkToken() : localStorage.getItem('auth_token')
     if (token && config.headers) {
       config.headers.Authorization = `Bearer ${token}`
     }
+    if (clerkEnabled && !token) delete config.headers.Authorization
 
     // Attach locale for backend translations
     if (config.headers) {
@@ -117,6 +119,16 @@ apiClient.interceptors.response.use(
       // Validate `data` shape to avoid HTML error pages breaking our error handling.
       const apiData = (typeof data === 'object' && data !== null ? data : {}) as Record<string, any>
 
+      if (status === 401 && clerkEnabled) {
+        if (!originalRequest._retry) {
+          originalRequest._retry = true
+          const refreshed = await getClerkToken(true)
+          if (refreshed) return apiClient(originalRequest)
+        }
+        window.dispatchEvent(new CustomEvent('clerk-auth-invalid'))
+        return Promise.reject({ status, code: apiData.code || 'CLERK_AUTH_REQUIRED', message: apiData.message || 'Please sign in again.' })
+      }
+
       // Ops monitoring disabled: treat as feature-flagged 404, and proactively redirect away
       // from ops pages to avoid broken UI states.
       if (status === 404 && apiData.message === 'Ops monitoring is disabled') {
@@ -140,23 +152,6 @@ apiClient.interceptors.response.use(
           code: 'OPS_DISABLED',
           message: apiData.message || error.message,
           url
-        })
-      }
-
-      if (status === 423 && apiData.code === 'ADMIN_COMPLIANCE_ACK_REQUIRED') {
-        try {
-          window.dispatchEvent(new CustomEvent('admin-compliance-required', {
-            detail: apiData.metadata || {}
-          }))
-        } catch {
-          // ignore event failures
-        }
-
-        return Promise.reject({
-          status,
-          code: apiData.code,
-          message: apiData.message || error.message,
-          metadata: apiData.metadata,
         })
       }
 

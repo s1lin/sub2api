@@ -6,6 +6,7 @@
 import { defineStore } from 'pinia'
 import { ref, computed, readonly } from 'vue'
 import { authAPI, isTotp2FARequired, passkeyAPI, type LoginResponse } from '@/api'
+import { clerkEnabled, clerkSessionId, getClerkToken, signOutClerk } from '@/auth/clerk'
 import type {
   User,
   LoginRequest,
@@ -83,6 +84,7 @@ export const useAuthStore = defineStore('auth', () => {
   const tokenExpiresAt = ref<number | null>(null) // 过期时间戳（毫秒）
   const runMode = ref<'standard' | 'simple'>('standard')
   const pendingAuthSession = ref<PendingAuthSessionSummary | null>(null)
+  const clerkError = ref('')
   let refreshIntervalId: ReturnType<typeof setInterval> | null = null
   let tokenRefreshTimeoutId: ReturnType<typeof setTimeout> | null = null
 
@@ -107,6 +109,9 @@ export const useAuthStore = defineStore('auth', () => {
    * Also starts auto-refresh and immediately fetches latest user data
    */
   function checkAuth(): void {
+    // Clerk's bridge restores verified state. Repeated calls from the home
+    // page must preserve a session the bridge has already authenticated.
+    if (clerkEnabled) return
     const savedToken = localStorage.getItem(AUTH_TOKEN_KEY)
     const savedUser = localStorage.getItem(AUTH_USER_KEY)
     const savedRefreshToken = localStorage.getItem(REFRESH_TOKEN_KEY)
@@ -414,6 +419,11 @@ export const useAuthStore = defineStore('auth', () => {
    * Clears all authentication state and persisted data
    */
   async function logout(): Promise<void> {
+    if (clerkEnabled) {
+      await signOutClerk()
+      clearAuth()
+      return
+    }
     try {
       // Call API logout (revokes refresh token on server)
       await authAPI.logout()
@@ -433,12 +443,15 @@ export const useAuthStore = defineStore('auth', () => {
    * @throws Error if not authenticated or request fails
    */
   async function refreshUser(): Promise<User> {
+    const requestSession = clerkEnabled ? clerkSessionId() : null
     if (!token.value) {
       throw new Error('Not authenticated')
     }
 
     try {
       const response = await authAPI.getCurrentUser()
+      if (clerkEnabled && (requestSession !== clerkSessionId() || !token.value)) throw new Error('Session changed')
+      if (clerkEnabled) token.value = localStorage.getItem(AUTH_TOKEN_KEY)
       if (response.data.run_mode) {
         runMode.value = response.data.run_mode
       }
@@ -472,6 +485,7 @@ export const useAuthStore = defineStore('auth', () => {
     refreshTokenValue.value = null
     tokenExpiresAt.value = null
     user.value = null
+    clerkError.value = ''
     localStorage.removeItem(AUTH_TOKEN_KEY)
     localStorage.removeItem(AUTH_USER_KEY)
     localStorage.removeItem(REFRESH_TOKEN_KEY)
@@ -487,6 +501,21 @@ export const useAuthStore = defineStore('auth', () => {
   }
 
   // ==================== Return Store API ====================
+  async function authenticateWithClerk(sessionId: string): Promise<void> {
+    clerkError.value = ''
+    const sessionToken = await getClerkToken()
+    if (!sessionToken) throw new Error('Clerk session is unavailable')
+    const response = await authAPI.getCurrentUser()
+    if (clerkSessionId() !== sessionId) return
+    clearAuth()
+    const { run_mode, ...userData } = response.data
+    runMode.value = run_mode || 'standard'
+    token.value = sessionToken
+    user.value = userData
+    localStorage.setItem(AUTH_TOKEN_KEY, sessionToken)
+    localStorage.setItem(AUTH_USER_KEY, JSON.stringify(userData))
+    startAutoRefresh()
+  }
 
   return {
     // State
@@ -494,6 +523,7 @@ export const useAuthStore = defineStore('auth', () => {
     token,
     runMode: readonly(runMode),
     pendingAuthSession: readonly(pendingAuthSession),
+    clerkError,
 
     // Computed
     isAuthenticated,
@@ -511,6 +541,8 @@ export const useAuthStore = defineStore('auth', () => {
     checkAuth,
     refreshUser,
     setPendingAuthSession,
-    clearPendingAuthSession
+    clearPendingAuthSession,
+    authenticateWithClerk,
+    clearAuth
   }
 })

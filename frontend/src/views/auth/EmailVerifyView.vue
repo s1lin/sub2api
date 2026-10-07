@@ -178,6 +178,7 @@
 </template>
 
 <script setup lang="ts">
+import { authRedirect } from '@/utils/authRedirect'
 import { computed, ref, onMounted, onUnmounted, watch } from 'vue'
 import { useRouter } from 'vue-router'
 import { useI18n } from 'vue-i18n'
@@ -343,6 +344,7 @@ onMounted(async () => {
       pendingAuthTokenField.value = registerData.pending_auth_token_field || activePendingSession?.token_field || 'pending_auth_token'
       pendingProvider.value = registerData.pending_provider || activePendingSession?.provider || ''
       pendingRedirect.value = registerData.pending_redirect || activePendingSession?.redirect || ''
+      if (!pendingRedirect.value) pendingRedirect.value = authRedirect(registerData.checkout_redirect)
       pendingAdoptionDecision.value = registerData.pending_adoption_decision
         ? {
             adoptDisplayName: registerData.pending_adoption_decision.adopt_display_name === true,
@@ -743,7 +745,7 @@ async function handleVerify(): Promise<void> {
     appStore.showSuccess(t('auth.accountCreatedSuccess', { siteName: siteName.value }))
 
     // Redirect to dashboard
-    await router.push(pendingRedirect.value || '/dashboard')
+    await router.push(authRedirect(pendingRedirect.value))
   } catch (error: unknown) {
     errorMessage.value = buildRegistrationErrorMessage(error, t('auth.verifyFailed'))
 
@@ -762,8 +764,8 @@ function handleBack(): void {
   // Clear session data
   sessionStorage.removeItem('register_data')
 
-  // Go back to registration
-  router.push('/register')
+  // Retain the selected checkout when returning to registration.
+  router.push({ path: '/register', query: { redirect: authRedirect(pendingRedirect.value) } })
 }
 
 function buildEmailSuffixNotAllowedMessage(): string {

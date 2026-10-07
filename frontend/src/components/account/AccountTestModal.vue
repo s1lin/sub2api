@@ -243,6 +243,7 @@
 
 <script setup lang="ts">
 import { computed, ref, watch, nextTick } from 'vue'
+import { getRequestAuthToken } from '@/auth/clerk'
 import { useI18n } from 'vue-i18n'
 import BaseDialog from '@/components/common/BaseDialog.vue'
 import Select from '@/components/common/Select.vue'
@@ -425,7 +426,7 @@ const startTest = async () => {
     const response = await fetch(url, {
       method: 'POST',
       headers: {
-        Authorization: `Bearer ${localStorage.getItem('auth_token')}`,
+        Authorization: `Bearer ${await getRequestAuthToken() || ''}`,
         'Content-Type': 'application/json'
       },
       body: JSON.stringify({

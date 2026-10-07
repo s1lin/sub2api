@@ -1,0 +1,14 @@
+{
+  "converter": "https://github.com/neethanwu/ascii-art",
+  "method": "core.pipeline.process_image + core.styles.classic_ascii",
+  "generator": "output/ascii-source/generate.py",
+  "densityRamp": "@%#*+=-:. ",
+  "brightness": "BT.601 luminance, area-averaged to the character grid",
+  "characterAspect": 2,
+  "artwork": [
+    { "file": "hero-core.txt", "columns": 140, "rows": 44 },
+    { "file": "model-network.txt", "columns": 80, "rows": 28 },
+    { "file": "video-reel.txt", "columns": 96, "rows": 23 }
+  ],
+  "notes": "Original procedural compositions (shaded core with film-strip orbit, model constellation, video reel) rendered with numpy, then converted. Text inherits the site's copper palette in both themes. No converter code runs in the browser."
+}

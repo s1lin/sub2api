@@ -11,6 +11,7 @@ import (
 	"net/mail"
 	"strconv"
 	"strings"
+	"sync"
 	"time"
 
 	dbent "github.com/Wei-Shaw/sub2api/ent"
@@ -86,6 +87,9 @@ type AuthService struct {
 	affiliateService      *AffiliateService
 	defaultSubAssigner    DefaultSubscriptionAssigner
 	userPlatformQuotaRepo UserPlatformQuotaRepository
+	clerkAuthOnce         sync.Once
+	clerkAuthVerifier     clerkIdentityVerifier
+	clerkAuthError        error
 }
 
 type CaptchaProof struct {

@@ -1,0 +1,11 @@
+# Use an embedded frontend build so the backend serves both the UI and API.
+# Keep the real tunnel credentials outside this repository.
+tunnel: REPLACE_WITH_TUNNEL_ID
+credentials-file: C:/Users/YOUR_USER/.cloudflared/REPLACE_WITH_TUNNEL_ID.json
+
+ingress:
+  - hostname: api.tokensbeat.com
+    service: http://127.0.0.1:8080
+  - hostname: tokensbeat.com
+    service: http://127.0.0.1:8080
+  - service: http_status:404

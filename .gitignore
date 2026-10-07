@@ -134,6 +134,7 @@ deploy/docker-compose.override.yml
 vite.config.js
 docs/*
 !docs/PAYMENT.md
+!docs/WSL_DEVELOPMENT.md
 !docs/PAYMENT_CN.md
 !docs/ADMIN_PAYMENT_INTEGRATION_API.md
 !docs/ASYNC_IMAGE_TASKS.md
@@ -152,6 +153,8 @@ docs/screenshots/*
 .serena/
 .codex/
 frontend/coverage/
+/dump.rdb
+/frontend/package-lock.json
 aicodex
 output/
 .codegraph/

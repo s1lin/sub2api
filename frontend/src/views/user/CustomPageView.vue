@@ -126,6 +126,7 @@
 </template>
 
 <script setup lang="ts">
+import { getRequestAuthToken } from '@/auth/clerk'
 import { computed, nextTick, onMounted, onUnmounted, ref, watch } from 'vue'
 import { useRoute } from 'vue-router'
 import { useResizeObserver } from '@vueuse/core'
@@ -295,7 +296,7 @@ async function fetchAndRenderMarkdown(slug: string) {
   activeHeadingId.value = ''
   try {
     const resp = await fetch(buildApiUrl(`/pages/${encodeURIComponent(slug)}`), {
-      headers: authStore.token ? { Authorization: `Bearer ${authStore.token}` } : {},
+      headers: { Authorization: `Bearer ${await getRequestAuthToken() || ''}` },
     })
     if (!resp.ok) {
       renderedHtml.value = `<p class="text-red-500">${t('common.pageNotFound')}</p>`

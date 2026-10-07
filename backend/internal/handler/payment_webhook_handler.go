@@ -19,8 +19,13 @@ import (
 
 // PaymentWebhookHandler handles payment provider webhook callbacks.
 type PaymentWebhookHandler struct {
-	paymentService *service.PaymentService
+	paymentService paymentWebhookService
 	registry       *payment.Registry
+}
+
+type paymentWebhookService interface {
+	GetWebhookProviders(context.Context, string, string) ([]payment.Provider, error)
+	HandlePaymentNotification(context.Context, *payment.PaymentNotification, string) error
 }
 
 // maxWebhookBodySize is the maximum allowed webhook request body size (1 MB).
@@ -35,6 +40,11 @@ func NewPaymentWebhookHandler(paymentService *service.PaymentService, registry *
 		paymentService: paymentService,
 		registry:       registry,
 	}
+}
+
+// NOWPaymentsNotify handles signed USDT payment notifications.
+func (h *PaymentWebhookHandler) NOWPaymentsNotify(c *gin.Context) {
+	h.handleNotify(c, payment.TypeNOWPayments)
 }
 
 // EasyPayNotify handles EasyPay payment notifications.
@@ -90,6 +100,12 @@ func (h *PaymentWebhookHandler) handleNotify(c *gin.Context, providerKey string)
 	providers, err := h.paymentService.GetWebhookProviders(c.Request.Context(), providerKey, outTradeNo)
 	if err != nil {
 		slog.Warn("[Payment Webhook] provider not found", "provider", providerKey, "outTradeNo", outTradeNo, "error", err)
+		if providerKey == payment.TypeStripe {
+			// No event has been verified or processed yet. Preserve Stripe's
+			// retries during database outages or provider configuration failures.
+			c.String(http.StatusServiceUnavailable, "provider unavailable")
+			return
+		}
 		if providerKey == payment.TypeWxpay {
 			c.String(http.StatusBadRequest, "verify failed")
 			return
@@ -148,6 +164,13 @@ func (h *PaymentWebhookHandler) handleNotify(c *gin.Context, providerKey string)
 // This allows looking up the correct provider instance before verification.
 func extractOutTradeNo(rawBody, providerKey string) string {
 	switch providerKey {
+	case payment.TypeNOWPayments:
+		var payload struct {
+			OrderID string `json:"order_id"`
+		}
+		if err := json.Unmarshal([]byte(rawBody), &payload); err == nil {
+			return strings.TrimSpace(payload.OrderID)
+		}
 	case payment.TypeEasyPay, payment.TypeAlipay:
 		values, err := url.ParseQuery(rawBody)
 		if err == nil {

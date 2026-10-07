@@ -6,6 +6,7 @@ import (
 	"github.com/Wei-Shaw/sub2api/internal/handler"
 	"github.com/Wei-Shaw/sub2api/internal/handler/admin"
 	ratelimit "github.com/Wei-Shaw/sub2api/internal/middleware"
+	"github.com/Wei-Shaw/sub2api/internal/pkg/response"
 	"github.com/Wei-Shaw/sub2api/internal/server/middleware"
 	"github.com/Wei-Shaw/sub2api/internal/service"
 
@@ -70,6 +71,20 @@ func RegisterPaymentRoutes(
 	publicRateLimiter := ratelimit.NewRateLimiter(redisClient)
 	public := v1.Group("/payment/public")
 	{
+		public.GET("/plans",
+			publicRateLimiter.Limit("payment-public-plans", 60, time.Minute),
+			func(c *gin.Context) {
+				settings, err := settingService.GetPublicSettings(c.Request.Context())
+				if err != nil {
+					response.ErrorFrom(c, err)
+					return
+				}
+				if settings.BackendModeEnabled || !settings.PaymentEnabled || !settings.SubscriptionEnabled {
+					response.Success(c, []any{})
+					return
+				}
+				paymentHandler.GetPlans(c)
+			})
 		public.POST("/orders/verify",
 			publicRateLimiter.Limit("payment-public-order-verify", publicOrderVerifyRateLimit, publicOrderVerifyRateLimitWindow),
 			paymentHandler.VerifyOrderPublic)
@@ -86,13 +101,13 @@ func RegisterPaymentRoutes(
 		webhook.POST("/wxpay", webhookHandler.WxpayNotify)
 		webhook.POST("/stripe", webhookHandler.StripeWebhook)
 		webhook.POST("/airwallex", webhookHandler.AirwallexWebhook)
+		webhook.POST("/nowpayments", webhookHandler.NOWPaymentsNotify)
 	}
 
 	// --- Admin payment endpoints (admin auth) ---
 	adminGroup := v1.Group("/admin/payment")
 	adminGroup.Use(gin.HandlerFunc(adminAuth))
 	adminGroup.Use(gin.HandlerFunc(auditLog))
-	adminGroup.Use(middleware.AdminComplianceGuard(settingService))
 	{
 		// Dashboard
 		adminGroup.GET("/dashboard", adminPaymentHandler.GetDashboard)

@@ -24,6 +24,11 @@ export interface PublicOrderVerifyResult {
 }
 
 export const paymentAPI = {
+
+  /** Public catalog; checkout and order creation still require authentication. */
+  getPublicPlans() {
+    return apiClient.get<SubscriptionPlan[]>('/payment/public/plans')
+  },
   /** Get payment configuration (enabled types, limits, etc.) */
   getConfig() {
     return apiClient.get<PaymentConfig>('/payment/config')

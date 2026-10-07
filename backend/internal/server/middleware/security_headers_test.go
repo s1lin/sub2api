@@ -17,6 +17,22 @@ func init() {
 	gin.SetMode(gin.TestMode)
 }
 
+func TestSecurityHeadersClerkPinsInstance(t *testing.T) {
+	cfg := config.CSPConfig{Enabled: true}
+	r := gin.New()
+	r.Use(SecurityHeaders(cfg, nil, "pk_live_Y2xlcmsudG9rZW5zYmVhdC5jb20k"))
+	r.GET("/login", func(c *gin.Context) { c.Status(http.StatusOK) })
+	w := httptest.NewRecorder()
+	r.ServeHTTP(w, httptest.NewRequest(http.MethodGet, "/login", nil))
+	policy := w.Header().Get("Content-Security-Policy")
+	for _, directive := range []string{"script-src", "connect-src", "frame-src"} {
+		require.True(t, directiveHasValue(policy, directive, "https://clerk.tokensbeat.com"))
+		require.False(t, directiveHasValue(policy, directive, "https://*.clerk.com"))
+	}
+	require.True(t, directiveHasValue(policy, "frame-src", "https://challenges.cloudflare.com"))
+	require.True(t, directiveHasValue(policy, "worker-src", "blob:"))
+}
+
 func TestGenerateNonce(t *testing.T) {
 	t.Run("generates_valid_base64_string", func(t *testing.T) {
 		nonce, err := GenerateNonce()

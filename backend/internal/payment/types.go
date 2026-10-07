@@ -18,6 +18,8 @@ const (
 	TypeLink         PaymentType = "link"
 	TypeEasyPay      PaymentType = "easypay"
 	TypeAirwallex    PaymentType = "airwallex"
+	TypeUSDT         PaymentType = "usdt"
+	TypeNOWPayments  PaymentType = "nowpayments"
 )
 
 // Order status constants shared across payment and service layers.

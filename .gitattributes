@@ -20,3 +20,6 @@ backend/migrations/*.sql text eol=lf
 
 # Dockerfile
 Dockerfile text eol=lf
+
+# Caddy config is also read by Linux deployment checks from WSL.
+deploy/Caddyfile text eol=lf

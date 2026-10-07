@@ -91,7 +91,9 @@ func adminComplianceAcknowledgementKey(adminUserID int64) string {
 
 func (s *SettingService) GetAdminComplianceStatus(ctx context.Context, adminUserID int64) (*AdminComplianceStatus, error) {
 	status := &AdminComplianceStatus{
-		Required:       true,
+		// Acknowledgment is no longer a prerequisite for operating the console.
+		// Retain this status endpoint for compatibility and historical records.
+		Required:       false,
 		Version:        AdminComplianceVersion,
 		DocumentPathZH: AdminComplianceDocumentPathZH,
 		DocumentPathEN: AdminComplianceDocumentPathEN,

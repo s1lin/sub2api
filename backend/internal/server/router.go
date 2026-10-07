@@ -67,7 +67,7 @@ func SetupRouter(
 			return *p
 		}
 		return nil
-	}))
+	}, cfg.Clerk.PublishableKey))
 	r.Use(middleware2.ServerTiming(cfg.Server.EnableServerTiming))
 
 	// Serve embedded frontend with settings injection if available

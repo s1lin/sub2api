@@ -5,6 +5,7 @@ import (
 	"errors"
 	"strings"
 
+	"github.com/Wei-Shaw/sub2api/internal/pkg/response"
 	"github.com/Wei-Shaw/sub2api/internal/service"
 
 	"github.com/gin-gonic/gin"
@@ -58,8 +59,13 @@ func jwtAuth(
 		}
 
 		// 验证token
-		claims, err := authService.ValidateToken(tokenString)
+		claims, err := authService.ValidateSession(c.Request.Context(), tokenString)
 		if err != nil {
+			if authService.ClerkEnabled() {
+				c.Abort()
+				response.ErrorFrom(c, err)
+				return
+			}
 			if errors.Is(err, service.ErrTokenExpired) {
 				AbortWithError(c, 401, "TOKEN_EXPIRED", "Token has expired")
 				return

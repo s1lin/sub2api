@@ -76,6 +76,7 @@ type Config struct {
 	Redis                   RedisConfig                   `mapstructure:"redis"`
 	Ops                     OpsConfig                     `mapstructure:"ops"`
 	JWT                     JWTConfig                     `mapstructure:"jwt"`
+	Clerk                   ClerkConfig                   `mapstructure:"clerk"`
 	Totp                    TotpConfig                    `mapstructure:"totp"`
 	WebAuthn                WebAuthnConfig                `mapstructure:"webauthn"`
 	LinuxDo                 LinuxDoConnectConfig          `mapstructure:"linuxdo_connect"`
@@ -112,6 +113,12 @@ type Config struct {
 }
 
 // SimpleModeConfig controls startup behavior in simple mode.
+type ClerkConfig struct {
+	PublishableKey string   `mapstructure:"publishable_key"`
+	SecretKey      string   `mapstructure:"secret"`
+	AllowedOrigins []string `mapstructure:"allowed_origins"`
+}
+
 type SimpleModeConfig struct {
 	AutoCreateDefaultGroups bool `mapstructure:"auto_create_default_groups" yaml:"auto_create_default_groups"`
 }
@@ -2080,7 +2087,7 @@ func setDefaults() {
 	// WebAuthn / Passkeys are opt-in because every deployment must explicitly
 	// declare its relying-party domain and trusted browser origins.
 	viper.SetDefault("webauthn.enabled", false)
-	viper.SetDefault("webauthn.rp_display_name", "Sub2API")
+	viper.SetDefault("webauthn.rp_display_name", "tokensbeat")
 	viper.SetDefault("webauthn.rp_id", "")
 	viper.SetDefault("webauthn.rp_origins", []string{})
 
@@ -2298,6 +2305,10 @@ func setDefaults() {
 	viper.SetDefault("image_storage.access_key_id", "")
 	viper.SetDefault("image_storage.secret_access_key", "")
 	viper.SetDefault("image_storage.public_base_url", "")
+	viper.SetDefault("clerk.publishable_key", "")
+	viper.SetDefault("clerk.secret", "")
+	_ = viper.BindEnv("clerk.secret", "CLERK_SECRET_KEY", "CLERK_SECRET")
+	viper.SetDefault("clerk.allowed_origins", []string{"https://tokensbeat.com", "https://api.tokensbeat.com"})
 
 	// Ops (vNext)
 	viper.SetDefault("ops.enabled", true)

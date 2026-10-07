@@ -5,6 +5,7 @@
  */
 
 import { apiClient, buildGatewayUrl } from '../client'
+import { clerkEnabled, getRequestAuthToken } from '@/auth/clerk'
 import type { PaginatedResponse } from '@/types'
 
 export type OpsQueryMode = 'auto' | 'raw' | 'preagg'
@@ -586,7 +587,7 @@ export function subscribeQPS(onMessage: (data: any) => void, options: SubscribeQ
     setStatus('offline')
   }
 
-  const connect = () => {
+  const connect = async () => {
     if (!shouldReconnect) return
     if (isConnecting) return
     if (ws && (ws.readyState === WebSocket.OPEN || ws.readyState === WebSocket.CONNECTING)) return
@@ -602,7 +603,18 @@ export function subscribeQPS(onMessage: (data: any) => void, options: SubscribeQ
     // Do NOT put admin JWT in the URL query string (it can leak via access logs, proxies, etc).
     // Browsers cannot set Authorization headers for WebSockets, so we pass the token via
     // Sec-WebSocket-Protocol (subprotocol list): ["sub2api-admin", "jwt.<token>"].
-    const rawToken = String(options.token ?? localStorage.getItem('auth_token') ?? '').trim()
+    let rawToken: string
+    try {
+      rawToken = String(clerkEnabled ? await getRequestAuthToken() || '' : options.token ?? localStorage.getItem('auth_token') ?? '').trim()
+    } catch {
+      isConnecting = false
+      scheduleReconnect()
+      return
+    }
+    if (!shouldReconnect) {
+      isConnecting = false
+      return
+    }
     const protocols: string[] = [OPS_WS_BASE_PROTOCOL]
     if (rawToken) protocols.push(`jwt.${rawToken}`)
 

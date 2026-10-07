@@ -30,6 +30,14 @@ func RegisterAuthRoutes(
 	auth.Use(servermiddleware.BackendModeAuthGuard(settingService))
 	// 认证事件（登录/注册/2FA/token 刷新失败）入审计
 	auth.Use(gin.HandlerFunc(auditLog))
+	requireNativeAuth := func(c *gin.Context) {
+		if h.Auth.ClerkEnabled() {
+			servermiddleware.AbortWithError(c, 410, "CLERK_AUTH_REQUIRED", "Sign in with Clerk")
+			return
+		}
+		c.Next()
+	}
+	auth.Use(requireNativeAuth)
 	{
 		// 注册/登录/2FA/验证码发送均属于高风险入口，增加服务端兜底限流（Redis 故障时 fail-close）
 		auth.POST("/register", rateLimiter.LimitWithOptions("auth-register", 5, time.Minute, middleware.RateLimitOptions{
@@ -256,7 +264,7 @@ func RegisterAuthRoutes(
 	{
 		authenticated.GET("/auth/me", h.Auth.GetCurrentUser)
 		// 撤销所有会话（需要认证）
-		authenticated.POST("/auth/revoke-all-sessions", h.Auth.RevokeAllSessions)
-		authenticated.POST("/auth/oauth/bind-token", h.Auth.PrepareOAuthBindAccessTokenCookie)
+		authenticated.POST("/auth/revoke-all-sessions", requireNativeAuth, h.Auth.RevokeAllSessions)
+		authenticated.POST("/auth/oauth/bind-token", requireNativeAuth, h.Auth.PrepareOAuthBindAccessTokenCookie)
 	}
 }

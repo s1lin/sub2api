@@ -42,13 +42,14 @@ export const PROVIDER_SUPPORTED_TYPES: Record<string, string[]> = {
   wxpay: ['wxpay'],
   stripe: ['card', 'alipay', 'wxpay', 'link'],
   airwallex: ['airwallex'],
+  nowpayments: ['usdt'],
 }
 
 /** Available payment modes for EasyPay providers. */
 export const EASYPAY_PAYMENT_MODES = ['qrcode', 'popup'] as const
 
 /** Fixed display order for user-facing payment methods */
-export const METHOD_ORDER = ['alipay', 'alipay_direct', 'wxpay', 'wxpay_direct', 'stripe', 'airwallex'] as const
+export const METHOD_ORDER = ['alipay', 'alipay_direct', 'wxpay', 'wxpay_direct', 'stripe', 'usdt', 'airwallex'] as const
 
 export function isBuiltInAlipayMethod(type: string): boolean {
   return type === 'alipay' || type === 'alipay_direct'
@@ -110,12 +111,14 @@ export const WEBHOOK_PATHS: Record<string, string> = {
   wxpay: '/api/v1/payment/webhook/wxpay',
   stripe: '/api/v1/payment/webhook/stripe',
   airwallex: '/api/v1/payment/webhook/airwallex',
+  nowpayments: '/api/v1/payment/webhook/nowpayments',
 }
 
 export const RETURN_PATH = '/payment/result'
 
 /** Fixed callback paths per provider — displayed as read-only after base URL. */
 export const PROVIDER_CALLBACK_PATHS: Record<string, CallbackPaths> = {
+  nowpayments: { notifyUrl: WEBHOOK_PATHS.nowpayments, returnUrl: RETURN_PATH },
   easypay: { notifyUrl: WEBHOOK_PATHS.easypay, returnUrl: RETURN_PATH },
   alipay: { notifyUrl: WEBHOOK_PATHS.alipay, returnUrl: RETURN_PATH },
   wxpay: { notifyUrl: WEBHOOK_PATHS.wxpay },
@@ -125,6 +128,16 @@ export const PROVIDER_CALLBACK_PATHS: Record<string, CallbackPaths> = {
 
 /** Per-provider config fields (excludes notifyUrl/returnUrl which are handled separately). */
 export const PROVIDER_CONFIG_FIELDS: Record<string, ConfigFieldDef[]> = {
+  nowpayments: [
+    { key: 'apiKey', label: 'API Key', sensitive: true },
+    { key: 'ipnSecret', label: 'IPN Secret', sensitive: true },
+    { key: 'payCurrency', label: 'USDT network', sensitive: false, defaultValue: 'usdttrc20', options: [
+      { value: 'usdttrc20', label: 'USDT · TRON (TRC20)' },
+      { value: 'usdterc20', label: 'USDT · Ethereum (ERC20)' },
+      { value: 'usdtbsc', label: 'USDT · BNB Smart Chain' },
+      { value: 'usdtsol', label: 'USDT · Solana' },
+    ] },
+  ],
   easypay: [
     { key: 'pid', label: 'PID', sensitive: false },
     { key: 'pkey', label: 'PKey', sensitive: true },
@@ -172,6 +185,7 @@ export function resolveTypeLabel(
   allTypes: TypeOption[],
   _redirectLabel: string,
 ): TypeOption {
+  if (typeVal === 'usdt') return { value: 'usdt', label: 'USDT' }
   return allTypes.find(pt => pt.value === typeVal) || { value: typeVal, label: typeVal }
 }
 

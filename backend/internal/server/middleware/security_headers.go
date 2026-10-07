@@ -8,6 +8,7 @@ import (
 	"strings"
 
 	"github.com/Wei-Shaw/sub2api/internal/config"
+	"github.com/Wei-Shaw/sub2api/internal/pkg/clerkauth"
 	"github.com/gin-gonic/gin"
 )
 
@@ -108,7 +109,7 @@ func GetNonceFromContext(c *gin.Context) string {
 // SecurityHeaders sets baseline security headers for all responses.
 // getFrameSrcOrigins is an optional function that returns extra origins to inject into frame-src;
 // pass nil to disable dynamic frame-src injection.
-func SecurityHeaders(cfg config.CSPConfig, getFrameSrcOrigins func() []string) gin.HandlerFunc {
+func SecurityHeaders(cfg config.CSPConfig, getFrameSrcOrigins func() []string, clerkPublishableKey ...string) gin.HandlerFunc {
 	policy := strings.TrimSpace(cfg.Policy)
 	if policy == "" {
 		policy = config.DefaultCSPPolicy
@@ -116,6 +117,21 @@ func SecurityHeaders(cfg config.CSPConfig, getFrameSrcOrigins func() []string) g
 
 	// Enhance policy with required directives (nonce placeholder and Cloudflare Insights)
 	policy = enhanceCSPPolicy(policy)
+	if len(clerkPublishableKey) > 0 && clerkPublishableKey[0] != "" {
+		if issuer, err := clerkauth.IssuerFromPublishableKey(clerkPublishableKey[0]); err == nil {
+			for _, entry := range []struct{ directive, value string }{
+				{"script-src", issuer}, {"connect-src", issuer}, {"frame-src", issuer},
+				{"script-src", "https://challenges.cloudflare.com"}, {"frame-src", "https://challenges.cloudflare.com"},
+				{"script-src", "https://*.protect.clerk.com"}, {"connect-src", "https://*.protect.clerk.com:*"}, {"frame-src", "https://*.protect.clerk.com"},
+				{"img-src", "https://img.clerk.com"}, {"worker-src", "'self'"}, {"worker-src", "blob:"}, {"style-src", "'unsafe-inline'"},
+				{"connect-src", "https://clerk-telemetry.com"}, {"connect-src", "https://*.clerk-telemetry.com"},
+			} {
+				if !directiveHasValue(policy, entry.directive, entry.value) {
+					policy = addToDirective(policy, entry.directive, entry.value)
+				}
+			}
+		}
+	}
 
 	return func(c *gin.Context) {
 		finalPolicy := policy

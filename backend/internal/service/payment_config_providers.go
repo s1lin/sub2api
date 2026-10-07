@@ -111,11 +111,12 @@ var pendingOrderStatuses = []string{
 // Key matching is case-insensitive. Non-listed keys (e.g. appId, notifyUrl,
 // stripe publishableKey) are returned in plaintext by the admin GET API.
 var providerSensitiveConfigFields = map[string]map[string]struct{}{
-	payment.TypeEasyPay:   {"pkey": {}},
-	payment.TypeAlipay:    {"privatekey": {}, "publickey": {}, "alipaypublickey": {}},
-	payment.TypeWxpay:     {"privatekey": {}, "apiv3key": {}, "publickey": {}},
-	payment.TypeStripe:    {"secretkey": {}, "webhooksecret": {}},
-	payment.TypeAirwallex: {"apikey": {}, "webhooksecret": {}},
+	payment.TypeEasyPay:     {"pkey": {}},
+	payment.TypeAlipay:      {"privatekey": {}, "publickey": {}, "alipaypublickey": {}},
+	payment.TypeWxpay:       {"privatekey": {}, "apiv3key": {}, "publickey": {}},
+	payment.TypeStripe:      {"secretkey": {}, "webhooksecret": {}},
+	payment.TypeAirwallex:   {"apikey": {}, "webhooksecret": {}},
+	payment.TypeNOWPayments: {"apikey": {}, "ipnsecret": {}},
 }
 
 // providerPendingOrderProtectedConfigFields lists config keys that cannot be
@@ -123,11 +124,12 @@ var providerSensitiveConfigFields = map[string]map[string]struct{}{
 // all provider identity fields that are snapshotted into orders or used by
 // webhook/refund verification.
 var providerPendingOrderProtectedConfigFields = map[string]map[string]struct{}{
-	payment.TypeEasyPay:   {"pkey": {}, "pid": {}},
-	payment.TypeAlipay:    {"privatekey": {}, "publickey": {}, "alipaypublickey": {}, "appid": {}},
-	payment.TypeWxpay:     {"privatekey": {}, "apiv3key": {}, "publickey": {}, "appid": {}, "mpappid": {}, "mchid": {}, "publickeyid": {}, "certserial": {}},
-	payment.TypeStripe:    {"secretkey": {}, "webhooksecret": {}, "currency": {}},
-	payment.TypeAirwallex: {"clientid": {}, "apikey": {}, "webhooksecret": {}, "apibase": {}, "accountid": {}, "currency": {}},
+	payment.TypeEasyPay:     {"pkey": {}, "pid": {}},
+	payment.TypeAlipay:      {"privatekey": {}, "publickey": {}, "alipaypublickey": {}, "appid": {}},
+	payment.TypeWxpay:       {"privatekey": {}, "apiv3key": {}, "publickey": {}, "appid": {}, "mpappid": {}, "mchid": {}, "publickeyid": {}, "certserial": {}},
+	payment.TypeStripe:      {"secretkey": {}, "webhooksecret": {}, "currency": {}},
+	payment.TypeAirwallex:   {"clientid": {}, "apikey": {}, "webhooksecret": {}, "apibase": {}, "accountid": {}, "currency": {}},
+	payment.TypeNOWPayments: {"apikey": {}, "ipnsecret": {}, "paycurrency": {}, "notifyurl": {}},
 }
 
 func isSensitiveProviderConfigField(providerKey, fieldName string) bool {
@@ -178,10 +180,14 @@ func (s *PaymentConfigService) countPendingOrdersByPlan(ctx context.Context, pla
 }
 
 var validProviderKeys = map[string]bool{
-	payment.TypeEasyPay: true, payment.TypeAlipay: true, payment.TypeWxpay: true, payment.TypeStripe: true, payment.TypeAirwallex: true,
+	payment.TypeNOWPayments: true,
+	payment.TypeEasyPay:     true, payment.TypeAlipay: true, payment.TypeWxpay: true, payment.TypeStripe: true, payment.TypeAirwallex: true,
 }
 
 func (s *PaymentConfigService) CreateProviderInstance(ctx context.Context, req CreateProviderInstanceRequest) (*dbent.PaymentProviderInstance, error) {
+	if req.ProviderKey == payment.TypeNOWPayments && (req.RefundEnabled || req.AllowUserRefund) {
+		return nil, infraerrors.BadRequest("VALIDATION_ERROR", "USDT refunds must be processed manually")
+	}
 	typesStr := joinTypes(req.SupportedTypes)
 	if err := validateProviderRequest(req.ProviderKey, req.Name, typesStr); err != nil {
 		return nil, err
@@ -213,6 +219,9 @@ func (s *PaymentConfigService) CreateProviderInstance(ctx context.Context, req C
 }
 
 func validateProviderRequest(providerKey, name, supportedTypes string) error {
+	if providerKey == payment.TypeNOWPayments && supportedTypes != "" && supportedTypes != payment.TypeUSDT {
+		return infraerrors.BadRequest("VALIDATION_ERROR", "NOWPayments supports USDT only")
+	}
 	if strings.TrimSpace(name) == "" {
 		return infraerrors.BadRequest("VALIDATION_ERROR", "provider name is required")
 	}
@@ -357,6 +366,11 @@ func (s *PaymentConfigService) UpdateProviderInstance(ctx context.Context, id in
 	if current.ProviderKey == payment.TypeEasyPay {
 		if err := validateEasyPayCustomMethods(configToValidate, nextSupportedTypes); err != nil {
 			return nil, err
+		}
+	}
+	if current.ProviderKey == payment.TypeNOWPayments {
+		if (req.RefundEnabled != nil && *req.RefundEnabled) || (req.AllowUserRefund != nil && *req.AllowUserRefund) {
+			return nil, infraerrors.BadRequest("VALIDATION_ERROR", "USDT refunds must be processed manually")
 		}
 	}
 	// Validate merged config when the instance will end up enabled.

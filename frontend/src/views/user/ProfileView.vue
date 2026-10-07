@@ -32,7 +32,12 @@
         </div>
       </div>
 
-      <ProfilePasswordForm />
+      <div v-if="clerkEnabled" class="card p-6">
+        <h3 class="font-semibold">{{ t('clerkAuth.accountTitle') }}</h3>
+        <p class="my-3 text-sm text-gray-500 dark:text-dark-300">{{ t('clerkAuth.accountDescription') }}</p>
+        <button class="btn btn-primary" @click="openClerkProfile">{{ t('clerkAuth.manageAccount') }}</button>
+      </div>
+      <ProfilePasswordForm v-else />
 
       <ProfileBalanceNotifyCard
         v-if="user && balanceLowNotifyEnabled"
@@ -43,8 +48,8 @@
         :user-email="user.email"
       />
 
-      <ProfileTotpCard />
-      <ProfilePasskeyCard :enabled="passkeyEnabled" />
+      <ProfileTotpCard v-if="!clerkEnabled" />
+      <ProfilePasskeyCard v-if="!clerkEnabled" :enabled="passkeyEnabled" />
     </div>
   </AppLayout>
 </template>
@@ -62,6 +67,7 @@ import ProfilePasskeyCard from '@/components/user/profile/ProfilePasskeyCard.vue
 import { isWeChatWebOAuthEnabled } from '@/api/auth'
 import { useAppStore } from '@/stores/app'
 import { useAuthStore } from '@/stores/auth'
+import { clerkEnabled, openClerkProfile } from '@/auth/clerk'
 
 const { t } = useI18n()
 const appStore = useAppStore()

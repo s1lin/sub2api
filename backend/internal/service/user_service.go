@@ -7,6 +7,7 @@ import (
 	"encoding/base64"
 	"encoding/hex"
 	"fmt"
+	"github.com/Wei-Shaw/sub2api/internal/config"
 	infraerrors "github.com/Wei-Shaw/sub2api/internal/pkg/errors"
 	"github.com/Wei-Shaw/sub2api/internal/pkg/pagination"
 	"image"
@@ -290,12 +291,23 @@ type ChangePasswordRequest struct {
 
 // UserService 用户服务
 type UserService struct {
+	defaultAdminEmail    string
 	userRepo             UserRepository
 	settingRepo          SettingRepository
 	authCacheInvalidator APIKeyAuthCacheInvalidator
 	billingCache         BillingCache
 	lastActiveTouchL1    sync.Map
 	lastActiveTouchSF    singleflight.Group
+}
+
+// NewUserServiceWithConfig uses the configured admin for administrative API keys.
+// Account creation and role assignment remain explicit deployment operations.
+func NewUserServiceWithConfig(userRepo UserRepository, settingRepo SettingRepository, authCacheInvalidator APIKeyAuthCacheInvalidator, billingCache BillingCache, cfg *config.Config) *UserService {
+	s := NewUserService(userRepo, settingRepo, authCacheInvalidator, billingCache)
+	if cfg != nil {
+		s.defaultAdminEmail = strings.ToLower(strings.TrimSpace(cfg.Default.AdminEmail))
+	}
+	return s
 }
 
 // NewUserService 创建用户服务实例
@@ -310,6 +322,16 @@ func NewUserService(userRepo UserRepository, settingRepo SettingRepository, auth
 
 // GetFirstAdmin 获取首个管理员用户（用于 Admin API Key 认证）
 func (s *UserService) GetFirstAdmin(ctx context.Context) (*User, error) {
+	if s.defaultAdminEmail != "" {
+		admin, err := s.userRepo.GetByEmail(ctx, s.defaultAdminEmail)
+		if err != nil {
+			return nil, fmt.Errorf("get configured default admin: %w", err)
+		}
+		if admin.Role != RoleAdmin || !admin.IsActive() {
+			return nil, fmt.Errorf("configured default admin is not an active administrator")
+		}
+		return admin, nil
+	}
 	admin, err := s.userRepo.GetFirstAdmin(ctx)
 	if err != nil {
 		return nil, fmt.Errorf("get first admin: %w", err)
@@ -1275,7 +1297,7 @@ func saveNotifyVerifyCode(ctx context.Context, cache EmailCache, email, code str
 
 // sendNotifyVerifyEmail builds and sends the verification email.
 func (s *UserService) sendNotifyVerifyEmail(ctx context.Context, emailService *EmailService, userID int64, email, code, locale string) error {
-	siteName := "Sub2API"
+	siteName := "tokensbeat"
 	if s.settingRepo != nil {
 		if name, err := s.settingRepo.GetValue(ctx, SettingKeySiteName); err == nil && name != "" {
 			siteName = name

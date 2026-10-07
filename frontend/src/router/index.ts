@@ -5,9 +5,9 @@
 
 import { createRouter, createWebHistory, type RouteRecordRaw } from 'vue-router'
 import { useAuthStore } from '@/stores/auth'
+import { clerkEnabled } from '@/auth/clerk'
 import { useAppStore } from '@/stores/app'
 import { useAdminSettingsStore } from '@/stores/adminSettings'
-import { useAdminComplianceStore } from '@/stores/adminCompliance'
 import { useNavigationLoadingState } from '@/composables/useNavigationLoading'
 import { useRoutePrefetch } from '@/composables/useRoutePrefetch'
 import { getSetupStatus } from '@/api/setup'
@@ -31,9 +31,21 @@ const routes: RouteRecordRaw[] = [
 
   // ==================== Public Routes ====================
   {
+    path: '/',
+    name: 'CreditsHome',
+    component: () => import('@/views/public/PricingView.vue'),
+    meta: { requiresAuth: false, title: 'Home', titleKey: 'storefront.title' }
+  },
+  {
+    path: '/pricing',
+    name: 'Pricing',
+    redirect: '/',
+    meta: { requiresAuth: false, title: 'Home', titleKey: 'storefront.title' }
+  },
+  {
     path: '/home',
     name: 'Home',
-    component: () => import('@/views/HomeView.vue'),
+    redirect: '/',
     meta: {
       requiresAuth: false,
       title: 'Home'
@@ -42,7 +54,7 @@ const routes: RouteRecordRaw[] = [
   {
     path: '/login',
     name: 'Login',
-    component: () => import('@/views/auth/LoginView.vue'),
+    component: clerkEnabled ? () => import('@/views/auth/ClerkAuthView.vue') : () => import('@/views/auth/LoginView.vue'),
     meta: {
       requiresAuth: false,
       title: 'Login',
@@ -52,7 +64,7 @@ const routes: RouteRecordRaw[] = [
   {
     path: '/register',
     name: 'Register',
-    component: () => import('@/views/auth/RegisterView.vue'),
+    component: clerkEnabled ? () => import('@/views/auth/ClerkAuthView.vue') : () => import('@/views/auth/RegisterView.vue'),
     meta: {
       requiresAuth: false,
       title: 'Register',
@@ -187,10 +199,6 @@ const routes: RouteRecordRaw[] = [
   },
 
   // ==================== User Routes ====================
-  {
-    path: '/',
-    redirect: '/home'
-  },
   {
     path: '/dashboard',
     name: 'Dashboard',
@@ -804,6 +812,11 @@ router.beforeEach(async (to, _from, next) => {
   const requiresAuth = to.meta.requiresAuth !== false // Default to true
   const requiresAdmin = to.meta.requiresAdmin === true
 
+  if (clerkEnabled && ['/forgot-password', '/reset-password', '/email-verify'].includes(to.path)) {
+    next({ path: '/login', query: to.query })
+    return
+  }
+
   if (to.path === '/setup') {
     try {
       const status = await getSetupStatus()
@@ -889,21 +902,6 @@ router.beforeEach(async (to, _from, next) => {
     next('/dashboard')
     return
   }
-
-  if (requiresAdmin && authStore.isAdmin) {
-    const adminComplianceStore = useAdminComplianceStore()
-    if (!adminComplianceStore.initialized) {
-      try {
-        await adminComplianceStore.fetchStatus()
-      } catch (error) {
-        const err = error as { status?: number; code?: string; metadata?: Record<string, string> }
-        if (err.status === 423 && err.code === 'ADMIN_COMPLIANCE_ACK_REQUIRED') {
-          adminComplianceStore.requireAcknowledgement(err.metadata)
-        }
-      }
-    }
-  }
-
 
   // 公共设置可能尚未加载（App.vue 的 onMounted 异步拉取晚于首次导航，且纯静态部署
   // 无 __APP_CONFIG__ 注入）。此时 cachedPublicSettings 为空会把 payment/risk_control

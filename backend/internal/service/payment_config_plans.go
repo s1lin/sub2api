@@ -129,7 +129,15 @@ func (s *PaymentConfigService) ListPlans(ctx context.Context) ([]*dbent.Subscrip
 }
 
 func (s *PaymentConfigService) ListPlansForSale(ctx context.Context) ([]*dbent.SubscriptionPlan, error) {
-	return s.entClient.SubscriptionPlan.Query().Where(subscriptionplan.ForSaleEQ(true)).Order(subscriptionplan.BySortOrder()).All(ctx)
+	groupIDs, err := s.entClient.Group.Query().Where(
+		group.StatusEQ(StatusActive), group.SubscriptionTypeEQ(SubscriptionTypeSubscription), group.DeletedAtIsNil(),
+	).IDs(ctx)
+	if err != nil {
+		return nil, err
+	}
+	return s.entClient.SubscriptionPlan.Query().Where(
+		subscriptionplan.ForSaleEQ(true), subscriptionplan.GroupIDIn(groupIDs...),
+	).Order(subscriptionplan.BySortOrder()).All(ctx)
 }
 
 func (s *PaymentConfigService) CreatePlan(ctx context.Context, req CreatePlanRequest) (*dbent.SubscriptionPlan, error) {

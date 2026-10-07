@@ -104,3 +104,24 @@ func TestErrOrderNotFound_DistinctFromOtherErrors(t *testing.T) {
 	require.False(t, errors.Is(wrappedLookupErr, ErrOrderNotFound),
 		"DB connection failures must not masquerade as order-not-found")
 }
+
+func TestPaymentConfirmationPreservesDatabaseErrors(t *testing.T) {
+	ctx := context.Background()
+	client := newOrderNotFoundTestClient(t)
+	svc := &PaymentService{entClient: client}
+
+	// A genuine missing row is terminal; connection failures must remain
+	// retryable even on the second read or duplicate-notification path.
+	err := svc.confirmPayment(ctx, 42, "pi_test", 10, payment.TypeStripe, nil)
+	require.ErrorIs(t, err, ErrOrderNotFound)
+	err = svc.alreadyProcessed(ctx, &dbent.PaymentOrder{ID: 42})
+	require.ErrorIs(t, err, ErrOrderNotFound)
+
+	require.NoError(t, client.Close())
+	err = svc.confirmPayment(ctx, 42, "pi_test", 10, payment.TypeStripe, nil)
+	require.Error(t, err)
+	require.NotErrorIs(t, err, ErrOrderNotFound)
+	err = svc.alreadyProcessed(ctx, &dbent.PaymentOrder{ID: 42})
+	require.Error(t, err)
+	require.NotErrorIs(t, err, ErrOrderNotFound)
+}

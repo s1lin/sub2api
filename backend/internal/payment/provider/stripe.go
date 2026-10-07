@@ -4,6 +4,7 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	"os"
 	"strings"
 	"sync"
 
@@ -30,10 +31,26 @@ type Stripe struct {
 
 // NewStripe creates a new Stripe provider instance.
 func NewStripe(instanceID string, config map[string]string) (*Stripe, error) {
-	if config["secretKey"] == "" {
+	cfg := cloneStringMap(config)
+	// Persist environment references in provider settings so server-side
+	// credentials can remain outside the plaintext configuration table.
+	for _, field := range []string{"secretKey", "webhookSecret"} {
+		value := strings.TrimSpace(cfg[field])
+		if strings.HasPrefix(value, "env:") {
+			value = strings.TrimSpace(os.Getenv(strings.TrimSpace(strings.TrimPrefix(value, "env:"))))
+			if value == "" {
+				return nil, fmt.Errorf("stripe config %s references an empty environment variable", field)
+			}
+		}
+		cfg[field] = value
+	}
+	if cfg["secretKey"] == "" {
 		return nil, fmt.Errorf("stripe config missing required key: secretKey")
 	}
-	cfg := cloneStringMap(config)
+	serverMode, publicMode := stripeKeyMode(cfg["secretKey"]), stripeKeyMode(cfg["publishableKey"])
+	if serverMode != "" && publicMode != "" && serverMode != publicMode {
+		return nil, fmt.Errorf("stripe publishable and server keys must use the same mode")
+	}
 	currency, err := payment.NormalizePaymentCurrency(cfg["currency"])
 	if err != nil {
 		return nil, fmt.Errorf("stripe config currency: %w", err)
@@ -43,6 +60,24 @@ func NewStripe(instanceID string, config map[string]string) (*Stripe, error) {
 		instanceID: instanceID,
 		config:     cfg,
 	}, nil
+}
+
+func stripeKeyMode(key string) string {
+	for _, kind := range []string{"sk", "rk", "pk"} {
+		for _, mode := range []string{"test", "live"} {
+			if strings.HasPrefix(key, kind+"_"+mode+"_") {
+				return mode
+			}
+		}
+	}
+	return ""
+}
+
+func (s *Stripe) validateLiveMode(live bool) error {
+	if mode := stripeKeyMode(s.config["secretKey"]); mode != "" && live != (mode == "live") {
+		return fmt.Errorf("stripe payment mode does not match configured credentials")
+	}
+	return nil
 }
 
 func (s *Stripe) ensureInit() {
@@ -149,6 +184,9 @@ func (s *Stripe) QueryOrder(ctx context.Context, tradeNo string) (*payment.Query
 	if err != nil {
 		return nil, fmt.Errorf("stripe query order: %w", err)
 	}
+	if err := s.validateLiveMode(pi.Livemode); err != nil {
+		return nil, err
+	}
 
 	status := payment.ProviderStatusPending
 	switch pi.Status {
@@ -186,6 +224,9 @@ func (s *Stripe) VerifyNotification(_ context.Context, rawBody string, headers m
 	event, err := webhook.ConstructEvent([]byte(rawBody), sig, webhookSecret)
 	if err != nil {
 		return nil, fmt.Errorf("stripe verify notification: %w", err)
+	}
+	if err := s.validateLiveMode(event.Livemode); err != nil {
+		return nil, err
 	}
 
 	switch event.Type {

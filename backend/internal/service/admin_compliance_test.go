@@ -54,12 +54,13 @@ func (r *adminComplianceRepoStub) Delete(ctx context.Context, key string) error 
 	return nil
 }
 
-func TestAdminComplianceStatusRequiresAckWhenMissing(t *testing.T) {
+func TestAdminComplianceStatusDoesNotRequireAckWhenMissing(t *testing.T) {
 	svc := NewSettingService(&adminComplianceRepoStub{}, &config.Config{})
 
 	status, err := svc.GetAdminComplianceStatus(context.Background(), 1)
 	require.NoError(t, err)
-	require.True(t, status.Required)
+	require.False(t, status.Required)
+	require.Nil(t, status.Acknowledgement)
 	require.Equal(t, AdminComplianceVersion, status.Version)
 	require.Equal(t, AdminComplianceAckPhraseZH, status.AckPhraseZH)
 	require.Equal(t, AdminComplianceDocumentPathZH, status.DocumentPathZH)
@@ -100,7 +101,7 @@ func TestAcceptAdminCompliancePersistsCurrentVersion(t *testing.T) {
 	require.Equal(t, AdminComplianceDocumentPathZH, stored.DocumentZH)
 }
 
-func TestAdminComplianceStatusRequiresAckOnOldVersion(t *testing.T) {
+func TestAdminComplianceStatusDoesNotRequireAckOnOldVersion(t *testing.T) {
 	old, err := json.Marshal(AdminComplianceAcknowledgement{Version: "v2026.01.01"})
 	require.NoError(t, err)
 	svc := NewSettingService(&adminComplianceRepoStub{
@@ -109,7 +110,7 @@ func TestAdminComplianceStatusRequiresAckOnOldVersion(t *testing.T) {
 
 	status, err := svc.GetAdminComplianceStatus(context.Background(), 1)
 	require.NoError(t, err)
-	require.True(t, status.Required)
+	require.False(t, status.Required)
 	require.Nil(t, status.Acknowledgement)
 }
 
@@ -129,5 +130,6 @@ func TestAdminComplianceStatusIsPerAdminUser(t *testing.T) {
 
 	statusForUserTwo, err := svc.GetAdminComplianceStatus(context.Background(), 2)
 	require.NoError(t, err)
-	require.True(t, statusForUserTwo.Required)
+	require.False(t, statusForUserTwo.Required)
+	require.Nil(t, statusForUserTwo.Acknowledgement)
 }

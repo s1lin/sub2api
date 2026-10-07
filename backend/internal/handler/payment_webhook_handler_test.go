@@ -9,6 +9,7 @@ import (
 	"fmt"
 	"net/http"
 	"net/http/httptest"
+	"strings"
 	"testing"
 
 	"github.com/Wei-Shaw/sub2api/internal/payment"
@@ -17,6 +18,63 @@ import (
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 )
+
+type stripeWebhookServiceStub struct {
+	providers   []payment.Provider
+	providerErr error
+	handleErr   error
+	handleCalls int
+}
+
+func (s *stripeWebhookServiceStub) GetWebhookProviders(context.Context, string, string) ([]payment.Provider, error) {
+	return s.providers, s.providerErr
+}
+
+func (s *stripeWebhookServiceStub) HandlePaymentNotification(context.Context, *payment.PaymentNotification, string) error {
+	s.handleCalls++
+	return s.handleErr
+}
+
+func TestStripeWebhookRetryResponses(t *testing.T) {
+	gin.SetMode(gin.TestMode)
+	tests := []struct {
+		name        string
+		providerErr error
+		verifyErr   error
+		handleErr   error
+		irrelevant  bool
+		wantCode    int
+		wantHandled int
+	}{
+		{name: "provider lookup outage is retryable", providerErr: errors.New("database unavailable"), wantCode: http.StatusServiceUnavailable},
+		{name: "missing provider is retryable", providerErr: payment.ErrProviderNotFound, wantCode: http.StatusServiceUnavailable},
+		{name: "invalid signature is rejected", verifyErr: errors.New("invalid signature"), wantCode: http.StatusBadRequest},
+		{name: "irrelevant verified event is acknowledged", irrelevant: true, wantCode: http.StatusOK},
+		{name: "fulfillment outage is retryable", handleErr: errors.New("database unavailable"), wantCode: http.StatusInternalServerError, wantHandled: 1},
+		{name: "unknown order is acknowledged", handleErr: fmt.Errorf("lookup: %w", service.ErrOrderNotFound), wantCode: http.StatusOK, wantHandled: 1},
+		{name: "processed payment is acknowledged", wantCode: http.StatusOK, wantHandled: 1},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			var notification *payment.PaymentNotification
+			if !tt.irrelevant {
+				notification = &payment.PaymentNotification{OrderID: "sub2_test", TradeNo: "pi_test", Status: payment.NotificationStatusSuccess, Amount: 10}
+			}
+			svc := &stripeWebhookServiceStub{
+				providerErr: tt.providerErr,
+				handleErr:   tt.handleErr,
+				providers:   []payment.Provider{webhookHandlerProviderStub{key: payment.TypeStripe, notification: notification, verifyErr: tt.verifyErr}},
+			}
+			handler := &PaymentWebhookHandler{paymentService: svc}
+			response := httptest.NewRecorder()
+			c, _ := gin.CreateTestContext(response)
+			c.Request = httptest.NewRequest(http.MethodPost, "/api/v1/payment/webhook/stripe", strings.NewReader(`{"type":"payment_intent.succeeded"}`))
+			handler.StripeWebhook(c)
+			require.Equal(t, tt.wantCode, response.Code)
+			require.Equal(t, tt.wantHandled, svc.handleCalls)
+		})
+	}
+}
 
 func TestWriteSuccessResponse(t *testing.T) {
 	gin.SetMode(gin.TestMode)

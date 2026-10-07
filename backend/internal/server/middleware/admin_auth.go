@@ -6,6 +6,7 @@ import (
 	"errors"
 	"strings"
 
+	"github.com/Wei-Shaw/sub2api/internal/pkg/response"
 	"github.com/Wei-Shaw/sub2api/internal/service"
 
 	"github.com/gin-gonic/gin"
@@ -163,8 +164,13 @@ func validateJWTForAdmin(
 	auditService *service.AuditLogService,
 ) bool {
 	// 验证 JWT token
-	claims, err := authService.ValidateToken(token)
+	claims, err := authService.ValidateSession(c.Request.Context(), token)
 	if err != nil {
+		if authService.ClerkEnabled() {
+			c.Abort()
+			response.ErrorFrom(c, err)
+			return false
+		}
 		if errors.Is(err, service.ErrTokenExpired) {
 			AbortWithError(c, 401, "TOKEN_EXPIRED", "Token has expired")
 			return false

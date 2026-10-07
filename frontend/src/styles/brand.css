@@ -1,0 +1,99 @@
+@font-face {
+  font-family: 'Geist';
+  src: url('/fonts/geist/Geist-Variable.woff2') format('woff2');
+  font-weight: 100 900;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Geist Mono';
+  src: url('/fonts/geist/GeistMono-Variable.woff2') format('woff2');
+  font-weight: 100 900;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* Copper + Graphite. These semantic tokens are shared by every brand surface. */
+:root {
+  --brand-canvas: #f4f5f3;
+  --brand-surface: #fafbf8;
+  --brand-inset: #e9ece7;
+  --brand-ink: #202522;
+  --brand-muted: #59615b;
+  --brand-line: #d8ddd6;
+  --brand-accent: #a74d30;
+  --brand-accent-hover: #8d3e25;
+  --brand-on-accent: #fafbf8;
+  --brand-accent-soft: #f0e4dd;
+  --brand-font: 'Geist', 'PingFang SC', 'Microsoft YaHei', system-ui, sans-serif;
+  --brand-mono: 'Geist Mono', ui-monospace, monospace;
+}
+
+.dark {
+  --brand-canvas: #141816;
+  --brand-surface: #1c221e;
+  --brand-inset: #262e28;
+  --brand-ink: #eef0ec;
+  --brand-muted: #b0b9af;
+  --brand-line: #354037;
+  --brand-accent: #e89b7b;
+  --brand-accent-hover: #f2b296;
+  --brand-on-accent: #141816;
+  --brand-accent-soft: #35271f;
+}
+
+body { font-family: var(--brand-font); }
+
+.brand-page {
+  min-height: 100dvh;
+  background: var(--brand-canvas);
+  color: var(--brand-ink);
+  font-family: var(--brand-font);
+}
+
+.brand-container { width: min(1240px, calc(100% - 96px)); margin-inline: auto; }
+.brand-wordmark { display: inline-flex; align-items: center; gap: 10px; min-width: 0; font-size: 27px; font-weight: 750; letter-spacing: -.065em; line-height: 1.2; }
+.brand-wordmark span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.brand-wordmark img { flex-shrink: 0; object-fit: contain; border-radius: 8px; }
+.public-header { position: relative; z-index: 20; }
+.public-nav { display: flex; align-items: center; justify-content: space-between; gap: 24px; min-height: 80px; }
+.public-nav-actions { display: flex; align-items: center; flex-shrink: 0; gap: 20px; font-size: 14px; }
+.brand-text-link { font-weight: 550; transition: color 160ms ease; }
+.brand-text-link:hover { color: var(--brand-accent); }
+.brand-theme-toggle { display: grid; place-items: center; width: 40px; height: 40px; border-radius: 10px; transition: background-color 160ms ease; }
+.brand-theme-toggle:hover { background: var(--brand-inset); }
+.public-account-link { padding-block: 12px; }
+.brand-button { display: inline-flex; min-height: 48px; justify-content: center; align-items: center; gap: 12px; padding: 13px 22px; border-radius: 10px; background: var(--brand-accent); color: var(--brand-on-accent); font-weight: 600; font-size: 15px; line-height: 1.4; white-space: nowrap; transition: background-color 180ms ease, transform 180ms ease; }
+.brand-button:hover { background: var(--brand-accent-hover); }
+.brand-button:active { transform: scale(.98); }
+.brand-button:disabled { cursor: not-allowed; opacity: .6; }
+.brand-page :where(a, button, summary, select, input):focus-visible { outline: 2px solid var(--brand-accent); outline-offset: 4px; }
+.brand-page ::selection { background: var(--brand-accent-soft); color: var(--brand-ink); }
+.brand-page .text-gradient { background: none; color: var(--brand-ink); -webkit-text-fill-color: currentColor; }
+.brand-footer { display: flex; justify-content: space-between; gap: 24px; padding-block: 28px; border-top: 1px solid var(--brand-line); color: var(--brand-muted); font-size: 13px; }
+
+@media (max-width: 767px) {
+  .brand-container { width: calc(100% - 40px); }
+  .public-nav { min-height: 72px; gap: 12px; }
+  .brand-wordmark { font-size: 24px; }
+  .public-nav-actions { gap: 8px; font-size: 13px; }
+  .public-docs { display: none; }
+  .brand-theme-toggle { width: 36px; height: 40px; }
+  .brand-footer { flex-direction: column; gap: 12px; }
+}
+
+@media (max-width: 380px) {
+  .brand-container { width: calc(100% - 32px); }
+  .brand-wordmark { font-size: 21px; }
+  .public-nav-actions { gap: 2px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .brand-page *, .brand-page *::before, .brand-page *::after {
+    animation-duration: .01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: .01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
