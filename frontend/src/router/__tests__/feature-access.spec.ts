@@ -112,6 +112,18 @@ describe('feature route guard', () => {
     appStore.fetchPublicSettings.mockReset()
   })
 
+  it('shows the public 404 page without sending visitors to sign in', async () => {
+    const { createRouter } = await import('vue-router')
+    const options = vi.mocked(createRouter).mock.calls[0][0]
+    const route = options.routes.find((entry) => entry.name === 'NotFound')!
+    expect(route.meta?.requiresAuth).toBe(false)
+    authStore.isAuthenticated = false
+    appStore.publicSettingsLoaded = true
+    const { navigation, next } = runGuard(route.meta!, '/missing-page')
+    await navigation
+    expect(next).toHaveBeenCalledWith()
+  })
+
   it('waits for the first public-settings request before deciding payment access', async () => {
     const deferred = createDeferred<{ payment_enabled: boolean }>()
     appStore.fetchPublicSettings.mockImplementation(async () => {

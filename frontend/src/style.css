@@ -18,7 +18,7 @@
 
   body {
     @apply bg-gray-50 text-gray-900 dark:bg-dark-950 dark:text-gray-100;
-    @apply min-h-screen;
+    min-height: 100dvh;
   }
 
   /* 自定义滚动条 - 仅针对 Firefox，避免 Chrome 取消 webkit 的全局定制 */
@@ -89,10 +89,10 @@
   }
 
   .btn-secondary {
-    @apply bg-white dark:bg-dark-800;
+    background: var(--brand-surface);
     @apply text-gray-700 dark:text-gray-200;
     @apply border border-gray-200 dark:border-dark-600;
-    @apply shadow-sm hover:bg-gray-50 dark:hover:bg-dark-700;
+    @apply hover:bg-gray-50 dark:hover:bg-dark-700;
     @apply hover:border-gray-300 dark:hover:border-dark-500;
   }
 
@@ -102,23 +102,15 @@
   }
 
   .btn-danger {
-    @apply bg-gradient-to-r from-red-500 to-red-600;
-    @apply text-white shadow-md shadow-red-500/25;
-    @apply hover:from-red-600 hover:to-red-700 hover:shadow-lg hover:shadow-red-500/30;
+    @apply bg-red-600 text-white hover:bg-red-700;
   }
 
   .btn-success {
-    @apply bg-gradient-to-r from-emerald-500 to-emerald-600;
-    @apply text-white shadow-md shadow-emerald-500/25;
-    @apply hover:from-emerald-600 hover:to-emerald-700 hover:shadow-lg hover:shadow-emerald-500/30;
-    @apply dark:shadow-emerald-500/20;
+    @apply bg-emerald-700 text-white hover:bg-emerald-800;
   }
 
   .btn-warning {
-    @apply bg-gradient-to-r from-amber-500 to-amber-600;
-    @apply text-white shadow-md shadow-amber-500/25;
-    @apply hover:from-amber-600 hover:to-amber-700 hover:shadow-lg hover:shadow-amber-500/30;
-    @apply dark:shadow-amber-500/20;
+    @apply bg-amber-700 text-white hover:bg-amber-800;
   }
 
   .btn-stripe {
@@ -167,8 +159,8 @@
 
   /* ============ 输入框样式 ============ */
   .input {
-    @apply w-full rounded-xl px-4 py-2.5 text-sm;
-    @apply bg-white dark:bg-dark-800;
+    @apply w-full rounded-[10px] px-4 py-2.5 text-sm;
+    background: var(--brand-surface);
     @apply border border-gray-200 dark:border-dark-600;
     @apply text-gray-900 dark:text-gray-100;
     @apply placeholder:text-gray-500 dark:placeholder:text-dark-400;
@@ -232,7 +224,7 @@
   }
 
   .card-hover {
-    @apply hover:-translate-y-0.5 hover:shadow-card-hover;
+    transition: border-color 180ms ease;
     @apply hover:border-gray-200 dark:hover:border-dark-600;
   }
 
@@ -262,7 +254,7 @@
   }
 
   .stat-icon {
-    @apply h-12 w-12 rounded-xl;
+    @apply h-10 w-10 shrink-0 rounded-[10px];
     @apply flex items-center justify-center;
     @apply text-xl;
   }
@@ -284,7 +276,9 @@
   }
 
   .stat-value {
-    @apply text-2xl font-bold text-gray-900 dark:text-white truncate;
+    @apply text-2xl font-semibold tracking-tight text-gray-900 dark:text-white truncate;
+    font-family: var(--brand-mono);
+    font-variant-numeric: tabular-nums;
   }
 
   .stat-label {
@@ -310,12 +304,13 @@
 
   .table {
     @apply w-full text-sm;
+    font-variant-numeric: tabular-nums;
   }
 
   .table th {
     @apply px-4 py-3 text-left font-medium;
     @apply text-gray-600 dark:text-dark-300;
-    @apply bg-gray-50 dark:bg-dark-800/50;
+    background: var(--brand-inset);
     @apply border-b border-gray-200 dark:border-dark-700;
   }
 
@@ -367,7 +362,7 @@
   /* ============ 下拉菜单 ============ */
   .dropdown {
     @apply absolute z-50;
-    @apply bg-white dark:bg-dark-800;
+    background: var(--brand-surface);
     @apply rounded-xl;
     @apply border border-gray-200 dark:border-dark-700;
     @apply shadow-lg;
@@ -392,8 +387,8 @@
 
   .modal-content {
     @apply w-full;
-    @apply max-h-[95vh] sm:max-h-[90vh];
-    @apply bg-white dark:bg-dark-800;
+    @apply max-h-[95dvh] sm:max-h-[90dvh];
+    background: var(--brand-surface);
     @apply rounded-2xl shadow-2xl;
     @apply border border-gray-200 dark:border-dark-700;
     @apply flex flex-col;
@@ -485,8 +480,10 @@
 
   .dialog-container {
     @apply flex w-full flex-col;
-    @apply max-h-[90vh];
-    @apply rounded-2xl bg-white dark:bg-dark-800;
+    @apply max-h-[90dvh];
+    @apply rounded-2xl;
+    background: var(--brand-surface);
+    border: 1px solid var(--brand-line);
     @apply shadow-xl;
   }
 
@@ -508,8 +505,8 @@
   /* ============ Toast 通知 ============ */
   .toast {
     @apply fixed right-4 top-4 z-[100];
-    @apply min-w-[320px] max-w-md;
-    @apply bg-white dark:bg-dark-800;
+    width: min(28rem, calc(100vw - 2rem));
+    background: var(--brand-surface);
     @apply rounded-xl shadow-lg;
     @apply border-l-4;
     @apply p-4;

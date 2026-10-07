@@ -1,5 +1,7 @@
 export default {
   dashboard: {
+    workspaceTitle: '创作与开发，一目了然。',
+    workspaceDescription: '集中管理模型、创作工具与应用用量。',
     title: '仪表盘',
     welcomeMessage: '欢迎回来！这是您账户的概览。',
     balance: '余额',
@@ -1030,6 +1032,8 @@ export default {
   // Errors
   errors: {
     somethingWentWrong: '出错了',
+    notFoundDescription: '这个地址已移动或不存在。返回首页，继续探索。',
+    backHome: '返回首页',
     pageNotFound: '页面未找到',
     unauthorized: '未授权',
     forbidden: '禁止访问',

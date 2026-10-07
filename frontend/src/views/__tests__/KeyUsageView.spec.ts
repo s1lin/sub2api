@@ -4,6 +4,11 @@ import { nextTick } from 'vue'
 
 import KeyUsageView from '../KeyUsageView.vue'
 
+// These tests exercise key usage, independent of the shared navigation stores.
+vi.mock('@/components/layout/PublicHeader.vue', () => ({
+  default: { template: '<header />' },
+}))
+
 const { showInfo, showSuccess, showError, fetchPublicSettings } = vi.hoisted(() => ({
   showInfo: vi.fn(),
   showSuccess: vi.fn(),

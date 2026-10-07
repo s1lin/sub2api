@@ -1,5 +1,7 @@
 export default {
   dashboard: {
+    workspaceTitle: 'Your workspace, in focus.',
+    workspaceDescription: 'Your models, tools, and application activity in one place.',
     title: 'Dashboard',
     welcomeMessage: "Welcome back! Here's an overview of your account.",
     balance: 'Balance',
@@ -1026,6 +1028,8 @@ export default {
   // Errors
   errors: {
     somethingWentWrong: 'Something went wrong',
+    notFoundDescription: 'This address has moved or does not exist. Head home to pick up where you left off.',
+    backHome: 'Back to home',
     pageNotFound: 'Page not found',
     unauthorized: 'Unauthorized',
     forbidden: 'Forbidden',

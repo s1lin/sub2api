@@ -5,7 +5,7 @@
     </div>
     <div class="min-w-0 flex-1">
       <p class="stat-label truncate">{{ title }}</p>
-      <div class="mt-1 flex items-baseline gap-2">
+      <div class="mt-1 flex flex-wrap items-baseline gap-2">
         <p class="stat-value" :title="String(formattedValue)">{{ formattedValue }}</p>
         <span v-if="change !== undefined" :class="['stat-trend', trendClass]">
           <Icon

@@ -1,5 +1,6 @@
 export default {
   common: {
+    skipToContent: '跳转到内容',
     loading: '加载中...',
     submitting: '提交中...',
     justNow: '刚刚',
