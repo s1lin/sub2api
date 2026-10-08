@@ -1,5 +1,7 @@
 /* Kumo semantic tokens inherit the approved Copper + Graphite identity. */
 :root, .dark, [data-mode] {
+  --platform-section-gap: 1rem;
+  --platform-page-padding: 1rem;
   --color-kumo-base: var(--brand-surface);
   --color-kumo-elevated: var(--brand-surface);
   --color-kumo-recessed: var(--brand-canvas);
@@ -21,6 +23,27 @@
 [data-platform-variant="primary"] { color: var(--brand-on-accent) !important; }
 /* Tailwind 3's bare ring is 3px; Kumo uses the Tailwind 4 1px definition. */
 .ring { --tw-ring-shadow: var(--tw-ring-inset,) 0 0 0 calc(1px + var(--tw-ring-offset-width, 0px)) var(--tw-ring-color, currentColor); }
+
+/* A single 1px outline, without LayerCard's additional outer ring/shadow. */
+.card, .glass-card, .card-glass { --tw-ring-shadow: 0 0 #0000; --tw-shadow: 0 0 #0000; box-shadow: none; }
+.input:not(:focus-visible), .btn-secondary:not(:focus-visible), .ring.border:not(:focus-visible) { --tw-ring-shadow: 0 0 #0000; }
+
+/* Transparent framework containers pass sibling margins to their visible root. */
+:where([class*="space-y-"], [class*="space-x-"]) > :is([__use_react_component_wrap], [__use_react_slot_wrap], [data-use-vue-component-wrap], [data-use-vue-slot-wrap]) > :first-child {
+  margin: inherit;
+}
+
+/* The same rhythm for page sections, card grids, and table toolbars. */
+.platform-content { padding: var(--platform-page-padding); }
+.platform-header-inner { padding-inline: var(--platform-page-padding); }
+.app-shell .gap-6 { gap: var(--platform-section-gap); }
+.app-shell .space-y-6 > :not([hidden]) ~ :not([hidden]) {
+  margin-top: calc(var(--platform-section-gap) * (1 - var(--tw-space-y-reverse, 0)));
+  margin-bottom: calc(var(--platform-section-gap) * var(--tw-space-y-reverse, 0));
+}
+@media (min-width: 768px) {
+  :root { --platform-page-padding: 1.5rem; }
+}
 
 .kumo-dialog-portal { position: relative; }
 .platform-dialog { display: flex; flex-direction: column; max-height: calc(100dvh - 4rem); left: 50%; top: 50%; translate: none; transform: translate(-50%, -50%); }

@@ -14,7 +14,7 @@
       <AppHeader />
 
       <!-- Main Content -->
-      <main id="main-content" tabindex="-1" class="min-w-0 p-4 md:p-6 lg:p-8">
+      <main id="main-content" tabindex="-1" class="platform-content min-w-0">
         <slot />
       </main>
     </div>

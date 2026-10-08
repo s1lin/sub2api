@@ -3,7 +3,13 @@ import { applyPureReactInVue, setVeauryOptions } from 'veaury'
 import { camelize, defineComponent, getCurrentInstance, h, nextTick, onMounted, ref, normalizeClass, normalizeStyle, type Component, type ComponentPublicInstance, type DefineComponent } from 'vue'
 import { Children, cloneElement, createElement, forwardRef, isValidElement, type ReactElement, type ReactNode, type ComponentType } from 'react'
 
-setVeauryOptions({ react: { createRoot } })
+// Bridge containers must not become extra flex/grid items or suppress the
+// spacing classes on the actual controls.
+const transparentWrapper = { style: { display: 'contents' } }
+setVeauryOptions({
+  react: { createRoot, componentWrapAttrs: transparentWrapper, slotWrapAttrs: transparentWrapper },
+  vue: { componentWrapAttrs: transparentWrapper, slotWrapAttrs: transparentWrapper },
+})
 
 export type ControlProps = Record<string, any>
 const booleanProps = new Set(['disabled', 'required', 'readonly', 'readOnly', 'multiple', 'autofocus', 'autoFocus', 'checked', 'indeterminate', 'compact', 'customLayout', 'closeOnClickOutside', 'closeOnEscape', 'showCloseButton', 'showValue', 'activateOnFocus', 'clearable', 'creatable', 'remote', 'loading'])

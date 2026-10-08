@@ -48,8 +48,9 @@ onUnmounted(() => {
 <style scoped>
 /* 桌面端：Flexbox 布局 */
 .table-page-layout {
-  @apply flex flex-col gap-6;
-  height: calc(100dvh - 64px - 4rem); /* 减去 header + lg:p-8 的上下padding */
+  @apply flex flex-col;
+  gap: var(--platform-section-gap);
+  height: calc(100dvh - 64px - 2 * var(--platform-page-padding));
 }
 
 .layout-section-fixed {

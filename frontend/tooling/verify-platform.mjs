@@ -110,6 +110,27 @@ try {
     await page.locator(entry.ready).first().waitFor({ timeout: 15000 }).catch(() => { ready = false })
     await page.evaluate(() => document.fonts.ready)
     await page.waitForTimeout(350)
+    if (entry.auth) {
+      const layout = await page.evaluate(() => {
+        const boxes = element => {
+          if (getComputedStyle(element).display === 'none') return []
+          if (getComputedStyle(element).display === 'contents') return [...element.children].flatMap(boxes)
+          const rect = element.getBoundingClientRect()
+          return rect.height && rect.width ? [rect] : []
+        }
+        const stack = document.querySelector('main .space-y-6')
+        const rows = stack ? [...stack.children].flatMap(boxes) : []
+        return {
+          sidebarBrand: document.querySelector('.sidebar-brand')?.textContent.trim(),
+          borders: [...document.querySelectorAll('main .card')].map(card => ({ width: getComputedStyle(card).borderTopWidth, shadow: getComputedStyle(card).boxShadow })),
+          gaps: rows.slice(1).map((row, i) => Math.round(row.top - rows[i].bottom)),
+        }
+      })
+      if (layout.sidebarBrand != null && layout.sidebarBrand !== settings.site_name) errors.push('Sidebar includes content beyond the brand name')
+      if (layout.borders.some(border => parseFloat(border.width) > 1 || (border.shadow.match(/-?[\d.]+px/g) || []).some(value => parseFloat(value) !== 0))) errors.push('Card has a doubled outline')
+      if (['dashboard', 'admin-dashboard'].some(name => entry.name.startsWith(name + '-')) && layout.gaps.some(gap => Math.abs(gap - 16) > 1)) errors.push('Dashboard section gaps differ: ' + layout.gaps.join(', '))
+      console.log(JSON.stringify({ name: entry.name, layout }))
+    }
     if (entry.name === 'admin-subscriptions-desktop-light') {
       await page.getByRole('button', { name: 'Assign Subscription', exact: true }).first().click()
       await page.getByRole('dialog').waitFor()
