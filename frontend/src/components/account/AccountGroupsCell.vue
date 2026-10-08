@@ -1,7 +1,7 @@
 <template>
-  <KumoPopoverRoot v-if="groups && groups.length > 0" v-model="showPopover"> 0" class="relative max-w-56">
+  <KumoPopoverRoot v-if="groups && groups.length > 0" v-model="showPopover">
     <!-- 分组容器：固定最大宽度，最多显示2行 -->
-    <div class="flex flex-wrap gap-1 max-h-14 overflow-hidden">
+    <div class="relative flex max-w-56 flex-wrap gap-1 max-h-14 overflow-hidden">
       <GroupBadge
         v-for="group in displayGroups"
         :key="group.id"
@@ -30,6 +30,7 @@
               {{ t('admin.accounts.groupCountTotal', { count: groups.length }) }}
             </span>
             <KumoButton
+              :aria-label="t('common.close')"
               @click="showPopover = false"
               class="rounded p-0.5 text-gray-400 hover:bg-gray-100 hover:text-gray-600 dark:hover:bg-dark-700 dark:hover:text-gray-300"
             >

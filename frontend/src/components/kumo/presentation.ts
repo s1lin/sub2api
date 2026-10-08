@@ -105,10 +105,11 @@ function NativeSelectControl(props: ControlProps) {
   })
 }
 
-function present(name: string, component: ComponentType<any>) {
+function present(name: string, component: ComponentType<any>, className?: string) {
   return bridge(name, props => {
     const { setElement } = useDomEvents(props)
-    return el(component, { ...domProps(props), ref: setElement }, props.children)
+    const forwarded = domProps(props)
+    return el(component, { ...forwarded, className: [className, forwarded.className].filter(Boolean).join(' '), ref: setElement }, props.children)
   })
 }
 
@@ -116,8 +117,8 @@ export const KumoRadio = bridge('KumoRadio', RadioControl)
 export const KumoRadioGroup = bridge('KumoRadioGroup', RadioGroupControl)
 export const KumoNativeSelect = bridge('KumoNativeSelect', NativeSelectControl)
 export const KumoSurface = present('KumoSurface', LayerCard)
-export const KumoBadge = present('KumoBadge', Badge)
-export const KumoTable = present('KumoTable', Table)
+export const KumoBadge = present('KumoBadge', Badge, 'platform-badge')
+export const KumoTable = present('KumoTable', Table, 'platform-table')
 export const KumoLoader = present('KumoLoader', Loader)
 export const KumoTableHeader = present('KumoTableHeader', Table.Header)
 export const KumoTableHead = present('KumoTableHead', Table.Head)

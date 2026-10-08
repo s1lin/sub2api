@@ -1,5 +1,5 @@
 <template>
-  <div v-if="!isDesktopViewport" class="space-y-3">
+  <div v-if="!isDesktopViewport" class="platform-data-cards space-y-3">
     <template v-if="loading">
       <div v-for="i in 5" :key="i" class="rounded-lg border border-gray-200 bg-[var(--brand-surface)] p-4 dark:border-dark-700 dark:bg-[var(--brand-surface)]">
         <div class="space-y-3">
@@ -64,16 +64,16 @@
             :data-field="column.key"
             class="flex min-w-0 items-start justify-between gap-4"
           >
-            <span class="text-xs font-medium uppercase tracking-wider text-gray-500 dark:text-dark-400">
+            <span class="platform-table-heading text-gray-500 dark:text-dark-400">
               {{ column.label }}
             </span>
-            <div class="min-w-0 max-w-full text-right text-sm text-gray-900 dark:text-gray-100">
+            <div class="platform-table-cell min-w-0 max-w-full text-right text-gray-900 dark:text-gray-100">
               <slot :name="`cell-${column.key}`" :row="row" :value="row[column.key]" :expanded="actionsExpanded">
                 {{ column.formatter ? column.formatter(row[column.key], row) : row[column.key] }}
               </slot>
             </div>
           </div>
-          <div v-if="hasActionsColumn" class="border-t border-gray-200 pt-3 dark:border-dark-700">
+          <div v-if="hasActionsColumn" class="platform-table-actions border-t border-gray-200 pt-3 dark:border-dark-700">
             <slot name="cell-actions" :row="row" :value="row['actions']" :expanded="actionsExpanded"></slot>
           </div>
         </div>
@@ -114,8 +114,7 @@
             scope="col"
             :aria-sort="column.sortable ? getColumnAriaSort(column.key) : undefined"
             :class="[
-              'sticky-header-cell py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500 dark:text-dark-400',
-              getAdaptivePaddingClass(),
+              'sticky-header-cell py-3 text-left text-gray-500 dark:text-dark-400',
               { 'cursor-pointer hover:bg-gray-100 dark:hover:bg-dark-700': column.sortable },
               getStickyColumnClass(column, index),
               column.class
@@ -163,7 +162,7 @@
           <KumoTableCell v-if="selectable" class="w-11 min-w-11 px-3 py-4">
             <KumoSkeleton class="mx-auto h-4 w-4 animate-pulse rounded bg-gray-200 dark:bg-dark-700"></KumoSkeleton>
           </KumoTableCell>
-          <KumoTableCell v-for="column in columns" :key="column.key" :class="['whitespace-nowrap py-4', getAdaptivePaddingClass()]">
+          <KumoTableCell v-for="column in columns" :key="column.key" class="whitespace-nowrap">
             <div class="animate-pulse">
               <div class="h-4 w-3/4 rounded bg-gray-200 dark:bg-dark-700"></div>
             </div>
@@ -174,7 +173,7 @@
         <KumoTableRow v-else-if="!data || data.length === 0">
           <KumoTableCell
             :colspan="tableColumnCount"
-            :class="['py-12 text-center text-gray-500 dark:text-dark-400', getAdaptivePaddingClass()]"
+            class="text-center text-gray-500 dark:text-dark-400"
           >
             <slot name="empty">
               <EmptyState :title="t('empty.noData')" class="!py-4" />
@@ -217,9 +216,9 @@
               v-for="(column, colIndex) in columns"
               :key="column.key"
               :class="[
-                'whitespace-nowrap py-4 text-sm text-gray-900 dark:text-gray-100',
-                getAdaptivePaddingClass(),
+                'whitespace-nowrap text-gray-900 dark:text-gray-100',
                 getStickyColumnClass(column, colIndex),
+                { 'platform-table-actions': column.key === 'actions' },
                 column.class
               ]"
             >
@@ -864,22 +863,6 @@ const getStickyColumnClass = (column: Column, index: number) => {
   return classes.join(' ')
 }
 
-// 根据列数自适应调整内边距
-const getAdaptivePaddingClass = () => {
-  const columnCount = props.columns.length
-
-  // 列数越多，内边距越小
-  if (columnCount >= 10) {
-    return 'px-2' // 8px
-  } else if (columnCount >= 7) {
-    return 'px-3' // 12px
-  } else if (columnCount >= 5) {
-    return 'px-4' // 16px
-  } else {
-    return 'px-6' // 24px (原始值)
-  }
-}
-
 // Init + keep persisted sort state consistent with current columns
 const didInitSort = ref(false)
 
@@ -937,7 +920,7 @@ defineExpose({
 <style scoped>
 /* 表格横向滚动 */
 .table-wrapper {
-  --select-col-width: 52px; /* 勾选列宽度：px-6 (24px*2) + checkbox (16px) */
+  --select-col-width: 48px; /* Shared 16px cell padding + 16px selection control. */
   position: relative;
   overflow-x: auto;
   overflow-y: auto;
@@ -947,87 +930,71 @@ defineExpose({
 }
 
 /* 表头容器，确保在滚动时覆盖表体内容 */
-.table-wrapper .table-header {
+.table-wrapper :deep(.table-header) {
   position: sticky;
   top: 0;
   z-index: 200;
   background-color: var(--brand-inset);
 }
 
-.dark .table-wrapper .table-header {
-  background-color: var(--brand-inset);
-}
-
 /* 表体保持在表头下方 */
-.table-body {
+.table-wrapper :deep(.table-body) {
   position: relative;
   z-index: 0;
 }
 
 /* 所有表头单元格固定在顶部 */
-.sticky-header-cell {
+.table-wrapper :deep(.sticky-header-cell) {
   position: sticky;
   top: 0;
   z-index: 210; /* 必须高于所有表体内容 */
   background-color: var(--brand-inset);
 }
 
-.dark .sticky-header-cell {
-  background-color: var(--brand-inset);
-}
-
 /* Sticky 列基础样式 */
-.sticky-col {
+.table-wrapper :deep(.sticky-col) {
   position: sticky;
   z-index: 20; /* 表体固定列 */
 }
 
 /* 单列固定（无勾选列时） */
-.sticky-col-left {
+.table-wrapper :deep(.sticky-col-left) {
   left: 0;
 }
 
 /* 双列固定（有勾选列时）：第一列（勾选） */
-.sticky-col-left-first {
+.table-wrapper :deep(.sticky-col-left-first) {
   left: 0;
 }
 
 /* 双列固定（有勾选列时）：第二列（名称） */
-.sticky-col-left-second {
+.table-wrapper :deep(.sticky-col-left-second) {
   left: var(--select-col-width);
 }
 
 /* 操作列固定 */
-.sticky-col-right {
+.table-wrapper :deep(.sticky-col-right) {
   right: 0;
 }
 
 /* 表头 sticky 列 - 需要比普通表头单元格更高的 z-index */
-.sticky-header-cell.sticky-col {
+.table-wrapper :deep(.sticky-header-cell.sticky-col) {
   z-index: 220; /* 高于普通表头单元格和表体固定列 */
 }
 
 /* 表体 sticky 列背景 */
-tbody .sticky-col {
-  background-color: var(--brand-surface);
-}
-
-.dark tbody .sticky-col {
+.table-wrapper :deep(tbody .sticky-col) {
   background-color: var(--brand-surface);
 }
 
 /* hover 状态保持 */
-tbody tr:hover .sticky-col {
-  background-color: var(--brand-inset);
-}
-
-.dark tbody tr:hover .sticky-col {
+.table-wrapper :deep(tbody tr:hover .sticky-col) {
   background-color: var(--brand-inset);
 }
 
 /* 阴影只在可滚动时显示 */
 /* 单列固定右侧阴影 */
-.is-scrollable .sticky-col-left::after {
+.table-wrapper.is-scrollable :deep(.sticky-col-left::after) {
   content: '';
   position: absolute;
   top: 0;
@@ -1040,7 +1007,7 @@ tbody tr:hover .sticky-col {
 }
 
 /* 双列固定：只在第二列显示阴影 */
-.is-scrollable .sticky-col-left-second::after {
+.table-wrapper.is-scrollable :deep(.sticky-col-left-second::after) {
   content: '';
   position: absolute;
   top: 0;
@@ -1053,7 +1020,7 @@ tbody tr:hover .sticky-col {
 }
 
 /* 操作列左侧阴影 */
-.is-scrollable .sticky-col-right::before {
+.table-wrapper.is-scrollable :deep(.sticky-col-right::before) {
   content: '';
   position: absolute;
   top: 0;
@@ -1066,12 +1033,12 @@ tbody tr:hover .sticky-col {
 }
 
 /* 暗色模式阴影 */
-.dark .is-scrollable .sticky-col-left::after,
-.dark .is-scrollable .sticky-col-left-second::after {
+:global(.dark) .table-wrapper.is-scrollable :deep(.sticky-col-left::after),
+:global(.dark) .table-wrapper.is-scrollable :deep(.sticky-col-left-second::after) {
   background: linear-gradient(to right, rgba(0, 0, 0, 0.2), transparent);
 }
 
-.dark .is-scrollable .sticky-col-right::before {
+:global(.dark) .table-wrapper.is-scrollable :deep(.sticky-col-right::before) {
   background: linear-gradient(to left, rgba(0, 0, 0, 0.2), transparent);
 }
 </style>

@@ -6,6 +6,10 @@
   --platform-nav-line-height: 1.25rem;
   --platform-nav-icon-size: 1.25rem;
   --platform-nav-chevron-size: 1rem;
+  --platform-table-font-size: .875rem;
+  --platform-table-line-height: 1.25rem;
+  --platform-table-label-size: .75rem;
+  --platform-table-icon-size: 1rem;
   --color-kumo-base: var(--brand-surface);
   --color-kumo-elevated: var(--brand-surface);
   --color-kumo-recessed: var(--brand-canvas);
@@ -48,7 +52,16 @@
   font-weight: 500;
   letter-spacing: normal;
 }
-.sidebar .sidebar-link { justify-content: flex-start; gap: .75rem; height: auto; min-height: 2.5rem; }
+.sidebar .sidebar-link {
+  justify-content: flex-start;
+  gap: .75rem;
+  height: auto;
+  min-height: 2.5rem;
+  padding: .625rem .875rem .625rem 1.0625rem;
+}
+.sidebar .sidebar-link.sidebar-link-collapsed { gap: 0; padding-inline: .875rem; }
+.sidebar .sidebar-submenu .sidebar-link { padding-block: .375rem; min-height: 2.25rem; }
+.sidebar .sidebar-label-flex { flex: 1; }
 .sidebar .sidebar-link svg, .sidebar .sidebar-svg-icon,
 .platform-nav-control svg, .platform-nav-menu [role="menuitem"] svg {
   width: var(--platform-nav-icon-size);
@@ -58,6 +71,53 @@
 .sidebar .sidebar-link .sidebar-label svg, .platform-nav-control svg.platform-nav-chevron {
   width: var(--platform-nav-chevron-size);
   height: var(--platform-nav-chevron-size);
+}
+
+/* Shared table metrics apply to Kumo tables and their mobile card equivalent. */
+.platform-table, .platform-data-cards, .platform-table-toolbar {
+  font-family: var(--brand-font);
+  font-size: var(--platform-table-font-size);
+  line-height: var(--platform-table-line-height);
+}
+.platform-table :is(th, td) { padding: .75rem 1rem; }
+.platform-table th, .platform-data-cards .platform-table-heading {
+  font-family: var(--brand-font);
+  font-size: var(--platform-table-label-size);
+  line-height: 1rem;
+  font-weight: 500;
+  text-transform: none;
+  letter-spacing: normal;
+}
+.platform-table td, .platform-data-cards .platform-table-cell {
+  font-size: var(--platform-table-font-size);
+  line-height: var(--platform-table-line-height);
+}
+:is(.platform-table, .platform-data-cards, .platform-table-toolbar) button:not([role]),
+.platform-table-toolbar :is(input, [role="combobox"]) {
+  font-size: inherit;
+  line-height: inherit;
+}
+:is(.platform-table, .platform-data-cards) .platform-table-actions {
+  font-size: var(--platform-table-label-size);
+  line-height: 1rem;
+}
+:is(.platform-table, .platform-data-cards) .platform-table-actions button:not([role]) {
+  flex-direction: row;
+  flex-wrap: nowrap;
+  align-items: center;
+  justify-content: center;
+  gap: .375rem;
+  height: auto;
+  min-height: 2rem;
+  padding: .375rem .5rem;
+  font-weight: 500;
+}
+.platform-table-actions div.flex { flex-wrap: wrap; max-width: 22rem; }
+:is(.platform-table, .platform-data-cards, .platform-table-toolbar) button:not([role]) svg,
+:is(.platform-table, .platform-data-cards) .platform-badge svg {
+  width: var(--platform-table-icon-size);
+  height: var(--platform-table-icon-size);
+  flex-shrink: 0;
 }
 .app-shell .gap-6 { gap: var(--platform-section-gap); }
 .app-shell .space-y-6 > :not([hidden]) ~ :not([hidden]) {

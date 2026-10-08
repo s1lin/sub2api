@@ -1,12 +1,12 @@
 <template>
   <div class="table-page-layout" :class="{ 'mobile-mode': isMobile }">
     <!-- 固定区域：操作按钮 -->
-    <div v-if="$slots.actions" class="layout-section-fixed">
+    <div v-if="$slots.actions" class="layout-section-fixed platform-table-toolbar">
       <slot name="actions" />
     </div>
 
     <!-- 固定区域：搜索和过滤器 -->
-    <div v-if="$slots.filters" class="layout-section-fixed">
+    <div v-if="$slots.filters" class="layout-section-fixed platform-table-toolbar">
       <slot name="filters" />
     </div>
 
@@ -89,11 +89,11 @@ onUnmounted(() => {
 }
 
 .table-scroll-container :deep(th) {
-  @apply px-5 py-4 text-left text-sm font-medium text-gray-600 dark:text-dark-300 border-b border-gray-200 dark:border-dark-700;
+  @apply text-gray-600 dark:text-dark-300 border-b border-gray-200 dark:border-dark-700;
 }
 
 .table-scroll-container :deep(td) {
-  @apply px-5 py-4 text-sm text-gray-700 dark:text-gray-300 border-b border-gray-100 dark:border-dark-800;
+  @apply text-gray-700 dark:text-gray-300 border-b border-gray-100 dark:border-dark-800;
 }
 
 /* 移动端：恢复正常滚动 */
