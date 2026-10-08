@@ -2,6 +2,9 @@
 :root, .dark, [data-mode="light"], [data-mode="dark"] {
   --platform-section-gap: 1rem;
   --platform-page-padding: 1rem;
+  --platform-body-size: .875rem;
+  --platform-body-line: 1.25rem;
+  --platform-metric-size: 1.25rem;
   --platform-nav-font-size: 0.875rem;
   --platform-nav-line-height: 1.25rem;
   --platform-nav-icon-size: 1.25rem;
@@ -73,6 +76,32 @@
 /* The same rhythm for page sections, card grids, and table toolbars. */
 .platform-content { padding: var(--platform-page-padding); }
 .platform-header-inner { padding-inline: var(--platform-page-padding); }
+/* Working screens share one body/control scale; display typography stays on public pages. */
+.app-shell { font-size: var(--platform-body-size); line-height: var(--platform-body-line); }
+.app-shell .platform-surface { min-width: 0; }
+:is(.app-shell, .platform-dialog) :is(input, textarea, [role="combobox"], [data-platform-control="button"]),
+.platform-select-popup, .platform-select-popup :is(input, [role="option"]),
+.platform-date-picker :is(input, button) {
+  font-size: var(--platform-body-size);
+  line-height: var(--platform-body-line);
+}
+.app-shell [data-platform-control="button"]:is(.btn-sm, .text-xs, .text-\[11px\]) {
+  font-size: .75rem;
+  line-height: 1rem;
+}
+.app-shell :is(.platform-surface, .card, .glass-card, .card-glass, .empty-state) :is(h2, h3) {
+  font-size: var(--platform-body-size);
+  line-height: var(--platform-body-line);
+  font-weight: 600;
+  letter-spacing: normal;
+}
+.app-shell .stat-value, .platform-metric-value {
+  font-family: var(--brand-mono);
+  font-size: var(--platform-metric-size);
+  line-height: 1.75rem;
+  font-weight: 500;
+  font-variant-numeric: tabular-nums;
+}
 /* Links and Kumo buttons share the same navigation typography and icon scale. */
 .sidebar .sidebar-link, .platform-nav-control, .platform-nav-menu [role="menuitem"] {
   font-family: var(--brand-font);
@@ -109,6 +138,11 @@
   line-height: var(--platform-table-line-height);
 }
 .platform-table :is(th, td) { padding: .75rem 1rem; }
+/* Let each column keep readable words. Wide data stays in its existing scroller.
+   Prose/log cells can still opt into wrapping with whitespace-normal/break-all. */
+.platform-table { overflow-wrap: normal; white-space: nowrap; }
+.platform-table th { white-space: nowrap; }
+.platform-data-cards .platform-table-heading { flex-shrink: 0; max-width: 45%; }
 .platform-table th, .platform-data-cards .platform-table-heading {
   font-family: var(--brand-font);
   font-size: var(--platform-table-label-size);

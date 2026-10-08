@@ -14,7 +14,7 @@
               <Icon name="dollar" size="sm" class="text-primary-500" />
               {{ t('affiliate.stats.rebateRate') }}
             </p>
-            <p class="mt-2 text-2xl font-semibold text-primary-600 dark:text-primary-400">
+            <p class="mt-2 platform-metric-value text-primary-600 dark:text-primary-400">
               {{ formattedRebateRate }}<span class="ml-0.5 text-base font-medium">%</span>
             </p>
             <p class="mt-1 text-xs text-gray-400 dark:text-dark-500">
@@ -23,19 +23,19 @@
           </KumoSurface>
           <KumoSurface class="card p-5">
             <p class="text-sm text-gray-500 dark:text-dark-400">{{ t('affiliate.stats.invitedUsers') }}</p>
-            <p class="mt-2 text-2xl font-semibold text-gray-900 dark:text-white">
+            <p class="mt-2 platform-metric-value text-gray-900 dark:text-white">
               {{ formatCount(detail.aff_count) }}
             </p>
           </KumoSurface>
           <KumoSurface class="card p-5">
             <p class="text-sm text-gray-500 dark:text-dark-400">{{ t('affiliate.stats.availableQuota') }}</p>
-            <p class="mt-2 text-2xl font-semibold text-emerald-600 dark:text-emerald-400">
+            <p class="mt-2 platform-metric-value text-emerald-600 dark:text-emerald-400">
               {{ formatCurrency(detail.aff_quota) }}
             </p>
           </KumoSurface>
           <KumoSurface class="card p-5">
             <p class="text-sm text-gray-500 dark:text-dark-400">{{ t('affiliate.stats.totalQuota') }}</p>
-            <p class="mt-2 text-2xl font-semibold text-gray-900 dark:text-white">
+            <p class="mt-2 platform-metric-value text-gray-900 dark:text-white">
               {{ formatCurrency(detail.aff_history_quota) }}
             </p>
             <p v-if="detail.aff_frozen_quota > 0" class="mt-1 text-xs text-amber-600 dark:text-amber-400">

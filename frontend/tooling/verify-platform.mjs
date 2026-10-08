@@ -1,4 +1,5 @@
 import { chromium } from 'playwright'
+import { checkDensity } from './platform-density.mjs'
 import { writeFile, mkdir } from 'node:fs/promises'
 import { fileURLToPath } from 'node:url'
 import { resolve } from 'node:path'
@@ -146,6 +147,11 @@ try {
       entries.push({ name: name + '-narrow-light', route, ready, width: 320, height: 700, theme: 'light', locale: 'en', auth: true, admin: name.startsWith('admin-') })
     }
   }
+  if (process.env.PLATFORM_DENSITY) {
+    for (const [name, route, ready] of routes.filter(([name]) => ['keys', 'admin-accounts', 'admin-ops', 'admin-dashboard'].includes(name))) {
+      entries.push({ name: name + '-laptop-dark', route, ready, width: 1024, height: 768, theme: 'dark', locale: 'en', auth: true, admin: name.startsWith('admin-') })
+    }
+  }
   const selected = process.env.PLATFORM_CASES ? entries.filter(entry => process.env.PLATFORM_CASES.split(',').some(name => entry.name.startsWith(name))) : entries
   for (const entry of selected) {
     const context = await browser.newContext({ viewport: { width: entry.width, height: entry.height }, colorScheme: entry.theme, reducedMotion: 'reduce' })
@@ -214,10 +220,11 @@ try {
         else if (path === '/admin/users') data = list([{ ...user, notes: 'Video production team', allowed_groups: [3], group_rates: {}, rpm_limit: 60 }])
         else if (path === '/admin/groups') data = list([group])
         else if (path === '/admin/accounts') data = list([account])
-        else if (path === '/admin/ops/advanced-settings') data = { data_retention: { cleanup_enabled: true, cleanup_schedule: '0 2 * * *', error_log_retention_days: 30, minute_metrics_retention_days: 7, hourly_metrics_retention_days: 90 }, aggregation: { aggregation_enabled: true }, openai_account_quota_auto_pause: { default_threshold_5h: 0, default_threshold_7d: 0 }, display_alert_events: true, display_openai_token_stats: false, auto_refresh_enabled: false, auto_refresh_interval_seconds: 30 }
+        else if (path === '/admin/ops/advanced-settings') data = { data_retention: { cleanup_enabled: true, cleanup_schedule: '0 2 * * *', error_log_retention_days: 30, minute_metrics_retention_days: 7, hourly_metrics_retention_days: 90 }, aggregation: { aggregation_enabled: true }, openai_account_quota_auto_pause: { default_threshold_5h: 0, default_threshold_7d: 0 }, display_alert_events: true, display_openai_token_stats: !!process.env.PLATFORM_DENSITY, auto_refresh_enabled: false, auto_refresh_interval_seconds: 30 }
         else if (path === '/admin/ops/runtime/alert') data = { evaluation_interval_seconds: 60, distributed_lock: { enabled: true, key: 'ops:preview', ttl_seconds: 30 }, silencing: { enabled: false, global_until_rfc3339: '', global_reason: '', entries: [] }, thresholds: { sla_percent_min: 99.5, ttft_p99_ms_max: 500, request_error_rate_percent_max: 5, upstream_error_rate_percent_max: 5 } }
         else if (path === '/admin/ops/email-notification/config') data = { alert: { enabled: false, recipients: [], min_severity: 'P1', rate_limit_per_hour: 10, batching_window_seconds: 60 }, report: { enabled: false, recipients: [], daily_summary_enabled: true, daily_summary_schedule: '0 9 * * *', weekly_summary_enabled: true, weekly_summary_schedule: '0 9 * * 1' } }
         else if (path === '/admin/ops/runtime/logging') data = { level: 'info', persist_access_logs: false, enable_sampling: false, sampling_initial: 100, sampling_thereafter: 100, caller: true, stacktrace_level: 'error', retention_days: 30, request_retention_days: 90 }
+        else if (path === '/admin/ops/dashboard/openai-token-stats') data = { time_range: '30d', start_time: '2026-09-08T00:00:00Z', end_time: '2026-10-08T00:00:00Z', total: 1, items: [{ model: 'gpt-4.1-production', request_count: 12847, avg_tokens_per_sec: 83.42, avg_first_token_ms: 247.18, total_output_tokens: 1842056, avg_duration_ms: 1534, requests_with_first_token: 12790 }] }
         else if (path === '/admin/ops/dashboard/snapshot-v2') data = { overview: null, throughput_trend: { points: [], by_platform: [], top_groups: [] }, error_trend: { points: [] } }
         else if (path.startsWith('/admin/ops/')) data = path.includes('alert-events') || path.includes('alert-rules') ? [] : { points: [], buckets: [], items: [], accounts: [], groups: [], platforms: [], users: [], total: 0, page: 1, page_size: 20 }
         else if (path === '/admin/system/version') data = { version: 'design-preview', build_type: 'source' }
@@ -237,6 +244,7 @@ try {
       await checkDashboard(page, entry, errors)
     }
     if (entry.auth) {
+      if (process.env.PLATFORM_DENSITY) await checkDensity(page, errors, entry.name)
       const layout = await page.evaluate(() => {
         const boxes = element => {
           if (getComputedStyle(element).display === 'none') return []

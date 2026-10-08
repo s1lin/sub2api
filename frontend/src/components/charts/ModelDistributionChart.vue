@@ -187,7 +187,7 @@
         <Doughnut :data="rankingChartData" :options="rankingDoughnutOptions" />
       </div>
       <div class="max-h-48 w-full min-w-0 flex-1 overflow-auto">
-        <KumoTable class="w-full text-xs">
+        <KumoTable class="platform-chart-table w-full">
           <KumoTableHeader>
             <KumoTableRow class="text-gray-500 dark:text-gray-400">
               <KumoTableHead class="pb-2 text-left">{{ t('admin.dashboard.spendingRankingUser') }}</KumoTableHead>

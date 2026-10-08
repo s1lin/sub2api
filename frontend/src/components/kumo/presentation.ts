@@ -116,7 +116,7 @@ function present(name: string, component: ComponentType<any>, className?: string
 export const KumoRadio = bridge('KumoRadio', RadioControl)
 export const KumoRadioGroup = bridge('KumoRadioGroup', RadioGroupControl)
 export const KumoNativeSelect = bridge('KumoNativeSelect', NativeSelectControl)
-export const KumoSurface = present('KumoSurface', LayerCard)
+export const KumoSurface = present('KumoSurface', LayerCard, 'platform-surface')
 export const KumoBadge = present('KumoBadge', Badge, 'platform-badge')
 export const KumoTable = present('KumoTable', Table, 'platform-table')
 export const KumoLoader = present('KumoLoader', Loader)
