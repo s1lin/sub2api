@@ -384,6 +384,7 @@ import {
   Filler
 } from 'chart.js'
 import { Line } from 'vue-chartjs'
+import { useTheme } from '@/composables/useTheme'
 
 // Register Chart.js components
 ChartJS.register(
@@ -447,14 +448,12 @@ const granularityOptions = computed(() => [
 ])
 
 // Dark mode detection
-const isDarkMode = computed(() => {
-  return document.documentElement.classList.contains('dark')
-})
+const { isDark: isDarkMode } = useTheme()
 
 // Chart colors
 const chartColors = computed(() => ({
-  text: isDarkMode.value ? '#e5e7eb' : '#374151',
-  grid: isDarkMode.value ? '#374151' : '#e5e7eb'
+  text: isDarkMode.value ? '#b0b9af' : '#59615b',
+  grid: isDarkMode.value ? '#354037' : '#d8ddd6'
 }))
 
 // Line chart options (for user trend chart)

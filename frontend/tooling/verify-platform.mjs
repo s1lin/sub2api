@@ -19,6 +19,9 @@ const plans = [
   { id: 8, group_id: 4, name: 'Professional development workspace', description: 'A longer plan name to check responsive wrapping.', price: 69, original_price: 79, validity_days: 30, validity_unit: 'day', rate_multiplier: 1, daily_limit_usd: 15, weekly_limit_usd: null, monthly_limit_usd: null, features: ['API access', 'Usage tracking'], group_platform: 'anthropic', sort_order: 2, for_sale: true, group_name: 'Claude' },
 ]
 const stats = Object.fromEntries(['total_api_keys', 'active_api_keys', 'total_requests', 'total_input_tokens', 'total_output_tokens', 'total_cache_creation_tokens', 'total_cache_read_tokens', 'total_tokens', 'total_cost', 'total_actual_cost', 'today_requests', 'today_input_tokens', 'today_output_tokens', 'today_cache_creation_tokens', 'today_cache_read_tokens', 'today_tokens', 'today_cost', 'today_actual_cost', 'average_duration_ms', 'rpm', 'tpm'].map(k => [k, 0]))
+const chartTrend = Array.from({ length: 7 }, (_, index) => ({ date: `2026-10-0${index + 1}`, requests: 20 + index * 5, input_tokens: 12000 + index * 3000, output_tokens: 6000 + index * 1500, cache_creation_tokens: 1000, cache_read_tokens: 2000 + index * 1000, total_tokens: 21000 + index * 5500, cost: 3 + index, actual_cost: 2 + index }))
+const chartModels = [{ model: 'gemini-2.5-pro', requests: 150, total_tokens: 120000, input_tokens: 70000, output_tokens: 50000, cost: 12, actual_cost: 9 }, { model: 'gpt-4.1', requests: 75, total_tokens: 90000, input_tokens: 60000, output_tokens: 30000, cost: 8, actual_cost: 6 }]
+const chartUsers = chartTrend.map(point => ({ ...point, user_id: user.id, username: user.username, email: user.email, tokens: point.total_tokens }))
 const results = []
 
 async function checkSidebarAlignment(page, errors, state) {
@@ -32,6 +35,85 @@ async function checkSidebarAlignment(page, errors, state) {
   // Measure against the nav because Veaury wraps group buttons in display:contents.
   const childrenAligned = await page.locator('.sidebar-submenu .sidebar-link').evaluateAll(rows => rows.every(row => Math.abs(row.querySelector('svg').getBoundingClientRect().x - row.closest('.sidebar-nav').getBoundingClientRect().x - 54) < .1))
   if (!childrenAligned) errors.push(`Sidebar child indentation differs (${state})`)
+}
+
+async function checkDashboard(page, entry, errors) {
+  const expectedCharts = entry.admin ? 3 : 2
+  await page.waitForFunction(count => document.querySelectorAll('canvas').length === count, expectedCharts)
+  const readCharts = () => page.evaluate(async () => {
+    const moduleURL = performance.getEntriesByType('resource').find(resource => resource.name.includes('/chart__js.js'))?.name
+    const { Chart } = await import(moduleURL)
+    return [...document.querySelectorAll('canvas')].map(canvas => {
+      const chart = Chart.getChart(canvas), rect = canvas.getBoundingClientRect()
+      const pixels = canvas.width && canvas.height ? canvas.getContext('2d').getImageData(0, 0, canvas.width, canvas.height).data : []
+      let drawn = 0
+      for (let i = 3; i < pixels.length; i += 4) if (pixels[i]) drawn++
+      return { width: rect.width, height: rect.height, drawn, type: chart?.config.type, labelColor: chart?.options.scales?.x?.ticks.color, points: chart?.data.datasets[0].data.length }
+    })
+  })
+  const checkCharts = (charts, theme) => {
+    if (charts.length !== expectedCharts || charts.some(chart => chart.width < 150 || chart.height < 150 || chart.drawn < 100 || !chart.points)) errors.push(`Dashboard charts are missing or empty (${theme})`)
+    if (charts.filter(chart => chart.type === 'line').some(chart => chart.labelColor !== (theme === 'dark' ? '#b0b9af' : '#59615b'))) errors.push(`Chart labels have stale ${theme} theme colors`)
+  }
+  await page.waitForTimeout(500)
+  const initialCharts = await readCharts()
+  checkCharts(initialCharts, entry.theme)
+  await page.screenshot({ path: resolve(outputPath(entry.name + '-charts.png')), fullPage: true })
+  // Exercise the actual theme control, including the mobile navigation drawer.
+  const toggle = async dark => {
+    if (entry.width < 1024) await page.getByRole('button', { name: entry.locale === 'zh' ? '切换菜单' : 'Toggle menu', exact: true }).click()
+    await page.locator('.sidebar').getByRole('button', { name: entry.locale === 'zh' ? (dark ? '浅色模式' : '深色模式') : (dark ? 'Light Mode' : 'Dark Mode'), exact: true }).click()
+    if (entry.width < 1024) { await page.keyboard.press('Escape'); await page.getByRole('dialog').waitFor({ state: 'hidden' }) }
+    await page.waitForTimeout(500)
+  }
+  await toggle(entry.theme === 'dark')
+  const alternateTheme = entry.theme === 'dark' ? 'light' : 'dark'
+  const alternateCharts = await readCharts()
+  checkCharts(alternateCharts, alternateTheme)
+  const themeState = await page.evaluate(() => ({ mode: document.documentElement.dataset.mode, persisted: localStorage.getItem('theme'), card: getComputedStyle(document.querySelector('main .card')).backgroundColor }))
+  if (themeState.mode !== alternateTheme || themeState.persisted !== alternateTheme || themeState.card !== (alternateTheme === 'dark' ? 'rgb(28, 34, 30)' : 'rgb(250, 251, 248)')) errors.push('Dashboard theme and surface colors disagree')
+  await toggle(alternateTheme === 'dark')
+
+  await page.locator('.date-picker-trigger').first().click()
+  const calendar = page.locator('.platform-date-picker')
+  await calendar.waitFor()
+  await page.waitForTimeout(350)
+  const metrics = await calendar.evaluate(el => {
+    const rect = el.getBoundingClientRect(), days = [...el.querySelectorAll('.rdp-day_button')].map(day => day.getBoundingClientRect())
+    const center = document.elementFromPoint(rect.x + rect.width / 2, Math.max(rect.y + 30, 30))
+    return { viewportFits: rect.x >= 0 && rect.y >= 0 && rect.right <= innerWidth && rect.bottom <= innerHeight, unoccluded: el.contains(center), width: rect.width, height: rect.height, smallestDay: Math.min(...days.map(day => Math.min(day.width, day.height))), background: getComputedStyle(el).backgroundColor, overflow: el.scrollWidth > el.clientWidth }
+  })
+  if (!metrics.viewportFits || !metrics.unoccluded || metrics.smallestDay < 32 || metrics.overflow) errors.push('Calendar is clipped, obscured, or has undersized date cells')
+  if (metrics.background !== (entry.theme === 'dark' ? 'rgb(28, 34, 30)' : 'rgb(250, 251, 248)')) errors.push('Calendar uses the wrong theme surface')
+  await page.screenshot({ path: resolve(outputPath(entry.name + '-calendar.png')) })
+
+  await calendar.getByRole('button', { name: entry.locale === 'zh' ? '上月' : 'Last Month', exact: true }).click()
+  await page.waitForTimeout(100)
+  const start = await calendar.locator('input[type="date"]').first().inputValue()
+  if (!await calendar.locator(`[data-day="${start}"][aria-selected="true"]`).count()) errors.push('Calendar did not follow the selected month preset')
+  const previousMonth = start.slice(0, 7)
+  await calendar.locator('.rdp-button_previous').click()
+  await page.waitForTimeout(100)
+  if (await calendar.locator(`[data-day="${start}"]:not([data-outside])`).count()) errors.push('Previous month navigation did not change the grid')
+  await calendar.locator('.rdp-button_next').click()
+  const customStart = `${previousMonth}-03`, customEnd = `${previousMonth}-06`
+  await calendar.locator(`[data-day="${customStart}"] button`).click()
+  await calendar.locator(`[data-day="${customEnd}"] button`).click()
+  const dates = await calendar.locator('input[type="date"]').evaluateAll(nodes => nodes.map(node => node.value))
+  if (dates[0] !== customStart || dates[1] !== customEnd) errors.push('Clicking calendar dates did not update the range')
+  const focusedDay = calendar.locator(`[data-day="${customEnd}"] button`)
+  await focusedDay.focus()
+  await page.keyboard.press('ArrowRight')
+  if (await page.evaluate(() => document.activeElement?.closest('[data-day]')?.getAttribute('data-day')) !== `${previousMonth}-07`) errors.push('Calendar keyboard navigation failed')
+  await calendar.locator('.date-picker-apply').click()
+  await calendar.waitFor({ state: 'hidden' })
+  await page.locator('.date-picker-trigger').first().click()
+  await calendar.waitFor()
+  const applied = await calendar.locator('input[type="date"]').evaluateAll(nodes => nodes.map(node => node.value))
+  if (applied[0] !== customStart || applied[1] !== customEnd) errors.push('Applied date range was not retained')
+  await page.keyboard.press('Escape')
+  await calendar.waitFor({ state: 'hidden' })
+  console.log(JSON.stringify({ name: entry.name, initialCharts, alternateCharts, themeState, calendar: metrics, applied }))
 }
 
 try {
@@ -59,6 +141,11 @@ try {
     { name: name + '-desktop-light', route, ready, width: 1440, height: 900, theme: 'light', locale: 'en', auth: !['storefront', 'not-found'].includes(name), admin: name.startsWith('admin-') },
     { name: name + '-mobile-dark', route, ready, width: 390, height: 844, theme: 'dark', locale: 'zh', auth: !['storefront', 'not-found'].includes(name), admin: name.startsWith('admin-') }
   ]);
+  if (process.env.PLATFORM_CHARTS) {
+    for (const [name, route, ready] of routes.filter(([name]) => name === 'dashboard' || name === 'admin-dashboard')) {
+      entries.push({ name: name + '-narrow-light', route, ready, width: 320, height: 700, theme: 'light', locale: 'en', auth: true, admin: name.startsWith('admin-') })
+    }
+  }
   const selected = process.env.PLATFORM_CASES ? entries.filter(entry => process.env.PLATFORM_CASES.split(',').some(name => entry.name.startsWith(name))) : entries
   for (const entry of selected) {
     const context = await browser.newContext({ viewport: { width: entry.width, height: entry.height }, colorScheme: entry.theme, reducedMotion: 'reduce' })
@@ -101,25 +188,25 @@ try {
         else if (path === '/payment/public/plans' || path === '/payment/plans') data = plans
         else if (path === '/payment/checkout-info') data = { methods: { stripe: { currency: 'USD', display_name: 'Card', daily_limit: 0, daily_used: 0, daily_remaining: 0, single_min: 1, single_max: 5000, fee_rate: 0, available: true } }, plans, global_min: 1, global_max: 5000, balance_disabled: false, balance_recharge_multiplier: 1, subscription_usd_to_cny_rate: 0, recharge_fee_rate: 0, help_text: '', help_image_url: '', stripe_publishable_key: '' }
         else if (path === '/admin/dashboard/stats') data = { ...stats, total_accounts: 0, normal_accounts: 0, error_accounts: 0, today_new_users: 0, total_users: 0, total_groups: 0 }
-        else if (path === '/admin/dashboard/snapshot-v2') data = { stats: { ...stats, total_accounts: 0, normal_accounts: 0, error_accounts: 0, today_new_users: 0, total_users: 0, total_groups: 0, uptime: 86400 }, trend: [], models: [], groups: [], users_trend: [] }
+        else if (path === '/admin/dashboard/snapshot-v2') data = { stats: { ...stats, total_accounts: 0, normal_accounts: 0, error_accounts: 0, today_new_users: 0, total_users: 0, total_groups: 0, uptime: 86400 }, trend: chartTrend, models: chartModels, groups: [], users_trend: chartUsers }
         else if (path === '/admin/dashboard/users-ranking') data = { items: [], total_actual_cost: 0, total_requests: 0, total_tokens: 0 }
         else if (path === '/usage/dashboard/stats') data = stats
-        else if (path === '/usage/dashboard/trend') data = { trend: [] }
-        else if (path === '/usage/dashboard/models') data = { models: [] }
+        else if (path === '/usage/dashboard/trend') data = { trend: chartTrend }
+        else if (path === '/usage/dashboard/models') data = { models: chartModels }
         else if (path === '/keys') data = { items: [{ id: 1001, name: 'Development workspace', key: 'sk-visual-fixture', status: 'active', group_id: 3, group: { id: 3, name: 'Gemini', platform: 'gemini', allow_batch_image_generation: true }, quota: 50, quota_used: 4.5, created_at: '2026-10-01T08:00:00Z', last_used_at: null }], total: 1, page: 1, page_size: 20, pages: 1 }
         else if (['/groups/available', '/admin/groups/all'].includes(path)) data = [{ id: 3, name: 'Gemini', platform: 'gemini', allow_batch_image_generation: true, status: 'active' }]
         else if (path === '/groups/rates') data = {}
         else if (path === '/usage/stats') data = { ...stats, total_requests: 0, total_tokens: 0, total_actual_cost: 0, total_cost: 0 }
-        else if (path === '/usage/dashboard/snapshot-v2') data = { stats, trend: [], models: [], groups: [] }
+        else if (path === '/usage/dashboard/snapshot-v2') data = { stats, trend: chartTrend, models: chartModels, groups: [] }
         else if (['/redeem/history', '/payment/orders/my'].includes(path)) data = { items: [], total: 0, page: 1, page_size: 20, pages: 0 }
         else if (path === '/usage') data = { items: [], total: 0, page: 1, page_size: 20, pages: 0 }
         else if (path === '/subscriptions/summary') data = { active_count: 0, subscriptions: [] }
         else if (path.includes('platform-quotas')) data = { platform_quotas: [] }
         else if (path.startsWith('/subscriptions') || path.startsWith('/announcements')) data = []
         else if (path === '/user/profile/identities') data = { identities: [], primary_identity: null }
-        else if (path.includes('/dashboard/trend')) data = { trend: [] }
-        else if (path.includes('/dashboard/models')) data = { models: [] }
-        else if (path.includes('/dashboard/users-trend')) data = { trend: [], users: [] }
+        else if (path.includes('/dashboard/trend')) data = { trend: chartTrend }
+        else if (path.includes('/dashboard/models')) data = { models: chartModels }
+        else if (path.includes('/dashboard/users-trend')) data = { trend: chartUsers, users: [user] }
         else if (path.includes('/dashboard/users-spending-ranking')) data = { items: [], total_actual_cost: 0, total_requests: 0, total_tokens: 0 }
         else if (path === '/admin/settings') data = settings
         else if (path === '/admin/users') data = list([{ ...user, notes: 'Video production team', allowed_groups: [3], group_rates: {}, rpm_limit: 60 }])
@@ -144,6 +231,9 @@ try {
     await page.locator(entry.ready).first().waitFor({ timeout: 15000 }).catch(() => { ready = false })
     await page.evaluate(() => document.fonts.ready)
     await page.waitForTimeout(350)
+    if (process.env.PLATFORM_CHARTS && entry.name.includes('dashboard-')) {
+      await checkDashboard(page, entry, errors)
+    }
     if (entry.auth) {
       const layout = await page.evaluate(() => {
         const boxes = element => {
@@ -167,6 +257,7 @@ try {
             return { text: el.textContent.trim(), tag: el.tagName, x: rect.x, height: rect.height, iconX: icon?.x, labelX: label?.x, padding: getComputedStyle(el).padding, border: getComputedStyle(el).borderWidth }
           }),
           tables: [...document.querySelectorAll('main table')].map(table => ({
+            compact: table.classList.contains('platform-chart-table'),
             selection: table.querySelector('.sticky-col-left-first') ? { width: table.querySelector('.sticky-col-left-first').getBoundingClientRect().width, offset: getComputedStyle(table.querySelector('.sticky-col-left-second')).left } : null,
             headings: [...table.querySelectorAll('thead th')].map(el => ({ text: el.textContent.trim(), size: getComputedStyle(el).fontSize, weight: getComputedStyle(el).fontWeight, line: getComputedStyle(el).lineHeight })),
             cells: [...table.querySelectorAll('tbody td')].slice(0, 24).map(el => ({ text: el.textContent.trim().slice(0, 100), actions: el.classList.contains('platform-table-actions'), size: getComputedStyle(el).fontSize, line: getComputedStyle(el).lineHeight })),
@@ -185,7 +276,7 @@ try {
       if (layout.nav.some(item => item.size !== '14px' || item.weight !== '500' || item.lineHeight !== '20px') || new Set(layout.nav.map(item => item.font)).size > 1) errors.push('Navigation typography is inconsistent')
       if (layout.nav.some(item => item.icons.some(icon => Math.abs(icon.size - (icon.chevron ? 16 : 20)) > 0.1))) errors.push('Navigation icon sizes are inconsistent')
       if ([...layout.tables.flatMap(table => table.headings), ...layout.mobileHeadings].some(heading => heading.size !== '12px' || heading.weight !== '500' || heading.line !== '16px')) errors.push('Table heading typography is inconsistent')
-      if ([...layout.tables.flatMap(table => table.cells).filter(cell => !cell.actions), ...layout.mobileCells].some(cell => cell.size !== '14px' || cell.line !== '20px')) errors.push('Table body typography is inconsistent')
+      if ([...layout.tables.filter(table => !table.compact).flatMap(table => table.cells).filter(cell => !cell.actions), ...layout.mobileCells].some(cell => cell.size !== '14px' || cell.line !== '20px')) errors.push('Table body typography is inconsistent')
       if (layout.actions.some(action => action.size !== '12px' || action.line !== '16px' || action.direction !== 'row' || action.height < 32 || action.overflow || action.icons.some(icon => icon.size !== 16 || icon.height !== 16))) errors.push('Table action icons, text, or alignment are inconsistent')
       if (layout.tables.some(table => table.selection && Math.abs(table.selection.width - parseFloat(table.selection.offset)) > .1)) errors.push('Table selection column and sticky offset differ')
       if (entry.name.startsWith('admin-accounts-') && await page.locator('main').innerText().then(text => text.includes('class="relative'))) errors.push('Account group cell contains stray markup')

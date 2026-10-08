@@ -24,11 +24,22 @@ function DatePickerControl(props: ControlProps) {
     return new Date(year, month - 1, day)
   }
   const format = (date: Date | undefined) => date ? `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}` : ''
+  const [month, setMonth] = useState(() => parse(props.startDate))
+  useEffect(() => {
+    const start = parse(props.startDate)
+    if (start) setMonth(start)
+  }, [props.startDate])
   return el(DatePicker, {
-    mode: 'range', selected: { from: parse(props.startDate), to: parse(props.endDate) },
+    mode: 'range', animate: false, selected: { from: parse(props.startDate), to: parse(props.endDate) },
     locale: props.locale === 'zh' ? zhCN : enUS,
-    defaultMonth: parse(props.startDate), disabled: props.max ? { after: parse(props.max)! } : undefined,
-    onChange: (range: DateRange | undefined) => props.onRangeChange?.({ start: format(range?.from), end: format(range?.to) }),
+    month, onMonthChange: setMonth, disabled: props.max ? { after: parse(props.max)! } : undefined,
+    onChange: (range: DateRange | undefined, day: Date) => {
+      // A complete range is replaced with two fresh clicks, rather than keeping
+      // its old start date when the user begins a different selection.
+      props.onRangeChange?.(props.startDate && props.endDate
+        ? { start: format(day), end: '' }
+        : { start: format(range?.from), end: format(range?.to) })
+    },
     className: props.className,
   })
 }

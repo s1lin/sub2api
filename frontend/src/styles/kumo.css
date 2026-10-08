@@ -1,5 +1,5 @@
 /* Kumo semantic tokens inherit the approved Copper + Graphite identity. */
-:root, .dark, [data-mode] {
+:root, .dark, [data-mode="light"], [data-mode="dark"] {
   --platform-section-gap: 1rem;
   --platform-page-padding: 1rem;
   --platform-nav-font-size: 0.875rem;
@@ -11,16 +11,26 @@
   --platform-table-label-size: .75rem;
   --platform-table-icon-size: 1rem;
   --color-kumo-base: var(--brand-surface);
+  --color-kumo-canvas: var(--brand-canvas);
+  --color-kumo-control: var(--brand-surface);
   --color-kumo-elevated: var(--brand-surface);
   --color-kumo-recessed: var(--brand-canvas);
   --color-kumo-tint: var(--brand-inset);
   --color-kumo-overlay: var(--brand-surface);
   --color-kumo-line: var(--brand-line);
+  --color-kumo-hairline: var(--brand-line);
+  --color-kumo-fill: var(--brand-line);
+  --color-kumo-fill-hover: var(--brand-inset);
+  --color-kumo-interact: var(--brand-line);
+  --color-kumo-contrast: var(--brand-ink);
   --color-kumo-brand: var(--brand-accent);
   --color-kumo-brand-hover: var(--brand-accent-hover);
   --color-kumo-focus: var(--brand-accent);
   --text-color-kumo-default: var(--brand-ink);
   --text-color-kumo-strong: var(--brand-ink);
+  --text-color-kumo-inverse: var(--brand-surface);
+  --text-color-kumo-brand: var(--brand-accent);
+  --text-color-kumo-inactive: var(--brand-muted);
   --text-color-kumo-subtle: var(--brand-muted);
   --text-color-kumo-placeholder: var(--brand-muted);
   --text-color-kumo-link: var(--brand-accent);
@@ -28,6 +38,25 @@
   --font-mono: var(--brand-mono);
 }
 [data-kumo-component] { font-family: var(--brand-font); }
+[data-kumo-component="Switch"] {
+  background-color: var(--brand-line);
+  --tw-ring-color: var(--brand-line);
+}
+[data-kumo-component="Switch"][aria-checked="true"] {
+  background-color: var(--brand-accent);
+  --tw-ring-color: var(--brand-accent);
+}
+[data-kumo-component="Switch"] > div { background-color: var(--brand-surface); }
+
+/* Chart.js measures the canvas's immediate parent. Only its Vue bridge wrapper
+   needs a layout box; other bridge wrappers must remain transparent to grids. */
+[data-use-vue-component-wrap]:has(> canvas) {
+  display: block !important;
+  position: relative;
+  width: 100%;
+  height: 100%;
+  min-width: 0;
+}
 [data-platform-variant="primary"] { color: var(--brand-on-accent) !important; }
 /* Tailwind 3's bare ring is 3px; Kumo uses the Tailwind 4 1px definition. */
 .ring { --tw-ring-shadow: var(--tw-ring-inset,) 0 0 0 calc(1px + var(--tw-ring-offset-width, 0px)) var(--tw-ring-color, currentColor); }
@@ -92,6 +121,13 @@
   font-size: var(--platform-table-font-size);
   line-height: var(--platform-table-line-height);
 }
+/* Distribution legends need compact, unbroken values inside their own scroller. */
+.platform-table.platform-chart-table { min-width: max-content; white-space: nowrap; }
+.platform-table.platform-chart-table :is(th, td) {
+  padding: .5rem;
+  font-size: var(--platform-table-label-size);
+  line-height: 1rem;
+}
 :is(.platform-table, .platform-data-cards, .platform-table-toolbar) button:not([role]),
 .platform-table-toolbar :is(input, [role="combobox"]) {
   font-size: inherit;
@@ -141,7 +177,39 @@
 .kumo-option-group { padding: .5rem .75rem; font-size: .75rem; color: var(--brand-muted); font-weight: 600; }
 .platform-pagination { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 1rem; padding: 1rem; border-top: 1px solid var(--brand-line); }
 .platform-help { max-width: calc(100vw - 2rem); white-space: normal; overflow-wrap: anywhere; }
-.platform-date-picker { width: min(360px, calc(100vw - 2rem)); max-height: min(680px, calc(100dvh - 2rem)); overflow-y: auto; }
+/* Kumo's popover positioner has no stacking level by default. */
+div:has(> .kumo-popover-popup) { z-index: 60; }
+.platform-date-picker { width: min(360px, calc(100vw - 2rem)); max-height: min(680px, calc(100dvh - 2rem), var(--available-height, 680px)); overflow-y: auto; }
+.platform-date-picker .rdp-root {
+  --rdp-accent-color: var(--brand-accent);
+  --rdp-accent-background-color: var(--brand-accent-soft);
+  --rdp-range_start-color: var(--brand-on-accent);
+  --rdp-range_end-color: var(--brand-on-accent);
+  --rdp-day-height: 2.5rem;
+  --rdp-day-width: 2.5rem;
+  --rdp-day_button-height: 2.5rem;
+  --rdp-day_button-width: 2.5rem;
+  --rdp-day_button-border-radius: .5rem;
+  --rdp-selected-border: 1px solid var(--brand-accent);
+  width: max-content;
+  color: var(--brand-ink);
+  font: 400 .875rem/1.25rem var(--brand-font);
+}
+.platform-date-picker .rdp-day_button:focus-visible {
+  outline: 2px solid var(--brand-accent);
+  outline-offset: -2px;
+}
+.platform-date-picker .rdp-selected { font-size: inherit; font-weight: 500; }
+.platform-date-picker .date-picker-field { display: block; }
+.platform-date-picker .date-picker-field input { margin-top: .375rem; font-size: .875rem; }
+@media (max-width: 379px) {
+  .platform-date-picker .rdp-root {
+    --rdp-day-height: 2rem;
+    --rdp-day-width: 2rem;
+    --rdp-day_button-height: 2rem;
+    --rdp-day_button-width: 2rem;
+  }
+}
 @media (max-width: 639px) {
   .platform-pagination { justify-content: center; gap: .75rem; }
   .platform-pagination-info, .platform-pagination-size { display: none; }

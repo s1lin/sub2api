@@ -15,11 +15,11 @@
     <KumoDatePicker :locale="locale" :start-date="localStartDate" :end-date="localEndDate" :max="tomorrow()"
       @range-change="onCalendarChange" class="mx-auto" />
     <div class="flex gap-2 p-3">
-      <KumoLabel class="min-w-0 flex-1 text-xs">{{ t('dates.startDate') }}
+      <KumoLabel class="date-picker-field min-w-0 flex-1 text-xs">{{ t('dates.startDate') }}
         <KumoInput type="date" v-model="localStartDate" :max="localEndDate || tomorrow()"
           :aria-label="t('dates.startDate')" class="w-full" @change="onDateChange" />
       </KumoLabel>
-      <KumoLabel class="min-w-0 flex-1 text-xs">{{ t('dates.endDate') }}
+      <KumoLabel class="date-picker-field min-w-0 flex-1 text-xs">{{ t('dates.endDate') }}
         <KumoInput type="date" v-model="localEndDate" :min="localStartDate" :max="tomorrow()"
           :aria-label="t('dates.endDate')" class="w-full" @change="onDateChange" />
       </KumoLabel>
