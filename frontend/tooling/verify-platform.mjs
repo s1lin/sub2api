@@ -150,6 +150,8 @@ try {
   for (const entry of selected) {
     const context = await browser.newContext({ viewport: { width: entry.width, height: entry.height }, colorScheme: entry.theme, reducedMotion: 'reduce' })
     await context.addInitScript(({ entry, user }) => {
+      // The Vite preview loads more modules than the default 250-entry buffer.
+      performance.setResourceTimingBufferSize(5000)
       localStorage.setItem('theme', entry.theme)
       localStorage.setItem('sub2api_locale', entry.locale)
       if (entry.auth) {
