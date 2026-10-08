@@ -19,7 +19,7 @@
           <KumoLabel for="username" class="input-label">
             {{ t('profile.username') }}
           </KumoLabel>
-          <KumoInput
+          <KumoInput :aria-label="t('profile.username')"
             id="username"
             v-model="username"
             type="text"

@@ -203,7 +203,7 @@
                     >
                       {{ t("admin.settings.overloadCooldown.cooldownMinutes") }}
                     </KumoLabel>
-                    <KumoInput
+                    <KumoInput :aria-label="t('admin.settings.overloadCooldown.cooldownMinutes')"
                       v-model.number="overloadCooldownForm.cooldown_minutes"
                       type="number"
                       min="1"
@@ -289,7 +289,7 @@
                         )
                       }}
                     </KumoLabel>
-                    <KumoInput
+                    <KumoInput :aria-label="t( 'admin.settings.rateLimit429Cooldown.cooldownSeconds', )"
                       v-model.number="rateLimit429CooldownForm.cooldown_seconds"
                       type="number"
                       min="1"
@@ -405,7 +405,7 @@
                     >
                       {{ t("admin.settings.streamTimeout.tempUnschedMinutes") }}
                     </KumoLabel>
-                    <KumoInput
+                    <KumoInput :aria-label="t('admin.settings.streamTimeout.tempUnschedMinutes')"
                       v-model.number="streamTimeoutForm.temp_unsched_minutes"
                       type="number"
                       min="1"
@@ -426,7 +426,7 @@
                     >
                       {{ t("admin.settings.streamTimeout.thresholdCount") }}
                     </KumoLabel>
-                    <KumoInput
+                    <KumoInput :aria-label="t('admin.settings.streamTimeout.thresholdCount')"
                       v-model.number="streamTimeoutForm.threshold_count"
                       type="number"
                       min="1"
@@ -447,7 +447,7 @@
                         t("admin.settings.streamTimeout.thresholdWindowMinutes")
                       }}
                     </KumoLabel>
-                    <KumoInput
+                    <KumoInput :aria-label="t('admin.settings.streamTimeout.thresholdWindowMinutes')"
                       v-model.number="
                         streamTimeoutForm.threshold_window_minutes
                       "
@@ -606,7 +606,7 @@
                       :key="index"
                       class="flex items-center gap-2"
                     >
-                      <KumoInput
+                      <KumoInput :aria-label="t('admin.settings.rectifier.apikeyPatterns')"
                         v-model="rectifierForm.apikey_signature_patterns[index]"
                         type="text"
                         class="input input-sm flex-1"
@@ -749,7 +749,7 @@
                     >
                       {{ t("admin.settings.betaPolicy.errorMessage") }}
                     </KumoLabel>
-                    <KumoInput
+                    <KumoInput :aria-label="t('admin.settings.betaPolicy.errorMessage')"
                       v-model="rule.error_message"
                       type="text"
                       class="input"
@@ -799,7 +799,7 @@
                       :key="index"
                       class="mb-1.5 flex items-center gap-2"
                     >
-                      <KumoInput
+                      <KumoInput :aria-label="t('admin.settings.betaPolicy.modelWhitelist') + ' — ' + (index + 1)"
                         v-model="rule.model_whitelist![index]"
                         type="text"
                         class="input input-sm flex-1"
@@ -892,7 +892,7 @@
                     </p>
                     <!-- Fallback Error Message (only when fallback_action=block) -->
                     <div v-if="rule.fallback_action === 'block'" class="mt-2">
-                      <KumoInput
+                      <KumoInput :aria-label="t('admin.settings.betaPolicy.errorMessage')"
                         v-model="rule.fallback_error_message"
                         type="text"
                         class="input"
@@ -1113,7 +1113,7 @@
                   >
                     {{ t("admin.settings.openaiFastPolicy.errorMessage") }}
                   </KumoLabel>
-                  <KumoInput
+                  <KumoInput :aria-label="t('admin.settings.openaiFastPolicy.errorMessage')"
                     v-model="rule.error_message"
                     type="text"
                     class="input"
@@ -1154,7 +1154,7 @@
                     :key="patternIdx"
                     class="mb-1.5 flex items-center gap-2"
                   >
-                    <KumoInput
+                    <KumoInput :aria-label="t('admin.settings.openaiFastPolicy.modelWhitelist') + ' — ' + (patternIdx + 1)"
                       v-model="rule.model_whitelist![patternIdx]"
                       type="text"
                       class="input input-sm flex-1"
@@ -1235,7 +1235,7 @@
                     }}
                   </p>
                   <div v-if="rule.fallback_action === 'block'" class="mt-2">
-                    <KumoInput
+                    <KumoInput :aria-label="t('admin.settings.openaiFastPolicy.errorMessage')"
                       v-model="rule.fallback_error_message"
                       type="text"
                       class="input"
@@ -1364,7 +1364,7 @@
                     <div
                       class="flex min-w-[220px] flex-1 items-center gap-1 rounded border border-transparent px-2 py-1 focus-within:border-primary-300 dark:focus-within:border-primary-700"
                     >
-                      <KumoInput
+                      <KumoInput :aria-label="t('admin.settings.registration.emailSuffixWhitelist')"
                         v-model="registrationEmailSuffixWhitelistDraft"
                         type="text"
                         class="w-full bg-transparent text-sm font-mono text-gray-900 outline-none placeholder:text-gray-400 dark:text-white dark:placeholder:text-gray-500"
@@ -1465,7 +1465,7 @@
                 >
                   {{ t("admin.settings.registration.frontendUrl") }}
                 </KumoLabel>
-                <KumoInput
+                <KumoInput :aria-label="t('admin.settings.registration.frontendUrl')"
                   v-model="form.frontend_url"
                   type="url"
                   class="input"
@@ -1604,7 +1604,7 @@
                     {{ t("admin.settings.security.auditRetentionHint") }}
                   </p>
                 </div>
-                <KumoInput
+                <KumoInput :aria-label="t('admin.settings.security.auditRetention')"
                   v-model.number="form.audit_log_retention_days"
                   type="number"
                   min="0"
@@ -1680,7 +1680,7 @@
                     <div
                       class="flex min-w-[220px] flex-1 items-center gap-1 rounded border border-transparent px-2 py-1 focus-within:border-primary-300 dark:focus-within:border-primary-700"
                     >
-                      <KumoInput
+                      <KumoInput :aria-label="t('admin.settings.apiKeyAcl.forwardedClientIpHeaders')"
                         id="forwarded-client-ip-headers"
                         v-model="forwardedClientIpHeaderDraft"
                         data-testid="forwarded-client-ip-headers-input"
@@ -1772,7 +1772,7 @@
                         {{ t("admin.settings.panelRateLimit.userRpm") }}
                       </KumoLabel>
                       <div class="flex items-center gap-2">
-                        <KumoInput
+                        <KumoInput :aria-label="t('admin.settings.panelRateLimit.userRpm')"
                           v-model.number="panelRateLimitForm.user_rpm"
                           data-testid="panel-rate-limit-user-rpm"
                           type="number"
@@ -1796,7 +1796,7 @@
                         {{ t("admin.settings.panelRateLimit.heavyRpm") }}
                       </KumoLabel>
                       <div class="flex items-center gap-2">
-                        <KumoInput
+                        <KumoInput :aria-label="t('admin.settings.panelRateLimit.heavyRpm')"
                           v-model.number="panelRateLimitForm.heavy_rpm"
                           type="number"
                           min="0"
@@ -1819,7 +1819,7 @@
                         {{ t("admin.settings.panelRateLimit.publicIpRpm") }}
                       </KumoLabel>
                       <div class="flex items-center gap-2">
-                        <KumoInput
+                        <KumoInput :aria-label="t('admin.settings.panelRateLimit.publicIpRpm')"
                           v-model.number="panelRateLimitForm.public_ip_rpm"
                           type="number"
                           min="0"
@@ -1970,7 +1970,7 @@
                     >
                       {{ t("admin.settings.turnstile.siteKey") }}
                     </KumoLabel>
-                    <KumoInput
+                    <KumoInput :aria-label="t('admin.settings.turnstile.siteKey')"
                       v-model="form.turnstile_site_key"
                       type="text"
                       class="input font-mono text-sm"
@@ -1994,7 +1994,7 @@
                     >
                       {{ t("admin.settings.turnstile.secretKey") }}
                     </KumoLabel>
-                    <KumoInput
+                    <KumoInput :aria-label="t('admin.settings.turnstile.secretKey')"
                       v-model="form.turnstile_secret_key"
                       type="password"
                       class="input font-mono text-sm"
@@ -2063,7 +2063,7 @@
                       <KumoLabel class="mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300">
                         {{ t("admin.settings.tencentCaptcha.appId") }}
                       </KumoLabel>
-                      <KumoInput
+                      <KumoInput :aria-label="t('admin.settings.tencentCaptcha.appId')"
                         v-model="form.tencent_captcha_app_id"
                         type="text"
                         inputmode="numeric"
@@ -2075,7 +2075,7 @@
                       <KumoLabel class="mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300">
                         {{ t("admin.settings.tencentCaptcha.appSecretKey") }}
                       </KumoLabel>
-                      <KumoInput
+                      <KumoInput :aria-label="t('admin.settings.tencentCaptcha.appSecretKey')"
                         v-model="form.tencent_captcha_app_secret_key"
                         type="password"
                         autocomplete="new-password"
@@ -2098,7 +2098,7 @@
                       <KumoLabel class="mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300">
                         {{ t("admin.settings.tencentCaptcha.cloudSecretId") }}
                       </KumoLabel>
-                      <KumoInput
+                      <KumoInput :aria-label="t('admin.settings.tencentCaptcha.cloudSecretId')"
                         v-model="form.tencent_captcha_cloud_secret_id"
                         type="password"
                         autocomplete="new-password"
@@ -2113,7 +2113,7 @@
                       <KumoLabel class="mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300">
                         {{ t("admin.settings.tencentCaptcha.cloudSecretKey") }}
                       </KumoLabel>
-                      <KumoInput
+                      <KumoInput :aria-label="t('admin.settings.tencentCaptcha.cloudSecretKey')"
                         v-model="form.tencent_captcha_cloud_secret_key"
                         type="password"
                         autocomplete="new-password"
@@ -2206,7 +2206,7 @@
                       >
                         {{ t("admin.settings.aliyunCaptcha.prefix") }}
                       </KumoLabel>
-                      <KumoInput
+                      <KumoInput :aria-label="t('admin.settings.aliyunCaptcha.prefix')"
                         v-model="form.aliyun_captcha_prefix"
                         type="text"
                         class="input font-mono text-sm"
@@ -2223,7 +2223,7 @@
                     >
                       {{ t("admin.settings.aliyunCaptcha.sceneId") }}
                     </KumoLabel>
-                    <KumoInput
+                    <KumoInput :aria-label="t('admin.settings.aliyunCaptcha.sceneId')"
                       v-model="form.aliyun_captcha_scene_id"
                       type="text"
                       class="input font-mono text-sm"
@@ -2239,7 +2239,7 @@
                     >
                       {{ t("admin.settings.aliyunCaptcha.accessKeyId") }}
                     </KumoLabel>
-                    <KumoInput
+                    <KumoInput :aria-label="t('admin.settings.aliyunCaptcha.accessKeyId')"
                       v-model="form.aliyun_captcha_access_key_id"
                       type="text"
                       class="input font-mono text-sm"
@@ -2255,7 +2255,7 @@
                     >
                       {{ t("admin.settings.aliyunCaptcha.accessKeySecret") }}
                     </KumoLabel>
-                    <KumoInput
+                    <KumoInput :aria-label="t('admin.settings.aliyunCaptcha.accessKeySecret')"
                       v-model="form.aliyun_captcha_access_key_secret"
                       type="password"
                       autocomplete="new-password"
@@ -2313,7 +2313,7 @@
                     >
                       {{ t("admin.settings.linuxdo.clientId") }}
                     </KumoLabel>
-                    <KumoInput
+                    <KumoInput :aria-label="t('admin.settings.linuxdo.clientId')"
                       v-model="form.linuxdo_connect_client_id"
                       type="text"
                       class="input font-mono text-sm"
@@ -2332,7 +2332,7 @@
                     >
                       {{ t("admin.settings.linuxdo.clientSecret") }}
                     </KumoLabel>
-                    <KumoInput
+                    <KumoInput :aria-label="t('admin.settings.linuxdo.clientSecret')"
                       v-model="form.linuxdo_connect_client_secret"
                       type="password"
                       class="input font-mono text-sm"
@@ -2361,7 +2361,7 @@
                     >
                       {{ t("admin.settings.linuxdo.redirectUrl") }}
                     </KumoLabel>
-                    <KumoInput
+                    <KumoInput :aria-label="t('admin.settings.linuxdo.redirectUrl')"
                       v-model="form.linuxdo_connect_redirect_url"
                       type="url"
                       class="input font-mono text-sm"
@@ -2461,7 +2461,7 @@
                     <div class="grid grid-cols-1 gap-4 lg:grid-cols-2">
                       <div>
                         <KumoLabel class="mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300">Client ID</KumoLabel>
-                        <KumoInput
+                        <KumoInput :aria-label="'Client ID'"
                           v-model="form.github_oauth_client_id"
                           type="text"
                           class="input font-mono text-sm"
@@ -2470,7 +2470,7 @@
                       </div>
                       <div>
                         <KumoLabel class="mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300">Client Secret</KumoLabel>
-                        <KumoInput
+                        <KumoInput :aria-label="'Client Secret'"
                           v-model="form.github_oauth_client_secret"
                           type="password"
                           class="input font-mono text-sm"
@@ -2487,7 +2487,7 @@
                       <KumoLabel class="mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300">
                         {{ localText("后端回调地址", "Backend Callback URL") }}
                       </KumoLabel>
-                      <KumoInput
+                      <KumoInput :aria-label="localText('后端回调地址', 'Backend Callback URL')"
                         v-model="form.github_oauth_redirect_url"
                         type="url"
                         class="input font-mono text-sm"
@@ -2514,7 +2514,7 @@
                       <KumoLabel class="mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300">
                         {{ localText("前端回跳地址", "Frontend Callback URL") }}
                       </KumoLabel>
-                      <KumoInput
+                      <KumoInput :aria-label="localText('前端回跳地址', 'Frontend Callback URL')"
                         v-model="form.github_oauth_frontend_redirect_url"
                         type="text"
                         class="input font-mono text-sm"
@@ -2555,7 +2555,7 @@
                     <div class="grid grid-cols-1 gap-4 lg:grid-cols-2">
                       <div>
                         <KumoLabel class="mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300">Client ID</KumoLabel>
-                        <KumoInput
+                        <KumoInput :aria-label="'Client ID'"
                           v-model="form.google_oauth_client_id"
                           type="text"
                           class="input font-mono text-sm"
@@ -2564,7 +2564,7 @@
                       </div>
                       <div>
                         <KumoLabel class="mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300">Client Secret</KumoLabel>
-                        <KumoInput
+                        <KumoInput :aria-label="'Client Secret'"
                           v-model="form.google_oauth_client_secret"
                           type="password"
                           class="input font-mono text-sm"
@@ -2581,7 +2581,7 @@
                       <KumoLabel class="mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300">
                         {{ localText("后端回调地址", "Backend Callback URL") }}
                       </KumoLabel>
-                      <KumoInput
+                      <KumoInput :aria-label="localText('后端回调地址', 'Backend Callback URL')"
                         v-model="form.google_oauth_redirect_url"
                         type="url"
                         class="input font-mono text-sm"
@@ -2608,7 +2608,7 @@
                       <KumoLabel class="mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300">
                         {{ localText("前端回跳地址", "Frontend Callback URL") }}
                       </KumoLabel>
-                      <KumoInput
+                      <KumoInput :aria-label="localText('前端回跳地址', 'Frontend Callback URL')"
                         v-model="form.google_oauth_frontend_redirect_url"
                         type="text"
                         class="input font-mono text-sm"
@@ -2687,7 +2687,7 @@
                         >
                           {{ localText("PC AppID", "PC App ID") }}
                         </KumoLabel>
-                        <KumoInput
+                        <KumoInput :aria-label="localText('PC AppID', 'PC App ID')"
                           v-model="form.wechat_connect_open_app_id"
                           data-testid="wechat-connect-open-app-id"
                           type="text"
@@ -2706,7 +2706,7 @@
                         >
                           {{ localText("PC AppSecret", "PC App Secret") }}
                         </KumoLabel>
-                        <KumoInput
+                        <KumoInput :aria-label="localText('PC AppSecret', 'PC App Secret')"
                           v-model="form.wechat_connect_open_app_secret"
                           data-testid="wechat-connect-open-app-secret"
                           type="password"
@@ -2760,7 +2760,7 @@
                         >
                           {{ localText("公众号 AppID", "Official Account App ID") }}
                         </KumoLabel>
-                        <KumoInput
+                        <KumoInput :aria-label="localText('公众号 AppID', 'Official Account App ID')"
                           v-model="form.wechat_connect_mp_app_id"
                           data-testid="wechat-connect-mp-app-id"
                           type="text"
@@ -2784,7 +2784,7 @@
                             )
                           }}
                         </KumoLabel>
-                        <KumoInput
+                        <KumoInput :aria-label="localText( '公众号 AppSecret', 'Official Account App Secret', )"
                           v-model="form.wechat_connect_mp_app_secret"
                           data-testid="wechat-connect-mp-app-secret"
                           type="password"
@@ -2838,7 +2838,7 @@
                         >
                           {{ localText("移动应用 AppID", "Mobile App ID") }}
                         </KumoLabel>
-                        <KumoInput
+                        <KumoInput :aria-label="localText('移动应用 AppID', 'Mobile App ID')"
                           v-model="form.wechat_connect_mobile_app_id"
                           data-testid="wechat-connect-mobile-app-id"
                           type="text"
@@ -2857,7 +2857,7 @@
                         >
                           {{ localText("移动应用 AppSecret", "Mobile App Secret") }}
                         </KumoLabel>
-                        <KumoInput
+                        <KumoInput :aria-label="localText('移动应用 AppSecret', 'Mobile App Secret')"
                           v-model="form.wechat_connect_mobile_app_secret"
                           data-testid="wechat-connect-mobile-app-secret"
                           type="password"
@@ -2907,7 +2907,7 @@
                         )
                       }}
                     </KumoLabel>
-                    <KumoInput
+                    <KumoInput :aria-label="localText( '浏览器回调地址', 'Browser Redirect URL', )"
                       data-testid="wechat-connect-redirect-url"
                       v-model="form.wechat_connect_redirect_url"
                       type="url"
@@ -2948,7 +2948,7 @@
                   >
                     {{ t("admin.settings.wechatConnect.frontendRedirectUrlLabel") }}
                   </KumoLabel>
-                  <KumoInput
+                  <KumoInput :aria-label="t('admin.settings.wechatConnect.frontendRedirectUrlLabel')"
                     data-testid="wechat-connect-frontend-redirect-url"
                     v-model="form.wechat_connect_frontend_redirect_url"
                     type="text"
@@ -2999,7 +2999,7 @@
                     >
                       {{ t("admin.settings.dingtalk.clientId") }}
                     </KumoLabel>
-                    <KumoInput
+                    <KumoInput :aria-label="t('admin.settings.dingtalk.clientId')"
                       v-model="form.dingtalk_connect_client_id"
                       type="text"
                       class="input font-mono text-sm"
@@ -3018,7 +3018,7 @@
                     >
                       {{ t("admin.settings.dingtalk.clientSecret") }}
                     </KumoLabel>
-                    <KumoInput
+                    <KumoInput :aria-label="t('admin.settings.dingtalk.clientSecret')"
                       v-model="form.dingtalk_connect_client_secret"
                       type="password"
                       class="input font-mono text-sm"
@@ -3047,7 +3047,7 @@
                     >
                       {{ t("admin.settings.dingtalk.redirectUrl") }}
                     </KumoLabel>
-                    <KumoInput
+                    <KumoInput :aria-label="t('admin.settings.dingtalk.redirectUrl')"
                       v-model="form.dingtalk_connect_redirect_url"
                       type="url"
                       class="input font-mono text-sm"
@@ -3123,7 +3123,7 @@
                         <KumoLabel class="text-sm text-gray-600 dark:text-gray-400 whitespace-nowrap min-w-[5rem]">
                           {{ t("admin.settings.dingtalk.syncDisplayNameTarget") }}
                         </KumoLabel>
-                        <KumoInput
+                        <KumoInput :aria-label="t('admin.settings.dingtalk.syncDisplayNameTarget')"
                           v-model="form.dingtalk_connect_sync_display_name_attr_key"
                           type="text"
                           placeholder="dingtalk_name"
@@ -3134,7 +3134,7 @@
                         <KumoLabel class="text-sm text-gray-600 dark:text-gray-400 whitespace-nowrap min-w-[5rem]">
                           {{ t("admin.settings.dingtalk.syncAttrDisplayName") }}
                         </KumoLabel>
-                        <KumoInput
+                        <KumoInput :aria-label="t('admin.settings.dingtalk.syncAttrDisplayName')"
                           v-model="form.dingtalk_connect_sync_display_name_attr_name"
                           type="text"
                           :placeholder="localText('钉钉姓名', 'DingTalk Name')"
@@ -3169,7 +3169,7 @@
                         <KumoLabel class="text-sm text-gray-600 dark:text-gray-400 whitespace-nowrap min-w-[5rem]">
                           {{ t("admin.settings.dingtalk.syncCorpEmailTarget") }}
                         </KumoLabel>
-                        <KumoInput
+                        <KumoInput :aria-label="t('admin.settings.dingtalk.syncCorpEmailTarget')"
                           v-model="form.dingtalk_connect_sync_corp_email_attr_key"
                           type="text"
                           placeholder="dingtalk_email"
@@ -3180,7 +3180,7 @@
                         <KumoLabel class="text-sm text-gray-600 dark:text-gray-400 whitespace-nowrap min-w-[5rem]">
                           {{ t("admin.settings.dingtalk.syncAttrDisplayName") }}
                         </KumoLabel>
-                        <KumoInput
+                        <KumoInput :aria-label="t('admin.settings.dingtalk.syncAttrDisplayName')"
                           v-model="form.dingtalk_connect_sync_corp_email_attr_name"
                           type="text"
                           :placeholder="localText('钉钉企业邮箱', 'DingTalk Corporate Email')"
@@ -3215,7 +3215,7 @@
                         <KumoLabel class="text-sm text-gray-600 dark:text-gray-400 whitespace-nowrap min-w-[5rem]">
                           {{ t("admin.settings.dingtalk.syncDeptTarget") }}
                         </KumoLabel>
-                        <KumoInput
+                        <KumoInput :aria-label="t('admin.settings.dingtalk.syncDeptTarget')"
                           v-model="form.dingtalk_connect_sync_dept_attr_key"
                           type="text"
                           placeholder="dingtalk_department"
@@ -3226,7 +3226,7 @@
                         <KumoLabel class="text-sm text-gray-600 dark:text-gray-400 whitespace-nowrap min-w-[5rem]">
                           {{ t("admin.settings.dingtalk.syncAttrDisplayName") }}
                         </KumoLabel>
-                        <KumoInput
+                        <KumoInput :aria-label="t('admin.settings.dingtalk.syncAttrDisplayName')"
                           v-model="form.dingtalk_connect_sync_dept_attr_name"
                           type="text"
                           :placeholder="localText('钉钉部门', 'DingTalk Department')"
@@ -3279,7 +3279,7 @@
                     >
                       {{ t("admin.settings.oidc.providerName") }}
                     </KumoLabel>
-                    <KumoInput
+                    <KumoInput :aria-label="t('admin.settings.oidc.providerName')"
                       v-model="form.oidc_connect_provider_name"
                       type="text"
                       class="input"
@@ -3295,7 +3295,7 @@
                     >
                       {{ t("admin.settings.oidc.clientId") }}
                     </KumoLabel>
-                    <KumoInput
+                    <KumoInput :aria-label="t('admin.settings.oidc.clientId')"
                       v-model="form.oidc_connect_client_id"
                       type="text"
                       class="input font-mono text-sm"
@@ -3311,7 +3311,7 @@
                     >
                       {{ t("admin.settings.oidc.clientSecret") }}
                     </KumoLabel>
-                    <KumoInput
+                    <KumoInput :aria-label="t('admin.settings.oidc.clientSecret')"
                       v-model="form.oidc_connect_client_secret"
                       type="password"
                       class="input font-mono text-sm"
@@ -3340,7 +3340,7 @@
                     >
                       {{ t("admin.settings.oidc.issuerUrl") }}
                     </KumoLabel>
-                    <KumoInput
+                    <KumoInput :aria-label="t('admin.settings.oidc.issuerUrl')"
                       v-model="form.oidc_connect_issuer_url"
                       type="url"
                       class="input font-mono text-sm"
@@ -3356,7 +3356,7 @@
                     >
                       {{ t("admin.settings.oidc.discoveryUrl") }}
                     </KumoLabel>
-                    <KumoInput
+                    <KumoInput :aria-label="t('admin.settings.oidc.discoveryUrl')"
                       v-model="form.oidc_connect_discovery_url"
                       type="url"
                       class="input font-mono text-sm"
@@ -3372,7 +3372,7 @@
                     >
                       {{ t("admin.settings.oidc.authorizeUrl") }}
                     </KumoLabel>
-                    <KumoInput
+                    <KumoInput :aria-label="t('admin.settings.oidc.authorizeUrl')"
                       v-model="form.oidc_connect_authorize_url"
                       type="url"
                       class="input font-mono text-sm"
@@ -3388,7 +3388,7 @@
                     >
                       {{ t("admin.settings.oidc.tokenUrl") }}
                     </KumoLabel>
-                    <KumoInput
+                    <KumoInput :aria-label="t('admin.settings.oidc.tokenUrl')"
                       v-model="form.oidc_connect_token_url"
                       type="url"
                       class="input font-mono text-sm"
@@ -3404,7 +3404,7 @@
                     >
                       {{ t("admin.settings.oidc.userinfoUrl") }}
                     </KumoLabel>
-                    <KumoInput
+                    <KumoInput :aria-label="t('admin.settings.oidc.userinfoUrl')"
                       v-model="form.oidc_connect_userinfo_url"
                       type="url"
                       class="input font-mono text-sm"
@@ -3420,7 +3420,7 @@
                     >
                       {{ t("admin.settings.oidc.jwksUrl") }}
                     </KumoLabel>
-                    <KumoInput
+                    <KumoInput :aria-label="t('admin.settings.oidc.jwksUrl')"
                       v-model="form.oidc_connect_jwks_url"
                       type="url"
                       class="input font-mono text-sm"
@@ -3436,7 +3436,7 @@
                     >
                       {{ t("admin.settings.oidc.scopes") }}
                     </KumoLabel>
-                    <KumoInput
+                    <KumoInput :aria-label="t('admin.settings.oidc.scopes')"
                       v-model="form.oidc_connect_scopes"
                       type="text"
                       class="input font-mono text-sm"
@@ -3453,7 +3453,7 @@
                     >
                       {{ t("admin.settings.oidc.redirectUrl") }}
                     </KumoLabel>
-                    <KumoInput
+                    <KumoInput :aria-label="t('admin.settings.oidc.redirectUrl')"
                       v-model="form.oidc_connect_redirect_url"
                       type="url"
                       class="input font-mono text-sm"
@@ -3489,7 +3489,7 @@
                     >
                       {{ t("admin.settings.oidc.frontendRedirectUrl") }}
                     </KumoLabel>
-                    <KumoInput
+                    <KumoInput :aria-label="t('admin.settings.oidc.frontendRedirectUrl')"
                       v-model="form.oidc_connect_frontend_redirect_url"
                       type="text"
                       class="input font-mono text-sm"
@@ -3530,7 +3530,7 @@
                     >
                       {{ t("admin.settings.oidc.clockSkewSeconds") }}
                     </KumoLabel>
-                    <KumoInput
+                    <KumoInput :aria-label="t('admin.settings.oidc.clockSkewSeconds')"
                       v-model.number="form.oidc_connect_clock_skew_seconds"
                       type="number"
                       min="0"
@@ -3545,7 +3545,7 @@
                     >
                       {{ t("admin.settings.oidc.allowedSigningAlgs") }}
                     </KumoLabel>
-                    <KumoInput
+                    <KumoInput :aria-label="t('admin.settings.oidc.allowedSigningAlgs')"
                       v-model="form.oidc_connect_allowed_signing_algs"
                       type="text"
                       class="input font-mono text-sm"
@@ -3606,7 +3606,7 @@
                     >
                       {{ t("admin.settings.oidc.userinfoEmailPath") }}
                     </KumoLabel>
-                    <KumoInput
+                    <KumoInput :aria-label="t('admin.settings.oidc.userinfoEmailPath')"
                       v-model="form.oidc_connect_userinfo_email_path"
                       type="text"
                       class="input font-mono text-sm"
@@ -3622,7 +3622,7 @@
                     >
                       {{ t("admin.settings.oidc.userinfoIdPath") }}
                     </KumoLabel>
-                    <KumoInput
+                    <KumoInput :aria-label="t('admin.settings.oidc.userinfoIdPath')"
                       v-model="form.oidc_connect_userinfo_id_path"
                       type="text"
                       class="input font-mono text-sm"
@@ -3638,7 +3638,7 @@
                     >
                       {{ t("admin.settings.oidc.userinfoUsernamePath") }}
                     </KumoLabel>
-                    <KumoInput
+                    <KumoInput :aria-label="t('admin.settings.oidc.userinfoUsernamePath')"
                       v-model="form.oidc_connect_userinfo_username_path"
                       type="text"
                       class="input font-mono text-sm"
@@ -3676,7 +3676,7 @@
                   >
                     {{ t("admin.settings.defaults.defaultBalance") }}
                   </KumoLabel>
-                  <KumoInput
+                  <KumoInput :aria-label="t('admin.settings.defaults.defaultBalance')"
                     v-model.number="form.default_balance"
                     type="number"
                     step="0.01"
@@ -3694,7 +3694,7 @@
                   >
                     {{ t("admin.settings.defaults.defaultConcurrency") }}
                   </KumoLabel>
-                  <KumoInput
+                  <KumoInput :aria-label="t('admin.settings.defaults.defaultConcurrency')"
                     v-model.number="form.default_concurrency"
                     type="number"
                     min="1"
@@ -3711,7 +3711,7 @@
                   >
                     {{ t("admin.settings.defaults.defaultUserRpmLimit") }}
                   </KumoLabel>
-                  <KumoInput
+                  <KumoInput :aria-label="t('admin.settings.defaults.defaultUserRpmLimit')"
                     v-model.number="form.default_user_rpm_limit"
                     type="number"
                     min="0"
@@ -3842,7 +3842,7 @@
                           t("admin.settings.defaults.subscriptionValidityDays")
                         }}
                       </KumoLabel>
-                      <KumoInput
+                      <KumoInput :aria-label="t('admin.settings.defaults.subscriptionValidityDays')"
                         v-model.number="item.validity_days"
                         type="number"
                         min="1"
@@ -3892,7 +3892,7 @@
                           <span class="font-mono text-xs text-gray-700 dark:text-gray-300">{{ p }}</span>
                         </KumoTableCell>
                         <KumoTableCell class="pr-4 py-1">
-                          <KumoInput
+                          <KumoInput :aria-label="p + ' — ' + t('admin.settings.platformQuota.daily')"
                             v-model.number="form.default_platform_quotas[p]!.daily"
                             type="number"
                             step="0.01"
@@ -3902,7 +3902,7 @@
                           />
                         </KumoTableCell>
                         <KumoTableCell class="pr-4 py-1">
-                          <KumoInput
+                          <KumoInput :aria-label="p + ' — ' + t('admin.settings.platformQuota.weekly')"
                             v-model.number="form.default_platform_quotas[p]!.weekly"
                             type="number"
                             step="0.01"
@@ -3912,7 +3912,7 @@
                           />
                         </KumoTableCell>
                         <KumoTableCell class="py-1">
-                          <KumoInput
+                          <KumoInput :aria-label="p + ' — ' + t('admin.settings.platformQuota.monthly')"
                             v-model.number="form.default_platform_quotas[p]!.monthly"
                             type="number"
                             step="0.01"
@@ -3995,7 +3995,7 @@
                         >
                           {{ t("admin.settings.defaults.defaultBalance") }}
                         </KumoLabel>
-                        <KumoInput
+                        <KumoInput :aria-label="t('admin.settings.defaults.defaultBalance')"
                           v-model.number="
                             authSourceDefaults[authSource.source].balance
                           "
@@ -4012,7 +4012,7 @@
                         >
                           {{ t("admin.settings.defaults.defaultConcurrency") }}
                         </KumoLabel>
-                        <KumoInput
+                        <KumoInput :aria-label="t('admin.settings.defaults.defaultConcurrency')"
                           v-model.number="
                             authSourceDefaults[authSource.source].concurrency
                           "
@@ -4176,7 +4176,7 @@
                               )
                             }}
                           </KumoLabel>
-                          <KumoInput
+                          <KumoInput :aria-label="t( 'admin.settings.defaults.subscriptionValidityDays', )"
                             v-model.number="item.validity_days"
                             type="number"
                             min="1"
@@ -4227,7 +4227,7 @@
                                 <span class="font-mono text-xs text-gray-700 dark:text-gray-300">{{ p }}</span>
                               </KumoTableCell>
                               <KumoTableCell class="pr-4 py-1">
-                                <KumoInput
+                                <KumoInput :aria-label="authSource.title + ' — ' + p + ' — ' + t('admin.settings.platformQuota.daily')"
                                   v-model.number="authSourceDefaults[authSource.source].platform_quotas[p]!.daily"
                                   type="number"
                                   step="0.01"
@@ -4237,7 +4237,7 @@
                                 />
                               </KumoTableCell>
                               <KumoTableCell class="pr-4 py-1">
-                                <KumoInput
+                                <KumoInput :aria-label="authSource.title + ' — ' + p + ' — ' + t('admin.settings.platformQuota.weekly')"
                                   v-model.number="authSourceDefaults[authSource.source].platform_quotas[p]!.weekly"
                                   type="number"
                                   step="0.01"
@@ -4247,7 +4247,7 @@
                                 />
                               </KumoTableCell>
                               <KumoTableCell class="py-1">
-                                <KumoInput
+                                <KumoInput :aria-label="authSource.title + ' — ' + p + ' — ' + t('admin.settings.platformQuota.monthly')"
                                   v-model.number="authSourceDefaults[authSource.source].platform_quotas[p]!.monthly"
                                   type="number"
                                   step="0.01"
@@ -4291,7 +4291,7 @@
                 >
                   {{ t("admin.settings.claudeCode.minVersion") }}
                 </KumoLabel>
-                <KumoInput
+                <KumoInput :aria-label="t('admin.settings.claudeCode.minVersion')"
                   v-model="form.min_claude_code_version"
                   type="text"
                   class="input max-w-xs font-mono text-sm"
@@ -4309,7 +4309,7 @@
                 >
                   {{ t("admin.settings.claudeCode.maxVersion") }}
                 </KumoLabel>
-                <KumoInput
+                <KumoInput :aria-label="t('admin.settings.claudeCode.maxVersion')"
                   v-model="form.max_claude_code_version"
                   type="text"
                   class="input max-w-xs font-mono text-sm"
@@ -4349,7 +4349,7 @@
                     >
                       {{ t("admin.settings.gatewayForwarding.minCodexVersion") }}
                     </KumoLabel>
-                    <KumoInput
+                    <KumoInput :aria-label="t('admin.settings.gatewayForwarding.minCodexVersion')"
                       v-model="form.min_codex_version"
                       type="text"
                       class="input w-full font-mono text-sm"
@@ -4366,7 +4366,7 @@
                     >
                       {{ t("admin.settings.gatewayForwarding.maxCodexVersion") }}
                     </KumoLabel>
-                    <KumoInput
+                    <KumoInput :aria-label="t('admin.settings.gatewayForwarding.maxCodexVersion')"
                       v-model="form.max_codex_version"
                       type="text"
                       class="input w-full font-mono text-sm"
@@ -4399,14 +4399,14 @@
                       <option value="header_prefix">{{ t("admin.settings.gatewayForwarding.codexFpTypeHeaderPrefix") }}</option>
                       <option value="body_path">{{ t("admin.settings.gatewayForwarding.codexFpTypeBodyPath") }}</option>
                     </KumoNativeSelect>
-                    <KumoInput
+                    <KumoInput :aria-label="t('admin.settings.gatewayForwarding.codexFpMatchPlaceholder')"
                       v-model="row.match"
                       type="text"
                       class="input flex-1 font-mono text-sm"
                       :placeholder="t('admin.settings.gatewayForwarding.codexFpMatchPlaceholder')"
                     />
                     <KumoLabel class="flex shrink-0 items-center gap-1 text-xs text-gray-600 dark:text-gray-400">
-                      <KumoCheckbox v-model="row.required" type="checkbox" />
+                      <KumoCheckbox :aria-label="t('admin.settings.gatewayForwarding.codexFpRequired')" v-model="row.required" type="checkbox" />
                       {{ t("admin.settings.gatewayForwarding.codexFpRequired") }}
                     </KumoLabel>
                     <KumoButton
@@ -4464,7 +4464,7 @@
                     :key="`codex-bl-${i}`"
                     class="mb-2 flex gap-2"
                   >
-                    <KumoInput
+                    <KumoInput :aria-label="t('admin.settings.gatewayForwarding.codexOriginatorPlaceholder')"
                       v-model="row.originator"
                       type="text"
                       class="input w-1/3 font-mono text-sm"
@@ -4474,7 +4474,7 @@
                         )
                       "
                     />
-                    <KumoInput
+                    <KumoInput :aria-label="t('admin.settings.gatewayForwarding.codexUaContainsPlaceholder')"
                       v-model="row.uaContains"
                       type="text"
                       class="input flex-1 font-mono text-sm"
@@ -4515,7 +4515,7 @@
                     :key="`codex-wl-${i}`"
                     class="mb-2 flex gap-2"
                   >
-                    <KumoInput
+                    <KumoInput :aria-label="t('admin.settings.gatewayForwarding.codexOriginatorPlaceholder')"
                       v-model="row.originator"
                       type="text"
                       class="input w-1/3 font-mono text-sm"
@@ -4525,7 +4525,7 @@
                         )
                       "
                     />
-                    <KumoInput
+                    <KumoInput :aria-label="t('admin.settings.gatewayForwarding.codexUaContainsPlaceholder')"
                       v-model="row.uaContains"
                       type="text"
                       class="input flex-1 font-mono text-sm"
@@ -4543,7 +4543,7 @@
                         )
                       "
                     >
-                      <KumoCheckbox
+                      <KumoCheckbox :aria-label="t( 'admin.settings.gatewayForwarding.codexWhitelistSkipFingerprint', )"
                         v-model="row.skipEngineFingerprint"
                         type="checkbox"
                       />
@@ -4622,7 +4622,7 @@
                   >
                     {{ t("admin.settings.upstreamBillingProbe.intervalMinutes") }}
                   </KumoLabel>
-                  <KumoInput
+                  <KumoInput :aria-label="t('admin.settings.upstreamBillingProbe.intervalMinutes')"
                     id="upstream-billing-probe-interval"
                     v-model.number="upstreamBillingProbeForm.interval_minutes"
                     type="number"
@@ -4694,7 +4694,7 @@
                     <KumoLabel class="mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300" for="ollama-cloud-usage-debounce">
                       {{ t("admin.settings.ollamaCloudUsage.debounceMinutes") }}
                     </KumoLabel>
-                    <KumoInput
+                    <KumoInput :aria-label="t('admin.settings.ollamaCloudUsage.debounceMinutes')"
                       id="ollama-cloud-usage-debounce"
                       v-model.number="ollamaCloudUsageForm.debounce_minutes"
                       type="number"
@@ -4712,7 +4712,7 @@
                     <KumoLabel class="mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300" for="ollama-cloud-usage-interval">
                       {{ t("admin.settings.ollamaCloudUsage.intervalMinutes") }}
                     </KumoLabel>
-                    <KumoInput
+                    <KumoInput :aria-label="t('admin.settings.ollamaCloudUsage.intervalMinutes')"
                       id="ollama-cloud-usage-interval"
                       v-model.number="ollamaCloudUsageForm.interval_minutes"
                       type="number"
@@ -4778,7 +4778,7 @@
                     <KumoLabel class="mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300" for="opencode-go-usage-debounce">
                       {{ t("admin.settings.opencodeGoUsage.debounceMinutes") }}
                     </KumoLabel>
-                    <KumoInput
+                    <KumoInput :aria-label="t('admin.settings.opencodeGoUsage.debounceMinutes')"
                       id="opencode-go-usage-debounce"
                       v-model.number="opencodeGoUsageForm.debounce_minutes"
                       type="number"
@@ -4796,7 +4796,7 @@
                     <KumoLabel class="mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300" for="opencode-go-usage-interval">
                       {{ t("admin.settings.opencodeGoUsage.intervalMinutes") }}
                     </KumoLabel>
-                    <KumoInput
+                    <KumoInput :aria-label="t('admin.settings.opencodeGoUsage.intervalMinutes')"
                       id="opencode-go-usage-interval"
                       v-model.number="opencodeGoUsageForm.interval_minutes"
                       type="number"
@@ -4911,7 +4911,7 @@
                         %
                       </span>
                     </div>
-                    <KumoInput
+                    <KumoInput :aria-label="platform + ' — ' + t('admin.settings.scheduling.accountSchedulingThresholdsTitle')"
                       v-model.number="form.account_scheduling_thresholds[platform]"
                       type="number"
                       min="1"
@@ -4963,7 +4963,7 @@
                   </p>
                 </div>
                 <div class="relative w-full shrink-0 sm:w-32">
-                  <KumoInput
+                  <KumoInput :aria-label="t('admin.settings.openaiExperimentalScheduler.oauthRateTitle')"
                     id="openai-oauth-scheduling-rate-multiplier"
                     v-model.number="form.openai_oauth_scheduling_rate_multiplier"
                     class="input pr-8"
@@ -5051,7 +5051,7 @@
                   </p>
                 </div>
                 <div class="relative w-full shrink-0 sm:w-32">
-                  <KumoInput
+                  <KumoInput :aria-label="t('admin.settings.openaiExperimentalScheduler.oauthRateTitle')"
                     id="openai-oauth-scheduling-rate-multiplier"
                     v-model.number="form.openai_oauth_scheduling_rate_multiplier"
                     class="input pr-8"
@@ -5092,7 +5092,7 @@
                     <span class="text-xs font-medium text-gray-600 dark:text-gray-400">
                       {{ field.label }}
                     </span>
-                    <KumoInput
+                    <KumoInput :aria-label="field.label"
                       v-model="form[field.key]"
                       class="input mt-1"
                       inputmode="decimal"
@@ -5126,7 +5126,7 @@
                   >
                     {{ t("admin.settings.gatewayForwarding.grokDefaultTextModel") }}
                   </KumoLabel>
-                  <KumoInput
+                  <KumoInput :aria-label="t('admin.settings.gatewayForwarding.grokDefaultTextModel')"
                     id="grok-default-text-model"
                     v-model.trim="form.grok_default_text_model"
                     type="text"
@@ -5434,7 +5434,7 @@
                         >
                           {{ t("admin.settings.gatewayForwarding.systemBlockText") }}
                         </KumoLabel>
-                        <KumoTextarea
+                        <KumoTextarea :aria-label="t('admin.settings.gatewayForwarding.systemBlockText')"
                           v-model="block.text"
                           rows="6"
                           class="input w-full resize-y font-mono text-xs leading-5"
@@ -5583,7 +5583,7 @@
                     )
                   }}
                 </KumoLabel>
-                <KumoInput
+                <KumoInput :aria-label="t( 'admin.settings.gatewayForwarding.antigravityUserAgentVersion', )"
                   v-model="form.antigravity_user_agent_version"
                   type="text"
                   class="input max-w-xs font-mono text-sm"
@@ -5613,7 +5613,7 @@
                     )
                   }}
                 </KumoLabel>
-                <KumoInput
+                <KumoInput :aria-label="t( 'admin.settings.gatewayForwarding.openaiCodexUserAgent', )"
                   v-model="form.openai_codex_user_agent"
                   type="text"
                   class="input w-full font-mono text-sm"
@@ -5643,7 +5643,7 @@
                     )
                   }}
                 </KumoLabel>
-                <KumoInput
+                <KumoInput :aria-label="t( 'admin.settings.gatewayForwarding.openaiCodexClientVersion', )"
                   v-model="form.openai_codex_client_version"
                   type="text"
                   class="input w-full font-mono text-sm"
@@ -5702,7 +5702,7 @@
                     )
                   }}
                 </KumoLabel>
-                <KumoInput
+                <KumoInput :aria-label="t( 'admin.settings.gatewayForwarding.claudeCodeClientVersion', )"
                   v-model="form.claude_code_client_version"
                   type="text"
                   class="input w-full font-mono text-sm"
@@ -5881,7 +5881,7 @@
                         t("admin.settings.webSearchEmulation.apiKey")
                       }}</KumoLabel>
                       <div class="relative">
-                        <KumoInput
+                        <KumoInput :aria-label="t('admin.settings.webSearchEmulation.apiKey')"
                           v-model="provider.api_key"
                           :type="apiKeyVisible[pIdx] ? 'text' : 'password'"
                           class="input w-full text-sm"
@@ -5988,7 +5988,7 @@
                         <KumoLabel class="text-xs text-gray-500">{{
                           t("admin.settings.webSearchEmulation.quotaLimit")
                         }}</KumoLabel>
-                        <KumoInput
+                        <KumoInput :aria-label="t('admin.settings.webSearchEmulation.quotaLimit')"
                           v-model="provider.quota_limit"
                           type="number"
                           min="1"
@@ -6007,7 +6007,7 @@
                         <KumoLabel class="text-xs text-gray-500">{{
                           t("admin.settings.webSearchEmulation.subscribedAt")
                         }}</KumoLabel>
-                        <KumoInput
+                        <KumoInput :aria-label="t('admin.settings.webSearchEmulation.subscribedAt')"
                           :value="formatSubscribedAt(provider.subscribed_at)"
                           type="date"
                           class="input text-sm"
@@ -6111,7 +6111,7 @@
                 {{ t("admin.settings.webSearchEmulation.testResultTitle") }}
               </h3>
               <div class="flex items-center gap-2">
-                <KumoInput
+                <KumoInput :aria-label="t('common.search')"
                   v-model="wsTestQuery"
                   type="text"
                   class="input flex-1 text-sm"
@@ -6202,7 +6202,7 @@
                 </p>
               </div>
               <KumoLabel class="toggle">
-                <KumoCheckbox v-model="form.allow_user_view_error_requests" type="checkbox" />
+                <KumoCheckbox :aria-label="t('admin.settings.user_error_view.label')" v-model="form.allow_user_view_error_requests" type="checkbox" />
                 <span class="toggle-slider"></span>
               </KumoLabel>
             </div>
@@ -6248,7 +6248,7 @@
                   >
                     {{ t("admin.settings.site.siteName") }}
                   </KumoLabel>
-                  <KumoInput
+                  <KumoInput :aria-label="t('admin.settings.site.siteName')"
                     v-model="form.site_name"
                     type="text"
                     class="input"
@@ -6264,7 +6264,7 @@
                   >
                     {{ t("admin.settings.site.siteSubtitle") }}
                   </KumoLabel>
-                  <KumoInput
+                  <KumoInput :aria-label="t('admin.settings.site.siteSubtitle')"
                     v-model="form.site_subtitle"
                     type="text"
                     class="input"
@@ -6285,7 +6285,7 @@
                 >
                   {{ t("admin.settings.site.apiBaseUrl") }}
                 </KumoLabel>
-                <KumoInput
+                <KumoInput :aria-label="t('admin.settings.site.apiBaseUrl')"
                   v-model="form.api_base_url"
                   type="text"
                   class="input font-mono text-sm"
@@ -6311,7 +6311,7 @@
                     >
                       {{ t("admin.settings.site.tableDefaultPageSize") }}
                     </KumoLabel>
-                    <KumoInput
+                    <KumoInput :aria-label="t('admin.settings.site.tableDefaultPageSize')"
                       v-model.number="form.table_default_page_size"
                       type="number"
                       min="5"
@@ -6329,7 +6329,7 @@
                     >
                       {{ t("admin.settings.site.tablePageSizeOptions") }}
                     </KumoLabel>
-                    <KumoInput
+                    <KumoInput :aria-label="t('admin.settings.site.tablePageSizeOptions')"
                       v-model="tablePageSizeOptionsInput"
                       type="text"
                       class="input font-mono text-sm"
@@ -6398,7 +6398,7 @@
                         >
                           {{ t("admin.settings.site.customEndpoints.name") }}
                         </KumoLabel>
-                        <KumoInput
+                        <KumoInput :aria-label="t('admin.settings.site.customEndpoints.name')"
                           v-model="ep.name"
                           type="text"
                           class="input text-sm"
@@ -6417,7 +6417,7 @@
                             t("admin.settings.site.customEndpoints.endpointUrl")
                           }}
                         </KumoLabel>
-                        <KumoInput
+                        <KumoInput :aria-label="t('admin.settings.site.customEndpoints.endpointUrl')"
                           v-model="ep.endpoint"
                           type="url"
                           class="input font-mono text-sm"
@@ -6438,7 +6438,7 @@
                             )
                           }}
                         </KumoLabel>
-                        <KumoInput
+                        <KumoInput :aria-label="t( 'admin.settings.site.customEndpoints.descriptionLabel', )"
                           v-model="ep.description"
                           type="text"
                           class="input text-sm"
@@ -6482,7 +6482,7 @@
                 >
                   {{ t("admin.settings.site.contactInfo") }}
                 </KumoLabel>
-                <KumoInput
+                <KumoInput :aria-label="t('admin.settings.site.contactInfo')"
                   v-model="form.contact_info"
                   type="text"
                   class="input"
@@ -6500,7 +6500,7 @@
                 >
                   {{ t("admin.settings.site.docUrl") }}
                 </KumoLabel>
-                <KumoInput
+                <KumoInput :aria-label="t('admin.settings.site.docUrl')"
                   v-model="form.doc_url"
                   type="url"
                   class="input font-mono text-sm"
@@ -6535,7 +6535,7 @@
                 >
                   {{ t("admin.settings.site.homeContent") }}
                 </KumoLabel>
-                <KumoTextarea
+                <KumoTextarea :aria-label="t('admin.settings.site.homeContent')"
                   v-model="form.home_content"
                   rows="6"
                   class="input font-mono text-sm"
@@ -6684,7 +6684,7 @@
                     >
                       {{ t("admin.settings.customMenu.name") }}
                     </KumoLabel>
-                    <KumoInput
+                    <KumoInput :aria-label="t('admin.settings.customMenu.name')"
                       v-model="item.label"
                       type="text"
                       class="input text-sm"
@@ -6718,7 +6718,7 @@
                     >
                       {{ t("admin.settings.customMenu.url") }}
                     </KumoLabel>
-                    <KumoInput
+                    <KumoInput :aria-label="t('admin.settings.customMenu.url')"
                       v-model="item.url"
                       type="url"
                       class="input font-mono text-sm"
@@ -6729,7 +6729,7 @@
                   </div>
 
                   <KumoLabel class="flex items-center gap-2 sm:col-span-2">
-                    <KumoCheckbox
+                    <KumoCheckbox :aria-label="t('admin.settings.customMenu.hideOpenButton')"
                       v-model="item.hide_open_button"
                       type="checkbox"
                       data-testid="custom-menu-hide-open-button"
@@ -6858,7 +6858,7 @@
                   <KumoLabel class="mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300">
                     {{ localText("条款更新日期", "Updated date") }}
                   </KumoLabel>
-                  <KumoInput
+                  <KumoInput :aria-label="localText('条款更新日期', 'Updated date')"
                     v-model="form.login_agreement_updated_at"
                     type="date"
                     class="input"
@@ -6943,7 +6943,7 @@
                         <KumoLabel class="mb-1 block text-xs font-medium text-gray-600 dark:text-gray-400">
                           {{ localText("文档名称", "Document title") }}
                         </KumoLabel>
-                        <KumoInput
+                        <KumoInput :aria-label="localText('文档名称', 'Document title')"
                           v-model="doc.title"
                           type="text"
                           class="input text-sm"
@@ -6958,7 +6958,7 @@
                           <span class="inline-flex flex-shrink-0 items-center border-r border-gray-200 bg-gray-50 px-3 text-sm text-gray-500 dark:border-dark-700 dark:bg-dark-800 dark:text-dark-400">
                             /legal/
                           </span>
-                          <KumoInput
+                          <KumoInput :aria-label="localText('文档路径', 'Document path')"
                             v-model="doc.id"
                             type="text"
                             class="min-w-0 flex-1 border-0 bg-transparent px-3 py-2 text-sm text-gray-900 outline-none placeholder:text-gray-400 focus:ring-0 dark:text-white dark:placeholder:text-dark-500"
@@ -6971,7 +6971,7 @@
                       <KumoLabel class="mb-1 block text-xs font-medium text-gray-600 dark:text-gray-400">
                         {{ localText("Markdown 内容", "Markdown content") }}
                       </KumoLabel>
-                        <KumoTextarea
+                        <KumoTextarea :aria-label="localText('Markdown 内容', 'Markdown content')"
                           v-model="doc.content_md"
                           rows="8"
                           class="input font-mono text-sm"
@@ -7068,7 +7068,7 @@
                   {{ t('admin.settings.features.channelMonitor.defaultInterval') }}
                   <span class="text-red-500">*</span>
                 </KumoLabel>
-                <KumoInput
+                <KumoInput :aria-label="t('admin.settings.features.channelMonitor.defaultInterval')"
                   v-model.number="form.channel_monitor_default_interval_seconds"
                   type="number"
                   min="15"
@@ -7194,7 +7194,7 @@
               <p class="mb-2 mt-0.5 text-xs text-gray-500 dark:text-gray-400">
                 {{ t('admin.settings.features.modelPlaza.priceDescriptionHint') }}
               </p>
-              <KumoTextarea
+              <KumoTextarea :aria-label="t('admin.settings.features.modelPlaza.requireAuth')"
                 v-model="form.model_plaza_description"
                 rows="6"
                 class="input font-mono text-sm"
@@ -7317,7 +7317,7 @@
                 {{ t('admin.settings.features.riskControl.cyberSessionBlockTTL') }}
                 <span class="text-red-500">*</span>
               </KumoLabel>
-              <KumoInput
+              <KumoInput :aria-label="t('admin.settings.features.riskControl.cyberSessionBlockTTL')"
                 v-model.number="form.cyber_session_block_ttl_seconds"
                 type="number"
                 min="1"
@@ -7368,7 +7368,7 @@
                   {{ t('admin.settings.features.affiliate.rebateRate') }}
                 </KumoLabel>
                 <div class="relative">
-                  <KumoInput
+                  <KumoInput :aria-label="t('admin.settings.features.affiliate.rebateRate')"
                     v-model.number="form.affiliate_rebate_rate"
                     type="number"
                     step="0.01"
@@ -7388,7 +7388,7 @@
                 <KumoLabel class="input-label">
                   {{ t('admin.settings.features.affiliate.freezeHours') }}
                 </KumoLabel>
-                <KumoInput
+                <KumoInput :aria-label="t('admin.settings.features.affiliate.freezeHours')"
                   v-model.number="form.affiliate_rebate_freeze_hours"
                   type="number"
                   step="1"
@@ -7405,7 +7405,7 @@
                 <KumoLabel class="input-label">
                   {{ t('admin.settings.features.affiliate.durationDays') }}
                 </KumoLabel>
-                <KumoInput
+                <KumoInput :aria-label="t('admin.settings.features.affiliate.durationDays')"
                   v-model.number="form.affiliate_rebate_duration_days"
                   type="number"
                   step="1"
@@ -7422,7 +7422,7 @@
                 <KumoLabel class="input-label">
                   {{ t('admin.settings.features.affiliate.perInviteeCap') }}
                 </KumoLabel>
-                <KumoInput
+                <KumoInput :aria-label="t('admin.settings.features.affiliate.perInviteeCap')"
                   v-model.number="form.affiliate_rebate_per_invitee_cap"
                   type="number"
                   step="0.01"
@@ -7455,7 +7455,7 @@
                 </div>
 
                 <div class="mb-3 flex items-center gap-2">
-                  <KumoInput
+                  <KumoInput :aria-label="t('admin.settings.features.affiliate.customUsers.searchPlaceholder')"
                     v-model="affiliateState.search"
                     type="text"
                     class="input flex-1"
@@ -7477,7 +7477,7 @@
                     <KumoTableHeader class="bg-gray-50 dark:bg-dark-800">
                       <KumoTableRow>
                         <KumoTableHead class="px-3 py-2 text-left">
-                          <KumoCheckbox
+                          <KumoCheckbox :aria-label="t('common.selectAll')"
                             type="checkbox"
                             :checked="affiliateState.entries.length > 0 && affiliateState.selected.length === affiliateState.entries.length"
                             @change="toggleAffiliateSelectAll"
@@ -7503,7 +7503,7 @@
                       </KumoTableRow>
                       <KumoTableRow v-for="entry in affiliateState.entries" :key="entry.user_id">
                         <KumoTableCell class="px-3 py-2">
-                          <KumoCheckbox
+                          <KumoCheckbox :aria-label="entry.email || String(entry.user_id)"
                             type="checkbox"
                             :checked="affiliateState.selected.includes(entry.user_id)"
                             @change="toggleAffiliateSelect(entry.user_id)"
@@ -7599,7 +7599,7 @@
                 </div>
                 <!-- Search input + result dropdown — hidden once a selection is made -->
                 <template v-else>
-                  <KumoInput
+                  <KumoInput :aria-label="t('admin.settings.features.affiliate.modal.userLabel')"
                     v-model="affiliateModal.userQuery"
                     type="text"
                     class="input"
@@ -7624,7 +7624,7 @@
               </div>
               <div v-else>
                 <KumoLabel class="input-label">{{ t('admin.settings.features.affiliate.modal.userLabel') }}</KumoLabel>
-                <KumoInput
+                <KumoInput :aria-label="t('admin.settings.features.affiliate.modal.userLabel')"
                   type="text"
                   class="input"
                   :value="affiliateModal.editingEntry ? affiliateModal.editingEntry.email : ''"
@@ -7634,7 +7634,7 @@
 
               <div>
                 <KumoLabel class="input-label">{{ t('admin.settings.features.affiliate.modal.codeLabel') }}</KumoLabel>
-                <KumoInput
+                <KumoInput :aria-label="t('admin.settings.features.affiliate.modal.codeLabel')"
                   v-model="affiliateModal.code"
                   type="text"
                   class="input font-mono"
@@ -7649,7 +7649,7 @@
               <div>
                 <KumoLabel class="input-label">{{ t('admin.settings.features.affiliate.modal.rateLabel') }}</KumoLabel>
                 <div class="relative">
-                  <KumoInput
+                  <KumoInput :aria-label="t('admin.settings.features.affiliate.modal.rateLabel')"
                     v-model="affiliateModal.rate"
                     type="number"
                     step="0.01"
@@ -7702,7 +7702,7 @@
               {{ t('admin.settings.features.affiliate.batchModal.hint') }}
             </p>
             <div class="relative">
-              <KumoInput
+              <KumoInput :aria-label="t('admin.settings.features.affiliate.modal.rateLabel')"
                 v-model="affiliateBatchModal.rate"
                 type="number"
                 step="0.01"
@@ -7791,7 +7791,7 @@
                     <KumoLabel class="input-label">{{
                       t("admin.settings.payment.productNamePrefix")
                     }}</KumoLabel
-                    ><KumoInput
+                    ><KumoInput :aria-label="t('admin.settings.payment.productNamePrefix')"
                       v-model="form.payment_product_name_prefix"
                       type="text"
                       class="input"
@@ -7802,7 +7802,7 @@
                     <KumoLabel class="input-label">{{
                       t("admin.settings.payment.productNameSuffix")
                     }}</KumoLabel
-                    ><KumoInput
+                    ><KumoInput :aria-label="t('admin.settings.payment.productNameSuffix')"
                       v-model="form.payment_product_name_suffix"
                       type="text"
                       class="input"
@@ -7830,7 +7830,7 @@
                     <KumoLabel class="input-label">{{
                       t("admin.settings.payment.minAmount")
                     }}</KumoLabel
-                    ><KumoInput
+                    ><KumoInput :aria-label="t('admin.settings.payment.minAmount')"
                       :value="form.payment_min_amount || ''"
                       @input="
                         form.payment_min_amount =
@@ -7849,7 +7849,7 @@
                     <KumoLabel class="input-label">{{
                       t("admin.settings.payment.maxAmount")
                     }}</KumoLabel
-                    ><KumoInput
+                    ><KumoInput :aria-label="t('admin.settings.payment.maxAmount')"
                       :value="form.payment_max_amount || ''"
                       @input="
                         form.payment_max_amount =
@@ -7868,7 +7868,7 @@
                     <KumoLabel class="input-label">{{
                       t("admin.settings.payment.dailyLimit")
                     }}</KumoLabel
-                    ><KumoInput
+                    ><KumoInput :aria-label="t('admin.settings.payment.dailyLimit')"
                       :value="form.payment_daily_limit || ''"
                       @input="
                         form.payment_daily_limit =
@@ -7887,7 +7887,7 @@
                     <KumoLabel class="input-label">{{
                       t("admin.settings.payment.balanceRechargeMultiplier")
                     }}</KumoLabel>
-                    <KumoInput
+                    <KumoInput :aria-label="t('admin.settings.payment.balanceRechargeMultiplier')"
                       :value="form.payment_balance_recharge_multiplier || ''"
                       @input="
                         form.payment_balance_recharge_multiplier =
@@ -7924,7 +7924,7 @@
                     <KumoLabel class="input-label">{{
                       t("admin.settings.payment.subscriptionUsdToCnyRate")
                     }}</KumoLabel>
-                    <KumoInput
+                    <KumoInput :aria-label="t('admin.settings.payment.subscriptionUsdToCnyRate')"
                       :value="form.payment_subscription_usd_to_cny_rate || ''"
                       @input="
                         form.payment_subscription_usd_to_cny_rate =
@@ -7953,7 +7953,7 @@
                       t("admin.settings.payment.rechargeFeeRate")
                     }}</KumoLabel>
                     <div class="relative">
-                      <KumoInput
+                      <KumoInput :aria-label="t('admin.settings.payment.rechargeFeeRate')"
                         :value="form.payment_recharge_fee_rate ?? ''"
                         @input="
                           form.payment_recharge_fee_rate = Math.min(
@@ -8000,7 +8000,7 @@
                     <KumoLabel class="input-label"
                       >{{ t("admin.settings.payment.orderTimeout") }}
                       <span class="text-red-500">*</span></KumoLabel
-                    ><KumoInput
+                    ><KumoInput :aria-label="t('admin.settings.payment.orderTimeout')"
                       v-model.number="form.payment_order_timeout_minutes"
                       type="number"
                       min="1"
@@ -8018,7 +8018,7 @@
                     <KumoLabel class="input-label">{{
                       t("admin.settings.payment.maxPendingOrders")
                     }}</KumoLabel
-                    ><KumoInput
+                    ><KumoInput :aria-label="t('admin.settings.payment.maxPendingOrders')"
                       v-model.number="form.payment_max_pending_orders"
                       type="number"
                       min="1"
@@ -8058,7 +8058,7 @@
                           t("admin.settings.payment.cancelRateLimitEvery")
                         }}</span
                       >
-                      <KumoInput
+                      <KumoInput :aria-label="t('admin.settings.payment.cancelRateLimitEvery')"
                         v-model.number="form.payment_cancel_rate_limit_window"
                         type="number"
                         min="1"
@@ -8083,7 +8083,7 @@
                           t("admin.settings.payment.cancelRateLimitAllowMax")
                         }}</span
                       >
-                      <KumoInput
+                      <KumoInput :aria-label="t('admin.settings.payment.cancelRateLimitAllowMax')"
                         v-model.number="form.payment_cancel_rate_limit_max"
                         type="number"
                         min="1"
@@ -8192,7 +8192,7 @@
                     <KumoLabel class="input-label">{{
                       t("admin.settings.payment.helpText")
                     }}</KumoLabel>
-                    <KumoTextarea
+                    <KumoTextarea :aria-label="t('admin.settings.payment.helpText')"
                       v-model="form.payment_help_text"
                       rows="3"
                       class="input"
@@ -8290,7 +8290,7 @@
                   >
                     {{ t("admin.settings.smtp.host") }}
                   </KumoLabel>
-                  <KumoInput
+                  <KumoInput :aria-label="t('admin.settings.smtp.host')"
                     v-model="form.smtp_host"
                     type="text"
                     class="input"
@@ -8303,7 +8303,7 @@
                   >
                     {{ t("admin.settings.smtp.port") }}
                   </KumoLabel>
-                  <KumoInput
+                  <KumoInput :aria-label="t('admin.settings.smtp.port')"
                     v-model.number="form.smtp_port"
                     type="number"
                     min="1"
@@ -8318,7 +8318,7 @@
                   >
                     {{ t("admin.settings.smtp.username") }}
                   </KumoLabel>
-                  <KumoInput
+                  <KumoInput :aria-label="t('admin.settings.smtp.username')"
                     v-model="form.smtp_username"
                     type="text"
                     class="input"
@@ -8331,7 +8331,7 @@
                   >
                     {{ t("admin.settings.smtp.password") }}
                   </KumoLabel>
-                  <KumoInput
+                  <KumoInput :aria-label="t('admin.settings.smtp.password')"
                     v-model="form.smtp_password"
                     type="password"
                     class="input"
@@ -8360,7 +8360,7 @@
                   >
                     {{ t("admin.settings.smtp.fromEmail") }}
                   </KumoLabel>
-                  <KumoInput
+                  <KumoInput :aria-label="t('admin.settings.smtp.fromEmail')"
                     v-model="form.smtp_from_email"
                     type="email"
                     class="input"
@@ -8373,7 +8373,7 @@
                   >
                     {{ t("admin.settings.smtp.fromName") }}
                   </KumoLabel>
-                  <KumoInput
+                  <KumoInput :aria-label="t('admin.settings.smtp.fromName')"
                     v-model="form.smtp_from_name"
                     type="text"
                     class="input"
@@ -8419,7 +8419,7 @@
                   >
                     {{ t("admin.settings.testEmail.recipientEmail") }}
                   </KumoLabel>
-                  <KumoInput
+                  <KumoInput :aria-label="t('admin.settings.testEmail.recipientEmail')"
                     v-model="testEmailAddress"
                     type="email"
                     class="input"
@@ -8508,7 +8508,7 @@
                     class="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"
                     >$</span
                   >
-                  <KumoInput
+                  <KumoInput :aria-label="t('admin.settings.balanceNotify.threshold')"
                     v-model.number="form.balance_low_notify_threshold"
                     type="number"
                     min="0"
@@ -8525,7 +8525,7 @@
                   class="mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300"
                   >{{ t("admin.settings.balanceNotify.rechargeUrl") }}</KumoLabel
                 >
-                <KumoInput
+                <KumoInput :aria-label="t('admin.settings.balanceNotify.rechargeUrl')"
                   v-model="form.balance_low_notify_recharge_url"
                   type="url"
                   class="input"
@@ -8573,7 +8573,7 @@
                     <KumoLabel
                       class="relative inline-flex items-center cursor-pointer shrink-0"
                     >
-                      <KumoCheckbox
+                      <KumoCheckbox :aria-label="t('admin.settings.quotaNotify.title') + ' — ' + entry.email"
                         type="checkbox"
                         :checked="!entry.disabled"
                         @change="entry.disabled = !entry.disabled"
@@ -8583,7 +8583,7 @@
                         class="w-9 h-5 bg-gray-200 peer-focus:outline-none rounded-full peer dark:bg-gray-600 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all dark:after:border-gray-500 peer-checked:bg-primary-600"
                       ></div>
                     </KumoLabel>
-                    <KumoInput
+                    <KumoInput :aria-label="t('admin.settings.quotaNotify.emailPlaceholder')"
                       v-model="entry.email"
                       type="email"
                       class="input flex-1"

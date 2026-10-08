@@ -31,7 +31,7 @@
                 <div class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-4">
                   <Icon name="gift" size="md" class="text-gray-400 dark:text-dark-500" />
                 </div>
-                <KumoInput
+                <KumoInput :aria-label="t('redeem.redeemCodeLabel')"
                   id="code"
                   v-model="redeemCode"
                   type="text"

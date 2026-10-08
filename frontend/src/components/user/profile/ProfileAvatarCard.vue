@@ -43,7 +43,7 @@
 
         <div class="flex flex-wrap items-center gap-3">
           <KumoLabel class="btn btn-secondary btn-sm cursor-pointer">
-            <KumoInput
+            <KumoInput :aria-label="t('profile.avatar.uploadAction')"
               data-testid="profile-avatar-file-input"
               type="file"
               accept="image/*"

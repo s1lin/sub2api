@@ -2,6 +2,10 @@
 :root, .dark, [data-mode] {
   --platform-section-gap: 1rem;
   --platform-page-padding: 1rem;
+  --platform-nav-font-size: 0.875rem;
+  --platform-nav-line-height: 1.25rem;
+  --platform-nav-icon-size: 1.25rem;
+  --platform-nav-chevron-size: 1rem;
   --color-kumo-base: var(--brand-surface);
   --color-kumo-elevated: var(--brand-surface);
   --color-kumo-recessed: var(--brand-canvas);
@@ -36,6 +40,25 @@
 /* The same rhythm for page sections, card grids, and table toolbars. */
 .platform-content { padding: var(--platform-page-padding); }
 .platform-header-inner { padding-inline: var(--platform-page-padding); }
+/* Links and Kumo buttons share the same navigation typography and icon scale. */
+.sidebar .sidebar-link, .platform-nav-control, .platform-nav-menu [role="menuitem"] {
+  font-family: var(--brand-font);
+  font-size: var(--platform-nav-font-size);
+  line-height: var(--platform-nav-line-height);
+  font-weight: 500;
+  letter-spacing: normal;
+}
+.sidebar .sidebar-link { justify-content: flex-start; gap: .75rem; height: auto; min-height: 2.5rem; }
+.sidebar .sidebar-link svg, .sidebar .sidebar-svg-icon,
+.platform-nav-control svg, .platform-nav-menu [role="menuitem"] svg {
+  width: var(--platform-nav-icon-size);
+  height: var(--platform-nav-icon-size);
+  flex-shrink: 0;
+}
+.sidebar .sidebar-link .sidebar-label svg, .platform-nav-control svg.platform-nav-chevron {
+  width: var(--platform-nav-chevron-size);
+  height: var(--platform-nav-chevron-size);
+}
 .app-shell .gap-6 { gap: var(--platform-section-gap); }
 .app-shell .space-y-6 > :not([hidden]) ~ :not([hidden]) {
   margin-top: calc(var(--platform-section-gap) * (1 - var(--tw-space-y-reverse, 0)));

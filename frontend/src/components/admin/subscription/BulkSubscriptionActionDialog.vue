@@ -30,7 +30,7 @@
           <KumoLabel for="bulk-subscription-days" class="input-label">
             {{ t('admin.subscriptions.form.adjustDays') }}
           </KumoLabel>
-          <KumoInput
+          <KumoInput :aria-label="t('admin.subscriptions.form.adjustDays')"
             id="bulk-subscription-days"
             v-model.number="days"
             type="number"
@@ -53,7 +53,7 @@
           </legend>
           <div class="flex flex-wrap gap-5">
             <KumoLabel v-for="window in quotaWindows" :key="window" class="flex items-center gap-2 text-sm text-gray-700 dark:text-gray-300">
-              <KumoCheckbox
+              <KumoCheckbox :aria-label="t(`admin.subscriptions.${window}`)"
                 v-model="windows[window]"
                 :name="window"
                 type="checkbox"

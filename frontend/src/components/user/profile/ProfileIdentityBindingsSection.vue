@@ -92,7 +92,7 @@
                 data-testid="profile-binding-email-form"
                 class="grid gap-2 sm:grid-cols-[minmax(0,1.4fr)_auto]"
               >
-                <KumoInput
+                <KumoInput :aria-label="t('profile.authBindings.emailPlaceholder')"
                   v-model.trim="emailBindingForm.email"
                   data-testid="profile-binding-email-input"
                   type="email"
@@ -113,7 +113,7 @@
                       : t('profile.authBindings.sendCodeAction')
                   }}
                 </KumoButton>
-                <KumoInput
+                <KumoInput :aria-label="t('profile.authBindings.codePlaceholder')"
                   v-model.trim="emailBindingForm.verifyCode"
                   data-testid="profile-binding-email-code-input"
                   type="text"
@@ -123,7 +123,7 @@
                   :placeholder="t('profile.authBindings.codePlaceholder')"
                   :disabled="isBindingEmail"
                 />
-                <KumoInput
+                <KumoInput :aria-label="emailPasswordPlaceholder"
                   v-model="emailBindingForm.password"
                   data-testid="profile-binding-email-password-input"
                   type="password"

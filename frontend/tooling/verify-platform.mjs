@@ -9,7 +9,7 @@ await mkdir(outputRoot, { recursive: true })
 const outputPath = name => outputRoot + name
 const baseURL = process.env.KUMO_PREVIEW_URL || 'http://127.0.0.1:3002'
 const browser = await chromium.launch({ ...(process.env.PLAYWRIGHT_CHROMIUM_EXECUTABLE ? { executablePath: process.env.PLAYWRIGHT_CHROMIUM_EXECUTABLE } : {}), headless: true })
-const settings = { site_name: 'tokensbeat', site_subtitle: 'Subscription to API Conversion Platform', site_logo: '', doc_url: '', payment_enabled: true, subscription_enabled: true, payment_balance_disabled: false, registration_enabled: true, email_verify_enabled: false, password_reset_enabled: true, default_concurrency: 5 }
+const settings = { site_name: 'tokensbeat', site_subtitle: 'Subscription to API Conversion Platform', site_logo: '', doc_url: '', ops_monitoring_enabled: true, payment_enabled: true, subscription_enabled: true, payment_balance_disabled: false, registration_enabled: true, email_verify_enabled: false, password_reset_enabled: true, default_concurrency: 5 }
 const user = { created_at: '2026-09-01T00:00:00Z', id: 9001, username: 'Preview account', email: 'preview@example.test', role: 'user', status: 'active', balance: 24.75, concurrency: 5, run_mode: 'normal' }
 const plans = [
   { id: 7, group_id: 3, name: 'Builder', description: 'Example plan for layout verification.', price: 24, original_price: 0, validity_days: 30, validity_unit: 'day', rate_multiplier: 1, daily_limit_usd: 5, weekly_limit_usd: null, monthly_limit_usd: null, features: ['API access', 'Usage tracking'], group_platform: 'openai', sort_order: 1, for_sale: true, group_name: 'OpenAI' },
@@ -35,6 +35,7 @@ try {
     ['admin-accounts', '/admin/accounts', 'main .table-page-layout'],
     ['admin-subscriptions', '/admin/subscriptions', 'main .table-page-layout'],
     ['admin-settings', '/admin/settings', 'main form'],
+    ['admin-ops', '/admin/ops', 'main input'],
     ['not-found', '/nonexistent-design-check', '.not-found']
   ];
   const entries = routes.flatMap(([name, route, ready]) => [
@@ -57,6 +58,12 @@ try {
     const page = await context.newPage()
     const errors = [], unknown = [], writes = []
     page.on('pageerror', error => errors.push(error.message))
+    page.on('console', message => {
+      if (/\[Kumo (Input|Checkbox|Textarea)\].*accessible name/.test(message.text())) {
+        const warning = message.text().split('\n')[0]
+        if (!errors.includes(warning)) errors.push(warning)
+      }
+    })
     await page.route('**/*', async route => {
       const request = route.request(), url = new URL(request.url())
       if (request.isNavigationRequest() && request.resourceType() === 'document' && url.origin === baseURL) {
@@ -97,6 +104,12 @@ try {
         else if (path.includes('/dashboard/users-trend')) data = { trend: [], users: [] }
         else if (path.includes('/dashboard/users-spending-ranking')) data = { items: [], total_actual_cost: 0, total_requests: 0, total_tokens: 0 }
         else if (path === '/admin/settings') data = settings
+        else if (path === '/admin/ops/advanced-settings') data = { data_retention: { cleanup_enabled: true, cleanup_schedule: '0 2 * * *', error_log_retention_days: 30, minute_metrics_retention_days: 7, hourly_metrics_retention_days: 90 }, aggregation: { aggregation_enabled: true }, openai_account_quota_auto_pause: { default_threshold_5h: 0, default_threshold_7d: 0 }, display_alert_events: true, display_openai_token_stats: false, auto_refresh_enabled: false, auto_refresh_interval_seconds: 30 }
+        else if (path === '/admin/ops/runtime/alert') data = { evaluation_interval_seconds: 60, distributed_lock: { enabled: true, key: 'ops:preview', ttl_seconds: 30 }, silencing: { enabled: false, global_until_rfc3339: '', global_reason: '', entries: [] }, thresholds: { sla_percent_min: 99.5, ttft_p99_ms_max: 500, request_error_rate_percent_max: 5, upstream_error_rate_percent_max: 5 } }
+        else if (path === '/admin/ops/email-notification/config') data = { alert: { enabled: false, recipients: [], min_severity: 'P1', rate_limit_per_hour: 10, batching_window_seconds: 60 }, report: { enabled: false, recipients: [], daily_summary_enabled: true, daily_summary_schedule: '0 9 * * *', weekly_summary_enabled: true, weekly_summary_schedule: '0 9 * * 1' } }
+        else if (path === '/admin/ops/runtime/logging') data = { level: 'info', persist_access_logs: false, enable_sampling: false, sampling_initial: 100, sampling_thereafter: 100, caller: true, stacktrace_level: 'error', retention_days: 30, request_retention_days: 90 }
+        else if (path === '/admin/ops/dashboard/snapshot-v2') data = { overview: null, throughput_trend: { points: [], by_platform: [], top_groups: [] }, error_trend: { points: [] } }
+        else if (path.startsWith('/admin/ops/')) data = path.includes('alert-events') || path.includes('alert-rules') ? [] : { points: [], buckets: [], items: [], accounts: [], groups: [], platforms: [], users: [], total: 0, page: 1, page_size: 20 }
         else if (path === '/admin/system/version') data = { version: 'design-preview', build_type: 'source' }
         else if (path === '/user/batch-image/access') data = { allowed: true }
         else if (/^\/(admin\/)?(users|groups|accounts|subscriptions|payment\/orders|redeem|batch-image\/jobs)$/.test(path)) data = { items: [], total: 0, page: 1, page_size: 20, pages: 0 }
@@ -124,11 +137,17 @@ try {
           sidebarBrand: document.querySelector('.sidebar-brand')?.textContent.trim(),
           borders: [...document.querySelectorAll('main .card')].map(card => ({ width: getComputedStyle(card).borderTopWidth, shadow: getComputedStyle(card).boxShadow })),
           gaps: rows.slice(1).map((row, i) => Math.round(row.top - rows[i].bottom)),
+          nav: [...document.querySelectorAll('.sidebar-link, .platform-nav-control')].filter(el => el.getBoundingClientRect().width).map(el => {
+            const style = getComputedStyle(el)
+            return { text: el.textContent.trim(), font: style.fontFamily, size: style.fontSize, weight: style.fontWeight, lineHeight: style.lineHeight, icons: [...el.querySelectorAll('svg')].filter(icon => icon.getBoundingClientRect().width).map(icon => ({ size: icon.getBoundingClientRect().width, chevron: !!icon.closest('.sidebar-label') || icon.classList.contains('platform-nav-chevron') })) }
+          }),
         }
       })
       if (layout.sidebarBrand != null && layout.sidebarBrand !== settings.site_name) errors.push('Sidebar includes content beyond the brand name')
       if (layout.borders.some(border => parseFloat(border.width) > 1 || (border.shadow.match(/-?[\d.]+px/g) || []).some(value => parseFloat(value) !== 0))) errors.push('Card has a doubled outline')
       if (['dashboard', 'admin-dashboard'].some(name => entry.name.startsWith(name + '-')) && layout.gaps.some(gap => Math.abs(gap - 16) > 1)) errors.push('Dashboard section gaps differ: ' + layout.gaps.join(', '))
+      if (layout.nav.some(item => item.size !== '14px' || item.weight !== '500' || item.lineHeight !== '20px') || new Set(layout.nav.map(item => item.font)).size > 1) errors.push('Navigation typography is inconsistent')
+      if (layout.nav.some(item => item.icons.some(icon => Math.abs(icon.size - (icon.chevron ? 16 : 20)) > 0.1))) errors.push('Navigation icon sizes are inconsistent')
       console.log(JSON.stringify({ name: entry.name, layout }))
     }
     if (entry.name === 'admin-subscriptions-desktop-light') {
@@ -136,6 +155,29 @@ try {
       await page.getByRole('dialog').waitFor()
       await page.locator('[data-assign-user-search] input[role="combobox"]').fill('preview')
       await page.keyboard.press('Escape')
+      await page.keyboard.press('Escape')
+      await page.getByRole('dialog').waitFor({ state: 'hidden' })
+    }
+    if (entry.name.startsWith('admin-ops-')) {
+      const zh = entry.locale === 'zh'
+      await page.getByRole('button', { name: zh ? '运维监控设置' : 'Ops Monitoring Settings', exact: true }).click()
+      const settingsDialog = page.getByRole('dialog')
+      await settingsDialog.locator('input[aria-label]').first().waitFor()
+      if (await settingsDialog.locator('input[data-platform-control="input"]:not([aria-label])').count()) errors.push('Ops settings contain unnamed inputs')
+      await page.screenshot({ path: resolve(outputPath(`ops-settings-${entry.theme}.png`)), fullPage: true })
+      await page.keyboard.press('Escape')
+      await settingsDialog.waitFor({ state: 'hidden' })
+      await page.getByRole('button', { name: zh ? '告警规则' : 'Alert Rules', exact: true }).click()
+      await page.getByRole('button', { name: zh ? '新建规则' : 'Create Rule', exact: true }).click()
+      const ruleDialog = page.getByRole('dialog', { name: zh ? '新建告警规则' : 'Create Alert Rule', exact: true })
+      await ruleDialog.locator('input[aria-label]').first().waitFor()
+      const checkboxes = ruleDialog.getByRole('checkbox')
+      if (await checkboxes.count() !== 2) errors.push('Alert rule controls did not render')
+      for (const checkbox of await checkboxes.all()) {
+        if (!(await checkbox.getAttribute('aria-label'))?.trim()) errors.push('Alert rule checkbox has no accessible name')
+      }
+      await page.keyboard.press('Escape')
+      await ruleDialog.waitFor({ state: 'hidden' })
       await page.keyboard.press('Escape')
       await page.getByRole('dialog').waitFor({ state: 'hidden' })
     }
@@ -169,9 +211,14 @@ try {
       await dialog.waitFor({ state: 'hidden' })
     }
     await page.waitForTimeout(250)
+    const unnamed = await page.locator('[data-platform-control="input"], [data-platform-control="textarea"], [data-platform-control="checkbox"]').evaluateAll(nodes => nodes.filter(node => {
+      const labelledBy = (node.getAttribute('aria-labelledby') || '').split(/\s+/).map(id => document.getElementById(id)?.textContent || '').join(' ').trim()
+      return !node.getAttribute('aria-label')?.trim() && !labelledBy && !Array.from(node.labels || []).some(label => label.textContent.trim())
+    }).map(node => ({ tag: node.tagName, type: node.getAttribute('type'), placeholder: node.getAttribute('placeholder'), html: node.outerHTML.slice(0, 700) })))
+    if (unnamed.length) errors.push(`${unnamed.length} controls have no accessible name`)
     await page.screenshot({ path: resolve(outputRoot + entry.name + '.png'), fullPage: true })
     const metrics = await page.evaluate(() => ({ overflow: document.documentElement.scrollWidth > innerWidth, theme: document.documentElement.classList.contains('dark') ? 'dark' : 'light', heading: document.querySelector('h1')?.textContent, primary: getComputedStyle(document.querySelector('.btn-primary, .brand-button') || document.body).backgroundColor }))
-    results.push({ ...entry, ready, ...metrics, errors, unknown, writes, actualRoute: new URL(page.url()).pathname })
+    results.push({ ...entry, ready, ...metrics, errors, unknown, writes, unnamed, actualRoute: new URL(page.url()).pathname })
     console.log(JSON.stringify(results.at(-1)))
     await context.close()
   }

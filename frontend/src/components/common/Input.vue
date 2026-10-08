@@ -1,6 +1,6 @@
 <template>
   <div class="w-full">
-    <KumoLabel v-if="label" :for="id" class="input-label mb-1.5 block">
+    <KumoLabel v-if="label" :for="fieldId" class="input-label mb-1.5 block">
       {{ label }}
       <span v-if="required" class="text-red-500">*</span>
     </KumoLabel>
@@ -13,8 +13,9 @@
         <slot name="prefix"></slot>
       </div>
 
-      <KumoInput
-        :id="id"
+      <KumoInput :aria-label="$attrs['aria-label'] || label || placeholderText"
+        :id="fieldId"
+        :aria-labelledby="$attrs['aria-labelledby']"
         ref="inputRef"
         :type="type"
         :value="modelValue"
@@ -58,7 +59,7 @@
 <script setup lang="ts">
 import { KumoInput, KumoLabel } from '@/components/kumo'
 
-import { computed, ref } from 'vue'
+import { computed, ref, useId } from 'vue'
 
 interface Props {
   modelValue: string | number | null | undefined
@@ -90,6 +91,8 @@ const emit = defineEmits<{
 }>()
 
 const inputRef = ref<HTMLInputElement | null>(null)
+const generatedId = useId()
+const fieldId = computed(() => props.id || generatedId)
 const placeholderText = computed(() => props.placeholder || '')
 
 const onInput = (event: Event) => {

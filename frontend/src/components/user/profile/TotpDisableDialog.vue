@@ -26,7 +26,7 @@
           <div v-if="verificationMethod === 'email'">
             <KumoLabel class="input-label">{{ t('profile.totp.emailCode') }}</KumoLabel>
             <div class="flex gap-2">
-              <KumoInput
+              <KumoInput :aria-label="t('profile.totp.emailCode')"
                 v-model="form.emailCode"
                 type="text"
                 maxlength="6"
@@ -50,7 +50,7 @@
             <KumoLabel for="password" class="input-label">
               {{ t('profile.currentPassword') }}
             </KumoLabel>
-            <KumoInput
+            <KumoInput :aria-label="t('profile.currentPassword')"
               id="password"
               v-model="form.password"
               type="password"

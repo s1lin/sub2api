@@ -36,7 +36,7 @@
           <div class="grid gap-3 sm:grid-cols-2">
             <div>
               <KumoLabel for="passkey-name" class="input-label">{{ t('profile.passkey.name') }}</KumoLabel>
-              <KumoInput
+              <KumoInput :aria-label="t('profile.passkey.name')"
                 id="passkey-name"
                 v-model="newName"
                 class="input"
@@ -49,7 +49,7 @@
               <KumoLabel for="passkey-add-password" class="input-label">{{
                 t('profile.currentPassword')
               }}</KumoLabel>
-              <KumoInput
+              <KumoInput :aria-label="t('profile.currentPassword')"
                 id="passkey-add-password"
                 v-model="newPassword"
                 type="password"
@@ -143,7 +143,7 @@
               <KumoLabel for="passkey-delete-password" class="input-label">{{
                 t('profile.currentPassword')
               }}</KumoLabel>
-              <KumoInput
+              <KumoInput :aria-label="t('profile.currentPassword')"
                 id="passkey-delete-password"
                 v-model="deletePassword"
                 type="password"

@@ -1572,7 +1572,7 @@ function handleToolbarRefresh() {
           <KumoLabel class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
             {{ t('admin.ops.customTimeRange.startTime') }}
           </KumoLabel>
-          <KumoInput
+          <KumoInput :aria-label="t('admin.ops.customTimeRange.startTime')"
             v-model="customStartTimeInput"
             type="datetime-local"
             class="w-full rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm text-gray-900 focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500 dark:border-dark-600 dark:bg-dark-800 dark:text-white"
@@ -1582,7 +1582,7 @@ function handleToolbarRefresh() {
           <KumoLabel class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
             {{ t('admin.ops.customTimeRange.endTime') }}
           </KumoLabel>
-          <KumoInput
+          <KumoInput :aria-label="t('admin.ops.customTimeRange.endTime')"
             v-model="customEndTimeInput"
             type="datetime-local"
             class="w-full rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm text-gray-900 focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500 dark:border-dark-600 dark:bg-dark-800 dark:text-white"

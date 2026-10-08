@@ -84,7 +84,7 @@
             class="grid grid-cols-[minmax(0,1fr)_minmax(0,1fr)_2rem] items-center gap-3 px-3 py-2"
             data-testid="recharge-bonus-tier-row"
           >
-            <KumoInput
+            <KumoInput :aria-label="t('admin.settings.payment.rechargeBonus.minAmountLabel') + ' — ' + (index + 1)"
               :value="tier.min_amount ?? ''"
               type="number"
               step="0.01"
@@ -95,7 +95,7 @@
               @input="onMinAmountInput(index, $event)"
             />
             <div class="relative">
-              <KumoInput
+              <KumoInput :aria-label="(currentMode === 'discount' ? t('admin.settings.payment.rechargeBonus.percentLabelDiscount') : t('admin.settings.payment.rechargeBonus.percentLabel')) + ' — ' + (index + 1)"
                 :value="tier.bonus_percent ?? ''"
                 type="number"
                 step="0.01"
@@ -159,7 +159,7 @@
         <KumoLabel class="input-label">
           {{ t('admin.settings.payment.rechargeBonus.noticeLabel') }}
         </KumoLabel>
-        <KumoTextarea
+        <KumoTextarea :aria-label="t('admin.settings.payment.rechargeBonus.noticeLabel')"
           :value="notice ?? ''"
           rows="3"
           class="input"

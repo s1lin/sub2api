@@ -57,7 +57,7 @@
         <span class="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500 dark:text-dark-400">
           $
         </span>
-        <KumoInput
+        <KumoInput :aria-label="t('payment.customAmount')"
           id="recharge-custom-amount"
           type="text"
           inputmode="decimal"

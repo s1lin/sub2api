@@ -75,7 +75,7 @@
                 :key="col.key"
                 class="flex w-full cursor-pointer items-center gap-2 px-3 py-2 text-sm"
               >
-                <KumoCheckbox :checked="isColumnVisible(col.key)" @change="toggleColumn(col.key)" />
+                <KumoCheckbox :aria-label="col.label" :checked="isColumnVisible(col.key)" @change="toggleColumn(col.key)" />
                 <span>{{ col.label }}</span>
               </KumoLabel>
             </KumoPopoverContent>
@@ -426,7 +426,7 @@
       <form id="key-form" @submit.prevent="handleSubmit" class="space-y-5">
         <div>
           <KumoLabel class="input-label">{{ t('keys.nameLabel') }}</KumoLabel>
-          <KumoInput
+          <KumoInput :aria-label="t('keys.nameLabel')"
             v-model="formData.name"
             type="text"
             required
@@ -531,7 +531,7 @@
             <KumoSwitch v-model="formData.use_custom_key"  />
           </div>
           <div v-if="formData.use_custom_key">
-            <KumoInput
+            <KumoInput :aria-label="t('keys.customKeyLabel')"
               v-model="formData.custom_key"
               type="text"
               class="input font-mono"
@@ -562,7 +562,7 @@
           <div v-if="formData.enable_ip_restriction" class="space-y-4 pt-2">
             <div>
               <KumoLabel class="input-label">{{ t('keys.ipWhitelist') }}</KumoLabel>
-              <KumoTextarea
+              <KumoTextarea :aria-label="t('keys.ipWhitelist')"
                 v-model="formData.ip_whitelist"
                 rows="3"
                 class="input font-mono text-sm"
@@ -573,7 +573,7 @@
 
             <div>
               <KumoLabel class="input-label">{{ t('keys.ipBlacklist') }}</KumoLabel>
-              <KumoTextarea
+              <KumoTextarea :aria-label="t('keys.ipBlacklist')"
                 v-model="formData.ip_blacklist"
                 rows="3"
                 class="input font-mono text-sm"
@@ -612,7 +612,7 @@
             <div>
               <div class="relative">
                 <span class="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500">$</span>
-                <KumoInput
+                <KumoInput :aria-label="t('keys.quotaAmount')"
                   v-model.number="formData.quota"
                   type="number"
                   step="0.01"
@@ -664,7 +664,7 @@
               <KumoLabel class="input-label">{{ t('keys.rateLimit5h') }}</KumoLabel>
               <div class="relative">
                 <span class="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500">$</span>
-                <KumoInput
+                <KumoInput :aria-label="t('keys.rateLimit5h')"
                   v-model.number="formData.rate_limit_5h"
                   type="number"
                   step="0.01"
@@ -705,7 +705,7 @@
               <KumoLabel class="input-label">{{ t('keys.rateLimit1d') }}</KumoLabel>
               <div class="relative">
                 <span class="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500">$</span>
-                <KumoInput
+                <KumoInput :aria-label="t('keys.rateLimit1d')"
                   v-model.number="formData.rate_limit_1d"
                   type="number"
                   step="0.01"
@@ -746,7 +746,7 @@
               <KumoLabel class="input-label">{{ t('keys.rateLimit7d') }}</KumoLabel>
               <div class="relative">
                 <span class="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500">$</span>
-                <KumoInput
+                <KumoInput :aria-label="t('keys.rateLimit7d')"
                   v-model.number="formData.rate_limit_7d"
                   type="number"
                   step="0.01"
@@ -836,7 +836,7 @@
             <!-- Date picker (always show for precise adjustment) -->
             <div>
               <KumoLabel class="input-label">{{ t('keys.expirationDate') }}</KumoLabel>
-              <KumoInput
+              <KumoInput :aria-label="t('keys.expirationDate')"
                 v-model="formData.expiration_date"
                 type="datetime-local"
                 class="input"

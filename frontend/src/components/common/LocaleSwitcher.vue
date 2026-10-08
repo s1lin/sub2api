@@ -6,7 +6,7 @@
       aria-haspopup="true"
       :aria-label="currentLocale?.name"
       @keydown.esc="isOpen = false"
-      class="flex items-center gap-1.5 rounded-lg px-2 py-1.5 text-sm font-medium text-gray-600 transition-colors hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-dark-700"
+      class="platform-nav-control flex items-center gap-1.5 rounded-lg px-2 py-1.5 text-gray-600 transition-colors hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-dark-700"
       :title="currentLocale?.name"
     >
       <span v-if="!textOnly" class="text-base">{{ currentLocale?.flag }}</span>
@@ -14,7 +14,7 @@
       <Icon
         name="chevronDown"
         size="xs"
-        class="text-gray-400 transition-transform duration-200"
+        class="platform-nav-chevron text-gray-400 transition-transform duration-200"
         :class="{ 'rotate-180': isOpen }"
       />
     </KumoDropdownTrigger>
@@ -22,7 +22,7 @@
 
       <KumoDropdownContent
         @keydown.esc="isOpen = false"
-        class="    w-32 overflow-hidden rounded-lg border border-gray-200 bg-white shadow-lg dark:border-dark-700 dark:bg-dark-800"
+        class="platform-nav-menu w-32 overflow-hidden rounded-lg border border-gray-200 bg-white shadow-lg dark:border-dark-700 dark:bg-dark-800"
       >
         <KumoDropdownItem
           v-for="locale in availableLocales"

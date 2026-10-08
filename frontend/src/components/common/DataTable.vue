@@ -25,7 +25,7 @@
     <template v-else>
       <div v-if="selectable" class="flex items-center justify-end gap-2 px-1">
         <KumoLabel class="flex items-center gap-2 text-sm font-medium text-gray-600 dark:text-gray-300">
-          <KumoCheckbox
+          <KumoCheckbox :aria-label="t('common.selectAll')"
             type="checkbox"
             class="h-4 w-4 rounded border-gray-300 text-primary-600 focus:ring-primary-500 dark:border-dark-600 dark:bg-dark-800"
             :checked="allVisibleSelected"

@@ -421,28 +421,28 @@ onMounted(async () => {
         <span v-if="runtimeLoading" class="text-xs text-gray-500">{{ t('common.loading') }}</span>
       </div>
       <div class="grid grid-cols-1 gap-3 md:grid-cols-2 xl:grid-cols-6">
-        <KumoLabel class="text-xs text-gray-600 dark:text-gray-300">
+        <KumoLabel class="block text-xs text-gray-600 dark:text-gray-300">
           {{ t('admin.ops.systemLogs.level') }}
           <Select v-model="runtimeConfig.level" class="mt-1" :options="runtimeLevelOptions" />
         </KumoLabel>
-        <KumoLabel class="text-xs text-gray-600 dark:text-gray-300">
+        <KumoLabel class="block text-xs text-gray-600 dark:text-gray-300">
           {{ t('admin.ops.systemLogs.stacktraceThreshold') }}
           <Select v-model="runtimeConfig.stacktrace_level" class="mt-1" :options="stacktraceLevelOptions" />
         </KumoLabel>
-        <KumoLabel class="text-xs text-gray-600 dark:text-gray-300">
+        <KumoLabel class="block text-xs text-gray-600 dark:text-gray-300">
           {{ t('admin.ops.systemLogs.samplingInitial') }}
-          <KumoInput v-model.number="runtimeConfig.sampling_initial" type="number" min="1" class="input mt-1" />
+          <KumoInput :aria-label="t('admin.ops.systemLogs.samplingInitial')" v-model.number="runtimeConfig.sampling_initial" type="number" min="1" class="input mt-1" />
         </KumoLabel>
-        <KumoLabel class="text-xs text-gray-600 dark:text-gray-300">
+        <KumoLabel class="block text-xs text-gray-600 dark:text-gray-300">
           {{ t('admin.ops.systemLogs.samplingThereafter') }}
-          <KumoInput v-model.number="runtimeConfig.sampling_thereafter" type="number" min="1" class="input mt-1" />
+          <KumoInput :aria-label="t('admin.ops.systemLogs.samplingThereafter')" v-model.number="runtimeConfig.sampling_thereafter" type="number" min="1" class="input mt-1" />
         </KumoLabel>
-        <KumoLabel class="text-xs text-gray-600 dark:text-gray-300">
+        <KumoLabel class="block text-xs text-gray-600 dark:text-gray-300">
           {{ t('admin.ops.systemLogs.retentionDays') }}
           <LogRetentionSelect v-model="runtimeConfig.retention_days" :label="t('admin.ops.systemLogs.retentionDays')" class="mt-1" />
           <span class="mt-1 block text-[11px] text-gray-500 dark:text-gray-400">{{ t('admin.ops.systemLogs.retentionDaysHint') }}</span>
         </KumoLabel>
-        <KumoLabel class="text-xs text-gray-600 dark:text-gray-300">
+        <KumoLabel class="block text-xs text-gray-600 dark:text-gray-300">
           {{ t('admin.ops.systemLogs.requestRetentionDays') }}
           <LogRetentionSelect v-model="runtimeConfig.request_retention_days" :label="t('admin.ops.systemLogs.requestRetentionDays')" allow-forever class="mt-1" />
           <span class="mt-1 block text-[11px] text-gray-500 dark:text-gray-400">{{ t('admin.ops.systemLogs.requestRetentionDaysHint') }}</span>
@@ -451,15 +451,15 @@ onMounted(async () => {
           <div class="grid gap-3 lg:grid-cols-[minmax(0,1fr)_auto] lg:items-end">
             <div class="flex flex-wrap items-center gap-x-4 gap-y-2">
               <KumoLabel class="inline-flex items-center gap-2 text-xs text-gray-600 dark:text-gray-300">
-                <KumoCheckbox v-model="runtimeConfig.caller" type="checkbox" />
+                <KumoCheckbox :aria-label="t('admin.ops.systemLogs.caller')" v-model="runtimeConfig.caller" type="checkbox" />
                 {{ t('admin.ops.systemLogs.caller') }}
               </KumoLabel>
               <KumoLabel class="inline-flex items-center gap-2 text-xs text-gray-600 dark:text-gray-300">
-                <KumoCheckbox v-model="runtimeConfig.enable_sampling" type="checkbox" />
+                <KumoCheckbox :aria-label="t('admin.ops.systemLogs.sampling')" v-model="runtimeConfig.enable_sampling" type="checkbox" />
                 {{ t('admin.ops.systemLogs.sampling') }}
               </KumoLabel>
               <KumoLabel class="inline-flex items-center gap-2 text-xs text-gray-600 dark:text-gray-300">
-                <KumoCheckbox v-model="runtimeConfig.persist_access_logs" type="checkbox" />
+                <KumoCheckbox :aria-label="t('admin.ops.systemLogs.persistAccessLogs')" v-model="runtimeConfig.persist_access_logs" type="checkbox" />
                 {{ t('admin.ops.systemLogs.persistAccessLogs') }}
               </KumoLabel>
             </div>
@@ -479,61 +479,61 @@ onMounted(async () => {
     </div>
 
     <div class="mb-4 grid grid-cols-1 gap-3 md:grid-cols-5">
-      <KumoLabel class="text-xs text-gray-600 dark:text-gray-300">
+      <KumoLabel class="block text-xs text-gray-600 dark:text-gray-300">
         {{ t('admin.ops.systemLogs.timeRange') }}
         <Select v-model="filters.time_range" class="mt-1" :options="timeRangeOptions" />
       </KumoLabel>
-      <KumoLabel class="text-xs text-gray-600 dark:text-gray-300">
+      <KumoLabel class="block text-xs text-gray-600 dark:text-gray-300">
         {{ t('admin.ops.systemLogs.startTime') }}
-        <KumoInput v-model="filters.start_time" type="datetime-local" class="input mt-1" />
+        <KumoInput :aria-label="t('admin.ops.systemLogs.startTime')" v-model="filters.start_time" type="datetime-local" class="input mt-1" />
       </KumoLabel>
-      <KumoLabel class="text-xs text-gray-600 dark:text-gray-300">
+      <KumoLabel class="block text-xs text-gray-600 dark:text-gray-300">
         {{ t('admin.ops.systemLogs.endTime') }}
-        <KumoInput v-model="filters.end_time" type="datetime-local" class="input mt-1" />
+        <KumoInput :aria-label="t('admin.ops.systemLogs.endTime')" v-model="filters.end_time" type="datetime-local" class="input mt-1" />
       </KumoLabel>
-      <KumoLabel class="text-xs text-gray-600 dark:text-gray-300">
+      <KumoLabel class="block text-xs text-gray-600 dark:text-gray-300">
         {{ t('admin.ops.systemLogs.level') }}
         <Select v-model="filters.level" class="mt-1" :options="filterLevelOptions" />
       </KumoLabel>
-      <KumoLabel class="text-xs text-gray-600 dark:text-gray-300">
+      <KumoLabel class="block text-xs text-gray-600 dark:text-gray-300">
         {{ t('admin.ops.systemLogs.component') }}
-        <KumoInput v-model="filters.component" type="text" class="input mt-1" :placeholder="t('admin.ops.systemLogs.componentPlaceholder')" />
+        <KumoInput :aria-label="t('admin.ops.systemLogs.component')" v-model="filters.component" type="text" class="input mt-1" :placeholder="t('admin.ops.systemLogs.componentPlaceholder')" />
       </KumoLabel>
-      <KumoLabel class="text-xs text-gray-600 dark:text-gray-300">
+      <KumoLabel class="block text-xs text-gray-600 dark:text-gray-300">
         {{ t('admin.ops.systemLogs.host') }}
-        <KumoInput v-model="filters.host" type="text" class="input mt-1" />
+        <KumoInput :aria-label="t('admin.ops.systemLogs.host')" v-model="filters.host" type="text" class="input mt-1" />
       </KumoLabel>
-      <KumoLabel class="text-xs text-gray-600 dark:text-gray-300">
+      <KumoLabel class="block text-xs text-gray-600 dark:text-gray-300">
         request_id
-        <KumoInput v-model="filters.request_id" type="text" class="input mt-1" />
+        <KumoInput aria-label="request_id" v-model="filters.request_id" type="text" class="input mt-1" />
       </KumoLabel>
-      <KumoLabel class="text-xs text-gray-600 dark:text-gray-300">
+      <KumoLabel class="block text-xs text-gray-600 dark:text-gray-300">
         client_request_id
-        <KumoInput v-model="filters.client_request_id" type="text" class="input mt-1" />
+        <KumoInput aria-label="client_request_id" v-model="filters.client_request_id" type="text" class="input mt-1" />
       </KumoLabel>
-      <KumoLabel class="text-xs text-gray-600 dark:text-gray-300">
+      <KumoLabel class="block text-xs text-gray-600 dark:text-gray-300">
         user_id
-        <KumoInput v-model="filters.user_id" type="text" class="input mt-1" />
+        <KumoInput aria-label="user_id" v-model="filters.user_id" type="text" class="input mt-1" />
       </KumoLabel>
-      <KumoLabel class="text-xs text-gray-600 dark:text-gray-300">
+      <KumoLabel class="block text-xs text-gray-600 dark:text-gray-300">
         {{ t('admin.ops.systemLogs.keyId') }}
-        <KumoInput v-model="filters.api_key_id" type="text" class="input mt-1" />
+        <KumoInput :aria-label="t('admin.ops.systemLogs.keyId')" v-model="filters.api_key_id" type="text" class="input mt-1" />
       </KumoLabel>
-      <KumoLabel class="text-xs text-gray-600 dark:text-gray-300">
+      <KumoLabel class="block text-xs text-gray-600 dark:text-gray-300">
         account_id
-        <KumoInput v-model="filters.account_id" type="text" class="input mt-1" />
+        <KumoInput aria-label="account_id" v-model="filters.account_id" type="text" class="input mt-1" />
       </KumoLabel>
-      <KumoLabel class="text-xs text-gray-600 dark:text-gray-300">
+      <KumoLabel class="block text-xs text-gray-600 dark:text-gray-300">
         {{ t('admin.ops.systemLogs.platform') }}
-        <KumoInput v-model="filters.platform" type="text" class="input mt-1" />
+        <KumoInput :aria-label="t('admin.ops.systemLogs.platform')" v-model="filters.platform" type="text" class="input mt-1" />
       </KumoLabel>
-      <KumoLabel class="text-xs text-gray-600 dark:text-gray-300">
+      <KumoLabel class="block text-xs text-gray-600 dark:text-gray-300">
         {{ t('admin.ops.systemLogs.model') }}
-        <KumoInput v-model="filters.model" type="text" class="input mt-1" />
+        <KumoInput :aria-label="t('admin.ops.systemLogs.model')" v-model="filters.model" type="text" class="input mt-1" />
       </KumoLabel>
-      <KumoLabel class="text-xs text-gray-600 dark:text-gray-300">
+      <KumoLabel class="block text-xs text-gray-600 dark:text-gray-300">
         {{ t('admin.ops.systemLogs.keyword') }}
-        <KumoInput v-model="filters.q" type="text" class="input mt-1" :placeholder="t('admin.ops.systemLogs.keywordPlaceholder')" />
+        <KumoInput :aria-label="t('admin.ops.systemLogs.keyword')" v-model="filters.q" type="text" class="input mt-1" :placeholder="t('admin.ops.systemLogs.keywordPlaceholder')" />
       </KumoLabel>
     </div>
 

@@ -17,30 +17,30 @@
         <div class="grid grid-cols-1 gap-3 md:grid-cols-2">
           <div>
             <KumoLabel class="mb-1 block text-xs font-medium text-gray-600 dark:text-gray-400">{{ t('admin.backup.s3.endpoint') }}</KumoLabel>
-            <KumoInput v-model="s3Form.endpoint" class="input w-full" placeholder="https://<account_id>.r2.cloudflarestorage.com" />
+            <KumoInput :aria-label="t('admin.backup.s3.endpoint')" v-model="s3Form.endpoint" class="input w-full" placeholder="https://<account_id>.r2.cloudflarestorage.com" />
           </div>
           <div>
             <KumoLabel class="mb-1 block text-xs font-medium text-gray-600 dark:text-gray-400">{{ t('admin.backup.s3.region') }}</KumoLabel>
-            <KumoInput v-model="s3Form.region" class="input w-full" placeholder="auto" />
+            <KumoInput :aria-label="t('admin.backup.s3.region')" v-model="s3Form.region" class="input w-full" placeholder="auto" />
           </div>
           <div>
             <KumoLabel class="mb-1 block text-xs font-medium text-gray-600 dark:text-gray-400">{{ t('admin.backup.s3.bucket') }}</KumoLabel>
-            <KumoInput v-model="s3Form.bucket" class="input w-full" />
+            <KumoInput :aria-label="t('admin.backup.s3.bucket')" v-model="s3Form.bucket" class="input w-full" />
           </div>
           <div>
             <KumoLabel class="mb-1 block text-xs font-medium text-gray-600 dark:text-gray-400">{{ t('admin.backup.s3.prefix') }}</KumoLabel>
-            <KumoInput v-model="s3Form.prefix" class="input w-full" placeholder="backups/" />
+            <KumoInput :aria-label="t('admin.backup.s3.prefix')" v-model="s3Form.prefix" class="input w-full" placeholder="backups/" />
           </div>
           <div>
             <KumoLabel class="mb-1 block text-xs font-medium text-gray-600 dark:text-gray-400">{{ t('admin.backup.s3.accessKeyId') }}</KumoLabel>
-            <KumoInput v-model="s3Form.access_key_id" class="input w-full" />
+            <KumoInput :aria-label="t('admin.backup.s3.accessKeyId')" v-model="s3Form.access_key_id" class="input w-full" />
           </div>
           <div>
             <KumoLabel class="mb-1 block text-xs font-medium text-gray-600 dark:text-gray-400">{{ t('admin.backup.s3.secretAccessKey') }}</KumoLabel>
-            <KumoInput v-model="s3Form.secret_access_key" type="password" class="input w-full" :placeholder="s3SecretConfigured ? t('admin.backup.s3.secretConfigured') : ''" />
+            <KumoInput :aria-label="t('admin.backup.s3.secretAccessKey')" v-model="s3Form.secret_access_key" type="password" class="input w-full" :placeholder="s3SecretConfigured ? t('admin.backup.s3.secretConfigured') : ''" />
           </div>
           <KumoLabel class="inline-flex items-center gap-2 text-sm text-gray-700 dark:text-gray-300 md:col-span-2">
-            <KumoCheckbox v-model="s3Form.force_path_style" type="checkbox" />
+            <KumoCheckbox :aria-label="t('admin.backup.s3.forcePathStyle')" v-model="s3Form.force_path_style" type="checkbox" />
             <span>{{ t('admin.backup.s3.forcePathStyle') }}</span>
           </KumoLabel>
         </div>
@@ -66,56 +66,56 @@
             </p>
           </div>
           <KumoLabel class="inline-flex items-center gap-2 text-sm text-gray-700 dark:text-gray-300">
-            <KumoCheckbox v-model="imageStorageForm.enabled" type="checkbox" />
+            <KumoCheckbox :aria-label="t('admin.backup.imageStorage.enabled')" v-model="imageStorageForm.enabled" type="checkbox" />
             <span>{{ t('admin.backup.imageStorage.enabled') }}</span>
           </KumoLabel>
         </div>
 
         <KumoLabel class="inline-flex items-center gap-2 text-sm text-gray-700 dark:text-gray-300">
-          <KumoCheckbox v-model="imageStorageForm.reuse_backup_s3" type="checkbox" />
+          <KumoCheckbox :aria-label="t('admin.backup.imageStorage.reuseBackupS3')" v-model="imageStorageForm.reuse_backup_s3" type="checkbox" />
           <span>{{ t('admin.backup.imageStorage.reuseBackupS3') }}</span>
         </KumoLabel>
 
         <div class="mt-3 grid grid-cols-1 gap-3 md:grid-cols-2">
           <div>
             <KumoLabel class="mb-1 block text-xs font-medium text-gray-600 dark:text-gray-400">{{ t('admin.backup.imageStorage.bucket') }}</KumoLabel>
-            <KumoInput v-model="imageStorageForm.bucket" class="input w-full" :placeholder="imageStorageForm.reuse_backup_s3 ? t('admin.backup.imageStorage.bucketInherited') : ''" />
+            <KumoInput :aria-label="t('admin.backup.imageStorage.bucket')" v-model="imageStorageForm.bucket" class="input w-full" :placeholder="imageStorageForm.reuse_backup_s3 ? t('admin.backup.imageStorage.bucketInherited') : ''" />
           </div>
           <div>
             <KumoLabel class="mb-1 block text-xs font-medium text-gray-600 dark:text-gray-400">{{ t('admin.backup.imageStorage.prefix') }}</KumoLabel>
-            <KumoInput v-model="imageStorageForm.prefix" class="input w-full" placeholder="images/" />
+            <KumoInput :aria-label="t('admin.backup.imageStorage.prefix')" v-model="imageStorageForm.prefix" class="input w-full" placeholder="images/" />
           </div>
 
           <template v-if="!imageStorageForm.reuse_backup_s3">
             <div>
               <KumoLabel class="mb-1 block text-xs font-medium text-gray-600 dark:text-gray-400">{{ t('admin.backup.s3.endpoint') }}</KumoLabel>
-              <KumoInput v-model="imageStorageForm.endpoint" class="input w-full" placeholder="https://<account_id>.r2.cloudflarestorage.com" />
+              <KumoInput :aria-label="t('admin.backup.s3.endpoint')" v-model="imageStorageForm.endpoint" class="input w-full" placeholder="https://<account_id>.r2.cloudflarestorage.com" />
             </div>
             <div>
               <KumoLabel class="mb-1 block text-xs font-medium text-gray-600 dark:text-gray-400">{{ t('admin.backup.s3.region') }}</KumoLabel>
-              <KumoInput v-model="imageStorageForm.region" class="input w-full" placeholder="auto" />
+              <KumoInput :aria-label="t('admin.backup.s3.region')" v-model="imageStorageForm.region" class="input w-full" placeholder="auto" />
             </div>
             <div>
               <KumoLabel class="mb-1 block text-xs font-medium text-gray-600 dark:text-gray-400">{{ t('admin.backup.s3.accessKeyId') }}</KumoLabel>
-              <KumoInput v-model="imageStorageForm.access_key_id" class="input w-full" />
+              <KumoInput :aria-label="t('admin.backup.s3.accessKeyId')" v-model="imageStorageForm.access_key_id" class="input w-full" />
             </div>
             <div>
               <KumoLabel class="mb-1 block text-xs font-medium text-gray-600 dark:text-gray-400">{{ t('admin.backup.s3.secretAccessKey') }}</KumoLabel>
-              <KumoInput v-model="imageStorageForm.secret_access_key" type="password" class="input w-full" :placeholder="imageStorageSecretConfigured ? t('admin.backup.s3.secretConfigured') : ''" />
+              <KumoInput :aria-label="t('admin.backup.s3.secretAccessKey')" v-model="imageStorageForm.secret_access_key" type="password" class="input w-full" :placeholder="imageStorageSecretConfigured ? t('admin.backup.s3.secretConfigured') : ''" />
             </div>
             <KumoLabel class="inline-flex items-center gap-2 text-sm text-gray-700 dark:text-gray-300 md:col-span-2">
-              <KumoCheckbox v-model="imageStorageForm.force_path_style" type="checkbox" />
+              <KumoCheckbox :aria-label="t('admin.backup.s3.forcePathStyle')" v-model="imageStorageForm.force_path_style" type="checkbox" />
               <span>{{ t('admin.backup.s3.forcePathStyle') }}</span>
             </KumoLabel>
           </template>
 
           <div>
             <KumoLabel class="mb-1 block text-xs font-medium text-gray-600 dark:text-gray-400">{{ t('admin.backup.imageStorage.publicBaseUrl') }}</KumoLabel>
-            <KumoInput v-model="imageStorageForm.public_base_url" class="input w-full" :placeholder="t('admin.backup.imageStorage.publicBaseUrlPlaceholder')" />
+            <KumoInput :aria-label="t('admin.backup.imageStorage.publicBaseUrl')" v-model="imageStorageForm.public_base_url" class="input w-full" :placeholder="t('admin.backup.imageStorage.publicBaseUrlPlaceholder')" />
           </div>
           <div>
             <KumoLabel class="mb-1 block text-xs font-medium text-gray-600 dark:text-gray-400">{{ t('admin.backup.imageStorage.presignExpiryHours') }}</KumoLabel>
-            <KumoInput v-model.number="imageStorageForm.presign_expiry_hours" type="number" min="1" class="input w-full" />
+            <KumoInput :aria-label="t('admin.backup.imageStorage.presignExpiryHours')" v-model.number="imageStorageForm.presign_expiry_hours" type="number" min="1" class="input w-full" />
           </div>
         </div>
 
@@ -141,23 +141,23 @@
         </div>
         <div class="grid grid-cols-1 gap-3 md:grid-cols-2">
           <KumoLabel class="inline-flex items-center gap-2 text-sm text-gray-700 dark:text-gray-300 md:col-span-2">
-            <KumoCheckbox v-model="scheduleForm.enabled" type="checkbox" />
+            <KumoCheckbox :aria-label="t('admin.backup.schedule.enabled')" v-model="scheduleForm.enabled" type="checkbox" />
             <span>{{ t('admin.backup.schedule.enabled') }}</span>
           </KumoLabel>
           <div>
             <KumoLabel class="mb-1 block text-xs font-medium text-gray-600 dark:text-gray-400">{{ t('admin.backup.schedule.cronExpr') }}</KumoLabel>
-            <KumoInput v-model="scheduleForm.cron_expr" class="input w-full" placeholder="0 2 * * *" />
+            <KumoInput :aria-label="t('admin.backup.schedule.cronExpr')" v-model="scheduleForm.cron_expr" class="input w-full" placeholder="0 2 * * *" />
             <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">{{ t('admin.backup.schedule.cronHint') }}</p>
           </div>
           <h4 class="mt-2 text-sm font-medium text-gray-900 dark:text-white md:col-span-2">{{ t('admin.backup.schedule.ordinaryRetention') }}</h4>
           <div>
             <KumoLabel class="mb-1 block text-xs font-medium text-gray-600 dark:text-gray-400">{{ t('admin.backup.schedule.retainDays') }}</KumoLabel>
-            <KumoInput v-model.number="scheduleForm.retain_days" data-testid="backup-retain-days" type="number" min="0" step="1" class="input w-full" />
+            <KumoInput :aria-label="t('admin.backup.schedule.retainDays')" v-model.number="scheduleForm.retain_days" data-testid="backup-retain-days" type="number" min="0" step="1" class="input w-full" />
             <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">{{ t('admin.backup.schedule.retainDaysHint') }}</p>
           </div>
           <div>
             <KumoLabel class="mb-1 block text-xs font-medium text-gray-600 dark:text-gray-400">{{ t('admin.backup.schedule.retainCount') }}</KumoLabel>
-            <KumoInput v-model.number="scheduleForm.retain_count" data-testid="backup-retain-count" type="number" min="0" step="1" class="input w-full" />
+            <KumoInput :aria-label="t('admin.backup.schedule.retainCount')" v-model.number="scheduleForm.retain_count" data-testid="backup-retain-count" type="number" min="0" step="1" class="input w-full" />
             <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">{{ t('admin.backup.schedule.retainCountHint') }}</p>
           </div>
         </div>
@@ -189,7 +189,7 @@
           <div class="flex flex-wrap items-center gap-2">
             <div class="flex items-center gap-1">
               <KumoLabel class="text-xs text-gray-600 dark:text-gray-400">{{ t('admin.backup.operations.expireDays') }}</KumoLabel>
-              <KumoInput v-model.number="manualExpireDays" type="number" min="0" class="input w-20 text-xs" />
+              <KumoInput :aria-label="t('admin.backup.operations.expireDays')" v-model.number="manualExpireDays" type="number" min="0" class="input w-20 text-xs" />
             </div>
             <KumoButton type="button" class="btn btn-primary btn-sm" :disabled="creatingBackup" @click="createBackup">
               {{ creatingBackup ? t('admin.backup.operations.backing') : t('admin.backup.operations.createBackup') }}

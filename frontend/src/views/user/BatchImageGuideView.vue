@@ -83,7 +83,7 @@
           row-key="id"
         >
           <template #header-select>
-            <KumoCheckbox
+            <KumoCheckbox :aria-label="t('common.selectAll')"
               type="checkbox"
               class="h-4 w-4 rounded border-gray-300 text-primary-600 focus:ring-primary-500"
               :checked="allVisibleSelected"
@@ -93,7 +93,7 @@
           </template>
 
           <template #cell-select="{ row }">
-            <KumoCheckbox
+            <KumoCheckbox :aria-label="row.task_name || defaultTaskName(row.created_at)"
               type="checkbox"
               class="h-4 w-4 rounded border-gray-300 text-primary-600 focus:ring-primary-500"
               :checked="selectedJobIds.has(row.id)"
@@ -492,7 +492,7 @@
         <div class="grid gap-4 md:grid-cols-2">
           <div class="md:col-span-2">
             <KumoLabel class="input-label">{{ t('batchImage.create.taskName') }}</KumoLabel>
-            <KumoInput
+            <KumoInput :aria-label="t('batchImage.create.taskName')"
               v-model="form.taskName"
               type="text"
               maxlength="255"
@@ -562,14 +562,14 @@
             <span class="text-xs text-gray-500 dark:text-gray-400">{{ t('batchImage.create.promptAdded', { count: promptRows.length }) }}</span>
           </div>
           <div class="rounded-lg border border-gray-200 p-3 dark:border-dark-700">
-            <KumoTextarea
+            <KumoTextarea :aria-label="'Prompt'"
               v-model="promptDraft"
               rows="3"
               class="h-[76px] w-full resize-y rounded-md border border-gray-300 px-3 py-2 text-sm leading-5 outline-none focus:border-primary-500 focus:ring-2 focus:ring-primary-100 dark:border-dark-600 dark:bg-dark-900 dark:text-gray-100 dark:focus:border-primary-500 dark:focus:ring-primary-900/40"
               :placeholder="t('batchImage.create.promptPlaceholder')"
             />
             <div class="mt-2 grid gap-2 md:grid-cols-[minmax(0,1fr)_112px_132px_112px] md:items-center">
-              <KumoInput
+              <KumoInput :aria-label="t('batchImage.create.customIdPlaceholder')"
                 v-model="customIdDraft"
                 type="text"
                 maxlength="255"
@@ -592,7 +592,7 @@
               >
                 <Icon name="upload" size="sm" class="mr-1.5" />
                 {{ t('batchImage.create.referenceImage') }}
-                <KumoInput
+                <KumoInput :aria-label="t('batchImage.create.referenceImage')"
                   type="file"
                   accept="image/png,image/jpeg,image/webp"
                   multiple
@@ -681,7 +681,7 @@
 	            <h3 class="text-sm font-semibold text-gray-900 dark:text-white">{{ t('batchImage.guide.skillTitle') }}</h3>
 	            <p class="text-xs text-gray-500 dark:text-gray-400">{{ t('batchImage.guide.skillDesc') }}</p>
 	          </div>
-	        <KumoTextarea
+	        <KumoTextarea :aria-label="t('batchImage.guide.skillTitle')"
 	          :value="agentInstruction"
 	          readonly
 	          class="min-h-[420px] w-full resize-y rounded-md border border-gray-200 bg-gray-50 p-4 font-mono text-sm leading-6 text-gray-800 outline-none focus:border-primary-400 focus:ring-2 focus:ring-primary-100 dark:border-dark-600 dark:bg-dark-900 dark:text-gray-100 dark:focus:border-primary-500 dark:focus:ring-primary-900/40"

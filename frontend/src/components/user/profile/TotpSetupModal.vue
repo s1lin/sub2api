@@ -24,7 +24,7 @@
               <div>
                 <KumoLabel class="input-label">{{ t('profile.totp.emailCode') }}</KumoLabel>
                 <div class="flex gap-2">
-                  <KumoInput
+                  <KumoInput :aria-label="t('profile.totp.emailCode')"
                     v-model="verifyForm.emailCode"
                     type="text"
                     maxlength="6"
@@ -48,7 +48,7 @@
             <div v-else class="space-y-4">
               <div>
                 <KumoLabel class="input-label">{{ t('profile.currentPassword') }}</KumoLabel>
-                <KumoInput
+                <KumoInput :aria-label="t('profile.currentPassword')"
                   v-model="verifyForm.password"
                   type="password"
                   autocomplete="current-password"
@@ -128,7 +128,7 @@
                 {{ t('profile.totp.enterCode') }}
               </KumoLabel>
               <div class="flex justify-center gap-2">
-                <KumoInput
+                <KumoInput :aria-label="t('profile.totp.enterCode') + ' — ' + (index + 1)"
                   v-for="(_, index) in 6"
                   :key="index"
                   :ref="(el: any) => setInputRef(el, index)"

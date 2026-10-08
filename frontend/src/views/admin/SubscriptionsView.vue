@@ -108,7 +108,7 @@
                     </KumoButton>
                   </div>
                   <!-- Other columns toggle -->
-                  <KumoLabel v-for="col in toggleableColumns" :key="col.key" class="flex w-full cursor-pointer items-center gap-2 px-3 py-2 text-sm"><KumoCheckbox :checked="isColumnVisible(col.key)"   @change="toggleColumn(col.key)" /><span>{{ col.label }}</span></KumoLabel>
+                  <KumoLabel v-for="col in toggleableColumns" :key="col.key" class="flex w-full cursor-pointer items-center gap-2 px-3 py-2 text-sm"><KumoCheckbox :aria-label="col.label" :checked="isColumnVisible(col.key)"   @change="toggleColumn(col.key)" /><span>{{ col.label }}</span></KumoLabel>
                 </div>
               </KumoPopoverContent></KumoPopoverRoot>
             <KumoButton
@@ -437,7 +437,7 @@
         class="space-y-5"
       >
         <KumoLabel class="flex items-center gap-2 text-sm text-gray-700 dark:text-gray-300">
-          <KumoCheckbox v-model="batchAssignEnabled" type="checkbox" :disabled="submitting" @change="resetAssignUsers" />
+          <KumoCheckbox :aria-label="t('admin.subscriptions.batchAssign.enable')" v-model="batchAssignEnabled" type="checkbox" :disabled="submitting" @change="resetAssignUsers" />
           {{ t('admin.subscriptions.batchAssign.enable') }}
         </KumoLabel>
         <p v-if="batchAssignEnabled" class="input-hint">{{ t('admin.subscriptions.batchAssign.hint') }}</p>
@@ -514,7 +514,7 @@
         </div>
         <div>
           <KumoLabel class="input-label">{{ t('admin.subscriptions.form.validityDays') }}</KumoLabel>
-          <KumoInput v-model.number="assignForm.validity_days" type="number" min="1" max="36500" step="1" :disabled="submitting" class="input" />
+          <KumoInput :aria-label="t('admin.subscriptions.form.validityDays')" v-model.number="assignForm.validity_days" type="number" min="1" max="36500" step="1" :disabled="submitting" class="input" />
           <p class="input-hint">{{ t('admin.subscriptions.validityHint') }}</p>
         </div>
         <div v-if="batchAssignResult" class="space-y-2 text-sm" role="status" data-test="batch-assign-result">
@@ -583,7 +583,7 @@
         <div>
           <KumoLabel class="input-label">{{ t('admin.subscriptions.form.adjustDays') }}</KumoLabel>
           <div class="flex items-center gap-2">
-            <KumoInput
+            <KumoInput :aria-label="t('admin.subscriptions.form.adjustDays')"
               v-model.number="extendForm.days"
               type="number"
               required

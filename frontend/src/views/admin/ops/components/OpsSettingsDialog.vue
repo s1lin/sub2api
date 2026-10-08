@@ -253,7 +253,7 @@ async function saveAllSettings() {
         <h4 class="mb-3 text-sm font-semibold text-gray-900 dark:text-white">{{ t('admin.ops.settings.dataCollection') }}</h4>
         <div>
           <KumoLabel class="input-label">{{ t('admin.ops.settings.evaluationInterval') }}</KumoLabel>
-          <KumoInput
+          <KumoInput :aria-label="t('admin.ops.settings.evaluationInterval')"
             v-model.number="runtimeSettings.evaluation_interval_seconds"
             type="number"
             min="1"
@@ -279,7 +279,7 @@ async function saveAllSettings() {
           <div v-if="emailConfig.alert.enabled">
             <KumoLabel class="input-label">{{ t('admin.ops.settings.alertRecipients') }}</KumoLabel>
             <div class="flex gap-2">
-              <KumoInput
+              <KumoInput :aria-label="t('admin.ops.settings.alertRecipients')"
                 v-model="alertRecipientInput"
                 type="email"
                 class="input"
@@ -327,7 +327,7 @@ async function saveAllSettings() {
           <div v-if="emailConfig.report.enabled">
             <KumoLabel class="input-label">{{ t('admin.ops.settings.reportRecipients') }}</KumoLabel>
             <div class="flex gap-2">
-              <KumoInput
+              <KumoInput :aria-label="t('admin.ops.settings.reportRecipients')"
                 v-model="reportRecipientInput"
                 type="email"
                 class="input"
@@ -359,14 +359,14 @@ async function saveAllSettings() {
               <Toggle v-model="emailConfig.report.daily_summary_enabled" />
             </div>
             <div v-if="emailConfig.report.daily_summary_enabled">
-              <KumoInput v-model="emailConfig.report.daily_summary_schedule" type="text" class="input" placeholder="0 9 * * *" />
+              <KumoInput :aria-label="t('admin.ops.settings.dailySummary')" v-model="emailConfig.report.daily_summary_schedule" type="text" class="input" placeholder="0 9 * * *" />
             </div>
             <div class="flex items-center justify-between">
               <KumoLabel class="text-sm font-medium text-gray-700 dark:text-gray-300">{{ t('admin.ops.settings.weeklySummary') }}</KumoLabel>
               <Toggle v-model="emailConfig.report.weekly_summary_enabled" />
             </div>
             <div v-if="emailConfig.report.weekly_summary_enabled">
-              <KumoInput v-model="emailConfig.report.weekly_summary_schedule" type="text" class="input" placeholder="0 9 * * 1" />
+              <KumoInput :aria-label="t('admin.ops.settings.weeklySummary')" v-model="emailConfig.report.weekly_summary_schedule" type="text" class="input" placeholder="0 9 * * 1" />
             </div>
           </div>
         </div>
@@ -380,7 +380,7 @@ async function saveAllSettings() {
         <div class="space-y-4">
           <div>
             <KumoLabel class="input-label">{{ t('admin.ops.settings.slaMinPercent') }}</KumoLabel>
-            <KumoInput
+            <KumoInput :aria-label="t('admin.ops.settings.slaMinPercent')"
               v-model.number="metricThresholds.sla_percent_min"
               type="number"
               min="0"
@@ -394,7 +394,7 @@ async function saveAllSettings() {
 
           <div>
             <KumoLabel class="input-label">{{ t('admin.ops.settings.ttftP99MaxMs') }}</KumoLabel>
-            <KumoInput
+            <KumoInput :aria-label="t('admin.ops.settings.ttftP99MaxMs')"
               v-model.number="metricThresholds.ttft_p99_ms_max"
               type="number"
               min="0"
@@ -406,7 +406,7 @@ async function saveAllSettings() {
 
           <div>
             <KumoLabel class="input-label">{{ t('admin.ops.settings.requestErrorRateMaxPercent') }}</KumoLabel>
-            <KumoInput
+            <KumoInput :aria-label="t('admin.ops.settings.requestErrorRateMaxPercent')"
               v-model.number="metricThresholds.request_error_rate_percent_max"
               type="number"
               min="0"
@@ -419,7 +419,7 @@ async function saveAllSettings() {
 
           <div>
             <KumoLabel class="input-label">{{ t('admin.ops.settings.upstreamErrorRateMaxPercent') }}</KumoLabel>
-            <KumoInput
+            <KumoInput :aria-label="t('admin.ops.settings.upstreamErrorRateMaxPercent')"
               v-model.number="metricThresholds.upstream_error_rate_percent_max"
               type="number"
               min="0"
@@ -450,7 +450,7 @@ async function saveAllSettings() {
 
             <div v-if="advancedSettings.data_retention.cleanup_enabled">
               <KumoLabel class="input-label">{{ t('admin.ops.settings.cleanupSchedule') }}</KumoLabel>
-              <KumoInput
+              <KumoInput :aria-label="t('admin.ops.settings.cleanupSchedule')"
                 v-model="advancedSettings.data_retention.cleanup_schedule"
                 type="text"
                 class="input"
@@ -462,7 +462,7 @@ async function saveAllSettings() {
             <div class="grid grid-cols-1 gap-4 md:grid-cols-3">
               <div>
                 <KumoLabel class="input-label">{{ t('admin.ops.settings.errorLogRetentionDays') }}</KumoLabel>
-                <KumoInput
+                <KumoInput :aria-label="t('admin.ops.settings.errorLogRetentionDays')"
                   v-model.number="advancedSettings.data_retention.error_log_retention_days"
                   type="number"
                   min="0"
@@ -472,7 +472,7 @@ async function saveAllSettings() {
               </div>
               <div>
                 <KumoLabel class="input-label">{{ t('admin.ops.settings.minuteMetricsRetentionDays') }}</KumoLabel>
-                <KumoInput
+                <KumoInput :aria-label="t('admin.ops.settings.minuteMetricsRetentionDays')"
                   v-model.number="advancedSettings.data_retention.minute_metrics_retention_days"
                   type="number"
                   min="0"
@@ -482,7 +482,7 @@ async function saveAllSettings() {
               </div>
               <div>
                 <KumoLabel class="input-label">{{ t('admin.ops.settings.hourlyMetricsRetentionDays') }}</KumoLabel>
-                <KumoInput
+                <KumoInput :aria-label="t('admin.ops.settings.hourlyMetricsRetentionDays')"
                   v-model.number="advancedSettings.data_retention.hourly_metrics_retention_days"
                   type="number"
                   min="0"
@@ -515,7 +515,7 @@ async function saveAllSettings() {
             <div class="grid grid-cols-1 gap-4 md:grid-cols-2">
               <div>
                 <KumoLabel class="input-label">{{ t('admin.ops.settings.openaiQuotaAutoPauseDefault5h') }}</KumoLabel>
-                <KumoInput
+                <KumoInput :aria-label="t('admin.ops.settings.openaiQuotaAutoPauseDefault5h')"
                   v-model.number="quotaAutoPause5hPercent"
                   type="number"
                   min="0"
@@ -527,7 +527,7 @@ async function saveAllSettings() {
               </div>
               <div>
                 <KumoLabel class="input-label">{{ t('admin.ops.settings.openaiQuotaAutoPauseDefault7d') }}</KumoLabel>
-                <KumoInput
+                <KumoInput :aria-label="t('admin.ops.settings.openaiQuotaAutoPauseDefault7d')"
                   v-model.number="quotaAutoPause7dPercent"
                   type="number"
                   min="0"

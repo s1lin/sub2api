@@ -26,7 +26,7 @@
         <div class="select-header">
           <div class="select-search">
             <Icon name="search" size="sm" class="text-gray-400" />
-            <KumoInput
+            <KumoInput :aria-label="t('admin.proxies.searchProxies')"
               ref="searchInputRef"
               v-model="searchQuery"
               type="text"

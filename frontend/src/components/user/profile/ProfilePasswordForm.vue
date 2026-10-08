@@ -19,7 +19,7 @@
           <KumoLabel for="old_password" class="input-label">
             {{ t('profile.currentPassword') }}
           </KumoLabel>
-          <KumoInput
+          <KumoInput :aria-label="t('profile.currentPassword')"
             id="old_password"
             v-model="form.old_password"
             type="password"
@@ -33,7 +33,7 @@
           <KumoLabel for="new_password" class="input-label">
             {{ t('profile.newPassword') }}
           </KumoLabel>
-          <KumoInput
+          <KumoInput :aria-label="t('profile.newPassword')"
             id="new_password"
             v-model="form.new_password"
             type="password"
@@ -50,7 +50,7 @@
           <KumoLabel for="confirm_password" class="input-label">
             {{ t('profile.confirmNewPassword') }}
           </KumoLabel>
-          <KumoInput
+          <KumoInput :aria-label="t('profile.confirmNewPassword')"
             id="confirm_password"
             v-model="form.confirm_password"
             type="password"

@@ -526,12 +526,12 @@ function cancelDelete() {
         <div class="grid grid-cols-1 gap-4 md:grid-cols-2">
           <div class="md:col-span-2">
             <KumoLabel class="input-label">{{ t('admin.ops.alertRules.form.name') }}</KumoLabel>
-            <KumoInput v-model="draft!.name" class="input" type="text" />
+            <KumoInput :aria-label="t('admin.ops.alertRules.form.name')" v-model="draft!.name" class="input" type="text" />
           </div>
 
           <div class="md:col-span-2">
             <KumoLabel class="input-label">{{ t('admin.ops.alertRules.form.description') }}</KumoLabel>
-            <KumoInput v-model="draft!.description" class="input" type="text" />
+            <KumoInput :aria-label="t('admin.ops.alertRules.form.description')" v-model="draft!.description" class="input" type="text" />
           </div>
 
           <div>
@@ -575,7 +575,7 @@ function cancelDelete() {
 
           <div>
             <KumoLabel class="input-label">{{ t('admin.ops.alertRules.form.threshold') }}</KumoLabel>
-            <KumoInput v-model.number="draft!.threshold" class="input" type="number" />
+            <KumoInput :aria-label="t('admin.ops.alertRules.form.threshold')" v-model.number="draft!.threshold" class="input" type="number" />
           </div>
 
           <div>
@@ -590,22 +590,22 @@ function cancelDelete() {
 
           <div>
             <KumoLabel class="input-label">{{ t('admin.ops.alertRules.form.sustained') }}</KumoLabel>
-            <KumoInput v-model.number="draft!.sustained_minutes" class="input" type="number" min="1" max="1440" />
+            <KumoInput :aria-label="t('admin.ops.alertRules.form.sustained')" v-model.number="draft!.sustained_minutes" class="input" type="number" min="1" max="1440" />
           </div>
 
           <div>
             <KumoLabel class="input-label">{{ t('admin.ops.alertRules.form.cooldown') }}</KumoLabel>
-            <KumoInput v-model.number="draft!.cooldown_minutes" class="input" type="number" min="0" max="1440" />
+            <KumoInput :aria-label="t('admin.ops.alertRules.form.cooldown')" v-model.number="draft!.cooldown_minutes" class="input" type="number" min="0" max="1440" />
           </div>
 
           <div class="flex items-center justify-between rounded-xl bg-gray-50 px-4 py-3 dark:bg-dark-800/50 md:col-span-2">
             <span class="text-xs font-bold text-gray-700 dark:text-gray-200">{{ t('admin.ops.alertRules.form.enabled') }}</span>
-            <KumoCheckbox v-model="draft!.enabled" type="checkbox" class="h-4 w-4 rounded border-gray-300 text-primary-600 focus:ring-primary-500" />
+            <KumoCheckbox :aria-label="t('admin.ops.alertRules.form.enabled')" v-model="draft!.enabled" type="checkbox" class="h-4 w-4 rounded border-gray-300 text-primary-600 focus:ring-primary-500" />
           </div>
 
           <div class="flex items-center justify-between rounded-xl bg-gray-50 px-4 py-3 dark:bg-dark-800/50 md:col-span-2">
             <span class="text-xs font-bold text-gray-700 dark:text-gray-200">{{ t('admin.ops.alertRules.form.notifyEmail') }}</span>
-            <KumoCheckbox v-model="draft!.notify_email" type="checkbox" class="h-4 w-4 rounded border-gray-300 text-primary-600 focus:ring-primary-500" />
+            <KumoCheckbox :aria-label="t('admin.ops.alertRules.form.notifyEmail')" v-model="draft!.notify_email" type="checkbox" class="h-4 w-4 rounded border-gray-300 text-primary-600 focus:ring-primary-500" />
           </div>
         </div>
       </div>

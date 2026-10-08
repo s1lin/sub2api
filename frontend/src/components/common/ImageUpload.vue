@@ -43,7 +43,7 @@
     <div class="flex-1 space-y-2">
       <div class="flex items-center gap-2">
         <KumoLabel class="btn btn-secondary btn-sm cursor-pointer">
-          <KumoInput
+          <KumoInput :aria-label="resolvedUploadLabel"
             type="file"
             :accept="acceptTypes"
             class="hidden"

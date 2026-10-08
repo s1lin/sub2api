@@ -321,7 +321,7 @@ onMounted(() => {
 
       <div>
         <div class="mb-1 text-xs font-medium text-gray-600 dark:text-gray-300">{{ t('admin.ops.runtime.evalIntervalSeconds') }}</div>
-        <KumoInput
+        <KumoInput :aria-label="t('admin.ops.runtime.evalIntervalSeconds')"
           v-model.number="draftAlert.evaluation_interval_seconds"
           type="number"
           min="1"
@@ -339,7 +339,7 @@ onMounted(() => {
         <div class="grid grid-cols-1 gap-4 md:grid-cols-2">
           <div>
             <div class="mb-1 text-xs font-medium text-gray-600 dark:text-gray-300">{{ t('admin.ops.runtime.slaMinPercent') }}</div>
-            <KumoInput
+            <KumoInput :aria-label="t('admin.ops.runtime.slaMinPercent')"
               v-model.number="draftAlert.thresholds.sla_percent_min"
               type="number"
               min="0"
@@ -355,7 +355,7 @@ onMounted(() => {
 
           <div>
             <div class="mb-1 text-xs font-medium text-gray-600 dark:text-gray-300">{{ t('admin.ops.runtime.ttftP99MaxMs') }}</div>
-            <KumoInput
+            <KumoInput :aria-label="t('admin.ops.runtime.ttftP99MaxMs')"
               v-model.number="draftAlert.thresholds.ttft_p99_ms_max"
               type="number"
               min="0"
@@ -368,7 +368,7 @@ onMounted(() => {
 
           <div>
             <div class="mb-1 text-xs font-medium text-gray-600 dark:text-gray-300">{{ t('admin.ops.runtime.requestErrorRateMaxPercent') }}</div>
-            <KumoInput
+            <KumoInput :aria-label="t('admin.ops.runtime.requestErrorRateMaxPercent')"
               v-model.number="draftAlert.thresholds.request_error_rate_percent_max"
               type="number"
               min="0"
@@ -382,7 +382,7 @@ onMounted(() => {
 
           <div>
             <div class="mb-1 text-xs font-medium text-gray-600 dark:text-gray-300">{{ t('admin.ops.runtime.upstreamErrorRateMaxPercent') }}</div>
-            <KumoInput
+            <KumoInput :aria-label="t('admin.ops.runtime.upstreamErrorRateMaxPercent')"
               v-model.number="draftAlert.thresholds.upstream_error_rate_percent_max"
               type="number"
               min="0"
@@ -400,14 +400,14 @@ onMounted(() => {
         <div class="mb-2 text-sm font-semibold text-gray-900 dark:text-white">{{ t('admin.ops.runtime.silencing.title') }}</div>
 
         <KumoLabel class="inline-flex items-center gap-2 text-sm text-gray-700 dark:text-gray-300">
-          <KumoCheckbox v-model="draftAlert.silencing.enabled" type="checkbox" class="h-4 w-4 rounded border-gray-300" />
+          <KumoCheckbox :aria-label="t('admin.ops.runtime.silencing.enabled')" v-model="draftAlert.silencing.enabled" type="checkbox" class="h-4 w-4 rounded border-gray-300" />
           <span>{{ t('admin.ops.runtime.silencing.enabled') }}</span>
         </KumoLabel>
 
         <div v-if="draftAlert.silencing.enabled" class="mt-4 space-y-4">
           <div>
             <div class="mb-1 text-xs font-medium text-gray-600 dark:text-gray-300">{{ t('admin.ops.runtime.silencing.globalUntil') }}</div>
-            <KumoInput
+            <KumoInput :aria-label="t('admin.ops.runtime.silencing.globalUntil')"
               v-model="draftAlert.silencing.global_until_rfc3339"
               type="text"
               class="input font-mono text-sm"
@@ -418,7 +418,7 @@ onMounted(() => {
 
           <div>
             <div class="mb-1 text-xs font-medium text-gray-600 dark:text-gray-300">{{ t('admin.ops.runtime.silencing.reason') }}</div>
-            <KumoInput
+            <KumoInput :aria-label="t('admin.ops.runtime.silencing.reason')"
               v-model="draftAlert.silencing.global_reason"
               type="text"
               class="input"
@@ -457,7 +457,7 @@ onMounted(() => {
                 <div class="grid grid-cols-1 gap-3 md:grid-cols-2">
                   <div>
                     <div class="mb-1 text-xs font-medium text-gray-600 dark:text-gray-300">{{ t('admin.ops.runtime.silencing.entries.ruleId') }}</div>
-                    <KumoInput
+                    <KumoInput :aria-label="t('admin.ops.runtime.silencing.entries.ruleId')"
                       :value="typeof (entry as any).rule_id === 'number' ? String((entry as any).rule_id) : ''"
                       type="text"
                       class="input font-mono text-sm"
@@ -468,7 +468,7 @@ onMounted(() => {
 
                   <div>
                     <div class="mb-1 text-xs font-medium text-gray-600 dark:text-gray-300">{{ t('admin.ops.runtime.silencing.entries.severities') }}</div>
-                    <KumoInput
+                    <KumoInput :aria-label="t('admin.ops.runtime.silencing.entries.severities')"
                       :value="Array.isArray((entry as any).severities) ? (entry as any).severities.join(', ') : ''"
                       type="text"
                       class="input font-mono text-sm"
@@ -479,7 +479,7 @@ onMounted(() => {
 
                   <div>
                     <div class="mb-1 text-xs font-medium text-gray-600 dark:text-gray-300">{{ t('admin.ops.runtime.silencing.entries.until') }}</div>
-                    <KumoInput
+                    <KumoInput :aria-label="t('admin.ops.runtime.silencing.entries.until')"
                       v-model="(entry as any).until_rfc3339"
                       type="text"
                       class="input font-mono text-sm"
@@ -489,7 +489,7 @@ onMounted(() => {
 
                   <div>
                     <div class="mb-1 text-xs font-medium text-gray-600 dark:text-gray-300">{{ t('admin.ops.runtime.silencing.entries.reason') }}</div>
-                    <KumoInput
+                    <KumoInput :aria-label="t('admin.ops.runtime.silencing.entries.reason')"
                       v-model="(entry as any).reason"
                       type="text"
                       class="input"
@@ -509,20 +509,20 @@ onMounted(() => {
         <div class="mt-3 grid grid-cols-1 gap-4 md:grid-cols-2">
           <div>
             <KumoLabel class="inline-flex items-center gap-2 text-xs text-gray-700 dark:text-gray-300">
-              <KumoCheckbox v-model="draftAlert.distributed_lock.enabled" type="checkbox" class="h-4 w-4 rounded border-gray-300" />
+              <KumoCheckbox :aria-label="t('admin.ops.runtime.lockEnabled')" v-model="draftAlert.distributed_lock.enabled" type="checkbox" class="h-4 w-4 rounded border-gray-300" />
               <span>{{ t('admin.ops.runtime.lockEnabled') }}</span>
             </KumoLabel>
           </div>
           <div class="md:col-span-2">
             <div class="mb-1 text-xs font-medium text-gray-500">{{ t('admin.ops.runtime.lockKey') }}</div>
-            <KumoInput v-model="draftAlert.distributed_lock.key" type="text" class="input text-xs font-mono" />
+            <KumoInput :aria-label="t('admin.ops.runtime.lockKey')" v-model="draftAlert.distributed_lock.key" type="text" class="input text-xs font-mono" />
             <p v-if="draftAlert.distributed_lock.enabled" class="mt-1 text-[11px] text-gray-500 dark:text-gray-400">
               {{ t('admin.ops.runtime.validation.lockKeyHint', { prefix: 'ops:' }) }}
             </p>
           </div>
           <div>
             <div class="mb-1 text-xs font-medium text-gray-500">{{ t('admin.ops.runtime.lockTTLSeconds') }}</div>
-            <KumoInput v-model.number="draftAlert.distributed_lock.ttl_seconds" type="number" min="1" max="86400" class="input text-xs font-mono" />
+            <KumoInput :aria-label="t('admin.ops.runtime.lockTTLSeconds')" v-model.number="draftAlert.distributed_lock.ttl_seconds" type="number" min="1" max="86400" class="input text-xs font-mono" />
           </div>
         </div>
       </KumoCollapsiblePanel>

@@ -13,7 +13,7 @@
                 size="md"
                 class="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"
               />
-              <KumoInput
+              <KumoInput :aria-label="t('admin.users.searchUsers')"
                 v-model="searchQuery"
                 type="text"
                 :placeholder="t('admin.users.searchUsers')"
@@ -79,7 +79,7 @@
                 class="relative w-full sm:w-36"
               >
                 <!-- Text/Email/URL/Textarea/Date type: styled input -->
-                <KumoInput
+                <KumoInput :aria-label="getAttributeDefinitionName(Number(attrId))"
                   v-if="['text', 'textarea', 'email', 'url', 'date'].includes(getAttributeDefinition(Number(attrId))?.type || 'text')"
                   :value="value"
                   @input="(e) => updateAttributeFilter(Number(attrId), (e.target as HTMLInputElement).value)"
@@ -88,7 +88,7 @@
                   class="input w-full"
                 />
                 <!-- Number type: number input -->
-                <KumoInput
+                <KumoInput :aria-label="getAttributeDefinitionName(Number(attrId))"
                   v-else-if="getAttributeDefinition(Number(attrId))?.type === 'number'"
                   :value="value"
                   type="number"
@@ -111,7 +111,7 @@
                   </div>
                 </template>
                 <!-- Fallback -->
-                <KumoInput
+                <KumoInput :aria-label="getAttributeDefinitionName(Number(attrId))"
                   v-else
                   :value="value"
                   @input="(e) => updateAttributeFilter(Number(attrId), (e.target as HTMLInputElement).value)"
@@ -148,14 +148,14 @@
                   class="w-48 rounded-lg border border-gray-200 bg-white py-1 shadow-lg dark:border-dark-600 dark:bg-dark-800"
                 >
                   <!-- Built-in filters -->
-                  <KumoLabel v-for="filter in builtInFilters" :key="filter.key" class="flex w-full cursor-pointer items-center gap-2 px-3 py-2 text-sm"><KumoCheckbox :checked="visibleFilters.has(filter.key)"   @change="toggleBuiltInFilter(filter.key)" /><span>{{ filter.name }}</span></KumoLabel>
+                  <KumoLabel v-for="filter in builtInFilters" :key="filter.key" class="flex w-full cursor-pointer items-center gap-2 px-3 py-2 text-sm"><KumoCheckbox :aria-label="filter.name" :checked="visibleFilters.has(filter.key)"   @change="toggleBuiltInFilter(filter.key)" /><span>{{ filter.name }}</span></KumoLabel>
                   <!-- Divider if custom attributes exist -->
                   <div
                     v-if="filterableAttributes.length > 0"
                     class="my-1 border-t border-gray-100 dark:border-dark-700"
                   ></div>
                   <!-- Custom attribute filters -->
-                  <KumoLabel v-for="attr in filterableAttributes" :key="attr.id" class="flex w-full cursor-pointer items-center gap-2 px-3 py-2 text-sm"><KumoCheckbox :checked="visibleFilters.has(`attr_${attr.id}`)"   @change="toggleAttributeFilter(attr)" /><span>{{ attr.name }}</span></KumoLabel>
+                  <KumoLabel v-for="attr in filterableAttributes" :key="attr.id" class="flex w-full cursor-pointer items-center gap-2 px-3 py-2 text-sm"><KumoCheckbox :aria-label="attr.name" :checked="visibleFilters.has(`attr_${attr.id}`)"   @change="toggleAttributeFilter(attr)" /><span>{{ attr.name }}</span></KumoLabel>
                 </KumoPopoverContent></KumoPopoverRoot>
               <!-- Column Settings Dropdown -->
               <KumoPopoverRoot v-model="showColumnDropdown"><KumoPopoverTrigger
@@ -170,7 +170,7 @@
 <KumoPopoverContent
                   class="max-h-80 w-48 overflow-y-auto rounded-lg border border-gray-200 bg-white py-1 shadow-lg dark:border-dark-600 dark:bg-dark-800"
                 >
-                  <KumoLabel v-for="col in toggleableColumns" :key="col.key" class="flex w-full cursor-pointer items-center gap-2 px-3 py-2 text-sm"><KumoCheckbox :checked="isColumnVisible(col.key)" :disabled="isForcedVisibleColumn(col.key)"  @change="toggleColumn(col.key)" /><span>{{ col.label }}</span></KumoLabel>
+                  <KumoLabel v-for="col in toggleableColumns" :key="col.key" class="flex w-full cursor-pointer items-center gap-2 px-3 py-2 text-sm"><KumoCheckbox :aria-label="col.label" :checked="isColumnVisible(col.key)" :disabled="isForcedVisibleColumn(col.key)"  @change="toggleColumn(col.key)" /><span>{{ col.label }}</span></KumoLabel>
                 </KumoPopoverContent></KumoPopoverRoot>
               <!-- Attributes Config Button -->
               <KumoButton

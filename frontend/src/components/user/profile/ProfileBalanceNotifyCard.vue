@@ -13,7 +13,7 @@
       <div class="flex items-center justify-between">
         <KumoLabel class="input-label mb-0">{{ t('profile.balanceNotify.enabled') }}</KumoLabel>
         <KumoLabel class="relative inline-flex items-center cursor-pointer">
-          <KumoCheckbox type="checkbox" v-model="notifyEnabled" @change="handleToggle" class="sr-only peer" />
+          <KumoCheckbox :aria-label="t('profile.balanceNotify.enabled')" type="checkbox" v-model="notifyEnabled" @change="handleToggle" class="sr-only peer" />
           <div class="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-primary-300 dark:peer-focus:ring-primary-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:after:border-gray-600 peer-checked:bg-primary-600"></div>
         </KumoLabel>
       </div>
@@ -27,7 +27,7 @@
           </KumoLabel>
           <div class="flex items-center gap-2">
             <span class="text-gray-500">$</span>
-            <KumoInput
+            <KumoInput :aria-label="t('profile.balanceNotify.threshold')"
               v-model.number="customThreshold"
               type="number"
               min="0"
@@ -56,7 +56,7 @@
               class="flex items-center justify-between px-3 py-2 bg-gray-50 dark:bg-dark-700 rounded-lg">
               <div class="flex items-center gap-2 min-w-0 flex-1">
                 <KumoLabel class="relative inline-flex items-center cursor-pointer shrink-0">
-                  <KumoCheckbox type="checkbox" :checked="!entry.disabled" @change="handleEmailToggle(entry)" class="sr-only peer" />
+                  <KumoCheckbox :aria-label="t('profile.balanceNotify.title') + ' — ' + entry.email" type="checkbox" :checked="!entry.disabled" @change="handleEmailToggle(entry)" class="sr-only peer" />
                   <div class="w-9 h-5 bg-gray-200 peer-focus:outline-none rounded-full peer dark:bg-gray-600 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all dark:after:border-gray-500 peer-checked:bg-primary-600"></div>
                 </KumoLabel>
                 <span class="text-sm text-gray-700 dark:text-gray-300 truncate">{{ entry.email }}</span>
@@ -65,7 +65,7 @@
                 <template v-if="!entry.verified">
                   <!-- Inline verify flow for saved unverified emails -->
                   <template v-if="verifyingEmail === entry.email">
-                    <KumoInput
+                    <KumoInput :aria-label="t('profile.balanceNotify.codePlaceholder')"
                       v-model="verifyCode"
                       type="text"
                       maxlength="6"
@@ -112,7 +112,7 @@
                 </KumoButton>
               </div>
               <div v-else class="flex items-center gap-1">
-                <KumoInput
+                <KumoInput :aria-label="t('profile.balanceNotify.codePlaceholder') + ' — ' + pe.email"
                   v-model="pe.code"
                   type="text"
                   maxlength="6"
@@ -132,7 +132,7 @@
 
           <!-- Add new email input (hidden when at limit) -->
           <div v-if="canAddMore" class="flex gap-2">
-            <KumoInput
+            <KumoInput :aria-label="t('profile.balanceNotify.emailPlaceholder')"
               v-model="newEmail"
               type="email"
               class="input flex-1"

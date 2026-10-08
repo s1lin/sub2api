@@ -124,7 +124,7 @@
                         </div>
                       </div>
                       <div class="grid grid-cols-1 gap-1">
-                        <KumoLabel v-for="col in toggleableColumns" :key="col.key" class="flex w-full cursor-pointer items-center gap-2 px-3 py-2 text-sm"><KumoCheckbox :checked="isColumnVisible(col.key)"   @change="toggleColumn(col.key)" /><span class="truncate">{{ col.label }}</span></KumoLabel>
+                        <KumoLabel v-for="col in toggleableColumns" :key="col.key" class="flex w-full cursor-pointer items-center gap-2 px-3 py-2 text-sm"><KumoCheckbox :aria-label="col.label" :checked="isColumnVisible(col.key)"   @change="toggleColumn(col.key)" /><span class="truncate">{{ col.label }}</span></KumoLabel>
                       </div>
                     </div>
                   </KumoPopoverContent></KumoPopoverRoot>
@@ -179,6 +179,7 @@
         >
           <template #header-select>
             <KumoCheckbox
+              :aria-label="t('common.selectAll')"
               type="checkbox"
               class="h-4 w-4 cursor-pointer rounded border-gray-300 text-primary-600 focus:ring-primary-500"
               :checked="allVisibleSelected"
@@ -187,7 +188,7 @@
             />
           </template>
           <template #cell-select="{ row }">
-            <KumoCheckbox type="checkbox" :checked="isSelected(row.id)" @change="toggleSel(row.id)" class="rounded border-gray-300 text-primary-600 focus:ring-primary-500" />
+            <KumoCheckbox :aria-label="row.name" type="checkbox" :checked="isSelected(row.id)" @change="toggleSel(row.id)" class="rounded border-gray-300 text-primary-600 focus:ring-primary-500" />
           </template>
           <template #cell-id="{ value }">
             <span class="font-mono text-xs text-gray-500 dark:text-gray-400">#{{ value }}</span>
@@ -447,7 +448,7 @@
     <ConfirmDialog :show="showCreateShadowDialog" :title="t('admin.accounts.createSparkShadow')" :message="t('admin.accounts.createSparkShadowConfirm', { name: creatingShadowAcc?.name })" @confirm="confirmCreateSparkShadow" @cancel="showCreateShadowDialog = false" />
     <ConfirmDialog :show="showExportDataDialog" :title="t('admin.accounts.dataExport')" :message="t('admin.accounts.dataExportConfirmMessage')" :confirm-text="t('admin.accounts.dataExportConfirm')" :cancel-text="t('common.cancel')" @confirm="handleExportData" @cancel="showExportDataDialog = false">
       <KumoLabel class="flex items-center gap-2 text-sm text-gray-700 dark:text-gray-300">
-        <KumoCheckbox type="checkbox" class="h-4 w-4 rounded border-gray-300 text-primary-600 focus:ring-primary-500" v-model="includeProxyOnExport" />
+        <KumoCheckbox :aria-label="t('admin.accounts.dataExportIncludeProxies')" type="checkbox" class="h-4 w-4 rounded border-gray-300 text-primary-600 focus:ring-primary-500" v-model="includeProxyOnExport" />
         <span>{{ t('admin.accounts.dataExportIncludeProxies') }}</span>
       </KumoLabel>
     </ConfirmDialog>
