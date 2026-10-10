@@ -20,27 +20,27 @@
     </KumoDropdownTrigger>
 
     <KumoDropdownContent
-      class="w-44 rounded-lg border border-[var(--brand-line)] bg-white dark:bg-dark-800"
+      class="w-44"
     >
-      <div class="p-1.5">
+      <div>
         <KumoDropdownItem
           @click="$emit('update:enabled', !enabled)"
-          class="flex w-full items-center justify-between rounded-md px-3 py-1.5 text-sm text-gray-700 hover:bg-[var(--brand-hover)] dark:text-gray-200"
+          class="justify-between"
         >
           <span>{{ t('common.autoRefresh.enable') }}</span>
-          <svg v-if="enabled" class="h-4 w-4 text-primary-500" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+          <svg v-if="enabled" class="platform-menu-check" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
             <path fill-rule="evenodd" d="M16.704 4.153a.75.75 0 01.143 1.052l-8 10.5a.75.75 0 01-1.127.075l-4.5-4.5a.75.75 0 011.06-1.06l3.894 3.893 7.48-9.817a.75.75 0 011.05-.143z" clip-rule="evenodd" />
           </svg>
         </KumoDropdownItem>
-        <div class="my-1 border-t border-[var(--brand-line)]"></div>
+        <div class="platform-menu-separator"></div>
         <KumoDropdownItem
           v-for="sec in intervals"
           :key="sec"
           @click="$emit('update:interval', sec)"
-          class="flex w-full items-center justify-between rounded-md px-3 py-1.5 text-sm text-gray-700 hover:bg-[var(--brand-hover)] dark:text-gray-200"
+          class="justify-between"
         >
           <span>{{ t('common.autoRefresh.seconds', { n: sec }) }}</span>
-          <svg v-if="intervalSeconds === sec" class="h-4 w-4 text-primary-500" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+          <svg v-if="intervalSeconds === sec" class="platform-menu-check" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
             <path fill-rule="evenodd" d="M16.704 4.153a.75.75 0 01.143 1.052l-8 10.5a.75.75 0 01-1.127.075l-4.5-4.5a.75.75 0 011.06-1.06l3.894 3.893 7.48-9.817a.75.75 0 011.05-.143z" clip-rule="evenodd" />
           </svg>
         </KumoDropdownItem>

@@ -111,14 +111,14 @@
         <div class="mt-3 flex justify-end gap-2">
           <KumoButton
             @click="showAddForm = false; resetNewPlan()"
-            class="rounded-lg bg-gray-100 px-3 py-1.5 text-sm font-medium text-gray-700 transition-colors hover:bg-[var(--brand-hover)] dark:bg-dark-600 dark:text-gray-300"
+            class="btn btn-secondary btn-sm"
           >
             {{ t('common.cancel') }}
           </KumoButton>
           <KumoButton
             @click="handleCreate"
             :disabled="!newPlan.model_id || !newPlan.cron_expression || creating"
-            class="flex items-center gap-1.5 rounded-lg bg-primary-500 px-3 py-1.5 text-sm font-medium text-white transition-colors hover:bg-primary-600 disabled:cursor-not-allowed disabled:opacity-50"
+            class="btn btn-primary btn-sm flex items-center gap-1.5"
           >
             <Icon v-if="creating" name="refresh" size="sm" class="animate-spin" :stroke-width="2" />
             {{ t('common.save') }}
@@ -321,14 +321,14 @@
             <div class="mt-3 flex justify-end gap-2">
               <KumoButton
                 @click="cancelEdit"
-                class="rounded-lg bg-gray-100 px-3 py-1.5 text-sm font-medium text-gray-700 transition-colors hover:bg-[var(--brand-hover)] dark:bg-dark-600 dark:text-gray-300"
+                class="btn btn-secondary btn-sm"
               >
                 {{ t('common.cancel') }}
               </KumoButton>
               <KumoButton
                 @click="handleEdit"
                 :disabled="!editForm.model_id || !editForm.cron_expression || updating"
-                class="flex items-center gap-1.5 rounded-lg bg-primary-500 px-3 py-1.5 text-sm font-medium text-white transition-colors hover:bg-primary-600 disabled:cursor-not-allowed disabled:opacity-50"
+                class="btn btn-primary btn-sm flex items-center gap-1.5"
               >
                 <Icon v-if="updating" name="refresh" size="sm" class="animate-spin" :stroke-width="2" />
                 {{ t('common.save') }}

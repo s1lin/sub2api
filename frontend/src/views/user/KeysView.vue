@@ -68,12 +68,12 @@
               <span class="hidden md:inline">{{ t('keys.columnSettings') }}</span>
             </KumoPopoverTrigger>
             <KumoPopoverContent
-              class="max-h-80 w-48 overflow-y-auto py-1"
+              class="max-h-80 w-48 overflow-y-auto"
             >
               <KumoLabel
                 v-for="col in toggleableColumns"
                 :key="col.key"
-                class="flex w-full cursor-pointer items-center gap-2 px-3 py-2 text-sm"
+                class="platform-menu-item cursor-pointer"
               >
                 <KumoCheckbox :aria-label="col.label" :checked="isColumnVisible(col.key)" @change="toggleColumn(col.key)" />
                 <span>{{ col.label }}</span>

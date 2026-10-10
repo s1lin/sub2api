@@ -1,14 +1,14 @@
 <template>
   <KumoButton
     type="button"
-    class="rounded-lg bg-primary-50 px-3 py-1 text-xs text-primary-700 transition-colors hover:bg-primary-100 dark:bg-primary-900/30 dark:text-primary-400 dark:hover:bg-primary-900/50"
+    class="btn btn-secondary btn-sm"
     @click="toggleImportPanel"
   >
     {{ t('admin.accounts.headerOverride.importJson') }}
   </KumoButton>
   <KumoButton
     type="button"
-    class="rounded-lg bg-primary-50 px-3 py-1 text-xs text-primary-700 transition-colors hover:bg-primary-100 disabled:cursor-not-allowed disabled:opacity-50 dark:bg-primary-900/30 dark:text-primary-400 dark:hover:bg-primary-900/50"
+    class="btn btn-secondary btn-sm"
     :disabled="!hasNamedRows"
     @click="copyAsJson"
   >
@@ -26,14 +26,14 @@
     <div class="flex gap-2">
       <KumoButton
         type="button"
-        class="rounded-lg bg-primary-600 px-3 py-1 text-xs text-white transition-colors hover:bg-primary-700"
+        class="btn btn-primary btn-sm"
         @click="applyImport"
       >
         {{ t('admin.accounts.headerOverride.importJsonApply') }}
       </KumoButton>
       <KumoButton
         type="button"
-        class="rounded-lg bg-gray-100 px-3 py-1 text-xs text-gray-600 transition-colors hover:bg-[var(--brand-hover)] dark:bg-dark-600 dark:text-gray-400"
+        class="btn btn-secondary btn-sm"
         @click="closeImportPanel"
       >
         {{ t('admin.accounts.headerOverride.importJsonCancel') }}

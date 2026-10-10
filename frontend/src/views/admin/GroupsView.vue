@@ -27,9 +27,9 @@
                 }}</span>
               </KumoPopoverTrigger>
 <KumoPopoverContent
-                class="max-h-80 w-48 overflow-y-auto rounded-lg border border-[var(--brand-line)] bg-white py-1 dark:bg-dark-800"
+                class="max-h-80 w-48 overflow-y-auto"
               >
-                <KumoLabel v-for="col in toggleableColumns" :key="col.key" class="flex w-full cursor-pointer items-center gap-2 px-3 py-2 text-sm"><KumoCheckbox :aria-label="col.label" :checked="isColumnVisible(col.key)"   @change="toggleColumn(col.key)" /><span>{{ col.label }}</span></KumoLabel>
+                <KumoLabel v-for="col in toggleableColumns" :key="col.key" class="platform-menu-item cursor-pointer"><KumoCheckbox :aria-label="col.label" :checked="isColumnVisible(col.key)"   @change="toggleColumn(col.key)" /><span>{{ col.label }}</span></KumoLabel>
               </KumoPopoverContent></KumoPopoverRoot>
             <KumoButton
               v-if="!authStore.isSimpleMode"
@@ -826,7 +826,7 @@
                 />
                 <KumoButton
                   type="button"
-                  class="rounded bg-primary-600 px-3 py-1.5 text-sm font-medium text-white transition-colors hover:bg-primary-700"
+                  class="btn btn-primary btn-sm"
                   @click="submitCreateAllowlistCustomEntry"
                 >
                   {{ t("admin.groups.modelAllowlist.addCustom") }}
@@ -2331,7 +2331,7 @@
                 />
                 <KumoButton
                   type="button"
-                  class="rounded bg-primary-600 px-3 py-1.5 text-sm font-medium text-white transition-colors hover:bg-primary-700"
+                  class="btn btn-primary btn-sm"
                   @click="submitEditAllowlistCustomEntry"
                 >
                   {{ t("admin.groups.modelAllowlist.addCustom") }}

@@ -24,17 +24,17 @@
                   <span class="hidden md:inline">{{ t('admin.users.filterSettings') }}</span>
                 </KumoPopoverTrigger>
 <KumoPopoverContent
-                  class="w-48 rounded-lg border border-[var(--brand-line)] bg-white py-1 dark:bg-dark-800"
+                  class="w-48"
                 >
                   <!-- Built-in filters -->
-                  <KumoLabel v-for="filter in builtInFilters" :key="filter.key" class="flex w-full cursor-pointer items-center gap-2 px-3 py-2 text-sm"><KumoCheckbox :aria-label="filter.name" :checked="visibleFilters.has(filter.key)"   @change="toggleBuiltInFilter(filter.key)" /><span>{{ filter.name }}</span></KumoLabel>
+                  <KumoLabel v-for="filter in builtInFilters" :key="filter.key" class="platform-menu-item cursor-pointer"><KumoCheckbox :aria-label="filter.name" :checked="visibleFilters.has(filter.key)"   @change="toggleBuiltInFilter(filter.key)" /><span>{{ filter.name }}</span></KumoLabel>
                   <!-- Divider if custom attributes exist -->
                   <div
                     v-if="filterableAttributes.length > 0"
-                    class="my-1 border-t border-[var(--brand-line)]"
+                    class="platform-menu-separator"
                   ></div>
                   <!-- Custom attribute filters -->
-                  <KumoLabel v-for="attr in filterableAttributes" :key="attr.id" class="flex w-full cursor-pointer items-center gap-2 px-3 py-2 text-sm"><KumoCheckbox :aria-label="attr.name" :checked="visibleFilters.has(`attr_${attr.id}`)"   @change="toggleAttributeFilter(attr)" /><span>{{ attr.name }}</span></KumoLabel>
+                  <KumoLabel v-for="attr in filterableAttributes" :key="attr.id" class="platform-menu-item cursor-pointer"><KumoCheckbox :aria-label="attr.name" :checked="visibleFilters.has(`attr_${attr.id}`)"   @change="toggleAttributeFilter(attr)" /><span>{{ attr.name }}</span></KumoLabel>
                 </KumoPopoverContent></KumoPopoverRoot>
               <!-- Column Settings Dropdown -->
               <KumoPopoverRoot v-model="showColumnDropdown"><KumoPopoverTrigger
@@ -47,9 +47,9 @@
                   <span class="hidden md:inline">{{ t('admin.users.columnSettings') }}</span>
                 </KumoPopoverTrigger>
 <KumoPopoverContent
-                  class="max-h-80 w-48 overflow-y-auto rounded-lg border border-[var(--brand-line)] bg-white py-1 dark:bg-dark-800"
+                  class="max-h-80 w-48 overflow-y-auto"
                 >
-                  <KumoLabel v-for="col in toggleableColumns" :key="col.key" class="flex w-full cursor-pointer items-center gap-2 px-3 py-2 text-sm"><KumoCheckbox :aria-label="col.label" :checked="isColumnVisible(col.key)" :disabled="isForcedVisibleColumn(col.key)"  @change="toggleColumn(col.key)" /><span>{{ col.label }}</span></KumoLabel>
+                  <KumoLabel v-for="col in toggleableColumns" :key="col.key" class="platform-menu-item cursor-pointer"><KumoCheckbox :aria-label="col.label" :checked="isColumnVisible(col.key)" :disabled="isForcedVisibleColumn(col.key)"  @change="toggleColumn(col.key)" /><span>{{ col.label }}</span></KumoLabel>
                 </KumoPopoverContent></KumoPopoverRoot>
               <!-- Attributes Config Button -->
               <KumoButton

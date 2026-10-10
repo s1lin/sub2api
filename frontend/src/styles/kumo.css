@@ -98,7 +98,7 @@
   font-size: var(--platform-body-size);
   line-height: var(--platform-body-line);
 }
-.app-shell [data-platform-control="button"]:is(.btn-sm, .text-xs, .text-\[11px\]) {
+:is(.app-shell, .platform-dialog) :is([data-platform-control="button"], label.btn):is(.btn-sm, .text-xs, .text-\[11px\]) {
   font-size: .75rem;
   line-height: 1rem;
 }
@@ -392,4 +392,82 @@ div:has(> .kumo-popover-popup) { z-index: 60; }
 @media (max-width: 359px) {
   .metric-strip { grid-template-columns: minmax(0, 1fr); }
   .metric-strip > :not([hidden]) { border-left: 0; }
+}
+
+/* ---------------------------------------------------------------------------
+   Kumo / Vue harmonisation. Kumo ships Tailwind 4 defaults (16px base controls,
+   tinted table heads, varied menu rows) while legacy screens use Tailwind 3
+   utilities. The rules below give both renderers one interior vocabulary.
+   ------------------------------------------------------------------------ */
+
+/* One body scale: Kumo's base-size labels, popover triggers and dialogs included. */
+.platform-dialog, .kumo-popover-popup, .platform-dropdown-popup {
+  font-size: var(--platform-body-size);
+  line-height: var(--platform-body-line);
+}
+:is(.app-shell, .platform-dialog, .kumo-popover-popup, .platform-dropdown-popup) :is(.text-base, label, [data-kumo-component="Button"], [data-kumo-component="LinkButton"], [data-kumo-component="Popover"]):not([data-ui-branded] *, :is(.platform-table, .platform-data-cards) *, .btn-stripe, .btn-wxpay, .btn-alipay, .btn-airwallex, .text-xs, .text-sm, .btn-sm, .btn-xs, .text-\[11px\], .text-\[10px\], .h-5, .h-6\.5) {
+  font-size: var(--platform-body-size);
+  line-height: var(--platform-body-line);
+}
+:is(.app-shell, .platform-dialog) .modal-title { font-size: 1rem; line-height: 1.5rem; font-weight: 600; }
+
+/* An unselected Select reads as a placeholder, like Kumo's Combobox. */
+.select-trigger[data-placeholder] { color: var(--brand-muted); }
+
+/* Table heads: panel colour with a single rule, for Kumo tables and DataTable alike. */
+.platform-table thead { background: var(--brand-panel); }
+.platform-table thead th { background: var(--brand-panel); box-shadow: inset 0 -1px 0 var(--brand-line); border-bottom: 0; }
+.platform-table thead tr { background: transparent; }
+
+/* Badges: one height, padding and type size whether Kumo or legacy `.badge`. */
+:is(.app-shell, .platform-dialog) :is(.platform-badge, .badge):not([data-ui-branded] *) {
+  min-height: 1.25rem;
+  padding-block: .125rem;
+  padding-inline: .5rem;
+  font-size: .75rem;
+  line-height: 1rem;
+  font-weight: 500;
+  box-shadow: none;
+}
+
+/* Menus: dropdown items, popover action lists and date presets share Select's option row. */
+.platform-dropdown-popup:not(.platform-nav-menu), .kumo-popover-popup:has(.platform-menu-item) { padding: .375rem; }
+:is(.platform-dropdown-popup [role^="menuitem"], .platform-menu-item) {
+  display: flex;
+  width: 100%;
+  min-height: 2rem;
+  height: auto;
+  align-items: center;
+  justify-content: flex-start;
+  gap: .5rem;
+  padding: .375rem .5rem;
+  border: 0;
+  border-radius: 4px;
+  background: transparent;
+  box-shadow: none;
+  font-size: var(--platform-body-size);
+  line-height: var(--platform-body-line);
+  font-weight: 400;
+  text-align: left;
+  white-space: nowrap;
+}
+:is(.platform-dropdown-popup [role^="menuitem"], .platform-menu-item):not([class*="text-red"], [data-variant="danger"]) { color: var(--brand-ink); }
+:is(.platform-dropdown-popup [role^="menuitem"], .platform-menu-item):is(:hover, [data-highlighted]) { background: var(--brand-hover); }
+.platform-menu-item:is([aria-pressed="true"], [aria-checked="true"], .is-active) { background: var(--brand-hover); color: var(--brand-accent); font-weight: 500; }
+:is(.platform-dropdown-popup [role^="menuitem"], .platform-menu-item) svg { width: 1rem; height: 1rem; flex-shrink: 0; }
+:is(.platform-dropdown-popup [role^="menuitem"], .platform-menu-item):not([class*="text-red"], [data-variant="danger"]) svg:not(.platform-menu-check) { color: var(--brand-muted); }
+.platform-menu-check, .platform-menu-item[aria-pressed="true"] svg { color: var(--brand-accent); }
+.platform-dropdown-popup [role^="menuitem"][class*="text-red"]:is(:hover, [data-highlighted]) { background: rgb(220 38 38 / 8%); }
+.platform-menu-label { padding: .375rem .5rem .25rem; color: var(--brand-muted); font-size: .6875rem; line-height: 1rem; font-weight: 500; letter-spacing: .06em; text-transform: uppercase; }
+.platform-menu-separator { height: 0; margin: .25rem -.375rem; border-top: 1px solid var(--brand-line); }
+.platform-dropdown-popup .my-1.border-t { margin-inline: -.375rem; }
+.platform-date-picker .date-picker-preset { min-height: 1.75rem; }
+.platform-menu-item :is(span, div) { line-height: inherit; }
+
+/* Selected state is the accent everywhere: switches, tabs, menu rows, checkboxes and radios. */
+[data-kumo-component="Checkbox"]:is([data-checked], [data-indeterminate]),
+[data-kumo-component="Radio"][data-kumo-part="item"][data-checked] {
+  background-color: var(--brand-accent);
+  --tw-ring-color: var(--brand-accent);
+  color: var(--brand-on-accent);
 }

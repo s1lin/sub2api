@@ -96,7 +96,7 @@
           <div class="ml-auto">
             <KumoButton
               type="button"
-              class="rounded-lg border border-red-200 bg-red-50 px-3 py-1.5 text-sm font-medium text-red-600 transition-colors hover:bg-red-100 dark:border-red-800 dark:bg-red-900/20 dark:text-red-400 dark:hover:bg-red-900/40"
+              class="btn btn-secondary btn-sm text-red-600 dark:text-red-400"
               @click="clearAllLocal"
             >
               {{ t('admin.groups.clearAll') }}

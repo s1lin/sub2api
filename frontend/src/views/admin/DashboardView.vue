@@ -320,9 +320,9 @@
           <Panel flush class="card p-4">
             <div class="mb-4 flex items-center justify-between gap-3">
               <h3 class="text-sm font-semibold text-gray-900 dark:text-white">{{ t('admin.dashboard.recentUsage') }} (Top 12)</h3>
-              <div class="flex gap-1" role="group" :aria-label="t('admin.dashboard.recentUsage')">
+              <div class="inline-flex p-0.5 ui-segmented" role="group" :aria-label="t('admin.dashboard.recentUsage')">
                 <KumoButton v-for="metric in (['tokens', 'actual_cost'] as const)" :key="metric" type="button"
-                  class="rounded px-2 py-1 text-xs" :class="userTrendMetric === metric ? 'bg-[var(--brand-accent)] text-[var(--brand-on-accent)]' : 'text-gray-600 dark:text-gray-300'"
+                  class="rounded-md px-2.5 py-1 text-xs font-medium transition-colors"
                   :aria-pressed="userTrendMetric === metric" @click="setUserTrendMetric(metric)">
                   {{ t(metric === 'tokens' ? 'admin.dashboard.tokens' : 'admin.dashboard.actualSpending') }}
                 </KumoButton>

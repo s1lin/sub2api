@@ -91,7 +91,7 @@
     }"
   >
     <KumoTable class="w-full min-w-max divide-y divide-gray-200 dark:divide-dark-700">
-      <KumoTableHeader class="table-header bg-gray-50 dark:bg-dark-800">
+      <KumoTableHeader class="table-header">
         <KumoTableRow>
           <KumoTableHead
             v-if="selectable"
@@ -934,7 +934,7 @@ defineExpose({
   position: sticky;
   top: 0;
   z-index: 200;
-  background-color: var(--brand-inset);
+  background-color: var(--brand-panel);
 }
 
 /* 表体保持在表头下方 */
@@ -948,7 +948,8 @@ defineExpose({
   position: sticky;
   top: 0;
   z-index: 210; /* 必须高于所有表体内容 */
-  background-color: var(--brand-inset);
+  background-color: var(--brand-panel);
+  box-shadow: inset 0 -1px 0 var(--brand-line);
 }
 
 /* Sticky 列基础样式 */
@@ -984,12 +985,12 @@ defineExpose({
 
 /* 表体 sticky 列背景 */
 .table-wrapper :deep(tbody .sticky-col) {
-  background-color: var(--brand-surface);
+  background-color: var(--brand-panel);
 }
 
 /* hover 状态保持 */
 .table-wrapper :deep(tbody tr:hover .sticky-col) {
-  background-color: var(--brand-inset);
+  background-color: var(--brand-hover);
 }
 
 /* 阴影只在可滚动时显示 */

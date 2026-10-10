@@ -55,7 +55,7 @@ export const KumoPopoverTrigger = bridge('KumoPopoverTrigger', props => {
   }, props.children)
 })
 export const KumoPopoverContent = bridge('KumoPopoverContent', props => el(Popover.Content, {
-  ...domProps(props), align: props.align ?? 'end', sideOffset: props.sideOffset ?? 6,
+  ...domProps(props), className: `kumo-popover-popup ${props.className ?? ''}`, align: props.align ?? 'end', sideOffset: props.sideOffset ?? 6,
 }, props.children))
 export const KumoMeter = bridge('KumoMeter', (props: ControlProps) => el(Meter, {
   ...domProps(props), label: props.label ?? '', value: Math.max(0, Math.min(Number(props.value) || 0, Number(props.max) || 100)),

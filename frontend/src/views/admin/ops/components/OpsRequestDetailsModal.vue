@@ -224,7 +224,7 @@ const kindBadgeClass = (kind: string) => {
                   </div>
                   <KumoButton
                     v-if="row.kind === 'error' && row.error_id"
-                    class="w-full rounded-lg bg-red-50 px-3 py-1.5 text-xs font-bold text-red-600 hover:bg-red-100 dark:bg-red-900/20 dark:text-red-300 dark:hover:bg-red-900/30"
+                    class="btn btn-secondary btn-sm w-full text-red-600 dark:text-red-400"
                     @click="openErrorDetail(row.error_id)"
                   >
                     {{ t('admin.ops.requestDetails.viewError') }}
@@ -299,7 +299,7 @@ const kindBadgeClass = (kind: string) => {
                   <KumoTableCell class="whitespace-nowrap px-4 py-3 text-right">
                     <KumoButton
                       v-if="row.kind === 'error' && row.error_id"
-                      class="rounded-lg bg-red-50 px-3 py-1.5 text-xs font-bold text-red-600 hover:bg-red-100 dark:bg-red-900/20 dark:text-red-300 dark:hover:bg-red-900/30"
+                      class="btn btn-secondary btn-sm text-red-600 dark:text-red-400"
                       @click="openErrorDetail(row.error_id)"
                     >
                       {{ t('admin.ops.requestDetails.viewError') }}

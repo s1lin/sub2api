@@ -83,6 +83,8 @@ function SelectControl(props: ControlProps) {
     id: props.id, 'aria-label': props.ariaLabel ?? props.placeholder,
     'aria-describedby': props.ariaDescribedby, 'aria-invalid': props.error || undefined,
     className: 'select-trigger w-full justify-between', ref: props.nativeRef,
+    // Lets an unselected Select match the Combobox placeholder colour.
+    'data-placeholder': selected == null && selectedLabel === props.placeholder ? '' : undefined,
   }
   const clear = props.clearable && props.modelValue != null && props.modelValue !== '' && !props.disabled
     ? el(Button, { type: 'button', variant: 'ghost', shape: 'square', size: 'sm', icon: XIcon, className: 'kumo-select-clear', 'aria-label': props.clearLabel, onClick: () => { updateModel(props, null); props.onChange?.(null, null) } }) : null

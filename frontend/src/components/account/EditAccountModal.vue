@@ -1384,7 +1384,7 @@
               :key="preset.label"
               type="button"
               @click="addTempUnschedRule(preset.rule)"
-              class="rounded-lg bg-gray-100 px-3 py-1.5 text-xs font-medium text-gray-600 transition-colors hover:bg-[var(--brand-hover)] dark:bg-dark-600 dark:text-gray-300"
+              class="btn btn-secondary btn-sm"
             >
               + {{ preset.label }}
             </KumoButton>

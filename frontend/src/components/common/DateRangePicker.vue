@@ -6,9 +6,9 @@
       <Icon name="chevronDown" size="sm" />
     </template>
     <div class="grid grid-cols-2 gap-1 p-2">
-      <KumoButton v-for="preset in presets" :key="preset.value" size="sm"
-        :variant="isPresetActive(preset) ? 'secondary' : 'ghost'"
-        class="date-picker-preset w-full justify-start" @click="selectPreset(preset)">
+      <KumoButton v-for="preset in presets" :key="preset.value" size="sm" variant="ghost"
+        :aria-pressed="isPresetActive(preset)"
+        class="date-picker-preset platform-menu-item" @click="selectPreset(preset)">
         {{ t(preset.labelKey) }}
       </KumoButton>
     </div>

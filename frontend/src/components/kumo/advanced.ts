@@ -14,7 +14,7 @@ import { domProps, updateModel } from './controls'
 function PopoverControl(props: ControlProps) {
   return el(Popover, { open: props.modelValue, onOpenChange: (open: boolean) => updateModel(props, open) },
     el(Popover.Trigger, { render: el(Button, { variant: props.variant ?? 'secondary', className: props.triggerClass, 'aria-label': props.label }) }, props.trigger?.()),
-    el(Popover.Content, { className: props.className, side: props.side ?? 'bottom', align: props.align ?? 'start' }, props.children))
+    el(Popover.Content, { className: `kumo-popover-popup ${props.className ?? ''}`, side: props.side ?? 'bottom', align: props.align ?? 'start' }, props.children))
 }
 
 function DatePickerControl(props: ControlProps) {

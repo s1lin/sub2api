@@ -23,19 +23,19 @@
                   </span>
                 </KumoPopoverTrigger>
 <KumoPopoverContent
-                  class="w-56 rounded-lg border border-[var(--brand-line)] bg-white dark:bg-dark-800"
+                  class="w-56"
                 >
-                  <div class="p-2">
+                  <div>
                     <KumoButton :aria-pressed="autoRefreshEnabled"
                       @click="setAutoRefreshEnabled(!autoRefreshEnabled)"
-                      class="flex w-full items-center justify-between rounded-md px-3 py-2 text-sm text-gray-700 hover:bg-[var(--brand-hover)] dark:text-gray-200"
+                      class="platform-menu-item justify-between"
                     >
                       <span>{{ t('admin.accounts.enableAutoRefresh') }}</span>
-                      <Icon v-if="autoRefreshEnabled" name="check" size="sm" class="text-primary-500" />
+                      <Icon v-if="autoRefreshEnabled" name="check" size="sm" class="platform-menu-check" />
                     </KumoButton>
-                    <div class="my-1 border-t border-[var(--brand-line)]"></div>
+                    <div class="platform-menu-separator"></div>
                     <KumoRadioGroup :model-value="autoRefreshIntervalSeconds" :aria-label="t('admin.accounts.autoRefresh')">
-                      <KumoRadio v-for="sec in autoRefreshIntervals" :key="sec" :value="sec" class="px-3 py-2 text-sm" @change="setAutoRefreshInterval(sec)">{{ autoRefreshIntervalLabel(sec) }}</KumoRadio>
+                      <KumoRadio v-for="sec in autoRefreshIntervals" :key="sec" :value="sec" class="platform-menu-item" @change="setAutoRefreshInterval(sec)">{{ autoRefreshIntervalLabel(sec) }}</KumoRadio>
                     </KumoRadioGroup>
                   </div>
                 </KumoPopoverContent></KumoPopoverRoot>
@@ -51,30 +51,20 @@
                   <Icon name="chevronDown" size="xs" class="ml-1 hidden md:inline" />
                 </KumoPopoverTrigger>
 <KumoPopoverContent
-                    class="w-80 max-w-[calc(100vw-2rem)] overflow-hidden rounded-lg border border-[var(--brand-line)] bg-white dark:bg-dark-800"
+                    class="w-80 max-w-[calc(100vw-2rem)] overflow-hidden"
                   >
-                    <div class="overflow-y-auto p-2" style="max-height: min(36rem, calc(100dvh - 6rem))">
-                      <div class="px-2 py-2">
-                        <div class="text-xs font-semibold uppercase tracking-wide text-gray-400 dark:text-gray-500">
-                          {{ t('admin.accounts.dataActions') }}
-                        </div>
-                      </div>
-                      <KumoButton class="account-tools-menu-item" @click="openSyncFromCrs">
-                        <span class="account-tools-menu-icon bg-blue-50 text-blue-600 dark:bg-blue-900/30 dark:text-blue-300">
-                          <Icon name="sync" size="sm" />
-                        </span>
+                    <div class="overflow-y-auto" style="max-height: min(36rem, calc(100dvh - 6rem))">
+                      <div class="platform-menu-label">{{ t('admin.accounts.dataActions') }}</div>
+                      <KumoButton class="platform-menu-item" @click="openSyncFromCrs">
+                        <Icon name="sync" size="sm" />
                         <span class="flex-1 text-left">{{ t('admin.accounts.syncFromCrs') }}</span>
                       </KumoButton>
-                      <KumoButton class="account-tools-menu-item" @click="openImportData">
-                        <span class="account-tools-menu-icon bg-emerald-50 text-emerald-600 dark:bg-emerald-900/30 dark:text-emerald-300">
-                          <Icon name="upload" size="sm" />
-                        </span>
+                      <KumoButton class="platform-menu-item" @click="openImportData">
+                        <Icon name="upload" size="sm" />
                         <span class="flex-1 text-left">{{ t('admin.accounts.dataImport') }}</span>
                       </KumoButton>
-                      <KumoButton class="account-tools-menu-item" @click="openExportDataDialogFromMenu">
-                        <span class="account-tools-menu-icon bg-violet-50 text-violet-600 dark:bg-violet-900/30 dark:text-violet-300">
-                          <Icon name="download" size="sm" />
-                        </span>
+                      <KumoButton class="platform-menu-item" @click="openExportDataDialogFromMenu">
+                        <Icon name="download" size="sm" />
                         <span class="flex-1 text-left">
                           {{ selIds.length ? t('admin.accounts.dataExportSelected') : t('admin.accounts.dataExport') }}
                         </span>
@@ -86,36 +76,21 @@
                         </span>
                       </KumoButton>
 
-                      <div class="my-2 border-t border-[var(--brand-line)]"></div>
-                      <div class="px-2 py-2">
-                        <div class="text-xs font-semibold uppercase tracking-wide text-gray-400 dark:text-gray-500">
-                          {{ t('admin.accounts.toolActions') }}
-                        </div>
-                      </div>
-                      <KumoButton class="account-tools-menu-item" @click="openErrorPassthrough">
-                        <span class="account-tools-menu-icon bg-amber-50 text-amber-600 dark:bg-amber-900/30 dark:text-amber-300">
-                          <Icon name="shield" size="sm" />
-                        </span>
+                      <div class="platform-menu-separator"></div>
+                      <div class="platform-menu-label">{{ t('admin.accounts.toolActions') }}</div>
+                      <KumoButton class="platform-menu-item" @click="openErrorPassthrough">
+                        <Icon name="shield" size="sm" />
                         <span class="flex-1 text-left">{{ t('admin.errorPassthrough.title') }}</span>
                       </KumoButton>
-                      <KumoButton class="account-tools-menu-item" @click="openTLSFingerprintProfiles">
-                        <span class="account-tools-menu-icon bg-slate-100 text-slate-600 dark:bg-slate-700 dark:text-slate-200">
-                          <Icon name="lock" size="sm" />
-                        </span>
+                      <KumoButton class="platform-menu-item" @click="openTLSFingerprintProfiles">
+                        <Icon name="lock" size="sm" />
                         <span class="flex-1 text-left">{{ t('admin.tlsFingerprintProfiles.title') }}</span>
                       </KumoButton>
 
-                      <div class="my-2 border-t border-[var(--brand-line)]"></div>
-                      <div class="px-2 py-2">
-                        <div class="flex items-center justify-between gap-3">
-                          <span class="text-xs font-semibold uppercase tracking-wide text-gray-400 dark:text-gray-500">
-                            {{ t('admin.accounts.viewColumns') }}
-                          </span>
-                          <Icon name="grid" size="sm" class="text-gray-400" />
-                        </div>
-                      </div>
+                      <div class="platform-menu-separator"></div>
+                      <div class="platform-menu-label">{{ t('admin.accounts.viewColumns') }}</div>
                       <div class="grid grid-cols-1 gap-1">
-                        <KumoLabel v-for="col in toggleableColumns" :key="col.key" class="flex w-full cursor-pointer items-center gap-2 px-3 py-2 text-sm"><KumoCheckbox :aria-label="col.label" :checked="isColumnVisible(col.key)"   @change="toggleColumn(col.key)" /><span class="truncate">{{ col.label }}</span></KumoLabel>
+                        <KumoLabel v-for="col in toggleableColumns" :key="col.key" class="platform-menu-item cursor-pointer"><KumoCheckbox :aria-label="col.label" :checked="isColumnVisible(col.key)"   @change="toggleColumn(col.key)" /><span class="truncate">{{ col.label }}</span></KumoLabel>
                       </div>
                     </div>
                   </KumoPopoverContent></KumoPopoverRoot>
@@ -2508,13 +2483,3 @@ onUnmounted(() => {
   desktopViewportMediaQuery = null
 })
 </script>
-
-<style scoped>
-.account-tools-menu-item {
-  @apply flex w-full items-center gap-3 rounded-md px-3 py-2 text-sm text-gray-700 transition-colors hover:bg-gray-100 dark:text-gray-200 dark:hover:bg-dark-700;
-}
-
-.account-tools-menu-icon {
-  @apply inline-flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-md;
-}
-</style>

@@ -121,7 +121,7 @@
                 <KumoButton
                   @click="handleUpdate"
                   :disabled="updating"
-                  class="flex w-full items-center justify-center gap-2 rounded-lg bg-red-500 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-red-600 disabled:cursor-not-allowed disabled:opacity-50"
+                  class="btn btn-danger flex w-full items-center justify-center gap-2"
                 >
                   {{ t('version.retry') }}
                 </KumoButton>
@@ -163,7 +163,7 @@
                 <KumoButton
                   @click="handleRestart"
                   :disabled="restarting"
-                  class="flex w-full items-center justify-center gap-2 rounded-lg bg-green-500 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-green-600 disabled:cursor-not-allowed disabled:opacity-50"
+                  class="btn btn-primary flex w-full items-center justify-center gap-2"
                 >
                   <KumoLoader v-if="restarting" class="h-4 w-4 animate-spin" />
                   <svg
@@ -280,7 +280,7 @@
                 <KumoButton
                   @click="handleUpdate"
                   :disabled="updating"
-                  class="flex w-full items-center justify-center gap-2 rounded-lg bg-primary-500 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-primary-600 disabled:cursor-not-allowed disabled:opacity-50"
+                  class="btn btn-primary flex w-full items-center justify-center gap-2"
                 >
                   <KumoLoader v-if="updating" class="h-4 w-4 animate-spin" />
                   <Icon v-else name="download" size="sm" :stroke-width="2" />
@@ -513,7 +513,7 @@
                             <KumoButton
                               @click="handleRollback"
                               :disabled="rollingBack"
-                              class="flex w-full items-center justify-center gap-2 rounded-lg bg-amber-500 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-amber-600 disabled:cursor-not-allowed disabled:opacity-50"
+                              class="btn btn-primary flex w-full items-center justify-center gap-2"
                             >
                               <KumoLoader v-if="rollingBack" class="h-4 w-4 animate-spin" />
                               <Icon v-else name="clock" size="sm" :stroke-width="2" />

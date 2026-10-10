@@ -104,7 +104,7 @@
           <div class="flex gap-2">
             <KumoButton
               type="button"
-              class="text-xs text-blue-600 hover:text-blue-700 dark:text-blue-400"
+              class="text-xs text-primary-600 hover:text-primary-700 dark:text-primary-400"
               @click="selectAll"
             >{{ t('admin.accounts.crsSelectAll') }}</KumoButton>
             <KumoButton

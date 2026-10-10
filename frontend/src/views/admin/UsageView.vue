@@ -81,9 +81,9 @@
                 <span class="hidden md:inline">{{ t('admin.users.columnSettings') }}</span>
               </KumoPopoverTrigger>
 <KumoPopoverContent
-                class="max-h-80 w-48 overflow-y-auto rounded-lg border border-[var(--brand-line)] bg-white py-1 dark:bg-dark-800"
+                class="max-h-80 w-48 overflow-y-auto"
               >
-                <KumoLabel v-for="col in currentToggleableColumns" :key="col.key" class="flex w-full cursor-pointer items-center gap-2 px-3 py-2 text-sm"><KumoCheckbox :checked="isCurrentColumnVisible(col.key)"  :data-testid="`usage-column-toggle-${col.key}`" @change="toggleCurrentColumn(col.key)" /><span>{{ col.label }}</span></KumoLabel>
+                <KumoLabel v-for="col in currentToggleableColumns" :key="col.key" class="platform-menu-item cursor-pointer"><KumoCheckbox :checked="isCurrentColumnVisible(col.key)"  :data-testid="`usage-column-toggle-${col.key}`" @change="toggleCurrentColumn(col.key)" /><span>{{ col.label }}</span></KumoLabel>
               </KumoPopoverContent></KumoPopoverRoot>
           </template>
         </UsageFilters>

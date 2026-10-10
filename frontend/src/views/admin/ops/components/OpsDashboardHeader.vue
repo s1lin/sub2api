@@ -918,7 +918,7 @@ function handleToolbarRefresh() {
         <KumoButton
           v-if="!props.fullscreen"
           type="button"
-          class="flex h-8 w-8 items-center justify-center rounded-lg bg-gray-100 text-gray-500 transition-colors hover:bg-[var(--brand-hover)] dark:bg-dark-700 dark:text-gray-400"
+          class="btn btn-secondary h-9 w-9 p-0"
           :disabled="loading"
           :title="t('common.refresh')"
           @click="handleToolbarRefresh"
@@ -939,7 +939,7 @@ function handleToolbarRefresh() {
         <KumoButton
           v-if="!props.fullscreen"
           type="button"
-          class="flex h-8 items-center gap-1.5 rounded-lg bg-blue-100 px-3 text-xs font-bold text-blue-700 transition-colors hover:bg-blue-200 dark:bg-blue-900/30 dark:text-blue-400 dark:hover:bg-blue-900/50"
+          class="btn btn-secondary gap-1.5"
           :title="t('admin.ops.alertRules.title')"
           @click="emit('openAlertRules')"
         >
@@ -953,7 +953,7 @@ function handleToolbarRefresh() {
         <KumoButton
           v-if="!props.fullscreen"
           type="button"
-          class="flex h-8 items-center gap-1.5 rounded-lg bg-gray-100 px-3 text-xs font-bold text-gray-700 transition-colors hover:bg-[var(--brand-hover)] dark:bg-dark-700 dark:text-gray-300"
+          class="btn btn-secondary gap-1.5"
           :title="t('admin.ops.settings.title')"
           @click="emit('openSettings')"
         >
@@ -968,7 +968,7 @@ function handleToolbarRefresh() {
         <KumoButton
           v-if="!props.fullscreen"
           type="button"
-          class="flex h-8 w-8 items-center justify-center rounded-lg bg-gray-100 text-gray-700 transition-colors hover:bg-[var(--brand-hover)] dark:bg-dark-700 dark:text-gray-300"
+          class="btn btn-secondary h-9 w-9 p-0"
           :title="t('admin.ops.fullscreen.enter')"
           @click="emit('enterFullscreen')"
         >
@@ -1185,7 +1185,7 @@ function handleToolbarRefresh() {
             </div>
             <KumoButton
               v-if="!props.fullscreen"
-              class="text-[10px] font-bold text-blue-500 hover:underline"
+              class="text-[10px] font-bold text-primary-600 hover:underline dark:text-primary-400"
               type="button"
               @click="openDetails({ title: t('admin.ops.requestDetails.title') })"
             >
@@ -1222,7 +1222,7 @@ function handleToolbarRefresh() {
             </div>
             <KumoButton
               v-if="!props.fullscreen"
-              class="text-[10px] font-bold text-blue-500 hover:underline"
+              class="text-[10px] font-bold text-primary-600 hover:underline dark:text-primary-400"
               type="button"
               @click="openDetails({ title: t('admin.ops.requestDetails.title'), kind: 'error' })"
             >
@@ -1252,7 +1252,7 @@ function handleToolbarRefresh() {
             </div>
             <KumoButton
               v-if="!props.fullscreen"
-              class="text-[10px] font-bold text-blue-500 hover:underline"
+              class="text-[10px] font-bold text-primary-600 hover:underline dark:text-primary-400"
               type="button"
               @click="openDetails({ title: t('admin.ops.latencyDuration'), sort: 'duration_desc' })"
             >
@@ -1303,7 +1303,7 @@ function handleToolbarRefresh() {
             </div>
             <KumoButton
               v-if="!props.fullscreen"
-              class="text-[10px] font-bold text-blue-500 hover:underline"
+              class="text-[10px] font-bold text-primary-600 hover:underline dark:text-primary-400"
               type="button"
               @click="openDetails({ title: t('admin.ops.ttftLabel'), kind: 'success', sort: 'ttft_desc' })"
             >
@@ -1352,7 +1352,7 @@ function handleToolbarRefresh() {
               <span class="text-[10px] font-bold uppercase text-gray-400">{{ t('admin.ops.requestErrors') }}</span>
               <HelpTooltip v-if="!props.fullscreen" :content="t('admin.ops.tooltips.errors')" />
             </div>
-            <KumoButton v-if="!props.fullscreen" class="text-[10px] font-bold text-blue-500 hover:underline" type="button" @click="openErrorDetails('request')">
+            <KumoButton v-if="!props.fullscreen" class="text-[10px] font-bold text-primary-600 hover:underline dark:text-primary-400" type="button" @click="openErrorDetails('request')">
               {{ t('admin.ops.requestDetails.details') }}
             </KumoButton>
           </div>
@@ -1378,7 +1378,7 @@ function handleToolbarRefresh() {
               <span class="text-[10px] font-bold uppercase text-gray-400">{{ t('admin.ops.upstreamErrors') }}</span>
               <HelpTooltip v-if="!props.fullscreen" :content="t('admin.ops.tooltips.upstreamErrors')" />
             </div>
-            <KumoButton v-if="!props.fullscreen" class="text-[10px] font-bold text-blue-500 hover:underline" type="button" @click="openErrorDetails('upstream')">
+            <KumoButton v-if="!props.fullscreen" class="text-[10px] font-bold text-primary-600 hover:underline dark:text-primary-400" type="button" @click="openErrorDetails('upstream')">
               {{ t('admin.ops.requestDetails.details') }}
             </KumoButton>
           </div>
@@ -1493,7 +1493,7 @@ function handleToolbarRefresh() {
               <div class="text-[10px] font-bold uppercase tracking-wider text-gray-400">{{ t('admin.ops.jobs') }}</div>
               <HelpTooltip v-if="!props.fullscreen" :content="t('admin.ops.tooltips.jobs')" />
             </div>
-            <KumoButton v-if="!props.fullscreen" class="text-[10px] font-bold text-blue-500 hover:underline" type="button" @click="openJobsDetails">
+            <KumoButton v-if="!props.fullscreen" class="text-[10px] font-bold text-primary-600 hover:underline dark:text-primary-400" type="button" @click="openJobsDetails">
               {{ t('admin.ops.requestDetails.details') }}
             </KumoButton>
           </div>
@@ -1576,14 +1576,14 @@ function handleToolbarRefresh() {
         <div class="flex justify-end gap-3 pt-2">
           <KumoButton
             type="button"
-            class="rounded-lg bg-gray-100 px-4 py-2 text-sm font-medium text-gray-700 hover:bg-[var(--brand-hover)] dark:bg-dark-700 dark:text-gray-300"
+            class="btn btn-secondary"
             @click="handleCustomTimeRangeCancel"
           >
             {{ t('common.cancel') }}
           </KumoButton>
           <KumoButton
             type="button"
-            class="rounded-lg bg-blue-500 px-4 py-2 text-sm font-medium text-white hover:bg-blue-600"
+            class="btn btn-primary"
             @click="handleCustomTimeRangeConfirm"
           >
             {{ t('common.confirm') }}

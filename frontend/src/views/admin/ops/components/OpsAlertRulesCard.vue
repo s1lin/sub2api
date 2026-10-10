@@ -406,7 +406,7 @@ function cancelDelete() {
           {{ t('admin.ops.alertRules.create') }}
         </KumoButton>
         <KumoButton
-          class="flex items-center gap-1.5 rounded-lg bg-gray-100 px-3 py-1.5 text-xs font-bold text-gray-700 transition-colors hover:bg-[var(--brand-hover)] disabled:cursor-not-allowed disabled:opacity-50 dark:bg-dark-700 dark:text-gray-300"
+          class="btn btn-secondary btn-sm flex items-center gap-1.5"
           :disabled="loading"
           @click="load"
         >

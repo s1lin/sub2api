@@ -86,7 +86,7 @@
               />
               <KumoButton
                 @click="queryKey"
-                class="text-xs px-3 py-1.5 rounded-lg bg-primary-500 text-white hover:bg-primary-600"
+                class="btn btn-primary btn-sm"
               >{{ t('keyUsage.apply') }}</KumoButton>
             </div>
           </div>

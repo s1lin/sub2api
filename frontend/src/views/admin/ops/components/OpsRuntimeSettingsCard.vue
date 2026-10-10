@@ -247,7 +247,7 @@ onMounted(() => {
         <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">{{ t('admin.ops.runtime.description') }}</p>
       </div>
       <KumoButton
-        class="flex items-center gap-1.5 rounded-lg bg-gray-100 px-3 py-1.5 text-xs font-bold text-gray-700 transition-colors hover:bg-[var(--brand-hover)] disabled:cursor-not-allowed disabled:opacity-50 dark:bg-dark-700 dark:text-gray-300"
+        class="btn btn-secondary btn-sm flex items-center gap-1.5"
         :disabled="loading"
         @click="loadSettings"
       >
@@ -283,7 +283,7 @@ onMounted(() => {
           </div>
 
           <KumoCollapsible class="col-span-1 md:col-span-2">
-            <KumoCollapsibleTrigger class="cursor-pointer text-xs font-medium text-blue-600 hover:text-blue-700 dark:text-blue-400">
+            <KumoCollapsibleTrigger class="cursor-pointer text-xs font-medium text-primary-600 hover:text-primary-700 dark:text-primary-400">
               {{ t('admin.ops.runtime.showAdvancedDeveloperSettings') }}
             </KumoCollapsibleTrigger>
             <KumoCollapsiblePanel>

@@ -263,7 +263,7 @@ watch(
           </div>
 
           <div class="flex items-center justify-end">
-            <KumoButton type="button" class="rounded-lg bg-gray-100 px-3 py-1.5 text-xs font-semibold text-gray-700 transition-colors hover:bg-[var(--brand-hover)] dark:bg-dark-700 dark:text-gray-300" @click="resetFilters">
+            <KumoButton type="button" class="btn btn-secondary btn-sm" @click="resetFilters">
               {{ t('common.reset') }}
             </KumoButton>
           </div>

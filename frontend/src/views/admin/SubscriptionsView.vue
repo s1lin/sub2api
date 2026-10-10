@@ -22,31 +22,31 @@
                 <span class="hidden md:inline">{{ t('admin.users.columnSettings') }}</span>
               </KumoPopoverTrigger>
 <KumoPopoverContent
-                class="w-48 rounded-lg border border-[var(--brand-line)] bg-white dark:bg-dark-800"
+                class="w-48"
               >
-                <div class="p-2">
+                <div>
                   <!-- User column mode selection -->
-                  <div class="mb-2 border-b border-[var(--brand-line)] pb-2">
-                    <div class="px-3 py-1 text-xs font-medium text-gray-500 dark:text-gray-400">
+                  <div class="mb-1 border-b border-[var(--brand-line)] pb-1">
+                    <div class="platform-menu-label">
                       {{ t('admin.subscriptions.columns.user') }}
                     </div>
                     <KumoButton :aria-pressed="userColumnMode === 'email'"
                       @click="setUserColumnMode('email')"
-                      class="flex w-full items-center justify-between rounded-md px-3 py-2 text-sm text-gray-700 hover:bg-[var(--brand-hover)] dark:text-gray-200"
+                      class="platform-menu-item justify-between"
                     >
                       <span>{{ t('admin.users.columns.email') }}</span>
-                      <Icon v-if="userColumnMode === 'email'" name="check" size="sm" class="text-primary-500" />
+                      <Icon v-if="userColumnMode === 'email'" name="check" size="sm" class="platform-menu-check" />
                     </KumoButton>
                     <KumoButton :aria-pressed="userColumnMode === 'username'"
                       @click="setUserColumnMode('username')"
-                      class="flex w-full items-center justify-between rounded-md px-3 py-2 text-sm text-gray-700 hover:bg-[var(--brand-hover)] dark:text-gray-200"
+                      class="platform-menu-item justify-between"
                     >
                       <span>{{ t('admin.users.columns.username') }}</span>
-                      <Icon v-if="userColumnMode === 'username'" name="check" size="sm" class="text-primary-500" />
+                      <Icon v-if="userColumnMode === 'username'" name="check" size="sm" class="platform-menu-check" />
                     </KumoButton>
                   </div>
                   <!-- Other columns toggle -->
-                  <KumoLabel v-for="col in toggleableColumns" :key="col.key" class="flex w-full cursor-pointer items-center gap-2 px-3 py-2 text-sm"><KumoCheckbox :aria-label="col.label" :checked="isColumnVisible(col.key)"   @change="toggleColumn(col.key)" /><span>{{ col.label }}</span></KumoLabel>
+                  <KumoLabel v-for="col in toggleableColumns" :key="col.key" class="platform-menu-item cursor-pointer"><KumoCheckbox :aria-label="col.label" :checked="isColumnVisible(col.key)"   @change="toggleColumn(col.key)" /><span>{{ col.label }}</span></KumoLabel>
                 </div>
               </KumoPopoverContent></KumoPopoverRoot>
             <KumoButton
