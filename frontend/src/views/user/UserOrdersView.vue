@@ -2,7 +2,7 @@
   <AppLayout>
     <div class="space-y-4">
       <!-- Filters -->
-      <KumoSurface class="card p-4">
+      <Panel flush class="card p-4">
         <div class="flex flex-wrap items-center gap-3">
           <Select v-model="currentFilter" :options="statusFilters" class="w-36" @change="handlePageChange(1)" />
           <div class="flex flex-1 items-center justify-end gap-2">
@@ -12,7 +12,7 @@
             <KumoButton class="btn btn-primary" @click="router.push('/purchase')">{{ t('payment.result.backToRecharge') }}</KumoButton>
           </div>
         </div>
-      </KumoSurface>
+      </Panel>
 
       <!-- Table -->
       <OrderTable :orders="orders" :loading="loading">
@@ -55,7 +55,7 @@
     <!-- Refund Dialog -->
     <BaseDialog :show="!!refundTarget" :title="t('payment.orders.requestRefund')" @close="refundTarget = null">
       <div v-if="refundTarget" class="space-y-4">
-        <div class="rounded-xl bg-gray-50 p-4 dark:bg-dark-800">
+        <div class="p-4 panel-section">
           <div class="flex justify-between text-sm">
             <span class="text-gray-500 dark:text-gray-400">{{ t('payment.orders.orderId') }}</span>
             <span class="font-mono text-gray-900 dark:text-white">#{{ refundTarget.id }}</span>
@@ -81,7 +81,8 @@
 </template>
 
 <script setup lang="ts">
-import { KumoButton, KumoLabel, KumoSurface, KumoTextarea } from '@/components/kumo'
+import Panel from '@/components/common/Panel.vue'
+import { KumoButton, KumoLabel, KumoTextarea } from '@/components/kumo'
 
 import { ref, reactive, computed, onMounted } from 'vue'
 import { useI18n } from 'vue-i18n'

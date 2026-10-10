@@ -8,14 +8,14 @@
       <div v-if="loading" role="status" :aria-label="t('storefront.loading')" class="space-y-5">
         <span class="sr-only">{{ t('storefront.loading') }}</span>
         <div v-for="height in ['h-24', 'h-52', 'h-36']" :key="height" :class="['card p-6', height]" aria-hidden="true">
-          <div class="mb-4 h-4 w-1/3 rounded bg-gray-200 dark:bg-dark-700"></div>
-          <div class="h-3 w-2/3 rounded bg-gray-100 dark:bg-dark-800"></div>
+          <div class="mb-4 h-4 w-1/3 rounded panel-section"></div>
+          <div class="h-3 w-2/3 rounded panel-section"></div>
         </div>
       </div>
-      <KumoSurface v-else-if="checkoutFailed" role="alert" class="card p-8 text-center">
+      <Panel flush v-else-if="checkoutFailed" role="alert" class="card p-8 text-center">
         <p class="mb-4 text-gray-500 dark:text-dark-300">{{ t('storefront.checkoutError') }}</p>
         <KumoButton class="btn btn-primary" @click="loadCheckout">{{ t('storefront.retry') }}</KumoButton>
-      </KumoSurface>
+      </Panel>
       <template v-else>
         <!-- Tab Switcher (hide during payment and subscription confirm) -->
         <KumoTabs v-if="tabs.length > 1 && paymentPhase === 'select' && !selectedPlan"
@@ -42,26 +42,26 @@
         <!-- Tab content (select phase) -->
         <template v-else>
           <!-- Neither top-up nor subscriptions available (balance recharge disabled via API while subscriptions are off) -->
-          <KumoSurface v-if="tabs.length === 0" class="card py-16 text-center">
+          <Panel flush v-if="tabs.length === 0" class="card py-16 text-center">
             <p class="text-gray-500 dark:text-gray-400">{{ t('payment.billingUnavailable') }}</p>
-          </KumoSurface>
+          </Panel>
           <!-- Top-up Tab -->
           <template v-else-if="activeTab === 'recharge'">
             <!-- Recharge Account Card -->
-            <KumoSurface class="card p-5">
+            <Panel flush class="card p-5">
               <p class="text-xs font-medium text-gray-500 dark:text-dark-400">{{ t('payment.rechargeAccount') }}</p>
               <p class="mt-1 text-base font-semibold text-gray-900 dark:text-white">{{ user?.username || '' }}</p>
               <p class="mt-0.5 text-sm font-medium text-green-600 dark:text-green-400">{{ t('payment.currentBalance') }}: {{ user?.balance?.toFixed(2) || '0.00' }}</p>
-            </KumoSurface>
-            <KumoSurface v-if="enabledMethods.length === 0" class="card py-16 text-center">
+            </Panel>
+            <Panel flush v-if="enabledMethods.length === 0" class="card py-16 text-center">
               <p class="text-gray-500 dark:text-gray-400">{{ t('payment.notAvailable') }}</p>
-            </KumoSurface>
+            </Panel>
             <template v-else>
-            <KumoSurface class="card p-6">
+            <Panel flush class="card p-6">
               <!-- 充值赠送活动文案（后台 Markdown 配置，空则不渲染） -->
               <div
                 v-if="renderedBonusNotice"
-                class="mb-5 rounded-xl border border-amber-200 bg-amber-50 px-4 py-3 text-sm leading-relaxed text-amber-900 dark:border-amber-500/30 dark:bg-amber-500/10 dark:text-amber-100 [&_a]:font-medium [&_a]:underline [&_h1]:text-base [&_h1]:font-semibold [&_h2]:text-base [&_h2]:font-semibold [&_h3]:text-sm [&_h3]:font-semibold [&_ol]:my-1 [&_ol]:ml-5 [&_ol]:list-decimal [&_p]:my-1 [&_strong]:font-semibold [&_ul]:my-1 [&_ul]:ml-5 [&_ul]:list-disc"
+                class="mb-5 rounded-lg border border-amber-200 bg-amber-50 px-4 py-3 text-sm leading-relaxed text-amber-900 dark:border-amber-500/30 dark:bg-amber-500/10 dark:text-amber-100 [&_a]:font-medium [&_a]:underline [&_h1]:text-base [&_h1]:font-semibold [&_h2]:text-base [&_h2]:font-semibold [&_h3]:text-sm [&_h3]:font-semibold [&_ol]:my-1 [&_ol]:ml-5 [&_ol]:list-decimal [&_p]:my-1 [&_strong]:font-semibold [&_ul]:my-1 [&_ul]:ml-5 [&_ul]:list-disc"
                 data-testid="recharge-bonus-notice"
                 v-html="renderedBonusNotice"
               ></div>
@@ -76,15 +76,15 @@
                 :currency="selectedCurrency"
               />
               <p v-if="amountError" class="mt-2 text-xs text-amber-600 dark:text-amber-300">{{ amountError }}</p>
-            </KumoSurface>
-            <KumoSurface v-if="enabledMethods.length >= 1" class="card p-6">
+            </Panel>
+            <Panel flush v-if="enabledMethods.length >= 1" class="card p-6">
               <PaymentMethodSelector
                 :methods="methodOptions"
                 :selected="selectedMethod"
                 @select="selectedMethod = $event"
               />
-            </KumoSurface>
-            <KumoSurface v-if="validAmount > 0" class="card p-6">
+            </Panel>
+            <Panel flush v-if="validAmount > 0" class="card p-6">
               <div class="space-y-2 text-sm">
                 <div class="flex justify-between">
                   <span class="text-gray-500 dark:text-gray-400">{{ t('payment.paymentAmount') }}</span>
@@ -98,23 +98,23 @@
                   <span class="text-gray-500 dark:text-gray-400">{{ t('payment.fee') }} ({{ feeRate }}%)</span>
                   <span class="text-gray-900 dark:text-white">{{ formatSelectedPaymentAmount(feeAmount) }}</span>
                 </div>
-                <div v-if="showActualPay" class="flex justify-between border-t border-gray-200 pt-2 dark:border-dark-600">
+                <div v-if="showActualPay" class="flex justify-between border-t border-[var(--brand-line)] pt-2">
                   <span class="font-medium text-gray-700 dark:text-gray-300">{{ t('payment.actualPay') }}</span>
                   <span class="text-lg font-bold text-primary-600 dark:text-primary-400">{{ formatSelectedPaymentAmount(totalAmount) }}</span>
                 </div>
-                <div v-if="showBonusRow" class="flex justify-between" :class="{ 'border-t border-gray-200 pt-2 dark:border-dark-600': !showActualPay }" data-testid="recharge-bonus-row">
+                <div v-if="showBonusRow" class="flex justify-between" :class="{ 'border-t border-[var(--brand-line)] pt-2 border-[var(--brand-line)]': !showActualPay }" data-testid="recharge-bonus-row">
                   <span class="text-gray-500 dark:text-gray-400">{{ t('payment.rechargeBonus.amountLabelWithPercent', { percent: formatRechargeBonusNumber(bonusQuote.percent) }) }}</span>
                   <span class="font-medium text-red-600 dark:text-red-400">+${{ bonusQuote.bonus.toFixed(2) }}</span>
                 </div>
-                <div v-if="showCreditedBalance" class="flex justify-between" :class="{ 'border-t border-gray-200 pt-2 dark:border-dark-600': !showActualPay && !showBonusRow }" data-testid="recharge-credited-row">
+                <div v-if="showCreditedBalance" class="flex justify-between" :class="{ 'border-t border-[var(--brand-line)] pt-2 border-[var(--brand-line)]': !showActualPay && !showBonusRow }" data-testid="recharge-credited-row">
                   <span class="text-gray-500 dark:text-gray-400">{{ t('payment.creditedBalance') }}</span>
                   <span :class="bonusQuote.percent > 0 ? 'font-semibold text-gray-900 dark:text-white' : 'text-gray-900 dark:text-white'">${{ creditedAmount.toFixed(2) }}</span>
                 </div>
-                <p v-if="balanceRechargeMultiplier !== 1" class="border-t border-gray-200 pt-2 text-xs text-gray-500 dark:border-dark-600 dark:text-gray-400">
+                <p v-if="balanceRechargeMultiplier !== 1" class="border-t border-[var(--brand-line)] pt-2 text-xs text-gray-500 dark:text-gray-400">
                   {{ t('payment.rechargeRatePreview', { currency: selectedCurrency, usd: balanceRechargeMultiplier.toFixed(2) }) }}
                 </p>
               </div>
-            </KumoSurface>
+            </Panel>
             <KumoButton class="btn btn-primary w-full py-3 text-base font-medium" :disabled="!canSubmit || submitting" @click="handleSubmitRecharge">
               <span v-if="submitting" class="flex items-center justify-center gap-2">
                 <KumoLoader class="h-4 w-4" />
@@ -128,7 +128,7 @@
           <template v-else-if="activeTab === 'subscription'">
             <!-- Subscription confirm (inline, replaces plan list) -->
             <template v-if="selectedPlan">
-              <KumoSurface class="card p-5">
+              <Panel flush class="card p-5">
                 <!-- Header: platform badge + plan name -->
                 <div class="mb-3 flex flex-wrap items-center gap-2">
                   <span :class="['rounded-md border px-2 py-0.5 text-xs font-medium', planBadgeClass]">
@@ -179,15 +179,15 @@
                     <div class="text-lg font-semibold text-gray-800 dark:text-gray-200">{{ t('payment.planCard.unlimited') }}</div>
                   </div>
                 </div>
-              </KumoSurface>
-              <KumoSurface v-if="enabledMethods.length >= 1" class="card p-6">
+              </Panel>
+              <Panel flush v-if="enabledMethods.length >= 1" class="card p-6">
                 <PaymentMethodSelector
                   :methods="subMethodOptions"
                   :selected="selectedMethod"
                   @select="selectedMethod = $event"
                 />
-              </KumoSurface>
-              <KumoSurface v-if="feeRate > 0 && selectedPlan.price > 0" class="card p-6">
+              </Panel>
+              <Panel flush v-if="feeRate > 0 && selectedPlan.price > 0" class="card p-6">
                 <div class="space-y-2 text-sm">
                   <div class="flex justify-between">
                     <span class="text-gray-500 dark:text-gray-400">{{ t('payment.amountLabel') }}</span>
@@ -197,12 +197,12 @@
                     <span class="text-gray-500 dark:text-gray-400">{{ t('payment.fee') }} ({{ feeRate }}%)</span>
                     <span class="text-gray-900 dark:text-white">{{ formatSelectedPaymentAmount(subFeeAmount) }}</span>
                   </div>
-                  <div class="flex justify-between border-t border-gray-200 pt-2 dark:border-dark-600">
+                  <div class="flex justify-between border-t border-[var(--brand-line)] pt-2">
                     <span class="font-medium text-gray-700 dark:text-gray-300">{{ t('payment.actualPay') }}</span>
                     <span class="text-lg font-bold text-primary-600 dark:text-primary-400">{{ formatSelectedPaymentAmount(subTotalAmount) }}</span>
                   </div>
                 </div>
-              </KumoSurface>
+              </Panel>
               <KumoButton class="btn btn-primary w-full py-3 text-base font-medium" :disabled="!canSubmitSubscription || submitting" @click="confirmSubscribe">
                 <span v-if="submitting" class="flex items-center justify-center gap-2">
                   <KumoLoader class="h-4 w-4" />
@@ -215,10 +215,10 @@
             </template>
             <!-- Plan list -->
             <template v-else>
-              <KumoSurface v-if="checkout.plans.length === 0" class="card py-16 text-center">
+              <Panel flush v-if="checkout.plans.length === 0" class="card py-16 text-center">
                 <Icon name="gift" size="xl" class="mx-auto mb-3 text-gray-300 dark:text-dark-600" />
                 <p class="text-gray-500 dark:text-gray-400">{{ t('payment.noPlans') }}</p>
-              </KumoSurface>
+              </Panel>
               <div v-else :class="planGridClass">
                 <SubscriptionPlanCard v-for="plan in checkout.plans" :key="plan.id" :plan="plan" :active-subscriptions="activeSubscriptions" @select="selectPlan" />
               </div>
@@ -227,7 +227,7 @@
                 <p class="mb-2 text-xs font-medium text-gray-500 dark:text-dark-400">{{ t('payment.activeSubscription') }}</p>
                 <div class="space-y-2">
                   <div v-for="sub in activeSubscriptions" :key="sub.id"
-                    class="flex items-center gap-3 rounded-xl border border-gray-100 bg-white px-3 py-2 dark:border-dark-700 dark:bg-dark-800">
+                    class="flex items-center gap-3 rounded-lg border border-[var(--brand-line)] bg-white px-3 py-2 dark:bg-dark-800">
                     <div :class="['h-6 w-1 shrink-0 rounded-full', platformAccentBarClass(sub.group?.platform || '')]" />
                     <div class="min-w-0 flex-1">
                       <div class="flex items-center gap-1.5">
@@ -249,14 +249,14 @@
             </template>
           </template>
         </template>
-        <KumoSurface v-if="(checkout.help_text || checkout.help_image_url) && paymentPhase === 'select' && !selectedPlan" class="card p-4">
+        <Panel flush v-if="(checkout.help_text || checkout.help_image_url) && paymentPhase === 'select' && !selectedPlan" class="card p-4">
           <div class="flex flex-col items-center gap-3">
             <img v-if="checkout.help_image_url" :src="checkout.help_image_url" alt=""
               class="h-40 max-w-full cursor-pointer rounded-lg object-contain transition-opacity hover:opacity-80"
               @click="previewImage = checkout.help_image_url" />
             <div v-if="checkout.help_text" class="markdown-body w-full overflow-x-auto break-words" v-html="renderedHelpText"></div>
           </div>
-        </KumoSurface>
+        </Panel>
       </template>
     </div>
     <!-- Renewal Plan Selection Modal -->
@@ -275,7 +275,8 @@
 </template>
 
 <script setup lang="ts">
-import { KumoBadge, KumoButton, KumoDialog, KumoLoader, KumoSurface, KumoTabs } from '@/components/kumo'
+import Panel from '@/components/common/Panel.vue'
+import { KumoBadge, KumoButton, KumoDialog, KumoLoader, KumoTabs } from '@/components/kumo'
 
 import { ref, computed, onMounted, watch } from 'vue'
 import { useI18n } from 'vue-i18n'

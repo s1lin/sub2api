@@ -1,13 +1,13 @@
 <template>
   <div v-if="!isDesktopViewport" class="platform-data-cards space-y-3">
     <template v-if="loading">
-      <div v-for="i in 5" :key="i" class="rounded-lg border border-gray-200 bg-[var(--brand-surface)] p-4 dark:border-dark-700 dark:bg-[var(--brand-surface)]">
+      <div v-for="i in 5" :key="i" class="rounded-lg border border-[var(--brand-line)] bg-[var(--brand-surface)] p-4 dark:bg-[var(--brand-surface)]">
         <div class="space-y-3">
           <div v-for="column in dataColumns" :key="column.key" class="flex justify-between">
             <KumoSkeleton class="h-4 w-20 animate-pulse rounded bg-gray-200 dark:bg-dark-700"></KumoSkeleton>
             <KumoSkeleton class="h-4 w-32 animate-pulse rounded bg-gray-200 dark:bg-dark-700"></KumoSkeleton>
           </div>
-          <div v-if="hasActionsColumn" class="border-t border-gray-200 pt-3 dark:border-dark-700">
+          <div v-if="hasActionsColumn" class="border-t border-[var(--brand-line)] pt-3">
             <KumoSkeleton class="h-8 w-full animate-pulse rounded bg-gray-200 dark:bg-dark-700"></KumoSkeleton>
           </div>
         </div>
@@ -15,7 +15,7 @@
     </template>
 
     <template v-else-if="!data || data.length === 0">
-      <div class="rounded-lg border border-gray-200 bg-[var(--brand-surface)] p-12 text-center dark:border-dark-700 dark:bg-[var(--brand-surface)]">
+      <div class="rounded-lg border border-[var(--brand-line)] bg-[var(--brand-surface)] p-12 text-center dark:bg-[var(--brand-surface)]">
         <slot name="empty">
           <EmptyState :title="t('empty.noData')" class="!py-4" />
         </slot>
@@ -27,7 +27,7 @@
         <KumoLabel class="flex items-center gap-2 text-sm font-medium text-gray-600 dark:text-gray-300">
           <KumoCheckbox :aria-label="t('common.selectAll')"
             type="checkbox"
-            class="h-4 w-4 rounded border-gray-300 text-primary-600 focus:ring-primary-500 dark:border-dark-600 dark:bg-dark-800"
+            class="h-4 w-4 rounded border-[var(--brand-line)] text-primary-600 focus:ring-primary-500 dark:bg-dark-800"
             :checked="allVisibleSelected"
             :indeterminate="someVisibleSelected"
             data-test="select-all-mobile"
@@ -39,7 +39,7 @@
       <div
         v-for="(row, index) in sortedData"
         :key="resolveRowKey(row, index)"
-        class="rounded-lg border border-gray-200 bg-[var(--brand-surface)] p-4 dark:border-dark-700 dark:bg-[var(--brand-surface)]"
+        class="rounded-lg border border-[var(--brand-line)] bg-[var(--brand-surface)] p-4 dark:bg-[var(--brand-surface)]"
         :class="{
           'cursor-pointer': clickableRows,
           'border-primary-300 bg-primary-50/40 dark:border-primary-700 dark:bg-primary-900/10': selectable && isRowSelected(row, index)
@@ -50,7 +50,7 @@
           <div v-if="selectable" class="flex justify-end">
             <KumoCheckbox
               type="checkbox"
-              class="h-4 w-4 rounded border-gray-300 text-primary-600 focus:ring-primary-500 dark:border-dark-600 dark:bg-dark-800"
+              class="h-4 w-4 rounded border-[var(--brand-line)] text-primary-600 focus:ring-primary-500 dark:bg-dark-800"
               :checked="isRowSelected(row, index)"
               :aria-label="getRowSelectionLabel(row, index)"
               data-test="select-row"
@@ -73,7 +73,7 @@
               </slot>
             </div>
           </div>
-          <div v-if="hasActionsColumn" class="platform-table-actions border-t border-gray-200 pt-3 dark:border-dark-700">
+          <div v-if="hasActionsColumn" class="platform-table-actions border-t border-[var(--brand-line)] pt-3">
             <slot name="cell-actions" :row="row" :value="row['actions']" :expanded="actionsExpanded"></slot>
           </div>
         </div>
@@ -100,7 +100,7 @@
           >
             <KumoCheckbox
               type="checkbox"
-              class="h-4 w-4 rounded border-gray-300 text-primary-600 focus:ring-primary-500 dark:border-dark-600 dark:bg-dark-800"
+              class="h-4 w-4 rounded border-[var(--brand-line)] text-primary-600 focus:ring-primary-500 dark:bg-dark-800"
               :checked="allVisibleSelected"
               :indeterminate="someVisibleSelected"
               :aria-label="t('common.selectAll')"
@@ -115,7 +115,7 @@
             :aria-sort="column.sortable ? getColumnAriaSort(column.key) : undefined"
             :class="[
               'sticky-header-cell py-3 text-left text-gray-500 dark:text-dark-400',
-              { 'cursor-pointer hover:bg-gray-100 dark:hover:bg-dark-700': column.sortable },
+              { 'cursor-pointer hover:bg-[var(--brand-hover)] hover:': column.sortable },
               getStickyColumnClass(column, index),
               column.class
             ]"
@@ -194,7 +194,7 @@
             :data-row-id="resolveRowKey(item.row, item.index)"
             :data-index="item.index"
             :ref="item.measure ? measureElement : undefined"
-            class="hover:bg-gray-50 dark:hover:bg-dark-800"
+            class="hover:bg-[var(--brand-hover)]"
             :class="{
               'cursor-pointer': clickableRows,
               'bg-primary-50/40 dark:bg-primary-900/10': selectable && isRowSelected(item.row, item.index)
@@ -204,7 +204,7 @@
             <KumoTableCell v-if="selectable" class="w-11 min-w-11 px-3 py-4 text-center">
               <KumoCheckbox
                 type="checkbox"
-                class="h-4 w-4 rounded border-gray-300 text-primary-600 focus:ring-primary-500 dark:border-dark-600 dark:bg-dark-800"
+                class="h-4 w-4 rounded border-[var(--brand-line)] text-primary-600 focus:ring-primary-500 dark:bg-dark-800"
                 :checked="isRowSelected(item.row, item.index)"
                 :aria-label="getRowSelectionLabel(item.row, item.index)"
                 data-test="select-row"
@@ -438,7 +438,7 @@ interface Props {
   serverSideSort?: boolean
   /** Emit 'rowClick' on row/card click and show pointer cursor (interactive cells should @click.stop) */
   clickableRows?: boolean
-  /** Estimated row height in px for the virtualizer (default 56) */
+  /** Estimated row height in px for the virtualizer (default 40) */
   estimateRowHeight?: number
   /** Number of rows to render beyond the visible area (default 5) */
   overscan?: number
@@ -749,7 +749,7 @@ const rowVirtualizer = useVirtualizer(computed(() => ({
     const row = sortedData.value?.[index]
     return row != null ? resolveRowKey(row, index) : index
   },
-  estimateSize: () => props.estimateRowHeight ?? 56,
+  estimateSize: () => props.estimateRowHeight ?? 40,
   overscan: props.overscan ?? 5,
   // 兜底高度:首个有效高度读数到来前,先按一屏渲染,避免空白帧
   initialRect: { width: 0, height: estimatedViewportHeight() },
@@ -1000,9 +1000,9 @@ defineExpose({
   top: 0;
   right: 0;
   bottom: 0;
-  width: 10px;
+  width: 1px;
   transform: translateX(100%);
-  background: linear-gradient(to right, rgba(0, 0, 0, 0.08), transparent);
+  background: var(--brand-line);
   pointer-events: none;
 }
 
@@ -1013,9 +1013,9 @@ defineExpose({
   top: 0;
   right: 0;
   bottom: 0;
-  width: 10px;
+  width: 1px;
   transform: translateX(100%);
-  background: linear-gradient(to right, rgba(0, 0, 0, 0.08), transparent);
+  background: var(--brand-line);
   pointer-events: none;
 }
 
@@ -1026,20 +1026,20 @@ defineExpose({
   top: 0;
   left: 0;
   bottom: 0;
-  width: 10px;
+  width: 1px;
   transform: translateX(-100%);
-  background: linear-gradient(to left, rgba(0, 0, 0, 0.08), transparent);
+  background: var(--brand-line);
   pointer-events: none;
 }
 
 /* 暗色模式阴影 */
 :global(.dark) .table-wrapper.is-scrollable :deep(.sticky-col-left::after),
 :global(.dark) .table-wrapper.is-scrollable :deep(.sticky-col-left-second::after) {
-  background: linear-gradient(to right, rgba(0, 0, 0, 0.2), transparent);
+  background: var(--brand-line);
 }
 
 :global(.dark) .table-wrapper.is-scrollable :deep(.sticky-col-right::before) {
-  background: linear-gradient(to left, rgba(0, 0, 0, 0.2), transparent);
+  background: var(--brand-line);
 }
 </style>
 
@@ -1073,7 +1073,7 @@ defineExpose({
 
 /* 常驻、不透明的滑块，无视鼠标是否 hover 都在那！ */
 .table-wrapper::-webkit-scrollbar-thumb {
-  background-color: rgba(107, 114, 128, 0.75) !important; 
+  background-color: rgba(107, 114, 128, 0.75) !important;
   border-radius: 6px !important;
   border: 2px solid transparent !important;
   background-clip: padding-box !important;

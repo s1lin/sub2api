@@ -1,6 +1,34 @@
 <template>
-  <AppLayout>
+  <AppLayout hide-page-header>
     <TablePageLayout>
+      <template #actions>
+        <div class="flex flex-1 flex-wrap items-center justify-end gap-2">
+            <KumoButton
+              @click="loadCodes"
+              :disabled="loading"
+              class="btn btn-secondary"
+              :title="t('common.refresh')"
+            >
+              <Icon name="refresh" size="md" :class="loading ? 'animate-spin' : ''" />
+            </KumoButton>
+            <KumoButton @click="handleExportCodes" class="btn btn-secondary">
+              {{ t('admin.redeem.exportCsv') }}
+            </KumoButton>
+            <KumoButton
+              data-test="batch-update-open"
+              @click="openBatchUpdateDialog"
+              :disabled="selectedCount === 0 || batchUpdating"
+              class="btn btn-secondary"
+            >
+              <Icon name="edit" size="md" class="mr-2" />
+              {{ t('admin.redeem.batchUpdate') }}
+            </KumoButton>
+            <KumoButton @click="showGenerateDialog = true" class="btn btn-primary">
+              {{ t('admin.redeem.generateCodes') }}
+            </KumoButton>
+          </div>
+      </template>
+
       <template #filters>
         <div class="flex flex-wrap items-center gap-3">
           <!-- Left: Search + Filters -->
@@ -27,31 +55,7 @@
           />
 
           <!-- Right: Action buttons -->
-          <div class="flex flex-1 flex-wrap items-center justify-end gap-2">
-            <KumoButton
-              @click="loadCodes"
-              :disabled="loading"
-              class="btn btn-secondary"
-              :title="t('common.refresh')"
-            >
-              <Icon name="refresh" size="md" :class="loading ? 'animate-spin' : ''" />
-            </KumoButton>
-            <KumoButton @click="handleExportCodes" class="btn btn-secondary">
-              {{ t('admin.redeem.exportCsv') }}
-            </KumoButton>
-            <KumoButton
-              data-test="batch-update-open"
-              @click="openBatchUpdateDialog"
-              :disabled="selectedCount === 0 || batchUpdating"
-              class="btn btn-secondary"
-            >
-              <Icon name="edit" size="md" class="mr-2" />
-              {{ t('admin.redeem.batchUpdate') }}
-            </KumoButton>
-            <KumoButton @click="showGenerateDialog = true" class="btn btn-primary">
-              {{ t('admin.redeem.generateCodes') }}
-            </KumoButton>
-          </div>
+
         </div>
       </template>
 
@@ -69,7 +73,7 @@
             <KumoCheckbox
               data-test="select-all-codes"
               type="checkbox"
-              class="h-4 w-4 cursor-pointer rounded border-gray-300 text-primary-600 focus:ring-primary-500"
+              class="h-4 w-4 cursor-pointer rounded border-[var(--brand-line)] text-primary-600 focus:ring-primary-500"
               :checked="allVisibleSelected"
               @click.stop
               @change="toggleSelectAllVisible($event)"
@@ -80,7 +84,7 @@
             <KumoCheckbox
               data-test="select-code"
               type="checkbox"
-              class="h-4 w-4 cursor-pointer rounded border-gray-300 text-primary-600 focus:ring-primary-500"
+              class="h-4 w-4 cursor-pointer rounded border-[var(--brand-line)] text-primary-600 focus:ring-primary-500"
               :checked="selectedCodeIds.has(row.id)"
               @click.stop
               @change="toggleSelectRow(row.id, $event)"
@@ -275,7 +279,7 @@
     <!-- Generate Codes Dialog -->
     <KumoDialog :show="!!(showGenerateDialog)" :title="t('admin.redeem.generateCodesTitle') ?? ''" custom-layout :close-on-click-outside="true" :close-on-escape="true" :z-index="50" width="normal" @close="showGenerateDialog = false">
 <template v-if="showGenerateDialog"><div
-          class="relative z-10 w-full max-w-md rounded-xl bg-white p-6 shadow-xl dark:bg-dark-800"
+          class="relative z-10 w-full max-w-md p-6 panel-section"
         >
           <h2 class="mb-4 text-lg font-semibold text-gray-900 dark:text-white">
             {{ t('admin.redeem.generateCodesTitle') }}
@@ -366,7 +370,7 @@
                     'rounded-lg border px-3 py-2 text-sm transition-colors',
                     generateForm.expiry_option === option.value
                       ? 'border-primary-500 bg-primary-50 text-primary-700 dark:border-primary-400 dark:bg-primary-900/20 dark:text-primary-300'
-                      : 'border-gray-200 text-gray-700 hover:bg-gray-50 dark:border-dark-600 dark:text-gray-300 dark:hover:bg-dark-700'
+                      : 'border-[var(--brand-line)] text-gray-700 hover:bg-[var(--brand-hover)] border-[var(--brand-line)] dark:text-gray-300 hover:'
                   ]"
                 >
                   {{ option.label }}
@@ -409,7 +413,7 @@
     <!-- Batch Update Dialog -->
     <KumoDialog :show="!!(showBatchUpdateDialog)" :title="t('admin.redeem.batchUpdateTitle') ?? ''" custom-layout :close-on-click-outside="true" :close-on-escape="true" :z-index="50" width="normal" @close="closeBatchUpdateDialog">
 <template v-if="showBatchUpdateDialog"><div
-          class="relative z-10 w-full max-w-lg rounded-xl bg-white p-6 shadow-xl dark:bg-dark-800"
+          class="relative z-10 w-full max-w-lg p-6 panel-section"
         >
           <h2 class="mb-1 text-lg font-semibold text-gray-900 dark:text-white">
             {{ t('admin.redeem.batchUpdateTitle') }}
@@ -425,7 +429,7 @@
                   data-test="batch-field-status"
                   v-model="batchUpdateForm.update_status"
                   type="checkbox"
-                  class="h-4 w-4 rounded border-gray-300 text-primary-600 focus:ring-primary-500"
+                  class="h-4 w-4 rounded border-[var(--brand-line)] text-primary-600 focus:ring-primary-500"
                 />
                 {{ t('admin.redeem.batchFields.status') }}
               </KumoLabel>
@@ -442,7 +446,7 @@
                 <KumoCheckbox
                   v-model="batchUpdateForm.update_expires_at"
                   type="checkbox"
-                  class="h-4 w-4 rounded border-gray-300 text-primary-600 focus:ring-primary-500"
+                  class="h-4 w-4 rounded border-[var(--brand-line)] text-primary-600 focus:ring-primary-500"
                 />
                 {{ t('admin.redeem.batchFields.expiresAt') }}
               </KumoLabel>
@@ -466,7 +470,7 @@
                   data-test="batch-field-notes"
                   v-model="batchUpdateForm.update_notes"
                   type="checkbox"
-                  class="h-4 w-4 rounded border-gray-300 text-primary-600 focus:ring-primary-500"
+                  class="h-4 w-4 rounded border-[var(--brand-line)] text-primary-600 focus:ring-primary-500"
                 />
                 {{ t('admin.redeem.batchFields.notes') }}
               </KumoLabel>
@@ -485,7 +489,7 @@
                 <KumoCheckbox
                   v-model="batchUpdateForm.update_group_id"
                   type="checkbox"
-                  class="h-4 w-4 rounded border-gray-300 text-primary-600 focus:ring-primary-500"
+                  class="h-4 w-4 rounded border-[var(--brand-line)] text-primary-600 focus:ring-primary-500"
                 />
                 {{ t('admin.redeem.batchFields.group') }}
               </KumoLabel>
@@ -516,10 +520,10 @@
 
     <!-- Generated Codes Result Dialog -->
     <KumoDialog :show="!!(showResultDialog)" :title="t('admin.redeem.generateCodesTitle') ?? ''" custom-layout :close-on-click-outside="true" :close-on-escape="true" :z-index="50" width="normal" @close="closeResultDialog">
-<template v-if="showResultDialog"><div class="relative z-10 w-full max-w-lg rounded-xl bg-white shadow-xl dark:bg-dark-800">
+<template v-if="showResultDialog"><div class="relative z-10 w-full max-w-lg panel-section">
           <!-- Header -->
           <div
-            class="flex items-center justify-between border-b border-gray-200 px-5 py-4 dark:border-dark-600"
+            class="flex items-center justify-between border-b border-[var(--brand-line)] px-5 py-4"
           >
             <div class="flex items-center gap-3">
               <div
@@ -550,7 +554,7 @@
             </div>
             <KumoButton
               @click="closeResultDialog"
-              class="rounded-lg p-1.5 text-gray-400 transition-colors hover:bg-gray-100 hover:text-gray-600 dark:hover:bg-dark-700 dark:hover:text-gray-300"
+              class="rounded-lg p-1.5 text-gray-400 transition-colors hover:bg-[var(--brand-hover)] hover:text-gray-600 dark:hover:text-gray-300"
             >
               <Icon name="x" size="md" :stroke-width="2" />
             </KumoButton>
@@ -562,13 +566,13 @@
                 readonly
                 :value="generatedCodesText"
                 :style="{ height: textareaHeight }"
-                class="w-full resize-none rounded-lg border border-gray-200 bg-gray-50 p-3 font-mono text-sm text-gray-800 focus:outline-none dark:border-dark-600 dark:bg-dark-700 dark:text-gray-200"
+                class="w-full resize-none rounded-lg border border-[var(--brand-line)] bg-gray-50 p-3 font-mono text-sm text-gray-800 focus:outline-none dark:bg-dark-700 dark:text-gray-200"
               ></KumoTextarea>
             </div>
           </div>
           <!-- Footer -->
           <div
-            class="flex justify-end gap-2 rounded-b-xl border-t border-gray-200 bg-gray-50 px-5 py-4 dark:border-dark-600 dark:bg-dark-700/50"
+            class="flex justify-end gap-2 px-5 py-4 panel-section"
           >
             <KumoButton
               @click="copyGeneratedCodes"

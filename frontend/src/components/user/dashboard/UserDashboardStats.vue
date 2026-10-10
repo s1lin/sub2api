@@ -1,8 +1,8 @@
 <template>
   <!-- Row 1: Core Stats -->
-  <div class="grid grid-cols-1 min-[360px]:grid-cols-2 gap-4 lg:grid-cols-4">
+  <MetricStrip :columns="isSimple ? 3 : 4">
     <!-- Balance -->
-    <KumoSurface v-if="!isSimple" class="card dashboard-metric p-4">
+    <div v-if="!isSimple" class="dashboard-metric p-4">
       <div class="flex items-center gap-3">
         <div class="metric-icon rounded-lg p-2">
           <svg class="h-5 w-5 text-[var(--brand-accent)]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -15,10 +15,10 @@
           <p class="text-xs text-gray-500 dark:text-gray-400">{{ t('common.available') }}</p>
         </div>
       </div>
-    </KumoSurface>
+    </div>
 
     <!-- API Keys -->
-    <KumoSurface class="card dashboard-metric p-4">
+    <div class="dashboard-metric p-4">
       <div class="flex items-center gap-3">
         <div class="metric-icon rounded-lg p-2">
           <Icon name="key" size="md" class="text-[var(--brand-accent)]" :stroke-width="2" />
@@ -29,10 +29,10 @@
           <p class="text-xs text-green-600 dark:text-green-400">{{ stats?.active_api_keys || 0 }} {{ t('common.active') }}</p>
         </div>
       </div>
-    </KumoSurface>
+    </div>
 
     <!-- Today Requests -->
-    <KumoSurface class="card dashboard-metric p-4">
+    <div class="dashboard-metric p-4">
       <div class="flex items-center gap-3">
         <div class="metric-icon rounded-lg p-2">
           <Icon name="chart" size="md" class="text-[var(--brand-accent)]" :stroke-width="2" />
@@ -43,10 +43,10 @@
           <p class="text-xs text-gray-500 dark:text-gray-400">{{ t('common.total') }}: {{ formatNumber(stats?.total_requests || 0) }}</p>
         </div>
       </div>
-    </KumoSurface>
+    </div>
 
     <!-- Today Cost -->
-    <KumoSurface class="card dashboard-metric p-4">
+    <div class="dashboard-metric p-4">
       <div class="flex items-center gap-3">
         <div class="metric-icon rounded-lg p-2">
           <Icon name="dollar" size="md" class="text-[var(--brand-accent)]" :stroke-width="2" />
@@ -64,13 +64,13 @@
           </p>
         </div>
       </div>
-    </KumoSurface>
-  </div>
+    </div>
+  </MetricStrip>
 
   <!-- Row 2: Token Stats -->
-  <div class="grid grid-cols-1 min-[360px]:grid-cols-2 gap-4 lg:grid-cols-4">
+  <MetricStrip>
     <!-- Today Tokens -->
-    <KumoSurface class="card dashboard-metric p-4">
+    <div class="dashboard-metric p-4">
       <div class="flex items-center gap-3">
         <div class="metric-icon rounded-lg p-2">
           <Icon name="cube" size="md" class="text-[var(--brand-accent)]" :stroke-width="2" />
@@ -81,10 +81,10 @@
           <p class="text-xs text-gray-500 dark:text-gray-400">{{ t('dashboard.input') }}: {{ formatTokens(stats?.today_input_tokens || 0) }} / {{ t('dashboard.output') }}: {{ formatTokens(stats?.today_output_tokens || 0) }} / {{ t('dashboard.cache') }}: {{ formatTokens((stats?.today_cache_creation_tokens || 0) + (stats?.today_cache_read_tokens || 0)) }}</p>
         </div>
       </div>
-    </KumoSurface>
+    </div>
 
     <!-- Total Tokens -->
-    <KumoSurface class="card dashboard-metric p-4">
+    <div class="dashboard-metric p-4">
       <div class="flex items-center gap-3">
         <div class="metric-icon rounded-lg p-2">
           <Icon name="database" size="md" class="text-[var(--brand-accent)]" :stroke-width="2" />
@@ -95,10 +95,10 @@
           <p class="text-xs text-gray-500 dark:text-gray-400">{{ t('dashboard.input') }}: {{ formatTokens(stats?.total_input_tokens || 0) }} / {{ t('dashboard.output') }}: {{ formatTokens(stats?.total_output_tokens || 0) }} / {{ t('dashboard.cache') }}: {{ formatTokens((stats?.total_cache_creation_tokens || 0) + (stats?.total_cache_read_tokens || 0)) }}</p>
         </div>
       </div>
-    </KumoSurface>
+    </div>
 
     <!-- Performance (RPM/TPM) -->
-    <KumoSurface class="card dashboard-metric p-4">
+    <div class="dashboard-metric p-4">
       <div class="flex items-center gap-3">
         <div class="metric-icon rounded-lg p-2">
           <Icon name="bolt" size="md" class="text-[var(--brand-accent)]" :stroke-width="2" />
@@ -115,10 +115,10 @@
           </div>
         </div>
       </div>
-    </KumoSurface>
+    </div>
 
     <!-- Avg Response Time -->
-    <KumoSurface class="card dashboard-metric p-4">
+    <div class="dashboard-metric p-4">
       <div class="flex items-center gap-3">
         <div class="metric-icon rounded-lg p-2">
           <Icon name="clock" size="md" class="text-[var(--brand-accent)]" :stroke-width="2" />
@@ -129,11 +129,11 @@
           <p class="text-xs text-gray-500 dark:text-gray-400">{{ t('dashboard.averageTime') }}</p>
         </div>
       </div>
-    </KumoSurface>
-  </div>
+    </div>
+  </MetricStrip>
 
   <!-- Row 3: Per-platform breakdown -->
-  <KumoSurface v-if="!isSimple && platformCards.length > 0" class="card p-4">
+  <Panel flush v-if="!isSimple && platformCards.length > 0" class="card p-4">
     <div class="mb-3 flex items-center justify-between">
       <h3 class="text-sm font-semibold text-gray-900 dark:text-white">{{ t('dashboard.platformBreakdown') }}</h3>
       <span class="text-xs text-gray-500 dark:text-gray-400">
@@ -147,10 +147,10 @@
         data-testid="platform-card"
         :data-platform="item.platform"
         :class="[
-          'rounded-lg border p-3',
+          '  p-3',
           item.isOther
-            ? 'border-dashed border-gray-300 bg-gray-50 dark:border-dark-500 dark:bg-dark-700/30'
-            : 'border-gray-200 dark:border-dark-600'
+            ? '    '
+            : ' '
         ]"
       >
         <div class="flex items-center justify-between">
@@ -181,7 +181,7 @@
         </div>
 
         <!-- Quota 区：仅当 quota 配置存在、非 __other__ 且至少有一个窗口配了 limit 时显示 -->
-        <div v-if="hasAnyLimit(item.quota) && !item.isOther" class="mt-3 space-y-1.5 border-t border-gray-200 pt-2 dark:border-dark-700">
+        <div v-if="hasAnyLimit(item.quota) && !item.isOther" class="mt-3 space-y-1.5 border-t border-[var(--brand-line)] pt-2">
           <p class="text-[10px] uppercase tracking-wide text-gray-400">
             {{ t('dashboard.platformQuota.title') }}
           </p>
@@ -193,7 +193,7 @@
                   <span class="text-gray-600 dark:text-gray-300">{{ t(`dashboard.platformQuota.${w}`) }}</span>
                   <span class="font-mono text-red-500">{{ t('dashboard.platformQuota.disabled') }}</span>
                 </div>
-                <div class="h-1.5 w-full overflow-hidden rounded-full bg-gray-200 dark:bg-dark-700">
+                <div class="h-1.5 w-full overflow-hidden panel-section">
                   <div class="h-full w-full rounded-full bg-red-500" />
                 </div>
               </template>
@@ -215,11 +215,13 @@
         </div>
       </div>
     </div>
-  </KumoSurface>
+  </Panel>
 </template>
 
 <script setup lang="ts">
-import { KumoMeter, KumoSurface } from '@/components/kumo'
+import MetricStrip from '@/components/common/MetricStrip.vue'
+import Panel from '@/components/common/Panel.vue'
+import { KumoMeter } from '@/components/kumo'
 
 import { computed } from 'vue'
 import { useI18n } from 'vue-i18n'

@@ -1,5 +1,5 @@
 <template>
-  <KumoSurface class="card p-4">
+  <Panel flush class="card p-4">
     <h3 class="mb-4 text-sm font-semibold text-gray-900 dark:text-white">
       {{ t('payment.admin.topUsers') }}
     </h3>
@@ -15,7 +15,7 @@
         <div
           v-for="(user, idx) in currencyUsers"
           :key="user.user_id"
-          class="flex items-center justify-between rounded-lg px-3 py-2 hover:bg-gray-50 dark:hover:bg-dark-700"
+          class="flex items-center justify-between px-3 py-2 hover:bg-[var(--brand-hover)] panel-section"
         >
           <div class="flex items-center gap-3">
             <span
@@ -34,11 +34,11 @@
         </div>
       </div>
     </div>
-  </KumoSurface>
+  </Panel>
 </template>
 
 <script setup lang="ts">
-import { KumoSurface } from '@/components/kumo'
+import Panel from '@/components/common/Panel.vue'
 
 import { useI18n } from 'vue-i18n'
 import type { TopUserPaymentStats } from '@/types/payment'

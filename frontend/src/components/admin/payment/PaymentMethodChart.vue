@@ -1,5 +1,5 @@
 <template>
-  <KumoSurface class="card p-4">
+  <Panel flush class="card p-4">
     <h3 class="mb-4 text-sm font-semibold text-gray-900 dark:text-white">
       {{ t('payment.admin.paymentDistribution') }}
     </h3>
@@ -29,20 +29,20 @@
         </div>
         <div v-for="[currency, amount] in sortedAmounts(method.amount)" :key="currency" class="flex items-center gap-2">
           <span class="w-10 text-xs text-gray-500 dark:text-gray-400">{{ currency }}</span>
-          <div class="h-2 flex-1 overflow-hidden rounded-full bg-gray-100 dark:bg-dark-700">
+          <div class="h-2 flex-1 overflow-hidden panel-section">
             <div
-              :class="['h-full rounded-full transition-all', barColorMap[method.type] || 'bg-gray-400']"
+              :class="['h-full  transition-all', barColorMap[method.type] || '']"
               :style="{ width: barWidth(currency, amount) + '%' }"
             ></div>
           </div>
         </div>
       </div>
     </div>
-  </KumoSurface>
+  </Panel>
 </template>
 
 <script setup lang="ts">
-import { KumoSurface } from '@/components/kumo'
+import Panel from '@/components/common/Panel.vue'
 
 import { computed } from 'vue'
 import { useI18n } from 'vue-i18n'

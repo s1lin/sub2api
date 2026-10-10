@@ -1,6 +1,6 @@
 <template>
-  <KumoSurface class="card">
-    <div class="flex items-start justify-between border-b border-gray-100 px-6 py-4 dark:border-dark-700">
+  <Panel flush class="card">
+    <div class="flex items-start justify-between border-b border-[var(--brand-line)] px-6 py-4">
       <div>
         <h2 class="text-lg font-medium text-gray-900 dark:text-white">
           {{ t('profile.passkey.title') }}
@@ -30,7 +30,7 @@
       <div>
         <form
           v-if="enabled && supported && showAddForm"
-          class="mb-5 flex flex-col gap-3 rounded-lg border border-gray-200 p-4 dark:border-dark-700"
+          class="mb-5 flex flex-col gap-3 rounded-lg border border-[var(--brand-line)] p-4"
           @submit.prevent="addPasskey"
         >
           <div class="grid gap-3 sm:grid-cols-2">
@@ -75,7 +75,7 @@
 
         <div
           v-else-if="credentials.length === 0"
-          class="rounded-lg border border-dashed border-gray-200 px-4 py-8 text-center text-sm text-gray-500 dark:border-dark-700 dark:text-gray-400"
+          class="px-4 py-8 text-center text-sm text-gray-500 dark:text-gray-400 panel-section"
         >
           {{ t('profile.passkey.empty') }}
         </div>
@@ -169,11 +169,12 @@
 
     </div>
   </KumoDialog>
-  </KumoSurface>
+  </Panel>
 </template>
 
 <script setup lang="ts">
-import { KumoButton, KumoDialog, KumoInput, KumoLabel, KumoLoader, KumoSurface } from '@/components/kumo'
+import Panel from '@/components/common/Panel.vue'
+import { KumoButton, KumoDialog, KumoInput, KumoLabel, KumoLoader } from '@/components/kumo'
 
 import { ref, watch } from 'vue'
 import { useI18n } from 'vue-i18n'

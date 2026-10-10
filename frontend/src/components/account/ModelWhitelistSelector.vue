@@ -2,7 +2,7 @@
   <div>
     <!-- Multi-select Dropdown -->
     <KumoPopoverRoot v-model="showDropdown">
-      <div class="mb-3 rounded-lg border border-gray-300 bg-white p-2 dark:border-dark-500 dark:bg-dark-700">
+      <div class="mb-3 rounded-lg border border-[var(--brand-line)] bg-white p-2 dark:bg-dark-700">
         <div class="grid grid-cols-2 gap-1.5">
           <span
             v-for="model in modelValue"
@@ -17,13 +17,13 @@
               type="button"
               @click.stop="removeModel(model)"
               :aria-label="`${t('common.delete')} ${model}`"
-              class="shrink-0 rounded-full hover:bg-gray-200 dark:hover:bg-dark-500"
+              class="shrink-0 rounded-full hover:bg-[var(--brand-hover)]"
             >
               <Icon name="x" size="xs" class="h-3.5 w-3.5" :stroke-width="2" />
             </KumoButton>
           </span>
         </div>
-        <KumoPopoverTrigger class="mt-2 flex w-full items-center justify-between border-t border-gray-200 pt-2 dark:border-dark-600" :aria-label="t('admin.accounts.searchModels')">
+        <KumoPopoverTrigger class="mt-2 flex w-full items-center justify-between border-t border-[var(--brand-line)] pt-2" :aria-label="t('admin.accounts.searchModels')">
           <span class="text-xs text-gray-400">{{ t('admin.accounts.modelCount', { count: modelValue.length }) }}</span>
           <svg class="h-5 w-5 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
@@ -32,7 +32,7 @@
       </div>
       <!-- Dropdown List -->
       <KumoPopoverContent align="start" class="w-[min(28rem,calc(100vw-2rem))] p-0">
-        <div class="sticky top-0 border-b border-gray-200 bg-white p-2 dark:border-dark-600 dark:bg-dark-700">
+        <div class="sticky top-0 border-b border-[var(--brand-line)] bg-white p-2 dark:bg-dark-700">
           <KumoInput
             v-model="searchQuery"
             type="text"
@@ -46,7 +46,7 @@
             v-for="model in filteredModels"
             :key="model.value"
             data-testid="model-option"
-            class="group flex items-center hover:bg-gray-100 dark:hover:bg-dark-600"
+            class="group flex items-center hover:bg-[var(--brand-hover)]"
           >
             <KumoLabel class="flex min-w-0 flex-1 cursor-pointer items-center gap-2 px-3 py-2 text-sm">
               <KumoCheckbox
@@ -61,7 +61,7 @@
             <KumoButton
               type="button"
               data-testid="copy-model-id"
-              class="mr-2 rounded p-1.5 text-gray-400 opacity-70 transition-colors hover:bg-gray-200 hover:text-primary-600 focus-visible:opacity-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-500 group-hover:opacity-100 dark:text-gray-500 dark:hover:bg-dark-500 dark:hover:text-primary-400"
+              class="mr-2 rounded p-1.5 text-gray-400 opacity-70 transition-colors hover:bg-[var(--brand-hover)] hover:text-primary-600 focus-visible:opacity-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-500 group-hover:opacity-100 dark:text-gray-500 dark:hover:text-primary-400"
               :title="`${t('common.copy')} ${model.value}`"
               :aria-label="`${t('common.copy')} ${model.value}`"
               @click="copyModelId(model.value)"

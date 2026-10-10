@@ -2,7 +2,7 @@
   <div :class="props.embedded ? 'space-y-4' : 'card'">
     <div
       v-if="!props.embedded"
-      class="border-b border-gray-100 px-6 py-4 dark:border-dark-700"
+      class="border-b border-[var(--brand-line)] px-6 py-4"
     >
       <h2 class="text-lg font-medium text-gray-900 dark:text-white">
         {{ t('profile.avatar.title') }}
@@ -15,8 +15,8 @@
     <div :class="props.embedded ? 'space-y-3' : 'flex flex-col gap-5 px-6 py-6 sm:flex-row sm:items-start'">
       <div
         :class="props.embedded
-          ? 'flex h-16 w-16 shrink-0 items-center justify-center overflow-hidden rounded-2xl bg-[var(--brand-accent-soft)] text-xl font-semibold text-[var(--brand-accent)]'
-          : 'flex h-24 w-24 shrink-0 items-center justify-center overflow-hidden rounded-2xl bg-[var(--brand-accent-soft)] text-3xl font-semibold text-[var(--brand-accent)]'"
+          ? 'flex h-16 w-16 shrink-0 items-center justify-center overflow-hidden rounded-lg bg-[var(--brand-accent-soft)] text-xl font-semibold text-[var(--brand-accent)]'
+          : 'flex h-24 w-24 shrink-0 items-center justify-center overflow-hidden rounded-lg bg-[var(--brand-accent-soft)] text-3xl font-semibold text-[var(--brand-accent)]'"
       >
         <img
           v-if="avatarPreviewUrl"

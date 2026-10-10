@@ -1,0 +1,5 @@
+{
+  "dependencies": {
+    "@cloudflare/kumo": "^2.14.0"
+  }
+}

@@ -6,7 +6,7 @@
     @close="$emit('close')"
   >
     <!-- provider tabs -->
-    <div class="mb-4 border-b border-gray-200 dark:border-dark-700">
+    <div class="mb-4 border-b border-[var(--brand-line)]">
       <KumoTabs v-model="activeProvider" variant="underline" :tabs="providerTabs">
       <template #tab="{ tab }"><span>{{ tab.label }}</span><KumoBadge v-if="countByProvider[tab.value as Provider] > 0">{{ countByProvider[tab.value as Provider] }}</KumoBadge></template>
     </KumoTabs>
@@ -36,7 +36,7 @@
         v-for="tpl in templatesForActiveProvider"
         v-else
         :key="tpl.id"
-        class="rounded-lg border border-gray-200 bg-white p-4 dark:border-dark-700 dark:bg-dark-800"
+        class="p-4 panel-section"
       >
         <div class="flex items-start justify-between gap-3">
           <div class="min-w-0 flex-1">
@@ -497,7 +497,7 @@ function normalizeAPIMode(mode: APIMode | undefined | null): APIMode {
 function apiModeButtonClass(mode: APIMode): string {
   const active = form.api_mode === mode
   if (active) {
-    return 'border-primary-500 bg-white text-primary-700 shadow-sm dark:border-primary-400 dark:bg-primary-500/15 dark:text-primary-300'
+    return 'ui-selected border-[var(--brand-line)]'
   }
   return 'border-blue-100 bg-white/70 text-gray-600 hover:border-primary-300 dark:border-dark-700 dark:bg-dark-800 dark:text-gray-400'
 }

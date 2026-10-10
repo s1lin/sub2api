@@ -1,5 +1,5 @@
 <template>
-  <KumoSurface class="subscription-plan card relative flex flex-col overflow-hidden">
+  <Panel flush class="subscription-plan card relative flex flex-col overflow-hidden">
     <div class="flex flex-1 flex-col p-6">
       <!-- Header: name + badge + price -->
       <div class="mb-5 flex flex-wrap items-start justify-between gap-4">
@@ -34,7 +34,7 @@
       </div>
 
       <!-- Group quota info (compact) -->
-      <div class="mb-5 grid grid-cols-1 gap-x-6 gap-y-3 border-y border-gray-200 py-4 text-sm dark:border-dark-700 sm:grid-cols-2">
+      <div class="mb-5 grid grid-cols-1 gap-x-6 gap-y-3 border-y border-[var(--brand-line)] py-4 text-sm sm:grid-cols-2">
         <div class="flex items-center justify-between">
           <span class="text-gray-500 dark:text-dark-400">{{ t('payment.planCard.rate') }}</span>
           <span class="font-medium text-gray-700 dark:text-gray-300">{{ rateDisplay }}</span>
@@ -89,11 +89,12 @@
         {{ isRenewal ? t('payment.renewNow') : t('payment.subscribeNow') }}
       </KumoButton>
     </div>
-  </KumoSurface>
+  </Panel>
 </template>
 
 <script setup lang="ts">
-import { KumoButton, KumoSurface } from '@/components/kumo'
+import Panel from '@/components/common/Panel.vue'
+import { KumoButton } from '@/components/kumo'
 
 import { computed } from 'vue'
 import { useI18n } from 'vue-i18n'

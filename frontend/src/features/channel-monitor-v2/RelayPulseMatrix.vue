@@ -1,8 +1,8 @@
 <template>
-  <KumoSurface
-    class="card flex min-h-[360px] flex-col overflow-visible !rounded-3xl !border-0 !p-6 shadow-sm ring-1 ring-gray-900/5 dark:!bg-dark-800 dark:ring-dark-700"
+  <Panel flush
+    class="card flex min-h-[360px] flex-col overflow-visible  !p-6   "
   >
-    <div class="card-header mb-4 flex shrink-0 flex-wrap items-start justify-between gap-3 !border-0 !p-0">
+    <div class="card-header mb-4 flex shrink-0 flex-wrap items-start justify-between gap-3  !p-0">
       <div class="min-w-0">
         <h2 class="flex items-center gap-2 text-sm font-bold text-gray-900 dark:text-white">
           <span class="inline-flex h-4 w-4 text-emerald-500" aria-hidden="true">
@@ -19,7 +19,7 @@
         <span class="hidden text-[11px] text-gray-400 dark:text-dark-400 sm:inline">{{ t('channelMonitorV2.matrix.wheelZoomX') }}</span>
         <KumoButton
           type="button"
-          class="inline-flex shrink-0 items-center rounded-lg border border-gray-200 bg-white px-2 py-1 text-[11px] font-semibold text-gray-600 hover:bg-gray-50 disabled:opacity-50 dark:border-dark-700 dark:bg-dark-900 dark:text-gray-300 dark:hover:bg-dark-800"
+          class="inline-flex shrink-0 items-center rounded-lg border border-[var(--brand-line)] bg-white px-2 py-1 text-[11px] font-semibold text-gray-600 hover:bg-[var(--brand-hover)] disabled:opacity-50 dark:bg-dark-900 dark:text-gray-300"
           :disabled="!zoomed"
           @click="resetMatrixZoom"
         >
@@ -32,7 +32,7 @@
       <div
         v-if="rows.length"
         ref="scrollRef"
-        class="matrix-scroll max-h-[min(42vh,420px)] max-w-full overflow-auto rounded-2xl bg-gray-50/60 p-2 dark:bg-dark-900/30"
+        class="matrix-scroll max-h-[min(42vh,420px)] max-w-full overflow-auto p-2 panel-section"
         @wheel="onMatrixWheel"
       >
         <div class="matrix-table w-full" :style="tableStyle">
@@ -53,7 +53,7 @@
           <div
             v-for="entry in alignedRows"
             :key="rowKey(entry.row)"
-            class="matrix-row border-b border-gray-100/80 dark:border-dark-700/60"
+            class="matrix-row border-b border-[var(--brand-line)]"
             :class="showThroughput ? 'matrix-row--with-tps' : ''"
           >
             <div class="dimension-cell flex min-w-0 items-center gap-2 bg-white dark:bg-dark-800" :title="rowLabel(entry.row)">
@@ -97,7 +97,9 @@
       <div class="mt-4 flex flex-col gap-2" :aria-label="t('channelMonitorV2.matrix.legendAria')">
         <div class="flex items-center gap-2 text-[11px] text-gray-500 dark:text-gray-400">
           <span class="shrink-0">{{ t('channelMonitorV2.matrix.bad') }}</span>
-          <div class="score-legend h-2.5 flex-1 overflow-hidden rounded-full"></div>
+          <div class="flex h-2.5 flex-1 overflow-hidden rounded-sm" aria-hidden="true">
+            <span v-for="score in 11" :key="score" class="h-full flex-1" :class="`health-score${score - 1}`"></span>
+          </div>
           <span class="shrink-0">{{ t('channelMonitorV2.matrix.good') }}</span>
         </div>
         <div class="flex flex-wrap gap-4 text-[11px] text-gray-500 dark:text-gray-400">
@@ -110,11 +112,12 @@
     </div>
 
 
-  </KumoSurface>
+  </Panel>
 </template>
 
 <script setup lang="ts">
-import { KumoBadge, KumoButton, KumoSurface, KumoTooltip } from '@/components/kumo'
+import Panel from '@/components/common/Panel.vue'
+import { KumoBadge, KumoButton, KumoTooltip } from '@/components/kumo'
 
 import { useI18n } from 'vue-i18n'
 import { computed, ref, watch } from 'vue'
@@ -441,20 +444,6 @@ function formatBucketRange(value: string) {
 .health-warning  { background: #f59e0b; }
 .health-critical { background: #ef4444; }
 .health-unknown  { background: #9ca3af; }
-
-.score-legend {
-  background: linear-gradient(
-    90deg,
-    rgb(239, 67, 67) 0%,
-    #f87171 15%,
-    #f97316 30%,
-    #f59e0b 45%,
-    #facc15 55%,
-    #a3e635 70%,
-    #22c55e 85%,
-    #16a34a 100%
-  );
-}
 
 .pulse-cell {
   position: relative;

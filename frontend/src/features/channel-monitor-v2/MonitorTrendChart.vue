@@ -1,8 +1,8 @@
 <template>
-  <KumoSurface
-    class="card flex min-h-[360px] flex-col overflow-hidden !rounded-3xl !border-0 !p-6 shadow-sm ring-1 ring-gray-900/5 dark:!bg-dark-800 dark:ring-dark-700"
+  <Panel flush
+    class="card flex min-h-[360px] flex-col overflow-hidden  !p-6   "
   >
-    <div class="card-header mb-4 flex shrink-0 flex-wrap items-start justify-between gap-3 !border-0 !p-0">
+    <div class="card-header mb-4 flex shrink-0 flex-wrap items-start justify-between gap-3  !p-0">
       <div class="min-w-0">
         <h2 class="flex items-center gap-2 text-sm font-bold text-gray-900 dark:text-white">
           <span class="inline-flex h-4 w-4 text-sky-500" aria-hidden="true">
@@ -27,7 +27,7 @@
         <KumoBadge class="badge badge-gray shrink-0">{{ bucketLabel }}</KumoBadge>
         <KumoButton
           type="button"
-          class="inline-flex shrink-0 items-center rounded-lg border border-gray-200 bg-white px-2 py-1 text-[11px] font-semibold text-gray-600 hover:bg-gray-50 disabled:opacity-50 dark:border-dark-700 dark:bg-dark-900 dark:text-gray-300 dark:hover:bg-dark-800"
+          class="inline-flex shrink-0 items-center rounded-lg border border-[var(--brand-line)] bg-white px-2 py-1 text-[11px] font-semibold text-gray-600 hover:bg-[var(--brand-hover)] disabled:opacity-50 dark:bg-dark-900 dark:text-gray-300"
           :disabled="!zoomed"
           @click="resetChartZoom"
         >
@@ -54,11 +54,12 @@
         />
       </div>
     </div>
-  </KumoSurface>
+  </Panel>
 </template>
 
 <script setup lang="ts">
-import { KumoBadge, KumoButton, KumoSurface } from '@/components/kumo'
+import Panel from '@/components/common/Panel.vue'
+import { KumoBadge, KumoButton } from '@/components/kumo'
 
 import { useI18n } from 'vue-i18n'
 import { computed, ref, watch } from 'vue'

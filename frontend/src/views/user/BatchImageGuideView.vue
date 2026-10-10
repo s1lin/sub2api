@@ -1,6 +1,25 @@
 <template>
-  <AppLayout>
+  <AppLayout hide-page-header>
     <TablePageLayout>
+      <template #actions>
+        <div class="flex flex-wrap items-center justify-start gap-2 sm:justify-end 2xl:flex-shrink-0">
+              <KumoButton type="button" class="btn btn-secondary" :disabled="loadingJobs" @click="resetFilters">
+                {{ t('common.reset') }}
+              </KumoButton>
+              <KumoButton type="button" class="btn btn-secondary" :disabled="loadingKeys || loadingJobs" :title="t('common.refresh')" @click="refreshPage">
+                <Icon name="refresh" size="md" :class="loadingKeys || loadingJobs ? 'animate-spin' : ''" />
+              </KumoButton>
+              <KumoButton type="button" class="btn btn-secondary" @click="showGuideModal = true">
+                <Icon name="book" size="md" class="mr-2" />
+                {{ t('batchImage.actions.usageGuide') }}
+              </KumoButton>
+              <KumoButton type="button" class="btn btn-primary" @click="openCreateModal">
+                <Icon name="plus" size="md" class="mr-2" />
+                {{ t('batchImage.actions.createJob') }}
+              </KumoButton>
+            </div>
+      </template>
+
       <template #filters>
         <div class="flex flex-col gap-3">
           <div class="flex flex-col gap-3 2xl:flex-row 2xl:items-center 2xl:justify-between">
@@ -17,27 +36,12 @@
               <Select v-model="filters.status" :options="statusFilterOptions" class="w-full" @change="applyFilters" />
               <Select v-model="filters.downloaded" :options="downloadFilterOptions" class="w-full" @change="applyFilters" />
             </div>
-            <div class="flex flex-wrap items-center justify-start gap-2 sm:justify-end 2xl:flex-shrink-0">
-              <KumoButton type="button" class="btn btn-secondary" :disabled="loadingJobs" @click="resetFilters">
-                {{ t('common.reset') }}
-              </KumoButton>
-              <KumoButton type="button" class="btn btn-secondary" :disabled="loadingKeys || loadingJobs" :title="t('common.refresh')" @click="refreshPage">
-                <Icon name="refresh" size="md" :class="loadingKeys || loadingJobs ? 'animate-spin' : ''" />
-              </KumoButton>
-              <KumoButton type="button" class="btn btn-secondary" @click="showGuideModal = true">
-                <Icon name="book" size="md" class="mr-2" />
-                {{ t('batchImage.actions.usageGuide') }}
-              </KumoButton>
-              <KumoButton type="button" class="btn btn-primary" @click="openCreateModal">
-                <Icon name="plus" size="md" class="mr-2" />
-                {{ t('batchImage.actions.createJob') }}
-              </KumoButton>
-            </div>
+
           </div>
 
           <div
             v-if="selectedJobIds.size"
-            class="flex flex-wrap items-center justify-between gap-3 rounded-lg border border-gray-200 bg-white px-3 py-2 shadow-sm dark:border-dark-700 dark:bg-dark-800"
+            class="flex flex-wrap items-center justify-between gap-3 rounded-lg border border-[var(--brand-line)] bg-[var(--brand-hover)] px-3 py-2"
           >
             <i18n-t
               keypath="batchImage.list.selectedJobs"
@@ -85,7 +89,7 @@
           <template #header-select>
             <KumoCheckbox :aria-label="t('common.selectAll')"
               type="checkbox"
-              class="h-4 w-4 rounded border-gray-300 text-primary-600 focus:ring-primary-500"
+              class="h-4 w-4 rounded border-[var(--brand-line)] text-primary-600 focus:ring-primary-500"
               :checked="allVisibleSelected"
               :indeterminate="someVisibleSelected"
               @change="toggleAllVisible(($event.target as HTMLInputElement).checked)"
@@ -95,7 +99,7 @@
           <template #cell-select="{ row }">
             <KumoCheckbox :aria-label="row.task_name || defaultTaskName(row.created_at)"
               type="checkbox"
-              class="h-4 w-4 rounded border-gray-300 text-primary-600 focus:ring-primary-500"
+              class="h-4 w-4 rounded border-[var(--brand-line)] text-primary-600 focus:ring-primary-500"
               :checked="selectedJobIds.has(row.id)"
               @change="toggleJobSelection(row.id, ($event.target as HTMLInputElement).checked)"
               @click.stop
@@ -107,14 +111,14 @@
 	              <KumoButton
 	                v-if="row.child_count > 0 && !row.is_child"
 	                type="button"
-	                class="mt-1 flex h-6 w-6 flex-shrink-0 items-center justify-center rounded-md text-gray-500 transition-colors hover:bg-gray-100 hover:text-gray-900 focus:outline-none focus-visible:ring-2 focus-visible:ring-primary-500/30 dark:text-gray-400 dark:hover:bg-dark-700 dark:hover:text-white"
+	                class="mt-1 flex h-6 w-6 flex-shrink-0 items-center justify-center rounded-md text-gray-500 transition-colors hover:bg-[var(--brand-hover)] hover:text-gray-900 focus:outline-none focus-visible:ring-2 focus-visible:ring-primary-500/30 dark:text-gray-400 dark:hover:text-white"
 	                :title="expandedParentIds.has(row.id) ? t('batchImage.list.collapseChildren') : t('batchImage.list.expandChildren', { n: row.child_count }, row.child_count)"
 	                @click.stop="toggleChildRows(row.id)"
 	              >
 	                <Icon :name="expandedParentIds.has(row.id) ? 'chevronDown' : 'chevronRight'" size="xs" />
 	              </KumoButton>
 	              <span v-else class="w-6 flex-shrink-0" />
-	              <KumoButton type="button" class="min-w-0 flex-1 rounded-lg py-1 text-left transition-colors hover:bg-gray-100 focus:outline-none focus-visible:ring-2 focus-visible:ring-primary-500/30 dark:hover:bg-dark-700" @click="selectJob(row.id)">
+	              <KumoButton type="button" class="min-w-0 flex-1 rounded-lg py-1 text-left transition-colors hover:bg-[var(--brand-hover)] focus:outline-none focus-visible:ring-2 focus-visible:ring-primary-500/30" @click="selectJob(row.id)">
 	                <span
 	                  class="flex min-w-0 items-center gap-2 text-sm font-medium"
 	                  :class="row.task_name ? 'text-gray-900 dark:text-white' : 'text-gray-500 dark:text-gray-400'"
@@ -179,7 +183,7 @@
 	            <div class="flex items-center justify-center gap-1">
               <KumoButton
                 type="button"
-                class="batch-row-action flex flex-col items-center gap-0.5 rounded-lg p-1.5 text-gray-500 transition-colors hover:bg-gray-100 hover:text-primary-600 focus:outline-none focus-visible:ring-2 focus-visible:ring-primary-500/30 dark:hover:bg-dark-700 dark:hover:text-primary-400"
+                class="batch-row-action flex flex-col items-center gap-0.5 rounded-lg p-1.5 text-gray-500 transition-colors hover:bg-[var(--brand-hover)] hover:text-primary-600 focus:outline-none focus-visible:ring-2 focus-visible:ring-primary-500/30 dark:hover:text-primary-400"
                 :title="t('batchImage.actions.viewDetail')"
                 @click="selectJob(row.id)"
               >
@@ -204,7 +208,7 @@
               <div v-if="canRetry(row) || canDeleteRecord(row)">
                 <KumoDropdown :model-value="openMoreJobId === row.id" @update:model-value="openMoreJobId = $event ? row.id : ''"><KumoDropdownTrigger
                   type="button"
-                  class="batch-row-action flex flex-col items-center gap-0.5 rounded-lg p-1.5 text-gray-500 transition-colors hover:bg-gray-100 hover:text-gray-900 focus:outline-none focus-visible:ring-2 focus-visible:ring-primary-500/30 dark:hover:bg-dark-700 dark:hover:text-white"
+                  class="batch-row-action flex flex-col items-center gap-0.5 rounded-lg p-1.5 text-gray-500 transition-colors hover:bg-[var(--brand-hover)] hover:text-gray-900 focus:outline-none focus-visible:ring-2 focus-visible:ring-primary-500/30 dark:hover:text-white"
                   :class="{ 'bg-gray-100 text-gray-900 dark:bg-dark-700 dark:text-white': openMoreJobId === row.id }"
                   :aria-label="t('batchImage.actions.moreActions')"
                 >
@@ -248,7 +252,7 @@
       <template #pagination>
         <div
           v-if="visibleBatchJobs.length > 0 || pagination.page > 1"
-          class="flex flex-col gap-3 border-t border-gray-200 bg-white px-4 py-3 dark:border-dark-700 dark:bg-dark-800 sm:flex-row sm:items-center sm:justify-between sm:px-6"
+          class="flex flex-col gap-3 border-t border-[var(--brand-line)] bg-white px-4 py-3 dark:bg-dark-800 sm:flex-row sm:items-center sm:justify-between sm:px-6"
         >
           <div class="flex flex-wrap items-center gap-3 text-sm text-gray-700 dark:text-gray-300">
             <i18n-t keypath="batchImage.pagination.pageNumber" tag="span" scope="global">
@@ -301,7 +305,7 @@
 
     <BaseDialog :show="!!currentJob" :title="t('batchImage.detail.title')" width="extra-wide" @close="closeDetail">
       <div v-if="currentJob" class="space-y-4">
-        <div class="rounded-lg border border-gray-200 bg-gray-50/70 px-4 py-3 dark:border-dark-700 dark:bg-dark-900/40">
+        <div class="px-4 py-3 panel-section">
           <div class="grid gap-x-6 gap-y-3 sm:grid-cols-2 lg:grid-cols-4">
             <div class="min-w-0 text-center">
               <p class="text-xs text-gray-500 dark:text-gray-400">{{ t('common.status') }}</p>
@@ -340,7 +344,7 @@
           </KumoButton>
         </div>
 
-        <div v-if="items.length" class="overflow-x-auto rounded-lg border border-gray-200 bg-white dark:border-dark-700 dark:bg-dark-900">
+        <div v-if="items.length" class="overflow-x-auto panel-section">
           <KumoTable class="w-full min-w-[860px] table-fixed divide-y divide-gray-200 text-sm dark:divide-dark-700">
             <colgroup>
               <col class="w-[18%]" />
@@ -383,7 +387,7 @@
                   </KumoBadge>
                 </KumoTableCell>
                 <KumoTableCell class="px-3 py-2.5 text-center">
-                  <div class="mx-auto h-12 w-12 overflow-hidden rounded-md border border-gray-200 bg-gray-50 dark:border-dark-700 dark:bg-dark-800">
+                  <div class="mx-auto h-12 w-12 overflow-hidden panel-section">
                     <KumoButton
                       v-if="itemPreviewUrls[itemPreviewKey(item)] && !previewErrorIds.has(itemPreviewKey(item))"
                       type="button"
@@ -401,7 +405,7 @@
                     <KumoButton
                       v-else-if="canLoadItemPreview(item)"
                       type="button"
-                      class="flex h-full w-full items-center justify-center text-gray-500 transition-colors hover:bg-gray-100 hover:text-primary-600 disabled:cursor-wait disabled:opacity-70 dark:text-gray-400 dark:hover:bg-dark-700"
+                      class="flex h-full w-full items-center justify-center text-gray-500 transition-colors hover:bg-[var(--brand-hover)] hover:text-primary-600 disabled:cursor-wait disabled:opacity-70 dark:text-gray-400"
                       :disabled="previewLoadingIds.has(itemPreviewKey(item))"
                       :title="previewErrorIds.has(itemPreviewKey(item)) ? t('batchImage.detail.previewReload') : t('batchImage.detail.previewLoad')"
                       @click="loadItemPreview(item)"
@@ -426,7 +430,7 @@
             </KumoTableBody>
           </KumoTable>
         </div>
-        <div v-else class="rounded-lg border border-dashed border-gray-200 py-10 text-center dark:border-dark-700">
+        <div v-else class="py-10 text-center panel-section">
           <Icon name="refresh" size="lg" class="mx-auto mb-3 text-gray-400" :class="loadingItems ? 'animate-spin' : ''" />
           <p class="text-sm font-medium text-gray-700 dark:text-gray-200">
             {{ loadingItems ? t('batchImage.detail.loadingItems') : t('batchImage.detail.noItems') }}
@@ -476,7 +480,7 @@
         <div class="rounded-lg border border-amber-200 bg-amber-50 px-3 py-2 text-sm text-amber-900 dark:border-amber-800 dark:bg-amber-950/30 dark:text-amber-100">
           {{ t('batchImage.imagePreview.notice') }}
         </div>
-        <div class="flex min-h-[420px] items-center justify-center rounded-lg bg-gray-50 p-4 dark:bg-dark-900">
+        <div class="flex min-h-[420px] items-center justify-center p-4 panel-section">
           <img
             v-if="previewImageUrl"
             :src="previewImageUrl"
@@ -561,11 +565,11 @@
             <KumoLabel class="input-label mb-0">Prompt</KumoLabel>
             <span class="text-xs text-gray-500 dark:text-gray-400">{{ t('batchImage.create.promptAdded', { count: promptRows.length }) }}</span>
           </div>
-          <div class="rounded-lg border border-gray-200 p-3 dark:border-dark-700">
+          <div class="p-3 panel-section">
             <KumoTextarea :aria-label="'Prompt'"
               v-model="promptDraft"
               rows="3"
-              class="h-[76px] w-full resize-y rounded-md border border-gray-300 px-3 py-2 text-sm leading-5 outline-none focus:border-primary-500 focus:ring-2 focus:ring-primary-100 dark:border-dark-600 dark:bg-dark-900 dark:text-gray-100 dark:focus:border-primary-500 dark:focus:ring-primary-900/40"
+              class="h-[76px] w-full resize-y rounded-md border border-[var(--brand-line)] px-3 py-2 text-sm leading-5 outline-none focus:border-primary-500 focus:ring-2 focus:ring-primary-100 dark:bg-dark-900 dark:text-gray-100 dark:focus:border-primary-500 dark:focus:ring-primary-900/40"
               :placeholder="t('batchImage.create.promptPlaceholder')"
             />
             <div class="mt-2 grid gap-2 md:grid-cols-[minmax(0,1fr)_112px_132px_112px] md:items-center">
@@ -610,7 +614,7 @@
               <span
                 v-for="(ref, refIndex) in referenceImageDrafts"
                 :key="`${ref.name}-${refIndex}`"
-                class="inline-flex max-w-full items-center gap-1 rounded-md border border-gray-200 bg-gray-50 px-2 py-1 text-xs text-gray-700 dark:border-dark-700 dark:bg-dark-900 dark:text-gray-200"
+                class="inline-flex max-w-full items-center gap-1 rounded-md border border-[var(--brand-line)] bg-gray-50 px-2 py-1 text-xs text-gray-700 dark:bg-dark-900 dark:text-gray-200"
               >
                 <span class="max-w-[180px] truncate">{{ ref.name }}</span>
                 <KumoButton type="button" class="text-gray-400 hover:text-red-600" :title="t('batchImage.create.removeReferenceImage')" @click="removeReferenceImageDraft(refIndex)">
@@ -622,11 +626,11 @@
               {{ t('batchImage.create.limitsHint', { maxPerItem: BATCH_IMAGE_MAX_OUTPUTS_PER_ITEM, maxPerJob: BATCH_IMAGE_MAX_OUTPUTS_PER_JOB, refLimit: selectedModelReferenceLimit }) }}
             </p>
           </div>
-          <div v-if="promptRows.length" class="overflow-hidden rounded-lg border border-gray-200 dark:border-dark-700">
+          <div v-if="promptRows.length" class="overflow-hidden panel-section">
             <div
               v-for="(row, index) in promptRows"
               :key="row.localId"
-              class="flex items-center gap-3 border-b border-gray-100 px-3 py-2 last:border-b-0 dark:border-dark-700"
+              class="flex items-center gap-3 border-b border-[var(--brand-line)] px-3 py-2 last:border-b-0"
             >
               <span class="w-20 flex-shrink-0 font-mono text-xs text-gray-500 dark:text-gray-400">{{ row.custom_id }}</span>
               <p class="min-w-0 flex-1 truncate text-sm text-gray-800 dark:text-gray-100">{{ row.prompt }}</p>
@@ -641,7 +645,7 @@
               </KumoButton>
             </div>
           </div>
-          <div v-else class="rounded-lg border border-dashed border-gray-200 px-3 py-6 text-center text-sm text-gray-500 dark:border-dark-700 dark:text-gray-400">
+          <div v-else class="px-3 py-6 text-center text-sm text-gray-500 dark:text-gray-400 panel-section">
             {{ t('batchImage.create.noPrompts') }}
           </div>
         </div>
@@ -669,7 +673,7 @@
 	      <div class="space-y-5">
 	        <section class="space-y-3">
 	          <h3 class="text-sm font-semibold text-gray-900 dark:text-white">{{ t('batchImage.guide.uiTitle') }}</h3>
-	          <div class="rounded-lg border border-gray-200 bg-gray-50 p-3 text-sm leading-6 text-gray-700 dark:border-dark-700 dark:bg-dark-900/50 dark:text-gray-200">
+	          <div class="p-3 text-sm leading-6 text-gray-700 dark:text-gray-200 panel-section">
 	            <p>{{ t('batchImage.guide.step1') }}</p>
 	            <p>{{ t('batchImage.guide.step2') }}</p>
 	            <p>{{ t('batchImage.guide.step3') }}</p>
@@ -684,7 +688,7 @@
 	        <KumoTextarea :aria-label="t('batchImage.guide.skillTitle')"
 	          :value="agentInstruction"
 	          readonly
-	          class="min-h-[420px] w-full resize-y rounded-md border border-gray-200 bg-gray-50 p-4 font-mono text-sm leading-6 text-gray-800 outline-none focus:border-primary-400 focus:ring-2 focus:ring-primary-100 dark:border-dark-600 dark:bg-dark-900 dark:text-gray-100 dark:focus:border-primary-500 dark:focus:ring-primary-900/40"
+	          class="min-h-[420px] w-full resize-y rounded-md border border-[var(--brand-line)] bg-gray-50 p-4 font-mono text-sm leading-6 text-gray-800 outline-none focus:border-primary-400 focus:ring-2 focus:ring-primary-100 dark:bg-dark-900 dark:text-gray-100 dark:focus:border-primary-500 dark:focus:ring-primary-900/40"
 	        />
 	        </section>
 	      </div>

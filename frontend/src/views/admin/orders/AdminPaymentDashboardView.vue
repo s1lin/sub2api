@@ -4,15 +4,15 @@
       <!-- Header with Day Switcher -->
       <div class="flex items-center justify-end">
         <div class="flex items-center gap-2">
-          <div class="flex rounded-lg border border-gray-200 dark:border-dark-600">
-            <KumoButton
+          <div class="flex rounded-lg border border-[var(--brand-line)]">
+            <KumoButton :aria-pressed="days === d"
               v-for="d in DAYS_OPTIONS"
               :key="d"
               type="button"
               class="px-3 py-1.5 text-xs font-medium transition-colors first:rounded-l-lg last:rounded-r-lg"
               :class="days === d
                 ? 'bg-primary-600 text-white'
-                : 'text-gray-600 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-dark-700'"
+                : 'text-gray-600 hover:bg-[var(--brand-hover)] dark:text-gray-300 hover:'"
               @click="days = d"
             >
               {{ d }}{{ t('payment.admin.daySuffix') }}
@@ -32,7 +32,7 @@
         <OrderStatsCards :stats="stats" />
         <DailyRevenueChart :data="stats.daily_series || []" :loading="loading" />
         <div class="grid grid-cols-1 gap-6 lg:grid-cols-2">
-          <KumoSurface class="card p-4">
+          <Panel flush class="card p-4">
             <h3 class="mb-4 text-sm font-semibold text-gray-900 dark:text-white">{{ t('payment.admin.paymentDistribution') }}</h3>
             <div v-if="!stats.payment_methods?.length" class="flex h-32 items-center justify-center text-sm text-gray-500 dark:text-gray-400">{{ t('payment.admin.noData') }}</div>
             <div v-else class="space-y-3">
@@ -47,14 +47,14 @@
                 </div>
               </div>
             </div>
-          </KumoSurface>
-          <KumoSurface class="card p-4">
+          </Panel>
+          <Panel flush class="card p-4">
             <h3 class="mb-4 text-sm font-semibold text-gray-900 dark:text-white">{{ t('payment.admin.topUsers') }}</h3>
             <div v-if="!hasTopUsers(stats.top_users)" class="flex h-32 items-center justify-center text-sm text-gray-500 dark:text-gray-400">{{ t('payment.admin.noData') }}</div>
             <div v-else class="space-y-2">
               <div v-for="[currency, users] in sortedTopUsers(stats.top_users)" :key="currency" class="space-y-2">
                 <p class="text-xs font-semibold text-gray-500 dark:text-gray-400">{{ currency }}</p>
-                <div v-for="(user, idx) in users" :key="user.user_id" class="flex items-center justify-between rounded-lg px-3 py-2 hover:bg-gray-50 dark:hover:bg-dark-700">
+                <div v-for="(user, idx) in users" :key="user.user_id" class="flex items-center justify-between px-3 py-2 hover:bg-[var(--brand-hover)] panel-section">
                   <div class="flex items-center gap-3">
                     <span :class="['flex h-6 w-6 items-center justify-center rounded-full text-xs font-bold', rankClass(idx)]">{{ idx + 1 }}</span>
                     <span class="text-sm text-gray-700 dark:text-gray-300">{{ user.email }}</span>
@@ -63,7 +63,7 @@
                 </div>
               </div>
             </div>
-          </KumoSurface>
+          </Panel>
         </div>
       </template>
     </div>
@@ -71,7 +71,8 @@
 </template>
 
 <script setup lang="ts">
-import { KumoButton, KumoSurface } from '@/components/kumo'
+import Panel from '@/components/common/Panel.vue'
+import { KumoButton } from '@/components/kumo'
 
 import { ref, watch, onMounted } from 'vue'
 import { useI18n } from 'vue-i18n'

@@ -8,7 +8,7 @@
     <div v-if="user" class="space-y-4">
       <div
         v-if="hasActiveSubscription"
-        class="rounded-xl border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-700 dark:border-amber-500/30 dark:bg-amber-500/10 dark:text-amber-200"
+        class="rounded-lg border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-700 dark:border-amber-500/30 dark:bg-amber-500/10 dark:text-amber-200"
       >
         {{ t('admin.users.platformQuota.subscriptionWarning') }}
       </div>
@@ -19,7 +19,7 @@
       <div v-else class="overflow-x-auto">
         <KumoTable class="min-w-full text-sm">
           <KumoTableHeader>
-            <KumoTableRow class="border-b border-gray-200 text-gray-700 dark:border-dark-700 dark:text-gray-300">
+            <KumoTableRow class="border-b border-[var(--brand-line)] text-gray-700 dark:text-gray-300">
               <KumoTableHead class="px-3 py-2 text-left font-medium">{{ t('admin.users.platformQuota.columns.platform') }}</KumoTableHead>
               <KumoTableHead class="px-3 py-2 text-left font-medium">{{ t('admin.users.platformQuota.columns.daily') }}</KumoTableHead>
               <KumoTableHead class="px-3 py-2 text-left font-medium">{{ t('admin.users.platformQuota.columns.weekly') }}</KumoTableHead>
@@ -28,7 +28,7 @@
             </KumoTableRow>
           </KumoTableHeader>
           <KumoTableBody>
-            <KumoTableRow v-for="row in quotas" :key="row.platform" class="border-b border-gray-100 dark:border-dark-800">
+            <KumoTableRow v-for="row in quotas" :key="row.platform" class="border-b border-[var(--brand-line)]">
               <KumoTableCell class="px-3 py-2 font-mono text-gray-900 dark:text-white">{{ row.platform }}</KumoTableCell>
               <KumoTableCell class="px-3 py-2">
                 <div class="flex items-center gap-1">

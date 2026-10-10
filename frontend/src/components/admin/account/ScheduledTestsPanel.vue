@@ -23,7 +23,7 @@
       <!-- Add Plan Form -->
       <div
         v-if="showAddForm"
-        class="rounded-xl border border-primary-200 bg-primary-50/50 p-4 dark:border-primary-800 dark:bg-primary-900/20"
+        class="rounded-lg border border-primary-200 bg-primary-50/50 p-4 dark:border-primary-800 dark:bg-primary-900/20"
       >
         <div class="mb-3 text-sm font-medium text-gray-700 dark:text-gray-300">
           {{ t('admin.scheduledTests.addPlan') }}
@@ -45,7 +45,7 @@
               {{ t('admin.scheduledTests.cronExpression') }}
               <HelpTooltip>
                 <template #trigger>
-                  <span class="inline-flex h-4 w-4 cursor-help items-center justify-center rounded-full border border-gray-400/70 text-[10px] font-semibold text-gray-400 transition-colors hover:border-primary-500 hover:text-primary-600 dark:border-gray-500 dark:text-gray-500 dark:hover:border-primary-400 dark:hover:text-primary-400">
+                  <span class="inline-flex h-4 w-4 cursor-help items-center justify-center rounded-full border border-[var(--brand-line)] text-[10px] font-semibold text-gray-400 transition-colors hover:border-primary-500 hover:text-primary-600 dark:text-gray-500 dark:hover:border-primary-400 dark:hover:text-primary-400">
                     ?
                   </span>
                 </template>
@@ -71,7 +71,7 @@
               {{ t('admin.scheduledTests.maxResults') }}
               <HelpTooltip>
                 <template #trigger>
-                  <span class="inline-flex h-4 w-4 cursor-help items-center justify-center rounded-full border border-gray-400/70 text-[10px] font-semibold text-gray-400 transition-colors hover:border-primary-500 hover:text-primary-600 dark:border-gray-500 dark:text-gray-500 dark:hover:border-primary-400 dark:hover:text-primary-400">
+                  <span class="inline-flex h-4 w-4 cursor-help items-center justify-center rounded-full border border-[var(--brand-line)] text-[10px] font-semibold text-gray-400 transition-colors hover:border-primary-500 hover:text-primary-600 dark:text-gray-500 dark:hover:border-primary-400 dark:hover:text-primary-400">
                     ?
                   </span>
                 </template>
@@ -111,7 +111,7 @@
         <div class="mt-3 flex justify-end gap-2">
           <KumoButton
             @click="showAddForm = false; resetNewPlan()"
-            class="rounded-lg bg-gray-100 px-3 py-1.5 text-sm font-medium text-gray-700 transition-colors hover:bg-gray-200 dark:bg-dark-600 dark:text-gray-300 dark:hover:bg-dark-500"
+            class="rounded-lg bg-gray-100 px-3 py-1.5 text-sm font-medium text-gray-700 transition-colors hover:bg-[var(--brand-hover)] dark:bg-dark-600 dark:text-gray-300"
           >
             {{ t('common.cancel') }}
           </KumoButton>
@@ -135,7 +135,7 @@
       <!-- Empty State -->
       <div
         v-else-if="plans.length === 0"
-        class="rounded-xl border border-dashed border-gray-300 py-10 text-center dark:border-dark-600"
+        class="py-10 text-center panel-section"
       >
         <Icon name="calendar" size="lg" class="mx-auto mb-2 text-gray-400" :stroke-width="1.5" />
         <p class="text-sm text-gray-500 dark:text-gray-400">
@@ -148,7 +148,7 @@
         <div
           v-for="plan in plans"
           :key="plan.id"
-          class="rounded-xl border border-gray-200 bg-white transition-all dark:border-dark-600 dark:bg-dark-800"
+          class="transition-all panel-section"
         >
           <!-- Plan Header -->
           <div
@@ -255,7 +255,7 @@
                   {{ t('admin.scheduledTests.cronExpression') }}
                   <HelpTooltip>
                     <template #trigger>
-                      <span class="inline-flex h-4 w-4 cursor-help items-center justify-center rounded-full border border-gray-400/70 text-[10px] font-semibold text-gray-400 transition-colors hover:border-primary-500 hover:text-primary-600 dark:border-gray-500 dark:text-gray-500 dark:hover:border-primary-400 dark:hover:text-primary-400">
+                      <span class="inline-flex h-4 w-4 cursor-help items-center justify-center rounded-full border border-[var(--brand-line)] text-[10px] font-semibold text-gray-400 transition-colors hover:border-primary-500 hover:text-primary-600 dark:text-gray-500 dark:hover:border-primary-400 dark:hover:text-primary-400">
                         ?
                       </span>
                     </template>
@@ -281,7 +281,7 @@
                   {{ t('admin.scheduledTests.maxResults') }}
                   <HelpTooltip>
                     <template #trigger>
-                      <span class="inline-flex h-4 w-4 cursor-help items-center justify-center rounded-full border border-gray-400/70 text-[10px] font-semibold text-gray-400 transition-colors hover:border-primary-500 hover:text-primary-600 dark:border-gray-500 dark:text-gray-500 dark:hover:border-primary-400 dark:hover:text-primary-400">
+                      <span class="inline-flex h-4 w-4 cursor-help items-center justify-center rounded-full border border-[var(--brand-line)] text-[10px] font-semibold text-gray-400 transition-colors hover:border-primary-500 hover:text-primary-600 dark:text-gray-500 dark:hover:border-primary-400 dark:hover:text-primary-400">
                         ?
                       </span>
                     </template>
@@ -321,7 +321,7 @@
             <div class="mt-3 flex justify-end gap-2">
               <KumoButton
                 @click="cancelEdit"
-                class="rounded-lg bg-gray-100 px-3 py-1.5 text-sm font-medium text-gray-700 transition-colors hover:bg-gray-200 dark:bg-dark-600 dark:text-gray-300 dark:hover:bg-dark-500"
+                class="rounded-lg bg-gray-100 px-3 py-1.5 text-sm font-medium text-gray-700 transition-colors hover:bg-[var(--brand-hover)] dark:bg-dark-600 dark:text-gray-300"
               >
                 {{ t('common.cancel') }}
               </KumoButton>
@@ -339,7 +339,7 @@
           <!-- Expanded Results Section -->
           <div
             v-if="expandedPlanId === plan.id"
-            class="border-t border-gray-100 px-4 py-3 dark:border-dark-700"
+            class="border-t border-[var(--brand-line)] px-4 py-3"
           >
             <div class="mb-2 text-xs font-medium text-gray-600 dark:text-gray-400">
               {{ t('admin.scheduledTests.results') }}
@@ -364,7 +364,7 @@
               <div
                 v-for="result in results"
                 :key="result.id"
-                class="rounded-lg border border-gray-100 bg-gray-50 p-3 dark:border-dark-700 dark:bg-dark-900"
+                class="p-3 panel-section"
               >
                 <div class="flex items-center justify-between">
                   <div class="flex items-center gap-2">

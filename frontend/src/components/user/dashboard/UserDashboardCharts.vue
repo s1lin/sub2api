@@ -1,7 +1,7 @@
 <template>
   <div class="space-y-6">
     <!-- Date Range Filter -->
-    <KumoSurface class="card p-4">
+    <div class="dashboard-toolbar">
       <div class="flex flex-wrap items-center gap-4">
         <div class="flex flex-wrap items-center gap-2">
           <span class="text-sm font-medium text-gray-700 dark:text-gray-300">{{ t('dashboard.timeRange') }}:</span>
@@ -17,13 +17,13 @@
           </div>
         </div>
       </div>
-    </KumoSurface>
+    </div>
 
     <!-- Charts Grid -->
     <div class="grid grid-cols-1 gap-6 lg:grid-cols-2">
       <!-- Model Distribution Chart -->
-      <KumoSurface class="card relative overflow-hidden p-4">
-        <div v-if="loading" class="absolute inset-0 z-10 flex items-center justify-center bg-white/50 backdrop-blur-sm dark:bg-dark-800/50">
+      <Panel flush class="card relative overflow-hidden p-4">
+        <div v-if="loading" class="absolute inset-0 z-10 flex items-center justify-center bg-white/50 dark:bg-dark-800/50">
           <LoadingSpinner size="md" />
         </div>
         <h3 class="mb-4 text-sm font-semibold text-gray-900 dark:text-white">{{ t('dashboard.modelDistribution') }}</h3>
@@ -44,7 +44,7 @@
                 </KumoTableRow>
               </KumoTableHeader>
               <KumoTableBody>
-                <KumoTableRow v-for="model in models" :key="model.model" class="border-t border-gray-100 dark:border-dark-700">
+                <KumoTableRow v-for="model in models" :key="model.model" class="border-t border-[var(--brand-line)]">
                   <KumoTableCell class="max-w-[100px] truncate py-1.5 font-medium text-gray-900 dark:text-white" :title="model.model">{{ model.model }}</KumoTableCell>
                   <KumoTableCell class="py-1.5 text-right text-gray-600 dark:text-gray-400">{{ formatNumber(model.requests) }}</KumoTableCell>
                   <KumoTableCell class="py-1.5 text-right text-gray-600 dark:text-gray-400">{{ formatTokens(model.total_tokens) }}</KumoTableCell>
@@ -55,7 +55,7 @@
             </KumoTable>
           </div>
         </div>
-      </KumoSurface>
+      </Panel>
 
       <!-- Token Usage Trend Chart -->
       <TokenUsageTrend :trend-data="trend" :loading="loading" />
@@ -64,7 +64,8 @@
 </template>
 
 <script setup lang="ts">
-import { KumoButton, KumoSurface, KumoTable, KumoTableBody, KumoTableCell, KumoTableHead, KumoTableHeader, KumoTableRow } from '@/components/kumo'
+import Panel from '@/components/common/Panel.vue'
+import { KumoButton, KumoTable, KumoTableBody, KumoTableCell, KumoTableHead, KumoTableHeader, KumoTableRow } from '@/components/kumo'
 
 import { computed } from 'vue'
 import { useI18n } from 'vue-i18n'
@@ -86,7 +87,7 @@ const modelData = computed(() => !props.models?.length ? null : {
   labels: props.models.map((m: ModelStat) => m.model),
   datasets: [{
     data: props.models.map((m: ModelStat) => m.total_tokens),
-    backgroundColor: ['#a74d30', '#58786a', '#bf9453', '#788da1', '#987e91', '#8f9c6d', '#b77862', '#59615b']
+    backgroundColor: ['#0f7a6c', '#bf9453', '#788da1', '#987e91', '#a74d30', '#8f9c6d', '#b77862', '#59615b']
   }]
 })
 

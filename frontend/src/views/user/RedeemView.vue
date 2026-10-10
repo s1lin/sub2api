@@ -2,10 +2,10 @@
   <AppLayout>
     <div class="mx-auto max-w-2xl space-y-6">
       <!-- Current Balance Card -->
-      <KumoSurface class="card overflow-hidden">
-        <div class="bg-gradient-to-br from-primary-500 to-primary-600 px-6 py-8 text-center">
+      <Panel flush class="card overflow-hidden">
+        <div class="px-6 py-8 text-center">
           <div
-            class="mb-4 inline-flex h-16 w-16 items-center justify-center rounded-2xl bg-white/20 backdrop-blur-sm"
+            class="mb-4 inline-flex h-16 w-16 items-center justify-center panel-section"
           >
             <Icon name="creditCard" size="xl" class="text-white" />
           </div>
@@ -17,10 +17,10 @@
             {{ t('redeem.concurrency') }}: {{ user?.concurrency || 0 }} {{ t('redeem.requests') }}
           </p>
         </div>
-      </KumoSurface>
+      </Panel>
 
       <!-- Redeem Form -->
-      <KumoSurface class="card">
+      <Panel flush class="card">
         <div class="p-6">
           <form @submit.prevent="handleRedeem" class="space-y-5">
             <div>
@@ -57,18 +57,18 @@
             </KumoButton>
           </form>
         </div>
-      </KumoSurface>
+      </Panel>
 
       <!-- Success Message -->
       <transition name="fade">
-        <KumoSurface
+        <Panel flush
           v-if="redeemResult"
           class="card border-emerald-200 bg-emerald-50 dark:border-emerald-800/50 dark:bg-emerald-900/20"
         >
           <div class="p-6">
             <div class="flex items-start gap-4">
               <div
-                class="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-xl bg-emerald-100 dark:bg-emerald-900/30"
+                class="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-lg bg-emerald-100 dark:bg-emerald-900/30"
               >
                 <Icon name="checkCircle" size="md" class="text-emerald-600 dark:text-emerald-400" />
               </div>
@@ -110,19 +110,19 @@
               </div>
             </div>
           </div>
-        </KumoSurface>
+        </Panel>
       </transition>
 
       <!-- Error Message -->
       <transition name="fade">
-        <KumoSurface
+        <Panel flush
           v-if="errorMessage"
           class="card border-red-200 bg-red-50 dark:border-red-800/50 dark:bg-red-900/20"
         >
           <div class="p-6">
             <div class="flex items-start gap-4">
               <div
-                class="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-xl bg-red-100 dark:bg-red-900/30"
+                class="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-lg bg-red-100 dark:bg-red-900/30"
               >
                 <Icon
                   name="exclamationCircle"
@@ -140,17 +140,17 @@
               </div>
             </div>
           </div>
-        </KumoSurface>
+        </Panel>
       </transition>
 
       <!-- Information Card -->
-      <KumoSurface
+      <Panel flush
         class="card border-primary-200 bg-primary-50 dark:border-primary-800/50 dark:bg-primary-900/20"
       >
         <div class="p-6">
           <div class="flex items-start gap-4">
             <div
-              class="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-xl bg-primary-100 dark:bg-primary-900/30"
+              class="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-lg bg-primary-100 dark:bg-primary-900/30"
             >
               <Icon name="infoCircle" size="md" class="text-primary-600 dark:text-primary-400" />
             </div>
@@ -177,11 +177,11 @@
             </div>
           </div>
         </div>
-      </KumoSurface>
+      </Panel>
 
       <!-- Recent Activity -->
-      <KumoSurface class="card">
-        <div class="border-b border-gray-100 px-6 py-4 dark:border-dark-700">
+      <Panel flush class="card">
+        <div class="border-b border-[var(--brand-line)] px-6 py-4">
           <h2 class="text-lg font-semibold text-gray-900 dark:text-white">
             {{ t('redeem.recentActivity') }}
           </h2>
@@ -197,12 +197,12 @@
             <div
               v-for="item in history"
               :key="item.id"
-              class="flex items-center justify-between rounded-xl bg-gray-50 p-4 dark:bg-dark-800"
+              class="flex items-center justify-between p-4 panel-section"
             >
               <div class="flex items-center gap-4">
                 <div
                   :class="[
-                    'flex h-10 w-10 items-center justify-center rounded-xl',
+                    'flex h-10 w-10 items-center justify-center rounded-lg',
                     isBalanceType(item.type)
                       ? item.value >= 0
                         ? 'bg-emerald-100 dark:bg-emerald-900/30'
@@ -294,7 +294,7 @@
           <!-- Empty State -->
           <div v-else class="empty-state py-8">
             <div
-              class="mb-4 flex h-16 w-16 items-center justify-center rounded-2xl bg-gray-100 dark:bg-dark-800"
+              class="mb-4 flex h-16 w-16 items-center justify-center panel-section"
             >
               <Icon name="clock" size="xl" class="text-gray-400 dark:text-dark-500" />
             </div>
@@ -327,13 +327,14 @@
             >{{ t('pagination.next') }}</KumoButton>
           </div>
         </div>
-      </KumoSurface>
+      </Panel>
     </div>
   </AppLayout>
 </template>
 
 <script setup lang="ts">
-import { KumoButton, KumoInput, KumoLabel, KumoLoader, KumoNativeSelect, KumoSurface } from '@/components/kumo'
+import Panel from '@/components/common/Panel.vue'
+import { KumoButton, KumoInput, KumoLabel, KumoLoader, KumoNativeSelect } from '@/components/kumo'
 
 import { ref, computed, onMounted } from 'vue'
 import { useI18n } from 'vue-i18n'

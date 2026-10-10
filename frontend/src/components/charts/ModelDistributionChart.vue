@@ -1,7 +1,7 @@
 <template>
-  <KumoSurface class="card p-4">
-    <div class="mb-4 flex items-center justify-between gap-3">
-      <h3 class="text-sm font-semibold text-gray-900 dark:text-white">
+  <Panel flush class="card p-4">
+    <div class="mb-4 flex flex-wrap items-center justify-between gap-3">
+      <h3 class="max-w-full shrink-0 break-normal text-sm font-semibold text-gray-900 dark:text-white">
         {{ !enableRankingView || activeView === 'model_distribution'
           ? t('admin.dashboard.modelDistribution')
           : t('admin.dashboard.spendingRankingTitle') }}
@@ -9,33 +9,33 @@
       <div class="flex flex-wrap items-center justify-end gap-2">
         <div
           v-if="showSourceToggle"
-          class="inline-flex rounded-lg border border-gray-200 bg-gray-50 p-0.5 dark:border-dark-700 dark:bg-dark-800"
+          class="inline-flex p-0.5 ui-segmented"
         >
-          <KumoButton
+          <KumoButton :aria-pressed="source === 'requested'"
             type="button"
             class="rounded-md px-2.5 py-1 text-xs font-medium transition-colors"
             :class="source === 'requested'
-              ? 'bg-white text-gray-900 shadow-sm dark:bg-dark-700 dark:text-white'
+              ? 'bg-[var(--brand-hover)] text-gray-900   dark:text-white'
               : 'text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200'"
             @click="emit('update:source', 'requested')"
           >
             {{ t('usage.requestedModel') }}
           </KumoButton>
-          <KumoButton
+          <KumoButton :aria-pressed="source === 'upstream'"
             type="button"
             class="rounded-md px-2.5 py-1 text-xs font-medium transition-colors"
             :class="source === 'upstream'
-              ? 'bg-white text-gray-900 shadow-sm dark:bg-dark-700 dark:text-white'
+              ? 'bg-[var(--brand-hover)] text-gray-900   dark:text-white'
               : 'text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200'"
             @click="emit('update:source', 'upstream')"
           >
             {{ t('usage.upstreamModel') }}
           </KumoButton>
-          <KumoButton
+          <KumoButton :aria-pressed="source === 'mapping'"
             type="button"
             class="rounded-md px-2.5 py-1 text-xs font-medium transition-colors"
             :class="source === 'mapping'
-              ? 'bg-white text-gray-900 shadow-sm dark:bg-dark-700 dark:text-white'
+              ? 'bg-[var(--brand-hover)] text-gray-900   dark:text-white'
               : 'text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200'"
             @click="emit('update:source', 'mapping')"
           >
@@ -44,48 +44,48 @@
         </div>
         <div
           v-if="showMetricToggle"
-          class="inline-flex rounded-lg border border-gray-200 bg-gray-50 p-0.5 dark:border-dark-700 dark:bg-dark-800"
+          class="inline-flex p-0.5 ui-segmented"
         >
-          <KumoButton
+          <KumoButton :aria-pressed="metric === 'tokens'"
             type="button"
             class="rounded-md px-2.5 py-1 text-xs font-medium transition-colors"
             :class="metric === 'tokens'
-              ? 'bg-white text-gray-900 shadow-sm dark:bg-dark-700 dark:text-white'
+              ? 'bg-[var(--brand-hover)] text-gray-900   dark:text-white'
               : 'text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200'"
             @click="emit('update:metric', 'tokens')"
           >
             {{ t('admin.dashboard.metricTokens') }}
           </KumoButton>
-          <KumoButton
+          <KumoButton :aria-pressed="metric === 'actual_cost'"
             type="button"
             class="rounded-md px-2.5 py-1 text-xs font-medium transition-colors"
             :class="metric === 'actual_cost'
-              ? 'bg-white text-gray-900 shadow-sm dark:bg-dark-700 dark:text-white'
+              ? 'bg-[var(--brand-hover)] text-gray-900   dark:text-white'
               : 'text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200'"
             @click="emit('update:metric', 'actual_cost')"
           >
             {{ t('admin.dashboard.metricActualCost') }}
           </KumoButton>
         </div>
-        <div v-if="enableRankingView" class="inline-flex rounded-lg bg-gray-100 p-1 dark:bg-dark-800">
-          <KumoButton
+        <div v-if="enableRankingView" class="inline-flex p-1 ui-segmented">
+          <KumoButton :aria-pressed="activeView === 'model_distribution'"
             type="button"
             class="rounded-md px-2.5 py-1 text-xs font-medium transition-colors"
             :class="
               activeView === 'model_distribution'
-                ? 'bg-white text-gray-900 shadow-sm dark:bg-dark-700 dark:text-white'
+                ? 'bg-[var(--brand-hover)] text-gray-900   dark:text-white'
                 : 'text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200'
             "
             @click="activeView = 'model_distribution'"
           >
             {{ t('admin.dashboard.viewModelDistribution') }}
           </KumoButton>
-          <KumoButton
+          <KumoButton :aria-pressed="activeView === 'spending_ranking'"
             type="button"
             class="rounded-md px-2.5 py-1 text-xs font-medium transition-colors"
             :class="
               activeView === 'spending_ranking'
-                ? 'bg-white text-gray-900 shadow-sm dark:bg-dark-700 dark:text-white'
+                ? 'bg-[var(--brand-hover)] text-gray-900   dark:text-white'
                 : 'text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200'
             "
             @click="activeView = 'spending_ranking'"
@@ -121,8 +121,8 @@
           <KumoTableBody>
             <template v-for="model in displayModelStats" :key="model.model">
               <KumoTableRow
-                class="border-t border-gray-100 transition-colors dark:border-dark-700"
-                :class="enableBreakdown ? 'cursor-pointer hover:bg-gray-50 dark:hover:bg-dark-700/40' : ''"
+                class="border-t border-[var(--brand-line)] transition-colors"
+                :class="enableBreakdown ? 'cursor-pointer hover:bg-[var(--brand-hover)] hover:' : ''"
                 @click="enableBreakdown && toggleBreakdown('model', model.model)"
               >
                 <KumoTableCell
@@ -200,10 +200,10 @@
             <KumoTableRow
               v-for="(item, index) in rankingDisplayItems"
               :key="item.isOther ? 'others' : `${item.user_id}-${index}`"
-              class="border-t border-gray-100 transition-colors dark:border-dark-700"
+              class="border-t border-[var(--brand-line)] transition-colors"
               :class="item.isOther
                 ? 'bg-gray-50/70 dark:bg-dark-700/20'
-                : 'cursor-pointer hover:bg-gray-50 dark:hover:bg-dark-700/40'"
+                : 'cursor-pointer hover:bg-[var(--brand-hover)] hover:'"
               @click="item.isOther ? undefined : emit('ranking-click', item)"
             >
               <KumoTableCell class="py-1.5">
@@ -239,11 +239,12 @@
     >
       {{ t('admin.dashboard.noDataAvailable') }}
     </div>
-  </KumoSurface>
+  </Panel>
 </template>
 
 <script setup lang="ts">
-import { KumoButton, KumoSurface, KumoTable, KumoTableBody, KumoTableCell, KumoTableHead, KumoTableHeader, KumoTableRow } from '@/components/kumo'
+import Panel from '@/components/common/Panel.vue'
+import { KumoButton, KumoTable, KumoTableBody, KumoTableCell, KumoTableHead, KumoTableHeader, KumoTableRow } from '@/components/kumo'
 
 import { computed, ref } from 'vue'
 import { useI18n } from 'vue-i18n'

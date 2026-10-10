@@ -27,7 +27,7 @@
       <span class="w-10 shrink-0 pt-2 text-xs font-semibold uppercase tracking-wider text-gray-400 dark:text-dark-500">
         {{ t('modelPlaza.filters.groupLabel') }}
       </span>
-      <div class="flex flex-wrap items-center gap-2">
+      <div class="flex flex-wrap items-center gap-2 ui-segmented">
         <KumoButton
           type="button"
           class="rounded-lg px-3 py-1.5 text-sm font-medium transition"
@@ -56,7 +56,7 @@
       <span class="w-10 shrink-0 pt-2 text-xs font-semibold uppercase tracking-wider text-gray-400 dark:text-dark-500">
         {{ t('modelPlaza.filters.rateLabel') }}
       </span>
-      <div class="flex flex-wrap items-center gap-2">
+      <div class="flex flex-wrap items-center gap-2 ui-segmented">
         <KumoButton
           type="button"
           class="rounded-lg px-3 py-1.5 text-sm font-medium transition"
@@ -173,51 +173,13 @@ function rateEnabled(r: number): boolean {
 
 function chipClass(active: boolean): string {
   return active
-    ? 'bg-gradient-to-r from-primary-500 to-primary-600 text-white shadow-sm shadow-primary-500/30'
+    ? 'ui-selected border border-[var(--brand-line)]'
     : 'bg-white text-gray-600 ring-1 ring-inset ring-gray-200 enabled:hover:bg-gray-50 enabled:hover:text-gray-900 enabled:hover:ring-gray-300 dark:bg-dark-800/60 dark:text-dark-300 dark:ring-dark-700 dark:enabled:hover:bg-dark-800 dark:enabled:hover:text-white'
 }
 </script>
 
 <style scoped>
-/* 平台/分组 chip 的配色统一从 --chip-accent(平台主色)派生,新增平台无需扩展样式。
-   激活态与非激活态在模板上互斥挂载,避免选择器优先级互相覆盖。 */
-.chip-tinted {
-  color: var(--chip-accent);
-  color: color-mix(in srgb, var(--chip-accent) 78%, black);
-  background-color: color-mix(in srgb, var(--chip-accent) 9%, transparent);
-  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--chip-accent) 25%, transparent);
-}
-
-.chip-tinted:not(:disabled):hover {
-  background-color: color-mix(in srgb, var(--chip-accent) 16%, transparent);
-}
-
-.dark .chip-tinted {
-  color: color-mix(in srgb, var(--chip-accent) 72%, white);
-  background-color: color-mix(in srgb, var(--chip-accent) 12%, transparent);
-  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--chip-accent) 30%, transparent);
-}
-
-.dark .chip-tinted:not(:disabled):hover {
-  background-color: color-mix(in srgb, var(--chip-accent) 18%, transparent);
-}
-
-.chip-tinted-active {
-  color: #fff;
-  background-color: var(--chip-accent);
-  background-color: color-mix(in srgb, var(--chip-accent) 85%, black);
-  box-shadow: 0 1px 2px 0 color-mix(in srgb, var(--chip-accent) 35%, transparent);
-}
-
-.chip-tinted-active:not(:disabled):hover {
-  background-color: color-mix(in srgb, var(--chip-accent) 75%, black);
-}
-
-.dark .chip-tinted-active {
-  background-color: color-mix(in srgb, var(--chip-accent) 80%, transparent);
-}
-
-.dark .chip-tinted-active:not(:disabled):hover {
-  background-color: var(--chip-accent);
-}
+.chip-tinted { color: var(--brand-muted); background: transparent; border: 1px solid var(--brand-line); }
+.chip-tinted:not(:disabled):hover, .chip-tinted-active { color: var(--brand-accent); background: var(--brand-hover); border: 1px solid var(--brand-line); }
+.chip-tinted-active:not(:disabled):hover { background: var(--brand-hover); }
 </style>

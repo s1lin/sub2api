@@ -1,19 +1,9 @@
 <template>
-  <AppLayout>
+  <AppLayout hide-page-header>
     <div class="space-y-6 pb-12">
       <!-- Ops-style elevated shell: title toolbar + filters (mirrors OpsDashboardHeader) -->
-      <KumoSurface
-        class="card sticky top-0 z-20 !rounded-3xl !border-0 p-0 shadow-sm ring-1 ring-gray-900/5 backdrop-blur-sm dark:!bg-dark-800 dark:ring-dark-700 supports-[backdrop-filter]:bg-white/95 dark:supports-[backdrop-filter]:bg-dark-800/95"
-      >
-        <header class="page-header mb-0 flex flex-wrap items-start justify-between gap-4 border-b border-gray-100 px-5 py-4 dark:border-dark-700 sm:px-6">
-          <div class="min-w-0">
-            <h1 class="page-title flex items-center gap-2 text-xl font-black text-gray-900 dark:text-white">
-              <span class="inline-flex h-8 w-8 items-center justify-center rounded-xl bg-blue-50 text-blue-500 dark:bg-blue-900/30 dark:text-blue-400">
-                <Icon name="chart" size="sm" />
-              </span>
-              {{ t('channelMonitorV2.title') }}
-            </h1>
-            <div class="page-description mt-1.5 flex flex-wrap items-center gap-2 text-xs text-gray-500 dark:text-gray-400">
+      <div class="space-y-4">
+        <PageHeader :title="t('channelMonitorV2.title')"><div class="page-description mt-1.5 flex flex-wrap items-center gap-2 text-xs text-gray-500 dark:text-gray-400">
               <span class="relative flex h-2 w-2 shrink-0">
                 <span
                   class="relative inline-flex h-2 w-2 rounded-full"
@@ -41,18 +31,15 @@
                 <LoadingSpinner size="sm" />
                 {{ t('channelMonitorV2.bootstrap.progress', { percent: bootstrapPercent }) }}
               </KumoBadge>
-            </div>
-          </div>
-          <KumoButton
-            class="btn btn-secondary btn-icon flex h-8 w-8 items-center justify-center rounded-lg bg-gray-100 text-gray-500 hover:bg-gray-200 dark:bg-dark-700 dark:text-gray-400 dark:hover:bg-dark-600"
+            </div><template #actions><KumoButton
+            class="btn btn-secondary btn-icon flex h-8 w-8 items-center justify-center rounded-lg bg-gray-100 text-gray-500 hover:bg-[var(--brand-hover)] dark:bg-dark-700 dark:text-gray-400"
             type="button"
             :title="t('common.refresh')"
             :disabled="loading"
             @click="reload(false)"
           >
             <Icon name="refresh" size="sm" :class="loading ? 'animate-spin' : ''" />
-          </KumoButton>
-        </header>
+          </KumoButton></template></PageHeader>
 
         <!-- First-upgrade silent backfill: show until 30d product window is covered -->
         <div
@@ -139,13 +126,12 @@
 
           <KumoTabs v-if="trendView === 'pulse'" v-model="healthMode" size="sm" :tabs="healthModeOptions" />
         </div>
-      </KumoSurface>
+      </div>
 
       <!-- Overview KPI: success · TTFT · tokens/s(optional) · cache · (+ RPM when throughput visible) -->
-      <section
+      <MetricStrip
         v-if="snapshot"
-        class="grid grid-cols-2 gap-3 sm:grid-cols-3"
-        :class="showThroughput ? 'xl:grid-cols-5' : 'xl:grid-cols-4'"
+        :columns="showThroughput ? 5 : 3"
         :aria-label="t('channelMonitorV2.summaryAria')"
       >
         <MetricCell
@@ -181,19 +167,18 @@
           :detail="t('channelMonitorV2.metrics.rpmDetail')"
           :title="exactRate(snapshot.metrics.rpm)"
         />
-      </section>
-      <section
+      </MetricStrip>
+      <MetricStrip
         v-else-if="loading"
-        class="grid grid-cols-2 gap-3 sm:grid-cols-3"
-        :class="showThroughput ? 'xl:grid-cols-5' : 'xl:grid-cols-4'"
+        :columns="showThroughput ? 5 : 3"
         aria-hidden="true"
       >
         <KumoSkeleton
-          v-for="i in (showThroughput ? 5 : 4)"
+          v-for="i in (showThroughput ? 5 : 3)"
           :key="i"
-          class="h-24 animate-pulse rounded-2xl bg-gray-50 dark:bg-dark-900/30"
+          class="h-24 animate-pulse rounded-lg bg-gray-50 dark:bg-dark-900/30"
         />
-      </section>
+      </MetricStrip>
 
       <div class="relative min-h-[320px]">
         <MonitorTrendChart
@@ -209,16 +194,16 @@
           :health-mode="healthMode"
           :show-throughput="showThroughput"
         />
-        <KumoSurface
+        <Panel flush
           v-else-if="loading"
-          class="card flex min-h-[320px] items-center justify-center !rounded-3xl !border-0 text-sm text-gray-400 shadow-sm ring-1 ring-gray-900/5 dark:ring-dark-700"
+          class="card flex min-h-[320px] items-center justify-center !rounded-lg !border-0 text-sm text-gray-400"
         >
           <span class="animate-pulse">{{ t('common.loading') }}</span>
-        </KumoSurface>
+        </Panel>
       </div>
 
-      <KumoSurface class="card flex min-h-0 flex-col overflow-hidden !rounded-3xl !border-0 shadow-sm ring-1 ring-gray-900/5 dark:!bg-dark-800 dark:ring-dark-700">
-        <div class="border-b border-gray-100 px-5 pt-4 dark:border-dark-700 sm:px-6">
+      <Panel flush class="card flex min-h-0 flex-col overflow-hidden !rounded-lg !border-0">
+        <div class="border-b border-[var(--brand-line)] px-5 pt-4 sm:px-6">
           <KumoTabs v-model="activeTab" :tabs="tabs" variant="underline" />
         </div>
         <div class="min-h-0 max-h-[min(52vh,520px)] overflow-auto p-4 sm:p-5">
@@ -272,7 +257,7 @@
             <div
               v-for="row in errorRows"
               :key="row.category"
-              class="rounded-2xl bg-gray-50 p-4 text-sm dark:bg-dark-900/30"
+              class="p-4 text-sm panel-section"
               :class="row.ignored ? 'opacity-60' : ''"
             >
               <KumoButton
@@ -287,7 +272,7 @@
                 <span class="h-2 overflow-hidden rounded-full bg-gray-100 dark:bg-dark-700">
                   <i
                     class="block h-full rounded-full"
-                    :class="row.ignored ? 'bg-gray-400 dark:bg-gray-500' : 'bg-gradient-to-r from-red-400 to-red-500'"
+                    :class="row.ignored ? 'bg-gray-400 dark:bg-gray-500' : '  '"
                     :style="{ width: `${Math.max(2, row.rate * 100)}%` }"
                   ></i>
                 </span>
@@ -297,12 +282,12 @@
                 >{{ formatPercent(row.rate) }}</small>
                 <Icon name="chevronDown" size="sm" :class="['text-gray-400 transition-transform', expandedErrors.has(row.category) ? 'rotate-180' : '']" />
               </KumoButton>
-              <div v-if="expandedErrors.has(row.category)" class="mt-3 space-y-2 border-t border-gray-100 pt-3 dark:border-dark-700">
+              <div v-if="expandedErrors.has(row.category)" class="mt-3 space-y-2 border-t border-[var(--brand-line)] pt-3">
                 <template v-if="isAdmin && (row.details || []).length">
                   <div
                     v-for="(detail, index) in row.details || []"
                     :key="`${row.category}:${index}:${detail.message}`"
-                    class="rounded-lg bg-gray-50 px-3 py-2 text-xs text-gray-600 dark:bg-dark-900/50 dark:text-dark-300"
+                    class="px-3 py-2 text-xs text-gray-600 dark:text-dark-300 panel-section"
                   >
                     <div class="mb-1 flex flex-wrap items-center gap-2">
                       <KumoBadge class="badge badge-gray !px-1.5 !py-0 text-[10px]">{{ detail.platform || '-' }}</KumoBadge>
@@ -387,13 +372,16 @@
             </p>
           </div>
         </div>
-      </KumoSurface>
+      </Panel>
     </div>
   </AppLayout>
 </template>
 
 <script setup lang="ts">
-import { KumoBadge, KumoButton, KumoSkeleton, KumoSurface, KumoTable, KumoTableBody, KumoTableCell, KumoTableHead, KumoTableHeader, KumoTableRow, KumoTabs } from '@/components/kumo'
+import MetricStrip from '@/components/common/MetricStrip.vue'
+import PageHeader from '@/components/layout/PageHeader.vue'
+import Panel from '@/components/common/Panel.vue'
+import { KumoBadge, KumoButton, KumoSkeleton, KumoTable, KumoTableBody, KumoTableCell, KumoTableHead, KumoTableHeader, KumoTableRow, KumoTabs } from '@/components/kumo'
 
 import { useI18n } from 'vue-i18n'
 import { computed, onBeforeUnmount, onMounted, ref, watch } from 'vue'

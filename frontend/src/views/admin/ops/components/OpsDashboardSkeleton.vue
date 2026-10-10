@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import Panel from '@/components/common/Panel.vue'
 import { KumoSkeleton } from '@/components/kumo'
 
 interface Props {
@@ -13,31 +14,31 @@ const props = withDefaults(defineProps<Props>(), {
 <template>
   <div class="space-y-6">
     <!-- Header (matches OpsDashboardHeader + overview blocks) -->
-    <div :class="['rounded-3xl bg-white shadow-sm ring-1 ring-gray-900/5 dark:bg-dark-800 dark:ring-dark-700', props.fullscreen ? 'p-8' : 'p-6']">
-      <div class="flex flex-wrap items-center justify-between gap-4 border-b border-gray-100 pb-4 dark:border-dark-700">
+    <Panel flush :class="['rounded-lg      ', props.fullscreen ? 'p-8' : 'p-6']">
+      <div class="flex flex-wrap items-center justify-between gap-4 border-b border-[var(--brand-line)] pb-4">
         <div class="space-y-2">
           <KumoSkeleton class="h-6 w-44 animate-pulse rounded bg-gray-200 dark:bg-dark-700"></KumoSkeleton>
           <KumoSkeleton class="h-3 w-80 max-w-full animate-pulse rounded bg-gray-100 dark:bg-dark-700/70"></KumoSkeleton>
         </div>
         <div v-if="!props.fullscreen" class="flex flex-wrap items-center gap-3">
-          <KumoSkeleton class="h-9 w-[140px] animate-pulse rounded-xl bg-gray-200 dark:bg-dark-700"></KumoSkeleton>
-          <KumoSkeleton class="h-9 w-[160px] animate-pulse rounded-xl bg-gray-200 dark:bg-dark-700"></KumoSkeleton>
-          <KumoSkeleton class="h-9 w-[150px] animate-pulse rounded-xl bg-gray-200 dark:bg-dark-700"></KumoSkeleton>
-          <KumoSkeleton class="h-9 w-9 animate-pulse rounded-xl bg-gray-200 dark:bg-dark-700"></KumoSkeleton>
-          <KumoSkeleton class="h-9 w-28 animate-pulse rounded-xl bg-gray-200 dark:bg-dark-700"></KumoSkeleton>
-          <KumoSkeleton class="h-9 w-28 animate-pulse rounded-xl bg-gray-200 dark:bg-dark-700"></KumoSkeleton>
-          <KumoSkeleton class="h-9 w-9 animate-pulse rounded-xl bg-gray-200 dark:bg-dark-700"></KumoSkeleton>
+          <KumoSkeleton class="h-9 w-[140px] animate-pulse rounded-lg bg-gray-200 dark:bg-dark-700"></KumoSkeleton>
+          <KumoSkeleton class="h-9 w-[160px] animate-pulse rounded-lg bg-gray-200 dark:bg-dark-700"></KumoSkeleton>
+          <KumoSkeleton class="h-9 w-[150px] animate-pulse rounded-lg bg-gray-200 dark:bg-dark-700"></KumoSkeleton>
+          <KumoSkeleton class="h-9 w-9 animate-pulse rounded-lg bg-gray-200 dark:bg-dark-700"></KumoSkeleton>
+          <KumoSkeleton class="h-9 w-28 animate-pulse rounded-lg bg-gray-200 dark:bg-dark-700"></KumoSkeleton>
+          <KumoSkeleton class="h-9 w-28 animate-pulse rounded-lg bg-gray-200 dark:bg-dark-700"></KumoSkeleton>
+          <KumoSkeleton class="h-9 w-9 animate-pulse rounded-lg bg-gray-200 dark:bg-dark-700"></KumoSkeleton>
         </div>
       </div>
 
       <div class="mt-6 grid grid-cols-1 gap-6 lg:grid-cols-12">
-        <div class="rounded-2xl bg-gray-50 p-4 dark:bg-dark-900/30 lg:col-span-5">
+        <div class="p-4 lg:col-span-5 panel-section">
           <div class="grid h-full grid-cols-1 gap-6 md:grid-cols-[200px_1fr] md:items-center">
-            <KumoSkeleton class="h-28 animate-pulse rounded-xl bg-gray-100 dark:bg-dark-700/70"></KumoSkeleton>
+            <KumoSkeleton class="h-28 animate-pulse rounded-lg bg-gray-100 dark:bg-dark-700/70"></KumoSkeleton>
             <div class="space-y-4">
               <KumoSkeleton class="h-4 w-32 animate-pulse rounded bg-gray-200 dark:bg-dark-700"></KumoSkeleton>
               <div class="grid grid-cols-2 gap-3">
-                <KumoSkeleton v-for="i in 4" :key="i" class="h-14 animate-pulse rounded-xl bg-gray-100 dark:bg-dark-700/70"></KumoSkeleton>
+                <KumoSkeleton v-for="i in 4" :key="i" class="h-14 animate-pulse rounded-lg bg-gray-100 dark:bg-dark-700/70"></KumoSkeleton>
               </div>
             </div>
           </div>
@@ -45,60 +46,60 @@ const props = withDefaults(defineProps<Props>(), {
 
         <div class="lg:col-span-7">
           <div class="grid h-full grid-cols-1 content-center gap-4 sm:grid-cols-2 lg:grid-cols-3">
-            <KumoSkeleton v-for="i in 6" :key="i" class="h-20 animate-pulse rounded-2xl bg-gray-50 dark:bg-dark-900/30"></KumoSkeleton>
+            <KumoSkeleton v-for="i in 6" :key="i" class="h-20 animate-pulse rounded-lg bg-gray-50 dark:bg-dark-900/30"></KumoSkeleton>
           </div>
         </div>
       </div>
-    </div>
+    </Panel>
 
     <!-- Row: Concurrency + Throughput (matches OpsDashboard.vue) -->
     <div class="grid grid-cols-1 gap-6 lg:grid-cols-4">
-      <div :class="['min-h-[360px] rounded-3xl bg-white shadow-sm ring-1 ring-gray-900/5 dark:bg-dark-800 dark:ring-dark-700 lg:col-span-1', props.fullscreen ? 'p-8' : 'p-6']">
+      <Panel flush :class="['min-h-[360px] rounded-lg       lg:col-span-1', props.fullscreen ? 'p-8' : 'p-6']">
         <KumoSkeleton class="h-4 w-44 animate-pulse rounded bg-gray-200 dark:bg-dark-700"></KumoSkeleton>
-        <KumoSkeleton class="mt-6 h-72 animate-pulse rounded-2xl bg-gray-100 dark:bg-dark-700/70"></KumoSkeleton>
-      </div>
-      <div :class="['min-h-[360px] rounded-3xl bg-white shadow-sm ring-1 ring-gray-900/5 dark:bg-dark-800 dark:ring-dark-700 lg:col-span-1', props.fullscreen ? 'p-8' : 'p-6']">
+        <KumoSkeleton class="mt-6 h-72 animate-pulse rounded-lg bg-gray-100 dark:bg-dark-700/70"></KumoSkeleton>
+      </Panel>
+      <Panel flush :class="['min-h-[360px] rounded-lg       lg:col-span-1', props.fullscreen ? 'p-8' : 'p-6']">
         <KumoSkeleton class="h-4 w-44 animate-pulse rounded bg-gray-200 dark:bg-dark-700"></KumoSkeleton>
-        <KumoSkeleton class="mt-6 h-72 animate-pulse rounded-2xl bg-gray-100 dark:bg-dark-700/70"></KumoSkeleton>
-      </div>
-      <div :class="['min-h-[360px] rounded-3xl bg-white shadow-sm ring-1 ring-gray-900/5 dark:bg-dark-800 dark:ring-dark-700 lg:col-span-2', props.fullscreen ? 'p-8' : 'p-6']">
+        <KumoSkeleton class="mt-6 h-72 animate-pulse rounded-lg bg-gray-100 dark:bg-dark-700/70"></KumoSkeleton>
+      </Panel>
+      <Panel flush :class="['min-h-[360px] rounded-lg       lg:col-span-2', props.fullscreen ? 'p-8' : 'p-6']">
         <KumoSkeleton class="h-4 w-56 animate-pulse rounded bg-gray-200 dark:bg-dark-700"></KumoSkeleton>
-        <KumoSkeleton class="mt-6 h-72 animate-pulse rounded-2xl bg-gray-100 dark:bg-dark-700/70"></KumoSkeleton>
-      </div>
+        <KumoSkeleton class="mt-6 h-72 animate-pulse rounded-lg bg-gray-100 dark:bg-dark-700/70"></KumoSkeleton>
+      </Panel>
     </div>
 
     <!-- Row: Visual Analysis (baseline 3-up grid) -->
     <div class="grid grid-cols-1 gap-6 md:grid-cols-3">
-      <div
+      <Panel flush
         v-for="i in 3"
         :key="i"
-        :class="['rounded-3xl bg-white shadow-sm ring-1 ring-gray-900/5 dark:bg-dark-800 dark:ring-dark-700', props.fullscreen ? 'p-8' : 'p-6']"
+        :class="['rounded-lg      ', props.fullscreen ? 'p-8' : 'p-6']"
       >
         <KumoSkeleton class="h-4 w-44 animate-pulse rounded bg-gray-200 dark:bg-dark-700"></KumoSkeleton>
-        <KumoSkeleton class="mt-6 h-56 animate-pulse rounded-2xl bg-gray-100 dark:bg-dark-700/70"></KumoSkeleton>
-      </div>
+        <KumoSkeleton class="mt-6 h-56 animate-pulse rounded-lg bg-gray-100 dark:bg-dark-700/70"></KumoSkeleton>
+      </Panel>
     </div>
 
     <!-- Alert Events -->
-    <div :class="['rounded-3xl bg-white shadow-sm ring-1 ring-gray-900/5 dark:bg-dark-800 dark:ring-dark-700', props.fullscreen ? 'p-8' : 'p-6']">
+    <Panel flush :class="['rounded-lg      ', props.fullscreen ? 'p-8' : 'p-6']">
       <div class="flex flex-wrap items-center justify-between gap-4">
         <KumoSkeleton class="h-4 w-48 animate-pulse rounded bg-gray-200 dark:bg-dark-700"></KumoSkeleton>
         <div v-if="!props.fullscreen" class="flex flex-wrap items-center gap-2">
-          <KumoSkeleton class="h-9 w-[140px] animate-pulse rounded-xl bg-gray-200 dark:bg-dark-700"></KumoSkeleton>
-          <KumoSkeleton class="h-9 w-[120px] animate-pulse rounded-xl bg-gray-200 dark:bg-dark-700"></KumoSkeleton>
-          <KumoSkeleton class="h-9 w-[120px] animate-pulse rounded-xl bg-gray-200 dark:bg-dark-700"></KumoSkeleton>
+          <KumoSkeleton class="h-9 w-[140px] animate-pulse rounded-lg bg-gray-200 dark:bg-dark-700"></KumoSkeleton>
+          <KumoSkeleton class="h-9 w-[120px] animate-pulse rounded-lg bg-gray-200 dark:bg-dark-700"></KumoSkeleton>
+          <KumoSkeleton class="h-9 w-[120px] animate-pulse rounded-lg bg-gray-200 dark:bg-dark-700"></KumoSkeleton>
         </div>
       </div>
 
       <div class="mt-6 space-y-3">
-        <div v-for="i in 6" :key="i" class="flex items-center justify-between gap-4 rounded-2xl bg-gray-50 p-4 dark:bg-dark-900/30">
+        <div v-for="i in 6" :key="i" class="flex items-center justify-between gap-4 p-4 panel-section">
           <div class="flex-1 space-y-2">
             <KumoSkeleton class="h-3 w-56 animate-pulse rounded bg-gray-200 dark:bg-dark-700"></KumoSkeleton>
             <KumoSkeleton class="h-3 w-80 max-w-full animate-pulse rounded bg-gray-100 dark:bg-dark-700/70"></KumoSkeleton>
           </div>
-          <KumoSkeleton class="h-7 w-20 animate-pulse rounded-xl bg-gray-200 dark:bg-dark-700"></KumoSkeleton>
+          <KumoSkeleton class="h-7 w-20 animate-pulse rounded-lg bg-gray-200 dark:bg-dark-700"></KumoSkeleton>
         </div>
       </div>
-    </div>
+    </Panel>
   </div>
 </template>

@@ -249,7 +249,7 @@ async function saveAllSettings() {
       </div>
 
       <!-- 数据采集频率 -->
-      <div class="rounded-2xl bg-gray-50 p-4 dark:bg-dark-700/50">
+      <div class="p-4 panel-section">
         <h4 class="mb-3 text-sm font-semibold text-gray-900 dark:text-white">{{ t('admin.ops.settings.dataCollection') }}</h4>
         <div>
           <KumoLabel class="input-label">{{ t('admin.ops.settings.evaluationInterval') }}</KumoLabel>
@@ -265,7 +265,7 @@ async function saveAllSettings() {
       </div>
 
       <!-- 预警配置 -->
-      <div class="rounded-2xl bg-gray-50 p-4 dark:bg-dark-700/50">
+      <div class="p-4 panel-section">
         <h4 class="mb-3 text-sm font-semibold text-gray-900 dark:text-white">{{ t('admin.ops.settings.alertConfig') }}</h4>
 
         <div class="space-y-4">
@@ -313,7 +313,7 @@ async function saveAllSettings() {
       </div>
 
       <!-- 评估报告配置 -->
-      <div class="rounded-2xl bg-gray-50 p-4 dark:bg-dark-700/50">
+      <div class="p-4 panel-section">
         <h4 class="mb-3 text-sm font-semibold text-gray-900 dark:text-white">{{ t('admin.ops.settings.reportConfig') }}</h4>
 
         <div class="space-y-4">
@@ -373,7 +373,7 @@ async function saveAllSettings() {
       </div>
 
       <!-- 指标阈值配置 -->
-      <div class="rounded-2xl bg-gray-50 p-4 dark:bg-dark-700/50">
+      <div class="p-4 panel-section">
         <h4 class="mb-3 text-sm font-semibold text-gray-900 dark:text-white">{{ t('admin.ops.settings.metricThresholds') }}</h4>
         <p class="mb-4 text-xs text-gray-500 dark:text-gray-400">{{ t('admin.ops.settings.metricThresholdsHint') }}</p>
 
@@ -433,7 +433,7 @@ async function saveAllSettings() {
       </div>
 
       <!-- 高级设置 -->
-      <KumoCollapsible class="rounded-2xl bg-gray-50 dark:bg-dark-700/50">
+      <KumoCollapsible class="panel-section">
             <KumoCollapsibleTrigger class="cursor-pointer p-4 text-sm font-semibold text-gray-900 dark:text-white">
           {{ t('admin.ops.settings.advancedSettings') }}
         </KumoCollapsibleTrigger>

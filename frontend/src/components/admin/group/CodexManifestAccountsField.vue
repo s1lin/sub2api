@@ -1,5 +1,5 @@
 <template>
-  <div class="border-t border-gray-200 pt-4 mt-4 dark:border-dark-400">
+  <div class="border-t border-[var(--brand-line)] pt-4 mt-4">
     <div class="mb-3 flex items-start justify-between gap-3">
       <div class="min-w-0 flex-1">
         <KumoLabel class="text-sm font-medium text-gray-700 dark:text-gray-300">

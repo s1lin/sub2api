@@ -1,6 +1,68 @@
 <template>
-  <AppLayout>
+  <AppLayout hide-page-header>
     <TablePageLayout>
+      <template #actions>
+        <div class="ml-auto flex flex-wrap items-center justify-end gap-3">
+            <KumoButton
+              @click="loadSubscriptions"
+              :disabled="loading"
+              class="btn btn-secondary"
+              :title="t('common.refresh')"
+            >
+              <Icon name="refresh" size="md" :class="loading ? 'animate-spin' : ''" />
+            </KumoButton>
+            <!-- Column Settings Dropdown -->
+            <KumoPopoverRoot v-model="showColumnDropdown"><KumoPopoverTrigger
+                class="btn btn-secondary px-2 md:px-3"
+                :aria-label="t('admin.users.columnSettings')"
+              >
+                <svg class="h-4 w-4 md:mr-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M9 4.5v15m6-15v15m-10.875 0h15.75c.621 0 1.125-.504 1.125-1.125V5.625c0-.621-.504-1.125-1.125-1.125H4.125C3.504 4.5 3 5.004 3 5.625v12.75c0 .621.504 1.125 1.125 1.125z" />
+                </svg>
+                <span class="hidden md:inline">{{ t('admin.users.columnSettings') }}</span>
+              </KumoPopoverTrigger>
+<KumoPopoverContent
+                class="w-48 rounded-lg border border-[var(--brand-line)] bg-white dark:bg-dark-800"
+              >
+                <div class="p-2">
+                  <!-- User column mode selection -->
+                  <div class="mb-2 border-b border-[var(--brand-line)] pb-2">
+                    <div class="px-3 py-1 text-xs font-medium text-gray-500 dark:text-gray-400">
+                      {{ t('admin.subscriptions.columns.user') }}
+                    </div>
+                    <KumoButton :aria-pressed="userColumnMode === 'email'"
+                      @click="setUserColumnMode('email')"
+                      class="flex w-full items-center justify-between rounded-md px-3 py-2 text-sm text-gray-700 hover:bg-[var(--brand-hover)] dark:text-gray-200"
+                    >
+                      <span>{{ t('admin.users.columns.email') }}</span>
+                      <Icon v-if="userColumnMode === 'email'" name="check" size="sm" class="text-primary-500" />
+                    </KumoButton>
+                    <KumoButton :aria-pressed="userColumnMode === 'username'"
+                      @click="setUserColumnMode('username')"
+                      class="flex w-full items-center justify-between rounded-md px-3 py-2 text-sm text-gray-700 hover:bg-[var(--brand-hover)] dark:text-gray-200"
+                    >
+                      <span>{{ t('admin.users.columns.username') }}</span>
+                      <Icon v-if="userColumnMode === 'username'" name="check" size="sm" class="text-primary-500" />
+                    </KumoButton>
+                  </div>
+                  <!-- Other columns toggle -->
+                  <KumoLabel v-for="col in toggleableColumns" :key="col.key" class="flex w-full cursor-pointer items-center gap-2 px-3 py-2 text-sm"><KumoCheckbox :aria-label="col.label" :checked="isColumnVisible(col.key)"   @change="toggleColumn(col.key)" /><span>{{ col.label }}</span></KumoLabel>
+                </div>
+              </KumoPopoverContent></KumoPopoverRoot>
+            <KumoButton
+              @click="showGuideModal = true"
+              class="btn btn-secondary"
+              :title="t('admin.subscriptions.guide.showGuide')"
+            >
+              <Icon name="questionCircle" size="md" />
+            </KumoButton>
+            <KumoButton @click="showAssignModal = true" class="btn btn-primary">
+              <Icon name="plus" size="md" class="mr-2" />
+              {{ t('admin.subscriptions.assignSubscription') }}
+            </KumoButton>
+          </div>
+      </template>
+
       <template #filters>
         <!-- Top Toolbar: Left (search + filters) / Right (actions) -->
         <div class="flex flex-wrap items-start justify-between gap-4">
@@ -64,69 +126,11 @@
           </div>
 
           <!-- Right: Actions -->
-          <div class="ml-auto flex flex-wrap items-center justify-end gap-3">
-            <KumoButton
-              @click="loadSubscriptions"
-              :disabled="loading"
-              class="btn btn-secondary"
-              :title="t('common.refresh')"
-            >
-              <Icon name="refresh" size="md" :class="loading ? 'animate-spin' : ''" />
-            </KumoButton>
-            <!-- Column Settings Dropdown -->
-            <KumoPopoverRoot v-model="showColumnDropdown"><KumoPopoverTrigger
-                class="btn btn-secondary px-2 md:px-3"
-                :aria-label="t('admin.users.columnSettings')"
-              >
-                <svg class="h-4 w-4 md:mr-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5">
-                  <path stroke-linecap="round" stroke-linejoin="round" d="M9 4.5v15m6-15v15m-10.875 0h15.75c.621 0 1.125-.504 1.125-1.125V5.625c0-.621-.504-1.125-1.125-1.125H4.125C3.504 4.5 3 5.004 3 5.625v12.75c0 .621.504 1.125 1.125 1.125z" />
-                </svg>
-                <span class="hidden md:inline">{{ t('admin.users.columnSettings') }}</span>
-              </KumoPopoverTrigger>
-<KumoPopoverContent
-                class="w-48 rounded-lg border border-gray-200 bg-white shadow-lg dark:border-dark-700 dark:bg-dark-800"
-              >
-                <div class="p-2">
-                  <!-- User column mode selection -->
-                  <div class="mb-2 border-b border-gray-200 pb-2 dark:border-dark-700">
-                    <div class="px-3 py-1 text-xs font-medium text-gray-500 dark:text-gray-400">
-                      {{ t('admin.subscriptions.columns.user') }}
-                    </div>
-                    <KumoButton :aria-pressed="userColumnMode === 'email'"
-                      @click="setUserColumnMode('email')"
-                      class="flex w-full items-center justify-between rounded-md px-3 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-200 dark:hover:bg-dark-700"
-                    >
-                      <span>{{ t('admin.users.columns.email') }}</span>
-                      <Icon v-if="userColumnMode === 'email'" name="check" size="sm" class="text-primary-500" />
-                    </KumoButton>
-                    <KumoButton :aria-pressed="userColumnMode === 'username'"
-                      @click="setUserColumnMode('username')"
-                      class="flex w-full items-center justify-between rounded-md px-3 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-200 dark:hover:bg-dark-700"
-                    >
-                      <span>{{ t('admin.users.columns.username') }}</span>
-                      <Icon v-if="userColumnMode === 'username'" name="check" size="sm" class="text-primary-500" />
-                    </KumoButton>
-                  </div>
-                  <!-- Other columns toggle -->
-                  <KumoLabel v-for="col in toggleableColumns" :key="col.key" class="flex w-full cursor-pointer items-center gap-2 px-3 py-2 text-sm"><KumoCheckbox :aria-label="col.label" :checked="isColumnVisible(col.key)"   @change="toggleColumn(col.key)" /><span>{{ col.label }}</span></KumoLabel>
-                </div>
-              </KumoPopoverContent></KumoPopoverRoot>
-            <KumoButton
-              @click="showGuideModal = true"
-              class="btn btn-secondary"
-              :title="t('admin.subscriptions.guide.showGuide')"
-            >
-              <Icon name="questionCircle" size="md" />
-            </KumoButton>
-            <KumoButton @click="showAssignModal = true" class="btn btn-primary">
-              <Icon name="plus" size="md" class="mr-2" />
-              {{ t('admin.subscriptions.assignSubscription') }}
-            </KumoButton>
-          </div>
+
         </div>
         <div
           v-if="selectedCount > 0"
-          class="mt-3 space-y-2 rounded-xl border border-primary-200 bg-primary-50 p-3 dark:border-primary-800 dark:bg-primary-900/20"
+          class="mt-3 space-y-2 rounded-lg border border-primary-200 bg-primary-50 p-3 dark:border-primary-800 dark:bg-primary-900/20"
           data-test="subscription-bulk-actions"
         >
           <div class="flex flex-wrap items-center gap-2">
@@ -300,7 +304,7 @@
                   !row.group?.weekly_limit_usd &&
                   !row.group?.monthly_limit_usd
                 "
-                class="flex items-center gap-2 rounded-lg bg-gradient-to-r from-emerald-50 to-teal-50 px-3 py-2 dark:from-emerald-900/20 dark:to-teal-900/20"
+                class="flex items-center gap-2 rounded-lg px-3 py-2"
               >
                 <span class="text-lg text-emerald-600 dark:text-emerald-400">∞</span>
                 <span class="text-xs font-medium text-emerald-700 dark:text-emerald-300">
@@ -556,7 +560,7 @@
         @submit.prevent="handleExtendSubscription"
         class="space-y-5"
       >
-        <div class="rounded-lg bg-gray-50 p-4 dark:bg-dark-700">
+        <div class="p-4 panel-section">
           <p class="text-sm text-gray-600 dark:text-gray-400">
             {{ t('admin.subscriptions.adjustingFor') }}
             <span class="font-medium text-gray-900 dark:text-white">{{
@@ -696,10 +700,10 @@
                 <span class="flex h-6 w-6 items-center justify-center rounded-full bg-primary-100 text-xs font-bold text-primary-700 dark:bg-primary-900/40 dark:text-primary-300">3</span>
                 {{ t('admin.subscriptions.guide.step3.title') }}
               </h3>
-              <div class="ml-8 overflow-hidden rounded-lg border border-gray-200 dark:border-dark-600">
+              <div class="ml-8 overflow-hidden panel-section">
                 <KumoTable class="w-full text-sm">
                   <KumoTableBody>
-                    <KumoTableRow v-for="(row, i) in guideActionRows" :key="i" class="border-b border-gray-100 dark:border-dark-700 last:border-0">
+                    <KumoTableRow v-for="(row, i) in guideActionRows" :key="i" class="border-b border-[var(--brand-line)] last:border-0">
                       <KumoTableCell class="whitespace-nowrap bg-gray-50 px-3 py-2 font-medium text-gray-700 dark:bg-dark-700 dark:text-gray-300">{{ row.action }}</KumoTableCell>
                       <KumoTableCell class="px-3 py-2 text-gray-600 dark:text-gray-400">{{ row.desc }}</KumoTableCell>
                     </KumoTableRow>

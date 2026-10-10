@@ -1,13 +1,13 @@
 <template>
   <div class="space-y-6">
-    <KumoSurface
+    <Panel flush
       data-testid="profile-overview-hero"
       class="card overflow-hidden"
     >
       <div class="px-6 py-6 md:px-8">
         <div class="flex flex-col gap-6 lg:flex-row lg:items-start">
           <div
-            class="flex h-20 w-20 shrink-0 items-center justify-center overflow-hidden rounded-2xl bg-[var(--brand-accent-soft)] text-2xl font-semibold text-[var(--brand-accent)]"
+            class="flex h-20 w-20 shrink-0 items-center justify-center overflow-hidden rounded-lg bg-[var(--brand-accent-soft)] text-2xl font-semibold text-[var(--brand-accent)]"
           >
             <img
               v-if="avatarUrl"
@@ -96,11 +96,11 @@
           </div>
         </div>
       </div>
-    </KumoSurface>
+    </Panel>
 
     <div class="space-y-6">
       <div data-testid="profile-main-column" class="space-y-6">
-        <KumoSurface
+        <Panel flush
           data-testid="profile-basics-panel"
           class="card p-6"
         >
@@ -116,23 +116,23 @@
           </div>
 
           <div class="grid gap-6 sm:grid-cols-1 md:grid-cols-2">
-            <div class="rounded-3xl border border-gray-100 bg-gray-50/80 p-5 dark:border-dark-700 dark:bg-dark-900/30">
+            <div class="p-5 panel-section">
               <ProfileAvatarCard
                 :user="user"
                 embedded
               />
             </div>
 
-            <div class="rounded-3xl border border-gray-100 bg-gray-50/80 p-5 dark:border-dark-700 dark:bg-dark-900/30">
+            <div class="p-5 panel-section">
               <ProfileEditForm
                 :initial-username="user?.username || ''"
                 embedded
               />
             </div>
           </div>
-        </KumoSurface>
+        </Panel>
 
-        <KumoSurface
+        <Panel flush
           data-testid="profile-auth-bindings-panel"
           v-if="!clerkEnabled"
           class="card p-6"
@@ -149,11 +149,11 @@
             embedded
             compact
           />
-        </KumoSurface>
+        </Panel>
       </div>
 
       <div data-testid="profile-side-column" class="space-y-6">
-        <KumoSurface
+        <Panel flush
           v-if="sourceHints.length"
           class="card p-6"
         >
@@ -168,20 +168,20 @@
             <div
               v-for="hint in sourceHints"
               :key="hint.key"
-              class="flex items-start gap-3 rounded-2xl border border-gray-100 bg-gray-50/80 px-4 py-3 text-sm text-gray-600 dark:border-dark-700 dark:bg-dark-900/30 dark:text-gray-300"
+              class="flex items-start gap-3 px-4 py-3 text-sm text-gray-600 dark:text-gray-300 panel-section"
             >
               <Icon name="link" size="sm" class="mt-0.5 text-gray-600 dark:text-gray-400" />
               <span>{{ hint.text }}</span>
             </div>
           </div>
-        </KumoSurface>
+        </Panel>
       </div>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import { KumoSurface } from '@/components/kumo'
+import Panel from '@/components/common/Panel.vue'
 
 import { clerkEnabled } from '@/auth/clerk'
 import { computed } from 'vue'

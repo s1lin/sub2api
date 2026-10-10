@@ -1,47 +1,47 @@
 <template><KumoDropdown :model-value="show && !!anchorRect" @update:model-value="!$event && emit('close')">
     <KumoDropdownContent v-if="anchorRect" :anchor="{ getBoundingClientRect: () => anchorRect! }" class="action-menu-content w-52 min-w-0 max-w-[calc(100vw-1rem)] max-h-[min(calc(100dvh-1rem),var(--available-height))] overflow-y-auto overscroll-contain"><div class="py-1">
           <template v-if="account">
-            <KumoDropdownItem @click="$emit('test', account)" class="flex w-full items-center gap-2 px-4 py-2 text-sm hover:bg-gray-100 dark:hover:bg-dark-700">
+            <KumoDropdownItem @click="$emit('test', account)" class="flex w-full items-center gap-2 px-4 py-2 text-sm hover:bg-[var(--brand-hover)]">
               <Icon name="play" size="sm" class="text-green-500" :stroke-width="2" />
               {{ t('admin.accounts.testConnection') }}
             </KumoDropdownItem>
-            <KumoDropdownItem @click="$emit('stats', account)" class="flex w-full items-center gap-2 px-4 py-2 text-sm hover:bg-gray-100 dark:hover:bg-dark-700">
+            <KumoDropdownItem @click="$emit('stats', account)" class="flex w-full items-center gap-2 px-4 py-2 text-sm hover:bg-[var(--brand-hover)]">
               <Icon name="chart" size="sm" class="text-indigo-500" />
               {{ t('admin.accounts.viewStats') }}
             </KumoDropdownItem>
-            <KumoDropdownItem @click="$emit('schedule', account)" class="flex w-full items-center gap-2 px-4 py-2 text-sm hover:bg-gray-100 dark:hover:bg-dark-700">
+            <KumoDropdownItem @click="$emit('schedule', account)" class="flex w-full items-center gap-2 px-4 py-2 text-sm hover:bg-[var(--brand-hover)]">
               <Icon name="clock" size="sm" class="text-orange-500" />
               {{ t('admin.scheduledTests.schedule') }}
             </KumoDropdownItem>
-            <KumoDropdownItem v-if="canDuplicate" @click="$emit('duplicate', account)" class="flex w-full items-center gap-2 px-4 py-2 text-sm hover:bg-gray-100 dark:hover:bg-dark-700">
+            <KumoDropdownItem v-if="canDuplicate" @click="$emit('duplicate', account)" class="flex w-full items-center gap-2 px-4 py-2 text-sm hover:bg-[var(--brand-hover)]">
               <Icon name="copy" size="sm" class="text-sky-500" />
               {{ t('admin.accounts.duplicateAccount') }}
             </KumoDropdownItem>
             <!-- 影子账号不持凭据:重授权/刷新 token 对其无效(后端拒绝),故隐藏(外审 G4)。 -->
             <template v-if="(account.type === 'oauth' || account.type === 'setup-token') && !isShadow">
-              <KumoDropdownItem @click="$emit('reauth', account)" class="flex w-full items-center gap-2 px-4 py-2 text-sm text-blue-600 hover:bg-gray-100 dark:hover:bg-dark-700">
+              <KumoDropdownItem @click="$emit('reauth', account)" class="flex w-full items-center gap-2 px-4 py-2 text-sm text-blue-600 hover:bg-[var(--brand-hover)]">
                 <Icon name="link" size="sm" />
                 {{ t('admin.accounts.reAuthorize') }}
               </KumoDropdownItem>
-              <KumoDropdownItem @click="$emit('refresh-token', account)" class="flex w-full items-center gap-2 px-4 py-2 text-sm text-purple-600 hover:bg-gray-100 dark:hover:bg-dark-700">
+              <KumoDropdownItem @click="$emit('refresh-token', account)" class="flex w-full items-center gap-2 px-4 py-2 text-sm text-purple-600 hover:bg-[var(--brand-hover)]">
                 <Icon name="refresh" size="sm" />
                 {{ t('admin.accounts.refreshToken') }}
               </KumoDropdownItem>
             </template>
-            <KumoDropdownItem v-if="isOpenAIOAuthParent" @click="$emit('create-spark-shadow', account)" class="flex w-full items-center gap-2 px-4 py-2 text-sm text-amber-600 hover:bg-gray-100 dark:hover:bg-dark-700">
+            <KumoDropdownItem v-if="isOpenAIOAuthParent" @click="$emit('create-spark-shadow', account)" class="flex w-full items-center gap-2 px-4 py-2 text-sm text-amber-600 hover:bg-[var(--brand-hover)]">
               <Icon name="sparkles" size="sm" />
               {{ t('admin.accounts.createSparkShadow') }}
             </KumoDropdownItem>
-            <KumoDropdownItem v-if="supportsPrivacy" @click="$emit('set-privacy', account)" class="flex w-full items-center gap-2 px-4 py-2 text-sm text-emerald-600 hover:bg-gray-100 dark:hover:bg-dark-700">
+            <KumoDropdownItem v-if="supportsPrivacy" @click="$emit('set-privacy', account)" class="flex w-full items-center gap-2 px-4 py-2 text-sm text-emerald-600 hover:bg-[var(--brand-hover)]">
               <Icon name="shield" size="sm" />
               {{ t('admin.accounts.setPrivacy') }}
             </KumoDropdownItem>
-            <div v-if="hasRecoverableState" class="my-1 border-t border-gray-100 dark:border-dark-700"></div>
-            <KumoDropdownItem v-if="hasRecoverableState" @click="$emit('recover-state', account)" class="flex w-full items-center gap-2 px-4 py-2 text-sm text-emerald-600 hover:bg-gray-100 dark:hover:bg-dark-700">
+            <div v-if="hasRecoverableState" class="my-1 border-t border-[var(--brand-line)]"></div>
+            <KumoDropdownItem v-if="hasRecoverableState" @click="$emit('recover-state', account)" class="flex w-full items-center gap-2 px-4 py-2 text-sm text-emerald-600 hover:bg-[var(--brand-hover)]">
               <Icon name="sync" size="sm" />
               {{ t('admin.accounts.recoverState') }}
             </KumoDropdownItem>
-            <KumoDropdownItem v-if="hasQuotaLimit" @click="$emit('reset-quota', account)" class="flex w-full items-center gap-2 px-4 py-2 text-sm text-teal-600 hover:bg-gray-100 dark:hover:bg-dark-700">
+            <KumoDropdownItem v-if="hasQuotaLimit" @click="$emit('reset-quota', account)" class="flex w-full items-center gap-2 px-4 py-2 text-sm text-teal-600 hover:bg-[var(--brand-hover)]">
               <Icon name="refresh" size="sm" />
               {{ t('admin.accounts.resetQuota') }}
             </KumoDropdownItem>

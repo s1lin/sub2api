@@ -1,6 +1,23 @@
 <template>
-  <AppLayout>
+  <AppLayout hide-page-header>
     <TablePageLayout>
+      <template #actions>
+        <div class="flex w-full flex-shrink-0 flex-wrap items-center justify-end gap-3 lg:w-auto">
+            <KumoButton
+              @click="loadChannels"
+              :disabled="loading"
+              class="btn btn-secondary"
+              :title="t('common.refresh', 'Refresh')"
+            >
+              <Icon name="refresh" size="md" :class="loading ? 'animate-spin' : ''" />
+            </KumoButton>
+            <KumoButton @click="openCreateDialog" class="btn btn-primary">
+              <Icon name="plus" size="md" class="mr-2" />
+              {{ t('admin.channels.createChannel', 'Create Channel') }}
+            </KumoButton>
+          </div>
+      </template>
+
       <template #filters>
         <div class="flex flex-col justify-between gap-4 lg:flex-row lg:items-start">
           <!-- Left: Search + Filters -->
@@ -30,20 +47,7 @@
           </div>
 
           <!-- Right: Actions -->
-          <div class="flex w-full flex-shrink-0 flex-wrap items-center justify-end gap-3 lg:w-auto">
-            <KumoButton
-              @click="loadChannels"
-              :disabled="loading"
-              class="btn btn-secondary"
-              :title="t('common.refresh', 'Refresh')"
-            >
-              <Icon name="refresh" size="md" :class="loading ? 'animate-spin' : ''" />
-            </KumoButton>
-            <KumoButton @click="openCreateDialog" class="btn btn-primary">
-              <Icon name="plus" size="md" class="mr-2" />
-              {{ t('admin.channels.createChannel', 'Create Channel') }}
-            </KumoButton>
-          </div>
+
         </div>
       </template>
 
@@ -100,7 +104,7 @@
             <div class="flex items-center gap-1">
               <KumoButton
                 @click="openEditDialog(row)"
-                class="flex flex-col items-center gap-0.5 rounded-lg p-1.5 text-gray-500 transition-colors hover:bg-gray-100 hover:text-primary-600 dark:hover:bg-dark-700 dark:hover:text-primary-400"
+                class="flex flex-col items-center gap-0.5 rounded-lg p-1.5 text-gray-500 transition-colors hover:bg-[var(--brand-hover)] hover:text-primary-600 dark:hover:text-primary-400"
               >
                 <Icon name="edit" size="sm" />
                 <span class="text-xs">{{ t('common.edit', 'Edit') }}</span>
@@ -193,7 +197,7 @@
                 <KumoCheckbox
                   type="checkbox"
                   v-model="form.restrict_models"
-                  class="h-4 w-4 rounded border-gray-300 text-primary-600 focus:ring-primary-500"
+                  class="h-4 w-4 rounded border-[var(--brand-line)] text-primary-600 focus:ring-primary-500"
                 />
                 <span class="input-label mb-0">{{ t('admin.channels.form.restrictModels', 'Restrict Models') }}</span>
               </KumoLabel>
@@ -221,12 +225,12 @@
                   class="inline-flex cursor-pointer items-center gap-1.5 rounded-md border px-3 py-1.5 text-sm transition-colors"
                   :class="activePlatforms.includes(p)
                     ? 'bg-primary-50 border-primary-300 dark:bg-primary-900/20 dark:border-primary-700'
-                    : 'border-gray-200 hover:bg-gray-50 dark:border-dark-600 dark:hover:bg-dark-700'"
+                    : 'border-[var(--brand-line)] hover:bg-[var(--brand-hover)] border-[var(--brand-line)] hover:'"
                 >
                   <KumoCheckbox
                     type="checkbox"
                     :checked="activePlatforms.includes(p)"
-                    class="h-3.5 w-3.5 rounded border-gray-300 text-primary-600 focus:ring-primary-500"
+                    class="h-3.5 w-3.5 rounded border-[var(--brand-line)] text-primary-600 focus:ring-primary-500"
                     @change="togglePlatform(p)"
                   />
                   <PlatformIcon :platform="p" size="xs" :class="platformTextClass(p)" />
@@ -236,7 +240,7 @@
             </div>
 
             <!-- Apply Pricing to Account Stats (toggle only in basic settings) -->
-            <div class="border-t border-gray-200 pt-4 dark:border-dark-700">
+            <div class="border-t border-[var(--brand-line)] pt-4">
               <div class="flex items-center justify-between">
                 <div>
                   <KumoLabel class="text-sm font-medium text-gray-700 dark:text-gray-300">
@@ -269,7 +273,7 @@
                   ({{ t('admin.channels.form.selectedCount', { count: section.group_ids.length }) }})
                 </span>
               </KumoLabel>
-              <div class="max-h-40 overflow-auto rounded-lg border border-gray-200 bg-gray-50 p-2 dark:border-dark-600 dark:bg-dark-900">
+              <div class="max-h-40 overflow-auto p-2 panel-section">
                 <div v-if="groupsLoading" class="py-2 text-center text-xs text-gray-500">
                   {{ t('common.loading', 'Loading...') }}
                 </div>
@@ -280,7 +284,7 @@
                   <KumoLabel
                     v-for="group in getGroupsForPlatform(section.platform)"
                     :key="group.id"
-                    class="inline-flex cursor-pointer items-center gap-1.5 rounded-md border border-gray-200 px-2 py-1 text-xs transition-colors hover:bg-gray-50 dark:border-dark-600 dark:hover:bg-dark-700"
+                    class="inline-flex cursor-pointer items-center gap-1.5 rounded-md border border-[var(--brand-line)] px-2 py-1 text-xs transition-colors hover:bg-[var(--brand-hover)]"
                     :class="[
                       section.group_ids.includes(group.id) ? 'bg-primary-50 border-primary-300 dark:bg-primary-900/20 dark:border-primary-700' : '',
                       isGroupInOtherChannel(group.id, section.platform) ? 'opacity-40' : ''
@@ -290,7 +294,7 @@
                       type="checkbox"
                       :checked="section.group_ids.includes(group.id)"
                       :disabled="isGroupInOtherChannel(group.id, section.platform)"
-                      class="h-3 w-3 rounded border-gray-300 text-primary-600 focus:ring-primary-500"
+                      class="h-3 w-3 rounded border-[var(--brand-line)] text-primary-600 focus:ring-primary-500"
                       @change="toggleGroupInSection(sIdx, group.id)"
                     />
                     <span :class="['font-medium', platformTextClass(group.platform)]">{{ group.name }}</span>
@@ -308,7 +312,7 @@
             </div>
 
             <!-- Web Search Emulation (Anthropic only, hidden when global disabled) -->
-            <div v-if="section.platform === 'anthropic' && webSearchGlobalEnabled" class="border-t border-gray-200 pt-3 dark:border-dark-600">
+            <div v-if="section.platform === 'anthropic' && webSearchGlobalEnabled" class="border-t border-[var(--brand-line)] pt-3">
               <div class="flex items-center justify-between">
                 <div>
                   <KumoLabel class="text-xs font-medium text-gray-700 dark:text-gray-300">
@@ -323,7 +327,7 @@
             </div>
 
             <!-- Codex Image Generation Bridge (OpenAI only) -->
-            <div v-if="section.platform === 'openai'" class="border-t border-gray-200 pt-3 dark:border-dark-600">
+            <div v-if="section.platform === 'openai'" class="border-t border-[var(--brand-line)] pt-3">
               <div class="flex items-center justify-between gap-4">
                 <div>
                   <KumoLabel class="text-xs font-medium text-gray-700 dark:text-gray-300">
@@ -338,7 +342,7 @@
             </div>
 
             <!-- Bedrock CC Compatibility (Anthropic only) -->
-            <div v-if="section.platform === 'anthropic'" class="border-t border-gray-200 pt-3 dark:border-dark-600">
+            <div v-if="section.platform === 'anthropic'" class="border-t border-[var(--brand-line)] pt-3">
               <div class="flex items-center justify-between gap-4">
                 <div>
                   <KumoLabel class="text-xs font-medium text-gray-700 dark:text-gray-300">
@@ -362,7 +366,7 @@
               </div>
               <div
                 v-if="Object.keys(section.model_mapping).length === 0"
-                class="rounded border border-dashed border-gray-300 p-2 text-center text-xs text-gray-400 dark:border-dark-500"
+                class="rounded p-2 text-center text-xs text-gray-400 panel-section"
               >
                 {{ t('admin.channels.form.noMappingRules', 'No mapping rules. Click "Add" to create one.') }}
               </div>
@@ -420,7 +424,7 @@
               </div>
               <div
                 v-if="section.model_pricing.length === 0"
-                class="rounded border border-dashed border-gray-300 p-2 text-center text-xs text-gray-400 dark:border-dark-500"
+                class="rounded p-2 text-center text-xs text-gray-400 panel-section"
               >
                 {{ t('admin.channels.form.noPricingRules', 'No pricing rules yet. Click "Add" to create one.') }}
               </div>
@@ -439,7 +443,7 @@
             </div>
 
             <!-- Account Stats Pricing Rules (per-platform, always visible) -->
-            <div class="mt-4 border-t border-gray-200 pt-4 dark:border-dark-700 space-y-3">
+            <div class="mt-4 border-t border-[var(--brand-line)] pt-4 space-y-3">
               <div class="flex items-center justify-between">
                 <h4 class="text-sm font-medium text-gray-700 dark:text-gray-300">
                   {{ t('admin.channels.form.accountStatsPricingRules') }}
@@ -464,7 +468,7 @@
               <div
                 v-for="(rule, ruleIndex) in section.account_stats_pricing_rules"
                 :key="ruleIndex"
-                class="space-y-3 rounded-lg border border-gray-200 p-4 dark:border-dark-600"
+                class="space-y-3 p-4 panel-section"
               >
                 <div class="flex items-center justify-between">
                   <KumoInput
@@ -486,9 +490,9 @@
                       class="inline-flex cursor-pointer items-center gap-1 rounded-md border px-2 py-1 text-xs transition-colors"
                       :class="rule.group_ids.includes(gid)
                         ? 'border-primary-300 bg-primary-50 dark:border-primary-700 dark:bg-primary-900/20'
-                        : 'border-gray-200 hover:bg-gray-50 dark:border-dark-600 dark:hover:bg-dark-700'"
+                        : 'border-[var(--brand-line)] hover:bg-[var(--brand-hover)] border-[var(--brand-line)] hover:'"
                     >
-                      <KumoCheckbox type="checkbox" :checked="rule.group_ids.includes(gid)" class="h-3 w-3 rounded border-gray-300 text-primary-600 focus:ring-primary-500" @change="rule.group_ids.includes(gid) ? rule.group_ids.splice(rule.group_ids.indexOf(gid), 1) : rule.group_ids.push(gid)" />
+                      <KumoCheckbox type="checkbox" :checked="rule.group_ids.includes(gid)" class="h-3 w-3 rounded border-[var(--brand-line)] text-primary-600 focus:ring-primary-500" @change="rule.group_ids.includes(gid) ? rule.group_ids.splice(rule.group_ids.indexOf(gid), 1) : rule.group_ids.push(gid)" />
                       <span :class="['font-medium', platformTextClass(section.platform)]">{{ getGroupNameById(gid) }}</span>
                     </KumoLabel>
                   </div>
@@ -535,7 +539,7 @@
                       + {{ t('common.add') }}
                     </KumoButton>
                   </div>
-                  <div v-if="rule.pricing.length === 0" class="rounded border border-dashed border-gray-300 p-2 text-center text-xs text-gray-400 dark:border-dark-500">
+                  <div v-if="rule.pricing.length === 0" class="rounded p-2 text-center text-xs text-gray-400 panel-section">
                     {{ t('admin.channels.form.noPricingRules') }}
                   </div>
                   <div v-else class="space-y-2">

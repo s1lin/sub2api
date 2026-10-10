@@ -57,7 +57,7 @@ const signInURL = computed(() => `/login?redirect=${encodeURIComponent(destinati
 const signUpURL = computed(() => `/register?redirect=${encodeURIComponent(destination.value)}`)
 const appearance = computed(() => ({
   variables: {
-    colorPrimary: isDark.value ? '#e89b7b' : '#a74d30',
+    colorPrimary: isDark.value ? '#3fd1b5' : '#0f7a6c',
     colorPrimaryForeground: isDark.value ? '#141816' : '#fafbf8',
     colorBackground: isDark.value ? '#1c221e' : '#fafbf8',
     colorForeground: isDark.value ? '#eef0ec' : '#202522',

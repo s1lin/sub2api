@@ -55,7 +55,7 @@ describe('Ops request latency details', () => {
     await flushPromises()
     const button = wrapper.findAll('button').find((item) =>
       item.text() === 'admin.ops.requestDetails.details' &&
-      item.element.closest('.rounded-2xl')?.textContent?.includes('TTFT'),
+      item.element.closest('[data-metric="ttft"]'),
     )
     expect(button).toBeDefined()
     await button!.trigger('click')

@@ -166,11 +166,12 @@ reachable; its tools require an API key. NOWPayments credentials and its IPN
 secret are still needed. Stripe runtime credentials are configured as described
 in the live setup record below.
 
-The readiness audit also found one active regular API group, with no active,
-schedulable upstream accounts. Credit top-ups do not provision upstream
-access. Add an upstream account in **Admin → Accounts**, assign it to the
-regular group for its platform, and verify an API request before opening
-customer payments. Use the admin interface for upstream credentials too.
+The readiness audit now finds active upstream accounts in the OpenAI standard
+credit groups **Right Code** and **Qwen 3.8**, in addition to the original empty
+Anthropic `default` group. Public API requests and credit deductions have been
+verified for both. Stripe sandbox checkout verification is complete as recorded
+below; NOWPayments setup and verification remain outstanding.
+Use the admin interface for future upstream credential updates.
 
 1. In **Admin → Settings**, enable registration if new customers should be
    able to sign up. Keep subscriptions disabled and balance top-ups enabled.
@@ -228,27 +229,110 @@ test/small purchase on the public domain, including duplicate callback
 delivery, exact balance changes, and a rejected underpayment.
 No live funds are moved by the automated fixture tests.
 
-### Right Code upstream setup (pending credentials, 2026-10-07)
+### Right Code upstream setup (verified, 2026-10-07)
 
-The selected upstream is now Right Code. Gemini and direct Codex subscription
-setup were superseded before either account was imported. The database currently
-has no upstream accounts; its existing `default` group uses the Anthropic platform.
+The selected upstream is Right Code. Gemini and direct Codex subscription setup
+were superseded before either account was imported. Account **Right Code - Codex**
+(ID 1) is active and schedulable in the **Right Code** group (ID 2). This is a
+public, standard credit group on the OpenAI platform, with no subscription plan.
 
-The protected, Git-ignored input file `backend/tmp/rightapi-setup.private.json`
-contains `apiKey`, `baseUrl`, and an optional `model`. Fill the first two values
-from the provider dashboard. The supplied hostname `rightapi.codes` timed out;
-the provider's current documentation is at
-[docs.rightapi.ai](https://docs.rightapi.ai/docs/rc_quick_start/models).
-Confirm the intended API destination from the dashboard before sending credentials.
-The documentation shows both a unified `/v1` base and channel-specific bases;
-use the URL associated with the supplied key.
+The protected, Git-ignored handoff file `backend/tmp/rightapi-setup.private.json`
+contains the supplied `apiKey`, working `baseUrl`, and smoke-test `model`.
+The application uses the imported account credentials in the database; it does
+not automatically reload this handoff file. The supplied hostname `rightapi.codes`
+timed out. The provider's current
+[documentation](https://docs.rightapi.ai/docs/rc_cli_config/codex) shows a unified
+`https://rightapi.ai/v1` endpoint, but this key returns HTTP 400 there with a
+legacy-key instruction. The documented channel endpoint
+**`https://www.rightapi.ai/codex/v1`** returned HTTP 200 and is the configured base.
 
-For the Codex/GPT channel, use an OpenAI **API Key** account and its native
-Responses interface. The existing URL builder supports both `/v1` and
-`/codex/v1` without duplicating the version path. Create a separate OpenAI
-standard credit group, discover the key's available models, and verify a small
-request through Tokensbeat before enabling customer payments. No upstream
-credential has been imported or request test completed yet.
+The account uses API-key authentication and native Responses requests
+(`openai_responses_mode=force_responses`), with WebSockets disabled and concurrency
+3. Group and account rate multipliers are 1.0, using the application's model
+pricing table; these are not a reconciliation of the provider's actual invoice.
+The account mapping and group allowlist expose the five GPT models returned by
+the provider: `gpt-5.5`, `gpt-5.6-sol`, `gpt-6-sol`, `gpt-6.1-sol`, and `gpt-6-astra`.
+The provider's separate `codex-auto-review` entry is not exposed for general use.
+
+Customer API keys should select the **Right Code** group and use the base URL
+**`https://api.tokensbeat.com/v1`**. Validation completed on 2026-10-07:
+
+- The normal admin account-connection test succeeded with `gpt-5.6-sol`.
+- Public `GET /v1/models` returned the five configured GPT models.
+- A public streaming `POST /v1/responses` returned `OK` and `response.completed`.
+- Exactly one usage row recorded 21 input and 5 output tokens; the temporary
+  user's balance decreased by $0.000255, matching the recorded charge.
+- The temporary verification user (ID 8) and API key were removed through the
+  normal service methods, with authentication-cache invalidation. Existing
+  customer balances were unchanged. The other four models were listed, not
+  inference-tested.
+
+Local setup helpers are `backend/tmp/rightapi-setup` and
+`backend/tmp/rightapi-gateway-check`. They read credentials internally and print
+only verification results. Running their request tests consumes upstream usage.
+Public payments remain disabled pending the payment checks described below.
+
+### Qwen3.8-Flash upstream setup (verified, 2026-10-08)
+
+Account **Qwen 3.8 - AABB vLLM** (ID 2) is active and schedulable in the public
+standard credit group **Qwen 3.8** (ID 3). Channel **Qwen 3.8** (ID 1) restricts
+the group to model **`qwen-3.8`** and supplies explicit token prices. The operator
+identified this gateway alias as **Qwen3.8-Flash**; the vLLM model metadata only
+exposes `/model` as its weights path, so the variant was not independently
+verified from the weights. Existing Right Code routing is preserved.
+
+The upstream is `https://aabb.tokensbeat.com/v1`, served by the gateway at
+`/data_minio/data3/shilei/2.5d-object-detection/.tokensbeat/gateway` on
+`124.174.9.42` (SSH port 60027). The imported credential belongs to the existing
+`external` tenant, restricted to `qwen-3.8`. Secrets are stored in the account
+database and the protected, Git-ignored `backend/tmp/qwen-setup` directory.
+No remote gateway configuration or unrelated service was changed or restarted.
+The gateway verifies its upstream TLS certificate using its existing CA.
+
+Customer keys should select **Qwen 3.8**, use base URL
+**`https://api.tokensbeat.com/v1`**, and send model **`qwen-3.8`**. Chat Completions
+is the native upstream protocol; Responses requests use the existing
+`force_chat_completions` compatibility adapter. WebSockets are disabled.
+Account concurrency is 3, group RPM is 30, and both rate multipliers are 1.0.
+The actual server advertises a **262,144-token context limit**.
+
+Customer prices match the published Alibaba Cloud Singapore/International
+[Qwen3.8-Flash list prices](https://www.alibabacloud.com/help/en/model-studio/qwen3-8-flash)
+checked on 2026-10-08:
+
+| Billing item | USD per million tokens |
+| --- | ---: |
+| Input | 0.15 |
+| Output, including reported reasoning tokens | 0.47 |
+| Reported cached input | 0.016 |
+
+These are retail reference rates, not measured self-hosted infrastructure costs.
+The gateway currently does not expose per-request cache-hit counts in the
+tested responses, so cached-input discounts were configured but not exercised
+by a real cache hit. No explicit cache-creation API or fee was enabled.
+
+Verification used temporary regular customer accounts and keys, including a
+final run with no explicit group grants after public activation:
+
+- Model listing exposed only `qwen-3.8`; native JSON and streaming Chat
+  Completions and streaming Responses all returned completed content.
+- Each successful request produced exactly one usage row with the correct
+  group, account, channel, token counts, and charge. A 17-input / 2-output request
+  cost **$0.00000349**. The final run's four requests cost **$0.00002897** in total;
+  the credit balance and API-key quota usage reconciled to that amount.
+- A forbidden model returned HTTP 404; an invalid key returned 401; a zero
+  balance returned 403; an exhausted key quota returned 429. Rejected requests
+  did not add a charge to the checked ledger. Quotas are checked before each
+  request; a completed request can cross a positive quota before the next
+  request is blocked.
+- All temporary users and keys were removed through normal service methods.
+  Verification usage remains as audit history; real customer balances were
+  not used. Five remote gateway model tests also passed.
+
+The sanitized report is `backend/tmp/qwen-setup/gateway-report.json`; setup
+metadata and source rates are alongside it. Helpers use the normal admin and
+API-key services with cache invalidation. This activation changes API access
+and usage billing only; the global public payment switch remains off.
 
 ### Stripe setup and integration review (2026-10-07)
 
@@ -300,17 +384,24 @@ The implementation plan for this existing integration is:
    HTTP 503 if it cannot resolve a Stripe provider, and payment confirmation
    propagates database errors instead of acknowledging them as success.
    Truly unknown orders and irrelevant verified events still receive HTTP 200.
-3. Run sandbox checkout tests against an isolated credit ledger: success,
-   decline, authentication, duplicate callback, delayed callback, amount and
-   currency mismatch, and database recovery. Local regression tests cover
+3. Sandbox checkout verification completed on October 7–8, 2026 against an
+   isolated PostgreSQL instance and Redis database, using the actual storefront,
+   Stripe Payment Element, backend, and signed Stripe webhook deliveries.
+   Successful card and 3D Secure payments each credited $20. A declined card
+   displayed the error and issued no credits. Local regression tests also cover
    signatures (including tampering, expired signatures, and incompatible API
    versions), retry responses, duplicate fulfillment, and amount/currency checks.
-   A real sandbox checkout remains pending runtime credentials.
-4. Before public launch, test late successful payments beyond the local
-   order-expiry grace period. The
-   current Stripe expiry path can acknowledge a late success without crediting
-   the order. Verify upstream API access and refund handling. Mode validation
-   and environment-backed Stripe secret storage are now implemented.
+4. Fixed and deployed recovery of verified Stripe payments after the local
+   expiry grace period. The regression test first reproduced the missing-credit
+   bug, then passed with the fix. A real sandbox $7 payment completed an order
+   deliberately expired seven days earlier. Its signed callback returned 200;
+   two duplicate replays left the balance unchanged, and an invalid signature
+   returned 400. Provider, currency, and amount validation still precede recovery.
+   Admin refunds of all three successful payments ($47 total) succeeded in Stripe
+   and removed the matching credits, returning the isolated balance to zero.
+   Remaining pending test intents were cancelled. Right Code API usage was
+   independently verified above. Mode validation and environment-backed Stripe
+   secret storage are implemented.
 5. For a subsequent checkout upgrade, prefer Checkout Sessions with Payment
    Element or hosted Checkout, and Dashboard-managed dynamic payment methods.
    Migrate order references, return flows, expiry, reconciliation and webhook
@@ -321,6 +412,15 @@ The implementation plan for this existing integration is:
 Stripe recommends [Checkout Sessions for most integrations](https://docs.stripe.com/payments/checkout-sessions-and-payment-intents-comparison)
 and explains [dynamic payment methods](https://docs.stripe.com/payments/payment-methods/dynamic-payment-methods)
 and [webhook retry behavior](https://docs.stripe.com/webhooks).
+
+Verification used Stripe's [official sandbox test cards](https://docs.stripe.com/testing).
+The checkout/result UI suite passed all 38 tests; the focused backend Stripe,
+payment, refund, fulfillment, and confirmation tests passed. No real funds moved
+and no production customer balance was changed. Live checkout remains disabled
+by the global `payment_enabled` setting. The temporary sandbox webhook endpoint
+was disabled after verification; the production endpoint remains configured.
+Protected, Git-ignored test receipts and browser screenshots are under
+`backend/tmp/stripe-e2e/`; sandbox keys are in `backend/tmp/stripe-sandbox.private.json`.
 
 A generated `PAYMENT_RESUME_SIGNING_KEY` is persisted in the Windows user
 environment for this installation. Keep it private and stable across restarts
@@ -381,6 +481,16 @@ rejected token once, and signs out through Clerk. Local password login,
 native token refresh, and legacy OAuth login endpoints are disabled when
 Clerk is configured. Password and MFA management are available through the
 Clerk account screen in Profile.
+
+Public documentation is available at `/docs`, linked from the homepage header,
+getting-started section, and footer. Eleven English/Chinese guides cover API
+keys, groups, credit billing, Codex, Windows/WSL, Chat Completions, Responses,
+Python/JavaScript, compatible clients, and troubleshooting. Documentation uses
+the customer endpoint `https://api.tokensbeat.com/v1`, with Qwen and GPT keys
+assigned to their respective groups. Source content is maintained in
+`frontend/src/content/docs.ts`; the public route requires no login. The docs
+include searchable navigation, section links, code copying, and a mobile menu.
+Pricing examples are dated and should be updated when configured rates change.
 
 `cloudflared` 2026.10.0 was installed through WinGet at
 `C:\Program Files (x86)\cloudflared\cloudflared.exe`. The Cloudflare browser

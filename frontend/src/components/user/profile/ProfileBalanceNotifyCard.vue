@@ -1,6 +1,6 @@
 <template>
-  <KumoSurface class="card">
-    <div class="border-b border-gray-100 px-6 py-4 dark:border-dark-700">
+  <Panel flush class="card">
+    <div class="border-b border-[var(--brand-line)] px-6 py-4">
       <h2 class="text-lg font-medium text-gray-900 dark:text-white">
         {{ t('profile.balanceNotify.title') }}
       </h2>
@@ -14,7 +14,7 @@
         <KumoLabel class="input-label mb-0">{{ t('profile.balanceNotify.enabled') }}</KumoLabel>
         <KumoLabel class="relative inline-flex items-center cursor-pointer">
           <KumoCheckbox :aria-label="t('profile.balanceNotify.enabled')" type="checkbox" v-model="notifyEnabled" @change="handleToggle" class="sr-only peer" />
-          <div class="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-primary-300 dark:peer-focus:ring-primary-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:after:border-gray-600 peer-checked:bg-primary-600"></div>
+          <div class="w-11 h-6 peer-focus:outline-none peer peer-checked:after:translate-x-full after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:h-5 after:w-5 after:transition-all peer-checked:bg-primary-600 panel-section"></div>
         </KumoLabel>
       </div>
 
@@ -53,11 +53,11 @@
           <!-- Saved email entries -->
           <div v-if="emailEntries.length > 0" class="space-y-2 mb-3">
             <div v-for="(entry, idx) in emailEntries" :key="idx"
-              class="flex items-center justify-between px-3 py-2 bg-gray-50 dark:bg-dark-700 rounded-lg">
+              class="flex items-center justify-between px-3 py-2 panel-section">
               <div class="flex items-center gap-2 min-w-0 flex-1">
                 <KumoLabel class="relative inline-flex items-center cursor-pointer shrink-0">
                   <KumoCheckbox :aria-label="t('profile.balanceNotify.title') + ' — ' + entry.email" type="checkbox" :checked="!entry.disabled" @change="handleEmailToggle(entry)" class="sr-only peer" />
-                  <div class="w-9 h-5 bg-gray-200 peer-focus:outline-none rounded-full peer dark:bg-gray-600 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all dark:after:border-gray-500 peer-checked:bg-primary-600"></div>
+                  <div class="w-9 h-5 peer-focus:outline-none peer peer-checked:after:translate-x-full after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:h-4 after:w-4 after:transition-all peer-checked:bg-primary-600 panel-section"></div>
                 </KumoLabel>
                 <span class="text-sm text-gray-700 dark:text-gray-300 truncate">{{ entry.email }}</span>
               </div>
@@ -69,7 +69,7 @@
                       v-model="verifyCode"
                       type="text"
                       maxlength="6"
-                      class="w-20 rounded border border-gray-300 px-2 py-1 text-xs dark:border-dark-500 dark:bg-dark-700"
+                      class="w-20 rounded border border-[var(--brand-line)] px-2 py-1 text-xs dark:bg-dark-700"
                       :placeholder="t('profile.balanceNotify.codePlaceholder')"
                     />
                     <KumoButton @click="verifySavedEmail(entry.email)" :disabled="!verifyCode || verifyCode.length !== 6 || verifyingSaved" class="text-xs text-primary-600 hover:text-primary-700">
@@ -116,7 +116,7 @@
                   v-model="pe.code"
                   type="text"
                   maxlength="6"
-                  class="w-20 rounded border border-gray-300 px-2 py-1 text-xs dark:border-dark-500 dark:bg-dark-700"
+                  class="w-20 rounded border border-[var(--brand-line)] px-2 py-1 text-xs dark:bg-dark-700"
                   :placeholder="t('profile.balanceNotify.codePlaceholder')"
                 />
                 <KumoButton @click="verifyPending(idx)" :disabled="!pe.code || pe.code.length !== 6 || pe.verifying" class="text-xs text-primary-600 hover:text-primary-700">
@@ -153,11 +153,12 @@
         </div>
       </template>
     </div>
-  </KumoSurface>
+  </Panel>
 </template>
 
 <script setup lang="ts">
-import { KumoButton, KumoCheckbox, KumoInput, KumoLabel, KumoSurface } from '@/components/kumo'
+import Panel from '@/components/common/Panel.vue'
+import { KumoButton, KumoCheckbox, KumoInput, KumoLabel } from '@/components/kumo'
 
 import { ref, computed, watch, onMounted, onUnmounted } from 'vue'
 import { useI18n } from 'vue-i18n'

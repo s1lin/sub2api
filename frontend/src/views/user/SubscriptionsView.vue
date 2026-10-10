@@ -9,9 +9,9 @@
       </div>
 
       <!-- Empty State -->
-      <KumoSurface v-else-if="subscriptions.length === 0" class="card p-12 text-center">
+      <Panel flush v-else-if="subscriptions.length === 0" class="card p-12 text-center">
         <div
-          class="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-gray-100 dark:bg-dark-700"
+          class="mx-auto mb-4 flex h-16 w-16 items-center justify-center panel-section"
         >
           <Icon name="creditCard" size="xl" class="text-gray-400" />
         </div>
@@ -21,19 +21,19 @@
         <p class="text-gray-500 dark:text-dark-400">
           {{ t('userSubscriptions.noActiveSubscriptionsDesc') }}
         </p>
-      </KumoSurface>
+      </Panel>
 
       <!-- Subscriptions Grid -->
       <div v-else class="grid gap-6 lg:grid-cols-2">
         <div
           v-for="subscription in subscriptions"
           :key="subscription.id"
-          class="overflow-hidden rounded-2xl border bg-white dark:bg-dark-800"
+          class="overflow-hidden rounded-lg border bg-white dark:bg-dark-800"
           :class="platformBorderClass(subscription.group?.platform || '')"
         >
           <!-- Header -->
           <div
-            class="flex items-center justify-between border-b border-gray-100 p-4 dark:border-dark-700"
+            class="flex items-center justify-between border-b border-[var(--brand-line)] p-4"
           >
             <div class="flex items-center gap-3">
               <div :class="['h-1.5 w-1.5 shrink-0 rounded-full', platformAccentDotClass(subscription.group?.platform || '')]" />
@@ -202,7 +202,7 @@
                 !subscription.group?.weekly_limit_usd &&
                 !subscription.group?.monthly_limit_usd
               "
-              class="flex items-center justify-center rounded-xl bg-gradient-to-r from-emerald-50 to-teal-50 py-6 dark:from-emerald-900/20 dark:to-teal-900/20"
+              class="flex items-center justify-center rounded-lg py-6"
             >
               <div class="flex items-center gap-3">
                 <span class="text-4xl text-emerald-600 dark:text-emerald-400">∞</span>
@@ -224,7 +224,8 @@
 </template>
 
 <script setup lang="ts">
-import { KumoButton, KumoLoader, KumoMeter, KumoSurface } from '@/components/kumo'
+import Panel from '@/components/common/Panel.vue'
+import { KumoButton, KumoLoader, KumoMeter } from '@/components/kumo'
 
 import { ref, onMounted } from 'vue'
 import { useI18n } from 'vue-i18n'

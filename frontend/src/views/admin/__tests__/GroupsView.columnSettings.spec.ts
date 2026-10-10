@@ -149,7 +149,7 @@ const AppLayoutStub = {
 const TablePageLayoutStub = {
   template: `
     <div>
-      <slot name="filters" />
+      <slot name="actions" /><slot name="filters" />
       <slot name="table" />
       <slot name="pagination" />
     </div>

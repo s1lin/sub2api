@@ -6,7 +6,7 @@
         :class="[
           hasUpdate
             ? 'bg-amber-100 text-amber-700 hover:bg-amber-200 dark:bg-amber-900/30 dark:text-amber-400 dark:hover:bg-amber-900/50'
-            : 'bg-gray-100 text-gray-600 hover:bg-gray-200 dark:bg-dark-800 dark:text-dark-400 dark:hover:bg-dark-700'
+            : 'bg-gray-100 text-gray-600 hover:bg-[var(--brand-hover)] dark:bg-dark-800 dark:text-dark-400 hover:'
         ]"
         :aria-label="hasUpdate ? t('version.updateAvailable') : t('version.upToDate')"
       >
@@ -23,19 +23,19 @@
           <span class="relative inline-flex h-2 w-2 rounded-full bg-amber-500"></span>
         </span>
       </KumoPopoverTrigger><KumoPopoverContent align="start"
-          class="overflow-hidden whitespace-normal rounded-xl border border-gray-200 bg-white shadow-lg transition-all duration-200 dark:border-dark-700 dark:bg-dark-800"
+          class="overflow-hidden whitespace-normal rounded-lg border border-[var(--brand-line)] bg-white transition-all duration-200 dark:bg-dark-800"
           :class="rollbackPanelOpen && isReleaseBuild ? 'w-80' : 'w-64'"
         >
           <!-- Header with refresh button -->
           <div
-            class="flex items-center justify-between border-b border-gray-100 px-4 py-3 dark:border-dark-700"
+            class="flex items-center justify-between border-b border-[var(--brand-line)] px-4 py-3"
           >
             <span class="text-sm font-medium text-gray-700 dark:text-dark-300">{{
               t('version.currentVersion')
             }}</span>
             <KumoButton
               @click="refreshVersion(true)"
-              class="rounded-lg p-1.5 text-gray-400 transition-colors hover:bg-gray-100 hover:text-gray-600 dark:hover:bg-dark-700 dark:hover:text-dark-200"
+              class="rounded-lg p-1.5 text-gray-400 transition-colors hover:bg-[var(--brand-hover)] hover:text-gray-600 dark:hover:text-dark-200"
               :disabled="loading"
               :title="t('version.refresh')"
             >
@@ -320,10 +320,10 @@
                 </a>
 
                 <!-- Version rollback entry -->
-                <div class="border-t border-gray-100 pt-2 dark:border-dark-700">
+                <div class="border-t border-[var(--brand-line)] pt-2">
                   <KumoButton
                     @click="toggleRollbackPanel"
-                    class="group flex w-full items-center justify-between rounded-lg px-2 py-1.5 text-xs text-gray-400 transition-colors hover:bg-gray-50 hover:text-gray-600 dark:text-dark-500 dark:hover:bg-dark-700/50 dark:hover:text-dark-300"
+                    class="group flex w-full items-center justify-between rounded-lg px-2 py-1.5 text-xs text-gray-400 transition-colors hover:bg-[var(--brand-hover)] hover:text-gray-600 dark:text-dark-500 dark:hover:text-dark-300"
                   >
                     <span class="flex items-center gap-1.5">
                       <Icon name="clock" size="xs" :stroke-width="2" />
@@ -380,7 +380,7 @@
                         </p>
                         <KumoButton
                           @click="loadRollbackVersions"
-                          class="w-full rounded-lg border border-gray-200 py-1.5 text-xs text-gray-500 transition-colors hover:bg-gray-50 hover:text-gray-700 dark:border-dark-700 dark:text-dark-400 dark:hover:bg-dark-700/50 dark:hover:text-dark-200"
+                          class="w-full rounded-lg border border-[var(--brand-line)] py-1.5 text-xs text-gray-500 transition-colors hover:bg-[var(--brand-hover)] hover:text-gray-700 dark:text-dark-400 dark:hover:text-dark-200"
                         >
                           {{ t('version.retry') }}
                         </KumoButton>
@@ -400,7 +400,7 @@
                           {{ t('version.rollbackSelectVersion') }}
                         </p>
 
-                        <KumoButton
+                        <KumoButton :aria-pressed="selectedRollbackVersion === item.version"
                           v-for="item in rollbackVersions"
                           :key="item.version"
                           @click="selectRollbackVersion(item.version)"
@@ -408,8 +408,8 @@
                           class="flex w-full items-center justify-between rounded-lg border px-3 py-2 text-left transition-all disabled:cursor-not-allowed disabled:opacity-60"
                           :class="
                             selectedRollbackVersion === item.version
-                              ? 'border-amber-300 bg-amber-50 shadow-sm dark:border-amber-700 dark:bg-amber-900/20'
-                              : 'border-gray-200 hover:border-gray-300 hover:bg-gray-50 dark:border-dark-700 dark:hover:border-dark-600 dark:hover:bg-dark-700/40'
+                              ? 'border-amber-300 bg-amber-50  dark:border-amber-700 dark:bg-amber-900/20'
+                              : 'border-[var(--brand-line)] hover:border-[var(--brand-line)] hover:bg-[var(--brand-hover)] border-[var(--brand-line)] dark:hover:border-[var(--brand-line)] hover:'
                           "
                         >
                           <span class="flex items-center gap-2">
@@ -418,7 +418,7 @@
                               :class="
                                 selectedRollbackVersion === item.version
                                   ? 'border-amber-500'
-                                  : 'border-gray-300 dark:border-dark-500'
+                                  : 'border-[var(--brand-line)] border-[var(--brand-line)]'
                               "
                             >
                               <span
@@ -450,22 +450,22 @@
 
                             <!-- Terminal-style block with deploy-method tabs -->
                             <div
-                              class="overflow-hidden rounded-lg border border-gray-200 dark:border-dark-600"
+                              class="overflow-hidden rounded-lg border border-[var(--brand-line)]"
                             >
                               <div
-                                class="flex items-center justify-between border-b border-gray-200 bg-gray-100 px-2 py-1.5 dark:border-dark-600 dark:bg-dark-700"
+                                class="flex items-center justify-between border-b border-[var(--brand-line)] bg-gray-100 px-2 py-1.5 dark:bg-dark-700"
                               >
                                 <div
                                   class="flex items-center gap-0.5 rounded-md bg-gray-200/70 p-0.5 dark:bg-dark-600/70"
                                 >
-                                  <KumoButton
+                                  <KumoButton :aria-pressed="manualTab === tab.key"
                                     v-for="tab in manualTabs"
                                     :key="tab.key"
                                     @click="manualTab = tab.key"
                                     class="rounded px-2 py-0.5 text-[11px] font-medium transition-colors"
                                     :class="
                                       manualTab === tab.key
-                                        ? 'bg-white text-gray-700 shadow-sm dark:bg-dark-800 dark:text-dark-100'
+                                        ? 'bg-[var(--brand-hover)] text-gray-700   dark:text-dark-100'
                                         : 'text-gray-400 hover:text-gray-600 dark:text-dark-400 dark:hover:text-dark-200'
                                     "
                                   >
@@ -474,7 +474,7 @@
                                 </div>
                                 <KumoButton
                                   @click="copyToClipboard(activeManualCommand)"
-                                  class="flex items-center gap-1 rounded px-1.5 py-0.5 text-[11px] text-gray-400 transition-colors hover:bg-gray-200 hover:text-gray-600 dark:text-dark-400 dark:hover:bg-dark-600 dark:hover:text-dark-200"
+                                  class="flex items-center gap-1 rounded px-1.5 py-0.5 text-[11px] text-gray-400 transition-colors hover:bg-[var(--brand-hover)] hover:text-gray-600 dark:text-dark-400 dark:hover:text-dark-200"
                                 >
                                   <Icon
                                     :name="copied ? 'check' : 'copy'"
@@ -513,7 +513,7 @@
                             <KumoButton
                               @click="handleRollback"
                               :disabled="rollingBack"
-                              class="flex w-full items-center justify-center gap-2 rounded-lg bg-amber-500 px-4 py-2 text-sm font-medium text-white shadow-sm transition-colors hover:bg-amber-600 disabled:cursor-not-allowed disabled:opacity-50"
+                              class="flex w-full items-center justify-center gap-2 rounded-lg bg-amber-500 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-amber-600 disabled:cursor-not-allowed disabled:opacity-50"
                             >
                               <KumoLoader v-if="rollingBack" class="h-4 w-4 animate-spin" />
                               <Icon v-else name="clock" size="sm" :stroke-width="2" />

@@ -33,10 +33,12 @@ export const KumoContextMenuTrigger = bridge('KumoContextMenuTrigger', props => 
   }, props.children)
 })
 export const KumoDropdownTrigger = bridge('KumoDropdownTrigger', props => el(DropdownMenu.Trigger, {
-  ...domProps(props), render: el(Button, { variant: props.variant ?? 'ghost' }), ref: props.nativeRef,
+  ...domProps(props), className: `platform-dropdown-trigger ${props.className ?? ''}`,
+  render: el(Button, { variant: props.variant ?? 'ghost' }), ref: props.nativeRef,
 }, props.children))
 export const KumoDropdownContent = bridge('KumoDropdownContent', props => el(DropdownMenu.Content, {
-  ...domProps(props), align: props.align ?? 'end', sideOffset: props.sideOffset ?? 6, collisionPadding: 8,
+  ...domProps(props), className: `platform-dropdown-popup ${props.className ?? ''}`,
+  align: props.align ?? 'end', sideOffset: props.sideOffset ?? 6, collisionPadding: 8,
 }, props.children))
 export const KumoDropdownItem = bridge('KumoDropdownItem', props => {
   const { setElement } = useDomEvents(props, true)

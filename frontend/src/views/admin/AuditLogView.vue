@@ -1,9 +1,16 @@
 <template>
-  <AppLayout>
+  <AppLayout hide-page-header>
     <TablePageLayout>
       <!-- Filters -->
+      <template #actions>
+        <KumoButton type="button" class="btn btn-danger" @click="openClearDialog">
+                <Icon name="trash" size="sm" class="mr-1.5" />
+                {{ t('admin.audit.clearAll') }}
+              </KumoButton>
+      </template>
+
       <template #filters>
-        <KumoSurface class="card p-4 sm:p-6">
+        <Panel flush class="card p-4 sm:p-6">
           <div class="flex flex-wrap items-end justify-between gap-4">
             <!-- Left: filter fields -->
             <div class="flex flex-1 flex-wrap items-end gap-4">
@@ -65,7 +72,6 @@
               </div>
             </div>
 
-            <!-- Right: actions -->
             <div class="flex w-full flex-wrap items-center justify-end gap-3 sm:w-auto">
               <KumoButton type="button" class="btn btn-primary" :disabled="loading" @click="search">
                 {{ t('common.search') }}
@@ -73,13 +79,10 @@
               <KumoButton type="button" class="btn btn-secondary" :disabled="loading" @click="resetFilters">
                 {{ t('common.reset') }}
               </KumoButton>
-              <KumoButton type="button" class="btn btn-danger" @click="openClearDialog">
-                <Icon name="trash" size="sm" class="mr-1.5" />
-                {{ t('admin.audit.clearAll') }}
-              </KumoButton>
+
             </div>
           </div>
-        </KumoSurface>
+        </Panel>
       </template>
 
       <!-- Table -->
@@ -176,7 +179,7 @@
 
       <div v-else-if="detail" class="space-y-5 py-2">
         <!-- Hero: action + result at a glance -->
-        <div class="rounded-2xl border border-gray-200 bg-gray-50/60 p-5 dark:border-dark-700 dark:bg-dark-900/60">
+        <div class="p-5 panel-section">
           <div class="flex flex-wrap items-center gap-3">
             <span :class="statusBadgeClass(detail.status_code)">
               <span class="h-1.5 w-1.5 rounded-full" :class="statusDotClass(detail.status_code)"></span>
@@ -187,7 +190,7 @@
             </span>
           </div>
 
-          <div class="mt-3 flex items-center gap-2 rounded-lg bg-white px-3 py-2 ring-1 ring-gray-200 dark:bg-dark-800 dark:ring-dark-600">
+          <div class="mt-3 flex items-center gap-2 px-3 py-2 panel-section">
             <span class="rounded bg-gray-100 px-1.5 py-0.5 font-mono text-[11px] font-bold text-gray-700 dark:bg-dark-700 dark:text-gray-200">
               {{ detail.method }}
             </span>
@@ -209,7 +212,7 @@
 
         <!-- Actor / auth / source -->
         <div class="grid grid-cols-1 gap-3 sm:grid-cols-3">
-          <div class="rounded-xl bg-gray-50 p-4 dark:bg-dark-900">
+          <div class="p-4 panel-section">
             <div class="text-xs font-bold uppercase tracking-wider text-gray-400">
               {{ t('admin.audit.columns.actor') }}
             </div>
@@ -219,7 +222,7 @@
             <div class="mt-0.5 text-xs text-gray-400">{{ detail.actor_role }}</div>
           </div>
 
-          <div class="rounded-xl bg-gray-50 p-4 dark:bg-dark-900">
+          <div class="p-4 panel-section">
             <div class="text-xs font-bold uppercase tracking-wider text-gray-400">
               {{ t('admin.audit.filters.authMethod') }}
             </div>
@@ -231,7 +234,7 @@
             </div>
           </div>
 
-          <div class="rounded-xl bg-gray-50 p-4 dark:bg-dark-900">
+          <div class="p-4 panel-section">
             <div class="text-xs font-bold uppercase tracking-wider text-gray-400">
               {{ t('admin.audit.columns.clientIp') }}
             </div>
@@ -246,7 +249,7 @@
           <h4 class="mb-1.5 text-xs font-bold uppercase tracking-wider text-gray-400">
             {{ t('admin.audit.detail.userAgent') }}
           </h4>
-          <div class="break-all rounded-xl bg-gray-50 p-3 font-mono text-xs leading-relaxed text-gray-600 dark:bg-dark-900 dark:text-gray-400">
+          <div class="break-all p-3 font-mono text-xs leading-relaxed text-gray-600 dark:text-gray-400 panel-section">
             {{ detail.user_agent || '—' }}
           </div>
         </section>
@@ -256,7 +259,7 @@
           <h4 class="mb-1.5 text-xs font-bold uppercase tracking-wider text-gray-400">
             {{ t('admin.audit.detail.requestBody') }}
           </h4>
-          <pre class="max-h-72 overflow-auto rounded-xl bg-gray-50 p-4 font-mono text-xs leading-relaxed text-gray-600 dark:bg-dark-900 dark:text-gray-400">{{ prettyBody(detail.request_body) }}</pre>
+          <pre class="max-h-72 overflow-auto rounded-lg bg-gray-50 p-4 font-mono text-xs leading-relaxed text-gray-600 dark:bg-dark-900 dark:text-gray-400">{{ prettyBody(detail.request_body) }}</pre>
         </section>
 
         <!-- Extra -->
@@ -264,7 +267,7 @@
           <h4 class="mb-1.5 text-xs font-bold uppercase tracking-wider text-gray-400">
             {{ t('admin.audit.detail.extra') }}
           </h4>
-          <pre class="max-h-48 overflow-auto rounded-xl bg-gray-50 p-4 font-mono text-xs leading-relaxed text-gray-600 dark:bg-dark-900 dark:text-gray-400">{{ JSON.stringify(detail.extra, null, 2) }}</pre>
+          <pre class="max-h-48 overflow-auto rounded-lg bg-gray-50 p-4 font-mono text-xs leading-relaxed text-gray-600 dark:bg-dark-900 dark:text-gray-400">{{ JSON.stringify(detail.extra, null, 2) }}</pre>
         </section>
       </div>
     </BaseDialog>
@@ -352,7 +355,8 @@
 </template>
 
 <script setup lang="ts">
-import { KumoButton, KumoInput, KumoLabel, KumoLoader, KumoSurface } from '@/components/kumo'
+import Panel from '@/components/common/Panel.vue'
+import { KumoButton, KumoInput, KumoLabel, KumoLoader } from '@/components/kumo'
 
 import { computed, onMounted, reactive, ref } from 'vue'
 import { useI18n } from 'vue-i18n'

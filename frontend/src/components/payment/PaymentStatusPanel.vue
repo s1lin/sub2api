@@ -4,13 +4,13 @@
 
     <!-- Success -->
     <template v-if="outcome === 'success'">
-      <KumoSurface class="card p-6">
+      <Panel flush class="card p-6">
         <div class="flex flex-col items-center space-y-4 py-4">
           <div class="flex h-16 w-16 items-center justify-center rounded-full bg-green-100 dark:bg-green-900/30">
             <Icon name="check" size="lg" class="text-green-500" />
           </div>
           <p class="text-lg font-bold text-gray-900 dark:text-white">{{ props.orderType === 'subscription' ? t('payment.result.subscriptionSuccess') : t('payment.result.success') }}</p>
-          <div v-if="paidOrder" class="w-full rounded-xl bg-gray-50 p-4 dark:bg-dark-800">
+          <div v-if="paidOrder" class="w-full p-4 panel-section">
             <div class="space-y-2 text-sm">
               <div class="flex justify-between">
                 <span class="text-gray-500 dark:text-gray-400">{{ t('payment.orders.orderId') }}</span>
@@ -37,14 +37,14 @@
           </div>
           <KumoButton class="btn btn-primary" @click="handleDone">{{ t('common.confirm') }}</KumoButton>
         </div>
-      </KumoSurface>
+      </Panel>
     </template>
 
     <!-- Cancelled -->
     <template v-else-if="outcome === 'cancelled'">
-      <KumoSurface class="card p-6">
+      <Panel flush class="card p-6">
         <div class="flex flex-col items-center space-y-4 py-4">
-          <div class="flex h-16 w-16 items-center justify-center rounded-full bg-gray-100 dark:bg-dark-700">
+          <div class="flex h-16 w-16 items-center justify-center panel-section">
             <svg class="h-8 w-8 text-gray-400 dark:text-gray-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
               <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
             </svg>
@@ -53,12 +53,12 @@
           <p class="text-sm text-gray-500 dark:text-gray-400">{{ t('payment.qr.cancelledDesc') }}</p>
           <KumoButton class="btn btn-primary" @click="handleDone">{{ t('common.confirm') }}</KumoButton>
         </div>
-      </KumoSurface>
+      </Panel>
     </template>
 
     <!-- Expired / Failed -->
     <template v-else-if="outcome === 'expired'">
-      <KumoSurface class="card p-6">
+      <Panel flush class="card p-6">
         <div class="flex flex-col items-center space-y-4 py-4">
           <div class="flex h-16 w-16 items-center justify-center rounded-full bg-orange-100 dark:bg-orange-900/30">
             <svg class="h-8 w-8 text-orange-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
@@ -69,7 +69,7 @@
           <p class="text-sm text-gray-500 dark:text-gray-400">{{ t('payment.qr.expiredDesc') }}</p>
           <KumoButton class="btn btn-primary" @click="handleDone">{{ t('common.confirm') }}</KumoButton>
         </div>
-      </KumoSurface>
+      </Panel>
     </template>
 
     <!-- ═══ Active States: QR or Popup waiting ═══ -->
@@ -77,7 +77,7 @@
     <!-- Mobile Alipay app handoff. The QR fallback stays hidden until launch timeout. -->
     <template v-else-if="isMobileAlipayDeepLink">
       <template v-if="!deepLinkFallbackVisible">
-        <KumoSurface class="card p-6">
+        <Panel flush class="card p-6">
           <div class="flex flex-col items-center space-y-4 py-4 text-center">
             <KumoLoader
               v-if="deepLinkState === 'launching'"
@@ -103,21 +103,21 @@
               {{ t('payment.qr.reopenAlipay') }}
             </KumoButton>
           </div>
-        </KumoSurface>
-        <KumoSurface class="card p-4 text-center">
+        </Panel>
+        <Panel flush class="card p-4 text-center">
           <p class="text-sm text-gray-500 dark:text-gray-400">{{ t('payment.qr.expiresIn') }}</p>
           <p class="mt-1 text-2xl font-bold tabular-nums text-gray-900 dark:text-white">{{ countdownDisplay }}</p>
           <p class="mt-1 text-xs text-gray-400 dark:text-gray-500">{{ t('payment.qr.waitingPayment') }}</p>
-        </KumoSurface>
+        </Panel>
       </template>
       <template v-else>
-        <KumoSurface data-test="alipay-qr-fallback" class="card p-6">
+        <Panel flush data-test="alipay-qr-fallback" class="card p-6">
           <div class="flex flex-col items-center space-y-4">
             <div class="text-center">
               <p class="text-lg font-semibold text-gray-900 dark:text-white">{{ t('payment.qr.alipayFallbackTitle') }}</p>
               <p class="mt-1 text-sm text-gray-500 dark:text-gray-400">{{ t('payment.qr.alipayFallbackHint') }}</p>
             </div>
-            <div class="w-full space-y-2 border-y border-gray-100 py-3 text-sm dark:border-dark-600">
+            <div class="w-full space-y-2 border-y border-[var(--brand-line)] py-3 text-sm">
               <div class="flex items-start justify-between gap-4">
                 <span class="text-gray-500 dark:text-gray-400">{{ t('payment.orders.payAmount') }}</span>
                 <span class="font-semibold text-gray-900 dark:text-white">{{ displayPaymentAmount }}</span>
@@ -136,7 +136,7 @@
             <div :class="['relative rounded-lg border-2 p-4', qrBorderClass]">
               <canvas ref="qrCanvas" class="mx-auto"></canvas>
               <div class="pointer-events-none absolute inset-0 flex items-center justify-center">
-                <span :class="['rounded-full p-2 shadow ring-2 ring-white', qrLogoBgClass]">
+                <span :class="['rounded-full p-2  ring-2 ring-white', qrLogoBgClass]">
                   <img :src="qrLogoIcon" alt="" class="h-5 w-5 brightness-0 invert" />
                 </span>
               </div>
@@ -166,20 +166,20 @@
               {{ t('payment.result.backToRecharge') }}
             </KumoButton>
           </div>
-        </KumoSurface>
+        </Panel>
       </template>
     </template>
 
     <!-- QR Code Mode -->
     <template v-else-if="showQRCode">
-      <KumoSurface class="card p-6">
+      <Panel flush class="card p-6">
         <div class="flex flex-col items-center space-y-4">
           <p class="text-lg font-semibold text-gray-900 dark:text-white">{{ scanTitle }}</p>
           <div :class="['relative rounded-lg border-2 p-4', qrBorderClass]">
             <canvas ref="qrCanvas" class="mx-auto"></canvas>
             <!-- Brand logo overlay -->
             <div class="pointer-events-none absolute inset-0 flex items-center justify-center">
-              <span :class="['rounded-full p-2 shadow ring-2 ring-white', qrLogoBgClass]">
+              <span :class="['rounded-full p-2  ring-2 ring-white', qrLogoBgClass]">
                 <img :src="qrLogoIcon" alt="" class="h-5 w-5 brightness-0 invert" />
               </span>
             </div>
@@ -189,12 +189,12 @@
             {{ t('payment.qr.openPayWindow') }}
           </KumoButton>
         </div>
-      </KumoSurface>
-      <KumoSurface class="card p-4 text-center">
+      </Panel>
+      <Panel flush class="card p-4 text-center">
         <p class="text-sm text-gray-500 dark:text-gray-400">{{ t('payment.qr.expiresIn') }}</p>
         <p class="mt-1 text-2xl font-bold tabular-nums text-gray-900 dark:text-white">{{ countdownDisplay }}</p>
         <p class="mt-1 text-xs text-gray-400 dark:text-gray-500">{{ t('payment.qr.waitingPayment') }}</p>
-      </KumoSurface>
+      </Panel>
       <KumoButton class="btn btn-secondary w-full" :disabled="cancelling" @click="handleCancel">
         {{ cancelling ? t('common.processing') : t('payment.qr.cancelOrder') }}
       </KumoButton>
@@ -202,7 +202,7 @@
 
     <!-- Waiting for Popup/Redirect Mode -->
     <template v-else>
-      <KumoSurface class="card p-6">
+      <Panel flush class="card p-6">
         <div class="flex flex-col items-center space-y-4 py-4">
           <KumoLoader class="h-10 w-10" />
           <p class="text-sm text-gray-500 dark:text-gray-400">{{ t('payment.qr.payInNewWindowHint') }}</p>
@@ -210,11 +210,11 @@
             {{ t('payment.qr.openPayWindow') }}
           </KumoButton>
         </div>
-      </KumoSurface>
-      <KumoSurface class="card p-4 text-center">
+      </Panel>
+      <Panel flush class="card p-4 text-center">
         <p class="mt-1 text-2xl font-bold tabular-nums text-gray-900 dark:text-white">{{ countdownDisplay }}</p>
         <p class="mt-1 text-xs text-gray-400 dark:text-gray-500">{{ t('payment.qr.waitingPayment') }}</p>
-      </KumoSurface>
+      </Panel>
       <KumoButton class="btn btn-secondary w-full" :disabled="cancelling" @click="handleCancel">
         {{ cancelling ? t('common.processing') : t('payment.qr.cancelOrder') }}
       </KumoButton>
@@ -223,7 +223,8 @@
 </template>
 
 <script setup lang="ts">
-import { KumoButton, KumoLoader, KumoSurface } from '@/components/kumo'
+import Panel from '@/components/common/Panel.vue'
+import { KumoButton, KumoLoader } from '@/components/kumo'
 
 import { ref, computed, watch, onMounted, onUnmounted, nextTick } from 'vue'
 import { useI18n } from 'vue-i18n'

@@ -40,13 +40,13 @@
           />
           <div
             v-if="userResults.length > 0"
-            class="mt-1 max-h-40 overflow-y-auto rounded border border-gray-200 dark:border-dark-700"
+            class="mt-1 max-h-40 overflow-y-auto rounded panel-section"
           >
             <KumoButton
               v-for="user in userResults"
               :key="user.id"
               type="button"
-              class="w-full px-3 py-1.5 text-left text-sm text-gray-900 hover:bg-gray-100 dark:text-white dark:hover:bg-dark-800"
+              class="w-full px-3 py-1.5 text-left text-sm text-gray-900 hover:bg-[var(--brand-hover)] dark:text-white"
               data-test="withdraw-user-option"
               @click="selectUser(user)"
             >
@@ -59,7 +59,7 @@
 
       <div
         v-if="selectedUser"
-        class="rounded-lg border border-gray-100 bg-gray-50 p-3 dark:border-dark-700 dark:bg-dark-800"
+        class="p-3 panel-section"
       >
         <div class="flex items-center justify-between text-sm">
           <span class="text-gray-500 dark:text-dark-400">{{ t('admin.affiliates.withdraw.availableQuota') }}</span>

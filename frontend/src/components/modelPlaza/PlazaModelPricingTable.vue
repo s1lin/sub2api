@@ -17,7 +17,7 @@
         >
           <KumoTableHead
             rowspan="2"
-            class="border-r border-gray-100 py-2.5 pl-5 pr-4 text-left align-middle dark:border-dark-700/60"
+            class="border-r border-[var(--brand-line)] py-2.5 pl-5 pr-4 text-left align-middle"
           >
             {{ t('modelPlaza.table.model') }}
           </KumoTableHead>
@@ -29,27 +29,27 @@
           </KumoTableHead>
           <KumoTableHead
             colspan="3"
-            class="border-l border-gray-100 pt-2 text-center dark:border-dark-700/60"
+            class="border-l border-[var(--brand-line)] pt-2 text-center"
           >
-            <div class="border-b border-gray-200 pb-2 text-gray-400 dark:border-dark-600 dark:text-dark-500">
+            <div class="border-b border-[var(--brand-line)] pb-2 text-gray-400 dark:text-dark-500">
               {{ t('modelPlaza.table.officialPrice') }}
               <span class="ml-1 normal-case font-normal text-gray-400 dark:text-dark-500">{{ t('modelPlaza.table.unitPerMillion') }}</span>
             </div>
           </KumoTableHead>
           <KumoTableHead
             rowspan="2"
-            class="border-l border-gray-100 py-2.5 pl-3 pr-5 text-right align-middle dark:border-dark-700/60"
+            class="border-l border-[var(--brand-line)] py-2.5 pl-3 pr-5 text-right align-middle"
           >
             {{ t('modelPlaza.table.rate') }}
           </KumoTableHead>
         </KumoTableRow>
         <KumoTableRow
-          class="border-b border-gray-200 text-left text-[11px] font-medium uppercase leading-4 tracking-wide text-gray-400 dark:border-dark-700 dark:text-dark-500"
+          class="border-b border-[var(--brand-line)] text-left text-[11px] font-medium uppercase leading-4 tracking-wide text-gray-400 dark:text-dark-500"
         >
           <KumoTableHead class="pz-bg px-3 py-2 font-medium">{{ t('modelPlaza.table.input') }}</KumoTableHead>
           <KumoTableHead class="pz-bg px-3 py-2 font-medium">{{ t('modelPlaza.table.output') }}</KumoTableHead>
           <KumoTableHead class="pz-bg px-3 py-2 font-medium">{{ t('modelPlaza.table.cache') }}</KumoTableHead>
-          <KumoTableHead class="border-l border-gray-100 px-3 py-2 font-medium dark:border-dark-700/60">
+          <KumoTableHead class="border-l border-[var(--brand-line)] px-3 py-2 font-medium">
             {{ t('modelPlaza.table.input') }}
           </KumoTableHead>
           <KumoTableHead class="px-3 py-2 font-medium">{{ t('modelPlaza.table.output') }}</KumoTableHead>
@@ -60,10 +60,10 @@
         <KumoTableRow
           v-for="{ model: m, period, key } in rows"
           :key="key"
-          class="border-b border-gray-100 transition-colors last:border-b-0 hover:bg-gray-50/70 dark:border-dark-800 dark:hover:bg-dark-800/50"
+          class="border-b border-[var(--brand-line)] transition-colors last:border-b-0 hover:bg-[var(--brand-hover)]"
         >
           <!-- 模型名 + 非 token 计费模式徽章;分时时段行额外标注时段 -->
-          <KumoTableCell class="border-r border-gray-100 py-2.5 pl-5 pr-4 align-middle dark:border-dark-700/60">
+          <KumoTableCell class="border-r border-[var(--brand-line)] py-2.5 pl-5 pr-4 align-middle">
             <div class="flex flex-wrap items-center gap-1.5">
               <span class="font-medium text-gray-900 dark:text-white">{{ m.name }}</span>
               <!-- 时段徽章紧跟模型名,其余徽章排在后面,空间不足时先换行的是它们 -->
@@ -210,7 +210,7 @@
 
           <!-- 官方价格(参考价,不乘倍率;官方有阶梯时每档一行) -->
           <KumoTableCell
-            class="border-l border-gray-100 px-3 py-2.5 align-middle font-mono text-xs text-gray-500 dark:border-dark-700/60 dark:text-dark-400"
+            class="border-l border-[var(--brand-line)] px-3 py-2.5 align-middle font-mono text-xs text-gray-500 dark:text-dark-400"
           >
             <template v-if="officialIntervals(m).length">
               <div
@@ -280,7 +280,7 @@
 
           <!-- 折扣倍率(分时时段行展示 生效倍率×时段倍率;生图独立倍率行展示独立倍率;专属倍率划线展示原倍率) -->
           <KumoTableCell
-            class="border-l border-gray-100 py-2.5 pl-3 pr-5 text-right align-middle font-mono text-xs dark:border-dark-700/60"
+            class="border-l border-[var(--brand-line)] py-2.5 pl-3 pr-5 text-right align-middle font-mono text-xs"
           >
             <span
               v-if="period"

@@ -23,7 +23,7 @@
       </div>
 
       <div v-else-if="rules.length === 0" class="py-8 text-center">
-        <div class="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-gray-100 dark:bg-dark-700">
+        <div class="mx-auto mb-4 flex h-12 w-12 items-center justify-center panel-section">
           <Icon name="shield" size="lg" class="text-gray-400" />
         </div>
         <h4 class="mb-1 text-sm font-medium text-gray-900 dark:text-white">
@@ -34,7 +34,7 @@
         </p>
       </div>
 
-      <div v-else class="max-h-96 overflow-auto rounded-lg border border-gray-200 dark:border-dark-600">
+      <div v-else class="max-h-96 overflow-auto panel-section">
         <KumoTable class="min-w-full divide-y divide-gray-200 dark:divide-dark-700">
           <KumoTableHeader class="sticky top-0 bg-gray-50 dark:bg-dark-700">
             <KumoTableRow>
@@ -62,7 +62,7 @@
             </KumoTableRow>
           </KumoTableHeader>
           <KumoTableBody class="divide-y divide-gray-200 bg-white dark:divide-dark-700 dark:bg-dark-800">
-            <KumoTableRow v-for="rule in rules" :key="rule.id" class="hover:bg-gray-50 dark:hover:bg-dark-700">
+            <KumoTableRow v-for="rule in rules" :key="rule.id" class="hover:bg-[var(--brand-hover)]">
               <KumoTableCell class="whitespace-nowrap px-3 py-2">
                 <span class="inline-flex h-5 w-5 items-center justify-center rounded bg-gray-100 text-xs font-medium text-gray-700 dark:bg-dark-600 dark:text-gray-300">
                   {{ rule.priority }}
@@ -238,7 +238,7 @@
         </div>
 
         <!-- Match Conditions -->
-        <div class="rounded-lg border border-gray-200 p-3 dark:border-dark-600">
+        <div class="p-3 panel-section">
           <h4 class="mb-2 text-sm font-medium text-gray-900 dark:text-white">
             {{ t('admin.errorPassthrough.form.matchConditions') }}
           </h4>
@@ -297,7 +297,7 @@
                   type="checkbox"
                   :value="platform.value"
                   v-model="form.platforms"
-                  class="h-3.5 w-3.5 rounded border-gray-300 text-primary-600 focus:ring-primary-500"
+                  class="h-3.5 w-3.5 rounded border-[var(--brand-line)] text-primary-600 focus:ring-primary-500"
                 />
                 <span class="text-xs text-gray-700 dark:text-gray-300">{{ platform.label }}</span>
               </KumoLabel>
@@ -307,7 +307,7 @@
         </div>
 
         <!-- Response Behavior -->
-        <div class="rounded-lg border border-gray-200 p-3 dark:border-dark-600">
+        <div class="p-3 panel-section">
           <h4 class="mb-2 text-sm font-medium text-gray-900 dark:text-white">
             {{ t('admin.errorPassthrough.form.responseBehavior') }}
           </h4>
@@ -318,7 +318,7 @@
                 <KumoCheckbox
                   type="checkbox"
                   v-model="form.passthrough_code"
-                  class="h-3.5 w-3.5 rounded border-gray-300 text-primary-600 focus:ring-primary-500"
+                  class="h-3.5 w-3.5 rounded border-[var(--brand-line)] text-primary-600 focus:ring-primary-500"
                 />
                 <span class="text-xs font-medium text-gray-700 dark:text-gray-300">
                   {{ t('admin.errorPassthrough.form.passthroughCode') }}
@@ -341,7 +341,7 @@
                 <KumoCheckbox
                   type="checkbox"
                   v-model="form.passthrough_body"
-                  class="h-3.5 w-3.5 rounded border-gray-300 text-primary-600 focus:ring-primary-500"
+                  class="h-3.5 w-3.5 rounded border-[var(--brand-line)] text-primary-600 focus:ring-primary-500"
                 />
                 <span class="text-xs font-medium text-gray-700 dark:text-gray-300">
                   {{ t('admin.errorPassthrough.form.passthroughBody') }}
@@ -365,7 +365,7 @@
           <KumoCheckbox
             type="checkbox"
             v-model="form.skip_monitoring"
-            class="h-3.5 w-3.5 rounded border-gray-300 text-yellow-600 focus:ring-yellow-500"
+            class="h-3.5 w-3.5 rounded border-[var(--brand-line)] text-yellow-600 focus:ring-yellow-500"
           />
           <span class="text-xs font-medium text-gray-700 dark:text-gray-300">
             {{ t('admin.errorPassthrough.form.skipMonitoring') }}
@@ -378,7 +378,7 @@
           <KumoCheckbox
             type="checkbox"
             v-model="form.enabled"
-            class="h-3.5 w-3.5 rounded border-gray-300 text-primary-600 focus:ring-primary-500"
+            class="h-3.5 w-3.5 rounded border-[var(--brand-line)] text-primary-600 focus:ring-primary-500"
           />
           <span class="text-xs font-medium text-gray-700 dark:text-gray-300">
             {{ t('admin.errorPassthrough.form.enabled') }}

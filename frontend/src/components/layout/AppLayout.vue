@@ -15,6 +15,9 @@
 
       <!-- Main Content -->
       <main id="main-content" tabindex="-1" class="platform-content min-w-0">
+        <PageHeader v-if="!hidePageHeader" :title="title" :description="description">
+          <template v-if="$slots.actions" #actions><slot name="actions" /></template>
+        </PageHeader>
         <slot />
       </main>
     </div>
@@ -31,6 +34,11 @@ import { useOnboardingTour } from '@/composables/useOnboardingTour'
 import { useOnboardingStore } from '@/stores/onboarding'
 import AppSidebar from './AppSidebar.vue'
 import AppHeader from './AppHeader.vue'
+import PageHeader from './PageHeader.vue'
+import { usePageHeading } from '@/composables/usePageHeading'
+
+defineProps<{ hidePageHeader?: boolean }>()
+const { title, description } = usePageHeading()
 
 const { t } = useI18n()
 const appStore = useAppStore()

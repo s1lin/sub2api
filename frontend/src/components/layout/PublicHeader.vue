@@ -2,11 +2,11 @@
   <header class="public-header">
     <nav class="brand-container public-nav" :aria-label="t('storefront.title')">
       <router-link to="/" class="brand-wordmark" :title="appStore.siteName">
-        <img v-if="siteLogo" :src="siteLogo" alt="" width="32" height="32" />
+        <img :src="siteLogo || '/logo.svg'" alt="" width="32" height="32" />
         <span>{{ appStore.siteName }}</span>
       </router-link>
       <div class="public-nav-actions">
-        <a v-if="docUrl" :href="docUrl" target="_blank" rel="noopener noreferrer" class="public-docs brand-text-link">{{ t('home.viewDocs') }}</a>
+        <router-link to="/docs" class="public-docs brand-text-link">{{ t('home.docs') }}</router-link>
         <LocaleSwitcher text-only />
         <KumoButton type="button" class="brand-theme-toggle" :aria-label="t(isDark ? 'home.switchToLight' : 'home.switchToDark')" @click="toggleTheme">
           <Icon :name="isDark ? 'sun' : 'moon'" size="md" />
@@ -36,6 +36,5 @@ const appStore = useAppStore()
 const authStore = useAuthStore()
 const { isDark, toggleTheme } = useTheme()
 const siteLogo = computed(() => sanitizeUrl(appStore.siteLogo || '', { allowRelative: true, allowDataUrl: true }))
-const docUrl = computed(() => sanitizeUrl(appStore.docUrl || ''))
 const accountPath = computed(() => authStore.isAdmin ? '/admin/dashboard' : '/dashboard')
 </script>

@@ -79,7 +79,7 @@
         <!-- OpenCode Zen vs GO -->
         <div v-if="isCNApiKeyAccount && account.platform === 'opencode_go'">
           <KumoLabel class="input-label">{{ t('admin.accounts.cnProviders.accountMode.title') }}</KumoLabel>
-          <div class="mt-2 grid grid-cols-1 gap-3 sm:grid-cols-2">
+          <div class="mt-2 grid grid-cols-1 gap-3 sm:grid-cols-2 ui-segmented">
             <KumoButton
               type="button"
               @click="editOpenCodeAccountMode = 'zen'"
@@ -87,13 +87,13 @@
                 'flex items-center gap-3 rounded-lg border-2 p-3 text-left transition-all',
                 editOpenCodeAccountMode === 'zen'
                   ? 'border-amber-500 bg-amber-50 dark:bg-amber-900/20'
-                  : 'border-gray-200 hover:border-gray-400 dark:border-dark-600 dark:hover:border-gray-600'
+                  : 'border-[var(--brand-line)] hover:border-[var(--brand-line)] border-[var(--brand-line)] dark:hover:border-[var(--brand-line)]'
               ]"
             >
               <div
                 :class="[
-                  'flex h-8 w-8 shrink-0 items-center justify-center rounded-lg',
-                  editOpenCodeAccountMode === 'zen' ? 'bg-amber-500 text-white' : 'bg-gray-100 text-gray-500 dark:bg-dark-600 dark:text-gray-400'
+                  'flex h-8 w-8 shrink-0 items-center justify-center ',
+                  editOpenCodeAccountMode === 'zen' ? 'bg-amber-500 text-white' : ' text-gray-500  dark:text-gray-400'
                 ]"
               >
                 <Icon name="creditCard" size="sm" />
@@ -110,13 +110,13 @@
                 'flex items-center gap-3 rounded-lg border-2 p-3 text-left transition-all',
                 editOpenCodeAccountMode === 'go'
                   ? 'border-amber-500 bg-amber-50 dark:bg-amber-900/20'
-                  : 'border-gray-200 hover:border-gray-400 dark:border-dark-600 dark:hover:border-gray-600'
+                  : 'border-[var(--brand-line)] hover:border-[var(--brand-line)] border-[var(--brand-line)] dark:hover:border-[var(--brand-line)]'
               ]"
             >
               <div
                 :class="[
-                  'flex h-8 w-8 shrink-0 items-center justify-center rounded-lg',
-                  editOpenCodeAccountMode === 'go' ? 'bg-amber-500 text-white' : 'bg-gray-100 text-gray-500 dark:bg-dark-600 dark:text-gray-400'
+                  'flex h-8 w-8 shrink-0 items-center justify-center ',
+                  editOpenCodeAccountMode === 'go' ? 'bg-amber-500 text-white' : ' text-gray-500  dark:text-gray-400'
                 ]"
               >
                 <Icon name="bolt" size="sm" />
@@ -140,7 +140,7 @@
                 'rounded-lg border-2 px-3 py-1.5 text-xs transition-all',
                 editAccountMode === opt.value
                   ? 'border-primary-500 bg-primary-50 font-medium text-primary-700 dark:bg-primary-900/30 dark:text-primary-300'
-                  : 'border-gray-200 text-gray-700 hover:border-gray-400 dark:border-dark-600 dark:text-gray-300 dark:hover:border-gray-600'
+                  : 'border-[var(--brand-line)] text-gray-700 hover:border-[var(--brand-line)] border-[var(--brand-line)] dark:text-gray-300 dark:hover:border-[var(--brand-line)]'
               ]"
               @click="editAccountMode = opt.value"
             >
@@ -161,7 +161,7 @@
                 'rounded-lg border-2 px-3 py-1.5 text-xs transition-all',
                 editApiProtocol === opt.value
                   ? 'border-primary-500 bg-primary-50 font-medium text-primary-700 dark:bg-primary-900/30 dark:text-primary-300'
-                  : 'border-gray-200 text-gray-700 hover:border-gray-400 dark:border-dark-600 dark:text-gray-300 dark:hover:border-gray-600'
+                  : 'border-[var(--brand-line)] text-gray-700 hover:border-[var(--brand-line)] border-[var(--brand-line)] dark:text-gray-300 dark:hover:border-[var(--brand-line)]'
               ]"
               @click="editApiProtocol = opt.value"
             >
@@ -230,7 +230,7 @@
         </div>
 
         <!-- Model Restriction Section (不适用于 Antigravity) -->
-        <div v-if="account.platform !== 'antigravity'" class="border-t border-gray-200 pt-4 dark:border-dark-600">
+        <div v-if="account.platform !== 'antigravity'" class="border-t border-[var(--brand-line)] pt-4">
           <KumoLabel class="input-label">{{ t('admin.accounts.modelRestriction') }}</KumoLabel>
 
           <div
@@ -244,7 +244,7 @@
 
           <template v-else>
             <!-- Mode Toggle -->
-            <div class="mb-4 flex gap-2">
+            <div class="mb-4 flex gap-2 ui-segmented">
               <KumoButton
                 type="button"
                 @click="modelRestrictionMode = 'whitelist'"
@@ -252,7 +252,7 @@
                   'flex-1 rounded-lg px-4 py-2 text-sm font-medium transition-all',
                   modelRestrictionMode === 'whitelist'
                     ? 'bg-primary-100 text-primary-700 dark:bg-primary-900/30 dark:text-primary-400'
-                    : 'bg-gray-100 text-gray-600 hover:bg-gray-200 dark:bg-dark-600 dark:text-gray-400 dark:hover:bg-dark-500'
+                    : 'bg-gray-100 text-gray-600 hover:bg-[var(--brand-hover)] dark:bg-dark-600 dark:text-gray-400 hover:'
                 ]"
               >
                 <svg
@@ -277,7 +277,7 @@
                   'flex-1 rounded-lg px-4 py-2 text-sm font-medium transition-all',
                   modelRestrictionMode === 'mapping'
                     ? 'bg-purple-100 text-purple-700 dark:bg-purple-900/30 dark:text-purple-400'
-                    : 'bg-gray-100 text-gray-600 hover:bg-gray-200 dark:bg-dark-600 dark:text-gray-400 dark:hover:bg-dark-500'
+                    : 'bg-gray-100 text-gray-600 hover:bg-[var(--brand-hover)] dark:bg-dark-600 dark:text-gray-400 hover:'
                 ]"
               >
                 <svg
@@ -381,7 +381,7 @@
             <KumoButton
               type="button"
               @click="addModelMapping"
-              class="mb-3 w-full rounded-lg border-2 border-dashed border-gray-300 px-4 py-2 text-gray-600 transition-colors hover:border-gray-400 hover:text-gray-700 dark:border-dark-500 dark:text-gray-400 dark:hover:border-dark-400 dark:hover:text-gray-300"
+              class="mb-3 w-full rounded-lg border-2 border-dashed border-[var(--brand-line)] px-4 py-2 text-gray-600 transition-colors hover:border-[var(--brand-line)] hover:text-gray-700 dark:text-gray-400 dark:hover:border-[var(--brand-line)] dark:hover:text-gray-300"
             >
               <svg
                 class="mr-1 inline h-4 w-4"
@@ -416,7 +416,7 @@
         </div>
 
         <!-- Pool Mode Section -->
-        <div class="border-t border-gray-200 pt-4 dark:border-dark-600">
+        <div class="border-t border-[var(--brand-line)] pt-4">
           <div class="mb-3 flex items-center justify-between">
             <div>
               <KumoLabel class="input-label mb-0">{{ t('admin.accounts.poolMode') }}</KumoLabel>
@@ -466,7 +466,7 @@
         </div>
 
         <!-- Custom Error Codes Section -->
-        <div class="border-t border-gray-200 pt-4 dark:border-dark-600">
+        <div class="border-t border-[var(--brand-line)] pt-4">
           <div class="mb-3 flex items-center justify-between">
             <div>
               <KumoLabel class="input-label mb-0">{{ t('admin.accounts.customErrorCodes') }}</KumoLabel>
@@ -496,7 +496,7 @@
                   'rounded-lg px-3 py-1.5 text-sm font-medium transition-colors',
                   selectedErrorCodes.includes(code.value)
                     ? 'bg-red-100 text-red-700 ring-1 ring-red-500 dark:bg-red-900/30 dark:text-red-400'
-                    : 'bg-gray-100 text-gray-600 hover:bg-gray-200 dark:bg-dark-600 dark:text-gray-400 dark:hover:bg-dark-500'
+                    : 'bg-gray-100 text-gray-600 hover:bg-[var(--brand-hover)] dark:bg-dark-600 dark:text-gray-400 hover:'
                 ]"
               >
                 {{ code.value }} {{ code.label }}
@@ -554,7 +554,7 @@
       <!-- Grok OAuth client-tool prompt cache opt-in -->
       <div
         v-if="account.platform === 'grok' && account.type === 'oauth'"
-        class="border-t border-gray-200 pt-4 dark:border-dark-600"
+        class="border-t border-[var(--brand-line)] pt-4"
       >
         <div class="flex items-center justify-between gap-4">
           <div class="min-w-0">
@@ -574,7 +574,7 @@
       <!-- Grok OAuth media generation eligibility override -->
       <div
         v-if="isGrokOAuthAccount"
-        class="border-t border-gray-200 pt-4 dark:border-dark-600"
+        class="border-t border-[var(--brand-line)] pt-4"
         data-testid="grok-media-eligibility-card"
       >
         <div class="space-y-3">
@@ -600,7 +600,7 @@
           <p v-else-if="grokMediaEligibilityError" class="text-xs text-red-600 dark:text-red-400">
             {{ grokMediaEligibilityError }}
           </p>
-          <div v-else-if="grokMediaEligibilityState" class="rounded-lg bg-gray-50 p-3 text-xs dark:bg-dark-700">
+          <div v-else-if="grokMediaEligibilityState" class="p-3 text-xs panel-section">
             <span class="font-medium">{{ t('admin.accounts.grokMediaEligibility.current') }}</span>
             <span class="ml-1" data-testid="grok-media-eligibility-status">
               {{ grokMediaEligibilityState.eligible ? t('admin.accounts.grokMediaEligibility.eligible') : t('admin.accounts.grokMediaEligibility.ineligible') }}
@@ -625,7 +625,7 @@
       <!-- Grok OAuth Custom Upstream URL (仅改写转发端点，OAuth 授权/刷新不受影响) -->
       <div
         v-if="account.platform === 'grok' && account.type === 'oauth'"
-        class="border-t border-gray-200 pt-4 dark:border-dark-600"
+        class="border-t border-[var(--brand-line)] pt-4"
       >
         <div class="mb-3 flex items-center justify-between">
           <div>
@@ -649,7 +649,7 @@
       </div>
 
       <!-- Header Override Section (eligible API-key platforms + grok OAuth) -->
-      <div v-if="headerOverrideCapable" class="border-t border-gray-200 pt-4 dark:border-dark-600">
+      <div v-if="headerOverrideCapable" class="border-t border-[var(--brand-line)] pt-4">
         <div class="mb-3 flex items-center justify-between">
           <div>
             <KumoLabel class="input-label mb-0">{{ t('admin.accounts.headerOverride.title') }}</KumoLabel>
@@ -678,7 +678,7 @@
       <!-- OpenAI/Grok OAuth Model Mapping (OAuth 类型没有 apikey 容器，需要独立的模型映射区域) -->
       <div
         v-if="(account.platform === 'openai' || account.platform === 'grok') && account.type === 'oauth'"
-        class="border-t border-gray-200 pt-4 dark:border-dark-600"
+        class="border-t border-[var(--brand-line)] pt-4"
       >
         <KumoLabel class="input-label">{{ t('admin.accounts.modelRestriction') }}</KumoLabel>
 
@@ -693,7 +693,7 @@
 
         <template v-else>
           <!-- Mode Toggle -->
-          <div class="mb-4 flex gap-2">
+          <div class="mb-4 flex gap-2 ui-segmented">
             <KumoButton
               type="button"
               @click="modelRestrictionMode = 'whitelist'"
@@ -701,7 +701,7 @@
                 'flex-1 rounded-lg px-4 py-2 text-sm font-medium transition-all',
                 modelRestrictionMode === 'whitelist'
                   ? 'bg-primary-100 text-primary-700 dark:bg-primary-900/30 dark:text-primary-400'
-                  : 'bg-gray-100 text-gray-600 hover:bg-gray-200 dark:bg-dark-600 dark:text-gray-400 dark:hover:bg-dark-500'
+                  : 'bg-gray-100 text-gray-600 hover:bg-[var(--brand-hover)] dark:bg-dark-600 dark:text-gray-400 hover:'
               ]"
             >
               {{ t('admin.accounts.modelWhitelist') }}
@@ -713,7 +713,7 @@
                 'flex-1 rounded-lg px-4 py-2 text-sm font-medium transition-all',
                 modelRestrictionMode === 'mapping'
                   ? 'bg-purple-100 text-purple-700 dark:bg-purple-900/30 dark:text-purple-400'
-                  : 'bg-gray-100 text-gray-600 hover:bg-gray-200 dark:bg-dark-600 dark:text-gray-400 dark:hover:bg-dark-500'
+                  : 'bg-gray-100 text-gray-600 hover:bg-[var(--brand-hover)] dark:bg-dark-600 dark:text-gray-400 hover:'
               ]"
             >
               {{ t('admin.accounts.modelMapping') }}
@@ -790,7 +790,7 @@
             <KumoButton
               type="button"
               @click="addModelMapping"
-              class="mb-3 w-full rounded-lg border-2 border-dashed border-gray-300 px-4 py-2 text-gray-600 transition-colors hover:border-gray-400 hover:text-gray-700 dark:border-dark-500 dark:text-gray-400 dark:hover:border-dark-400 dark:hover:text-gray-300"
+              class="mb-3 w-full rounded-lg border-2 border-dashed border-[var(--brand-line)] px-4 py-2 text-gray-600 transition-colors hover:border-[var(--brand-line)] hover:text-gray-700 dark:text-gray-400 dark:hover:border-[var(--brand-line)] dark:hover:text-gray-300"
             >
               + {{ t('admin.accounts.addMapping') }}
             </KumoButton>
@@ -875,11 +875,11 @@
         </div>
 
         <!-- Model Restriction Section for Service Account -->
-        <div class="border-t border-gray-200 pt-4 dark:border-dark-600">
+        <div class="border-t border-[var(--brand-line)] pt-4">
           <KumoLabel class="input-label">{{ t('admin.accounts.modelRestriction') }}</KumoLabel>
 
           <!-- Mode Toggle -->
-          <div class="mb-4 flex gap-2">
+          <div class="mb-4 flex gap-2 ui-segmented">
             <KumoButton
               type="button"
               @click="modelRestrictionMode = 'whitelist'"
@@ -887,7 +887,7 @@
                 'flex-1 rounded-lg px-4 py-2 text-sm font-medium transition-all',
                 modelRestrictionMode === 'whitelist'
                   ? 'bg-primary-100 text-primary-700 dark:bg-primary-900/30 dark:text-primary-400'
-                  : 'bg-gray-100 text-gray-600 hover:bg-gray-200 dark:bg-dark-600 dark:text-gray-400 dark:hover:bg-dark-500'
+                  : 'bg-gray-100 text-gray-600 hover:bg-[var(--brand-hover)] dark:bg-dark-600 dark:text-gray-400 hover:'
               ]"
             >
               <svg
@@ -912,7 +912,7 @@
                 'flex-1 rounded-lg px-4 py-2 text-sm font-medium transition-all',
                 modelRestrictionMode === 'mapping'
                   ? 'bg-purple-100 text-purple-700 dark:bg-purple-900/30 dark:text-purple-400'
-                  : 'bg-gray-100 text-gray-600 hover:bg-gray-200 dark:bg-dark-600 dark:text-gray-400 dark:hover:bg-dark-500'
+                  : 'bg-gray-100 text-gray-600 hover:bg-[var(--brand-hover)] dark:bg-dark-600 dark:text-gray-400 hover:'
               ]"
             >
               <svg
@@ -1016,7 +1016,7 @@
             <KumoButton
               type="button"
               @click="addModelMapping"
-              class="mb-3 w-full rounded-lg border-2 border-dashed border-gray-300 px-4 py-2 text-gray-600 transition-colors hover:border-gray-400 hover:text-gray-700 dark:border-dark-500 dark:text-gray-400 dark:hover:border-dark-400 dark:hover:text-gray-300"
+              class="mb-3 w-full rounded-lg border-2 border-dashed border-[var(--brand-line)] px-4 py-2 text-gray-600 transition-colors hover:border-[var(--brand-line)] hover:text-gray-700 dark:text-gray-400 dark:hover:border-[var(--brand-line)] dark:hover:text-gray-300"
             >
               <svg
                 class="mr-1 inline h-4 w-4"
@@ -1115,7 +1115,7 @@
             <KumoCheckbox
               v-model="editBedrockForceGlobal"
               type="checkbox"
-              class="rounded border-gray-300 text-primary-600 focus:ring-primary-500 dark:border-dark-500"
+              class="rounded border-[var(--brand-line)] text-primary-600 focus:ring-primary-500"
             />
             <span class="text-sm text-gray-700 dark:text-gray-300">{{ t('admin.accounts.bedrockForceGlobal') }}</span>
           </KumoLabel>
@@ -1123,11 +1123,11 @@
         </div>
 
         <!-- Model Restriction for Bedrock -->
-        <div class="border-t border-gray-200 pt-4 dark:border-dark-600">
+        <div class="border-t border-[var(--brand-line)] pt-4">
           <KumoLabel class="input-label">{{ t('admin.accounts.modelRestriction') }}</KumoLabel>
 
           <!-- Mode Toggle -->
-          <div class="mb-4 flex gap-2">
+          <div class="mb-4 flex gap-2 ui-segmented">
             <KumoButton
               type="button"
               @click="modelRestrictionMode = 'whitelist'"
@@ -1135,7 +1135,7 @@
                 'flex-1 rounded-lg px-4 py-2 text-sm font-medium transition-all',
                 modelRestrictionMode === 'whitelist'
                   ? 'bg-primary-100 text-primary-700 dark:bg-primary-900/30 dark:text-primary-400'
-                  : 'bg-gray-100 text-gray-600 hover:bg-gray-200 dark:bg-dark-600 dark:text-gray-400 dark:hover:bg-dark-500'
+                  : 'bg-gray-100 text-gray-600 hover:bg-[var(--brand-hover)] dark:bg-dark-600 dark:text-gray-400 hover:'
               ]"
             >
               {{ t('admin.accounts.modelWhitelist') }}
@@ -1147,7 +1147,7 @@
                 'flex-1 rounded-lg px-4 py-2 text-sm font-medium transition-all',
                 modelRestrictionMode === 'mapping'
                   ? 'bg-purple-100 text-purple-700 dark:bg-purple-900/30 dark:text-purple-400'
-                  : 'bg-gray-100 text-gray-600 hover:bg-gray-200 dark:bg-dark-600 dark:text-gray-400 dark:hover:bg-dark-500'
+                  : 'bg-gray-100 text-gray-600 hover:bg-[var(--brand-hover)] dark:bg-dark-600 dark:text-gray-400 hover:'
               ]"
             >
               {{ t('admin.accounts.modelMapping') }}
@@ -1192,7 +1192,7 @@
         </div>
 
         <!-- Pool Mode Section for Bedrock -->
-        <div class="border-t border-gray-200 pt-4 dark:border-dark-600">
+        <div class="border-t border-[var(--brand-line)] pt-4">
           <div class="mb-3 flex items-center justify-between">
             <div>
               <KumoLabel class="input-label mb-0">{{ t('admin.accounts.poolMode') }}</KumoLabel>
@@ -1244,7 +1244,7 @@
 
       <div
         v-if="account.platform === 'antigravity' && account.type === 'oauth'"
-        class="border-t border-gray-200 pt-4 dark:border-dark-600"
+        class="border-t border-[var(--brand-line)] pt-4"
       >
         <KumoLabel class="input-label">{{ t('admin.accounts.antigravityProjectIdLabel') }}</KumoLabel>
         <KumoInput
@@ -1259,7 +1259,7 @@
 
       <!-- Antigravity model restriction (applies to all antigravity types) -->
       <!-- Antigravity 只支持模型映射模式，不支持白名单模式 -->
-      <div v-if="account.platform === 'antigravity'" class="border-t border-gray-200 pt-4 dark:border-dark-600">
+      <div v-if="account.platform === 'antigravity'" class="border-t border-[var(--brand-line)] pt-4">
         <KumoLabel class="input-label">{{ t('admin.accounts.modelRestriction') }}</KumoLabel>
 
         <!-- Mapping Mode Only (no toggle for Antigravity) -->
@@ -1336,7 +1336,7 @@
           <KumoButton
             type="button"
             @click="addAntigravityModelMapping"
-            class="mb-3 w-full rounded-lg border-2 border-dashed border-gray-300 px-4 py-2 text-gray-600 transition-colors hover:border-gray-400 hover:text-gray-700 dark:border-dark-500 dark:text-gray-400 dark:hover:border-dark-400 dark:hover:text-gray-300"
+            class="mb-3 w-full rounded-lg border-2 border-dashed border-[var(--brand-line)] px-4 py-2 text-gray-600 transition-colors hover:border-[var(--brand-line)] hover:text-gray-700 dark:text-gray-400 dark:hover:border-[var(--brand-line)] dark:hover:text-gray-300"
           >
             <svg class="mr-1 inline h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
@@ -1359,7 +1359,7 @@
       </div>
 
       <!-- Temp Unschedulable Rules -->
-      <div class="border-t border-gray-200 pt-4 dark:border-dark-600 space-y-4">
+      <div class="border-t border-[var(--brand-line)] pt-4 space-y-4">
         <div class="mb-3 flex items-center justify-between">
           <div>
             <KumoLabel class="input-label mb-0">{{ t('admin.accounts.tempUnschedulable.title') }}</KumoLabel>
@@ -1384,7 +1384,7 @@
               :key="preset.label"
               type="button"
               @click="addTempUnschedRule(preset.rule)"
-              class="rounded-lg bg-gray-100 px-3 py-1.5 text-xs font-medium text-gray-600 transition-colors hover:bg-gray-200 dark:bg-dark-600 dark:text-gray-300 dark:hover:bg-dark-500"
+              class="rounded-lg bg-gray-100 px-3 py-1.5 text-xs font-medium text-gray-600 transition-colors hover:bg-[var(--brand-hover)] dark:bg-dark-600 dark:text-gray-300"
             >
               + {{ preset.label }}
             </KumoButton>
@@ -1394,7 +1394,7 @@
             <div
               v-for="(rule, index) in tempUnschedRules"
               :key="getTempUnschedRuleKey(rule)"
-              class="rounded-lg border border-gray-200 p-3 dark:border-dark-600"
+              class="p-3 panel-section"
             >
               <div class="mb-2 flex items-center justify-between">
                 <span class="text-xs font-medium text-gray-500 dark:text-gray-400">
@@ -1477,7 +1477,7 @@
           <KumoButton
             type="button"
             @click="addTempUnschedRule()"
-            class="w-full rounded-lg border-2 border-dashed border-gray-300 px-4 py-2 text-sm text-gray-600 transition-colors hover:border-gray-400 hover:text-gray-700 dark:border-dark-500 dark:text-gray-400 dark:hover:border-dark-400 dark:hover:text-gray-300"
+            class="w-full rounded-lg border-2 border-dashed border-[var(--brand-line)] px-4 py-2 text-sm text-gray-600 transition-colors hover:border-[var(--brand-line)] hover:text-gray-700 dark:text-gray-400 dark:hover:border-[var(--brand-line)] dark:hover:text-gray-300"
           >
             <svg
               class="mr-1 inline h-4 w-4"
@@ -1495,7 +1495,7 @@
 
       <div
         v-if="supportsAccountSchedulingThresholdOverride"
-        class="border-t border-gray-200 pt-4 dark:border-dark-600"
+        class="border-t border-[var(--brand-line)] pt-4"
         data-testid="account-scheduling-threshold-section"
       >
         <div class="mb-3 flex items-center justify-between">
@@ -1509,7 +1509,7 @@
             v-model="accountSchedulingThresholdOverrideEnabled"
             data-testid="account-scheduling-threshold-override-enabled"
             type="checkbox"
-            class="h-4 w-4 rounded border-gray-300 text-primary-600 focus:ring-primary-500"
+            class="h-4 w-4 rounded border-[var(--brand-line)] text-primary-600 focus:ring-primary-500"
           />
         </div>
         <div v-if="accountSchedulingThresholdOverrideEnabled">
@@ -1529,7 +1529,7 @@
       <!-- Intercept Warmup Requests (Anthropic/Antigravity) -->
       <div
         v-if="account?.platform === 'anthropic' || account?.platform === 'antigravity'"
-        class="border-t border-gray-200 pt-4 dark:border-dark-600"
+        class="border-t border-[var(--brand-line)] pt-4"
       >
         <div class="flex items-center justify-between">
           <div>
@@ -1623,7 +1623,7 @@
           </div>
         </div>
       </div>
-      <div class="border-t border-gray-200 pt-4 dark:border-dark-600">
+      <div class="border-t border-[var(--brand-line)] pt-4">
         <KumoLabel class="input-label">{{ t('admin.accounts.expiresAt') }}</KumoLabel>
         <KumoInput v-model="expiresAtInput" type="datetime-local" class="input" />
         <div class="mt-2 flex gap-2">
@@ -1643,7 +1643,7 @@
       <!-- OpenAI 自动透传开关（OAuth/API Key） -->
       <div
         v-if="account?.platform === 'openai' && (account?.type === 'oauth' || account?.type === 'setup-token' || account?.type === 'apikey')"
-        class="border-t border-gray-200 pt-4 dark:border-dark-600"
+        class="border-t border-[var(--brand-line)] pt-4"
       >
         <div class="flex items-center justify-between">
           <div>
@@ -1659,7 +1659,7 @@
       <!-- OpenAI Codex namespace 工具摊平（兼容开关，仅 OAuth） -->
       <div
         v-if="account?.platform === 'openai' && account?.type === 'oauth'"
-        class="border-t border-gray-200 pt-4 dark:border-dark-600"
+        class="border-t border-[var(--brand-line)] pt-4"
       >
         <div class="flex items-center justify-between">
           <div>
@@ -1675,11 +1675,11 @@
       <!-- OpenAI Codex hosted image_generation bridge policy -->
       <div
         v-if="account?.platform === 'openai' && (account?.type === 'oauth' || account?.type === 'setup-token' || account?.type === 'apikey')"
-        class="border-t border-gray-200 pt-4 dark:border-dark-600"
+        class="border-t border-[var(--brand-line)] pt-4"
       >
-        <div class="overflow-hidden rounded-lg border border-sky-100 bg-sky-50/60 shadow-sm dark:border-sky-900/50 dark:bg-sky-950/20">
+        <div class="overflow-hidden rounded-lg border border-sky-100 bg-sky-50/60 dark:border-sky-900/50 dark:bg-sky-950/20">
           <div class="flex items-start gap-3 px-4 py-3">
-            <div class="mt-0.5 flex h-9 w-9 shrink-0 items-center justify-center rounded-md bg-white text-sky-600 shadow-sm ring-1 ring-sky-100 dark:bg-dark-800 dark:text-sky-300 dark:ring-sky-900/60">
+            <div class="mt-0.5 flex h-9 w-9 shrink-0 items-center justify-center text-sky-600 dark:text-sky-300 panel-section">
               <Icon name="sparkles" size="sm" />
             </div>
             <div class="min-w-0 flex-1">
@@ -1709,7 +1709,7 @@
                   'group flex min-h-[62px] items-start gap-2 rounded-md border px-3 py-2 text-left transition-all',
                   codexImageToolMode === option.value
                     ? option.selectedCardClass
-                    : 'border-transparent bg-transparent text-slate-600 hover:border-gray-200 hover:bg-gray-50 dark:text-slate-300 dark:hover:border-dark-500 dark:hover:bg-dark-700'
+                    : 'border-transparent bg-transparent text-slate-600 hover:border-[var(--brand-line)] hover:bg-[var(--brand-hover)] dark:text-slate-300 dark:hover:border-[var(--brand-line)] hover:'
                 ]"
               >
                 <span
@@ -1717,7 +1717,7 @@
                     'mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full border transition-colors',
                     codexImageToolMode === option.value
                       ? option.selectedDotClass
-                      : 'border-gray-300 text-transparent group-hover:border-gray-400 dark:border-dark-500'
+                      : 'border-[var(--brand-line)] text-transparent group-hover:border-[var(--brand-line)] border-[var(--brand-line)]'
                   ]"
                 >
                   <Icon name="check" size="xs" :stroke-width="2" />
@@ -1735,7 +1735,7 @@
       <!-- OpenAI WS Mode 三态（off/ctx_pool/passthrough） -->
       <div
         v-if="account?.platform === 'openai' && (account?.type === 'oauth' || account?.type === 'setup-token' || account?.type === 'apikey')"
-        class="border-t border-gray-200 pt-4 dark:border-dark-600"
+        class="border-t border-[var(--brand-line)] pt-4"
       >
         <div class="flex items-center justify-between">
           <div>
@@ -1756,7 +1756,7 @@
       <!-- OpenAI APIKey Responses API support mode -->
       <div
         v-if="account?.platform === 'openai' && account?.type === 'apikey'"
-        class="space-y-4 border-t border-gray-200 pt-4 dark:border-dark-600"
+        class="space-y-4 border-t border-[var(--brand-line)] pt-4"
       >
         <div class="flex items-center justify-between gap-4">
           <div>
@@ -1776,7 +1776,7 @@
         </div>
         <div
           v-if="openAITextGenerationCapabilityEnabled"
-          class="rounded-lg bg-gray-50 px-3 py-2 text-xs text-gray-600 dark:bg-dark-700 dark:text-gray-300"
+          class="px-3 py-2 text-xs text-gray-600 dark:text-gray-300 panel-section"
         >
           <span class="font-medium">{{ t(openAIResponsesStatusKey) }}</span>
         </div>
@@ -1793,11 +1793,11 @@
             <KumoLabel
               v-for="option in openAIEndpointCapabilityOptions"
               :key="option.value"
-              class="flex cursor-pointer items-center gap-2 rounded-lg border border-gray-200 px-3 py-2 text-sm dark:border-dark-600"
+              class="flex cursor-pointer items-center gap-2 rounded-lg border border-[var(--brand-line)] px-3 py-2 text-sm"
             >
               <KumoCheckbox
                 type="checkbox"
-                class="rounded border-gray-300 text-primary-600 focus:ring-primary-500 dark:border-dark-500"
+                class="rounded border-[var(--brand-line)] text-primary-600 focus:ring-primary-500"
                 :data-testid="`openai-endpoint-capability-${option.value}`"
                 :checked="openAIEndpointCapabilities.includes(option.value)"
                 @change="toggleOpenAIEndpointCapability(option.value, $event)"
@@ -1812,7 +1812,7 @@
       <!-- OpenAI APIKey images: backfill b64_json from url -->
       <div
         v-if="account?.platform === 'openai' && account?.type === 'apikey'"
-        class="flex items-center justify-between gap-4 border-t border-gray-200 pt-4 dark:border-dark-600"
+        class="flex items-center justify-between gap-4 border-t border-[var(--brand-line)] pt-4"
       >
         <div>
           <KumoLabel class="input-label mb-0">{{ t('admin.accounts.openai.imagesUrlToB64Json') }}</KumoLabel>
@@ -1829,7 +1829,7 @@
 
       <div
         v-if="account?.type === 'apikey'"
-        class="flex items-center justify-between gap-4 border-t border-gray-200 pt-4 dark:border-dark-600"
+        class="flex items-center justify-between gap-4 border-t border-[var(--brand-line)] pt-4"
       >
         <div>
           <KumoLabel class="input-label mb-0">{{ t('admin.accounts.upstreamBilling.autoProbe') }}</KumoLabel>
@@ -1853,7 +1853,7 @@
 
       <section
         v-if="account?.opencode_go_usage?.eligible"
-        class="space-y-4 border-t border-gray-200 pt-4 dark:border-dark-600"
+        class="space-y-4 border-t border-[var(--brand-line)] pt-4"
         data-testid="opencode-go-usage-settings"
       >
         <div class="flex items-start justify-between gap-4">
@@ -1881,7 +1881,7 @@
         <template v-else>
           <div
             v-if="opencodeGoSnapshot"
-            class="border-y border-gray-100 py-3 dark:border-dark-700"
+            class="border-y border-[var(--brand-line)] py-3"
             data-testid="opencode-go-usage-details"
           >
             <div class="grid grid-cols-[minmax(4rem,auto)_minmax(0,1fr)] gap-x-3 gap-y-1.5 text-xs">
@@ -1898,7 +1898,7 @@
             </div>
             <p
               v-if="opencodeGoSnapshot.last_error"
-              class="mt-2 break-words border-t border-gray-100 pt-2 text-xs text-amber-700 dark:border-dark-700 dark:text-amber-300"
+              class="mt-2 break-words border-t border-[var(--brand-line)] pt-2 text-xs text-amber-700 dark:text-amber-300"
             >
               {{ t(`admin.accounts.opencodeGo.errors.${opencodeGoSnapshot.last_error}`, opencodeGoSnapshot.last_error) }}
             </p>
@@ -1917,7 +1917,7 @@
             </KumoButton>
           </div>
 
-          <div class="flex items-center justify-between gap-4 border-t border-gray-100 pt-4 dark:border-dark-700">
+          <div class="flex items-center justify-between gap-4 border-t border-[var(--brand-line)] pt-4">
             <div>
               <KumoLabel class="text-sm font-medium text-gray-900 dark:text-white">
                 {{ t('admin.accounts.opencodeGo.autoRefresh') }}
@@ -1939,7 +1939,7 @@
       <!-- Anthropic API Key 自动透传开关 -->
       <div
         v-if="account?.platform === 'anthropic' && account?.type === 'apikey'"
-        class="border-t border-gray-200 pt-4 dark:border-dark-600"
+        class="border-t border-[var(--brand-line)] pt-4"
       >
         <div class="flex items-center justify-between">
           <div>
@@ -1954,7 +1954,7 @@
 
       <div
         v-if="account?.platform === 'anthropic' && account?.type === 'apikey'"
-        class="border-t border-gray-200 pt-4 dark:border-dark-600"
+        class="border-t border-[var(--brand-line)] pt-4"
       >
         <div class="flex items-center justify-between gap-4">
           <div>
@@ -1973,7 +1973,7 @@
       <!-- Anthropic API Key: Web Search Emulation (hidden when global disabled) -->
       <div
         v-if="account?.platform === 'anthropic' && account?.type === 'apikey' && webSearchGlobalEnabled"
-        class="border-t border-gray-200 pt-4 dark:border-dark-600"
+        class="border-t border-[var(--brand-line)] pt-4"
       >
         <div class="flex items-center justify-between">
           <div>
@@ -1993,7 +1993,7 @@
       <!-- 配额控制 (Anthropic apikey/bedrock: 配额限制 + 亲和) -->
       <div
         v-if="account?.platform === 'anthropic' && (account?.type === 'apikey' || account?.type === 'bedrock')"
-        class="border-t border-gray-200 pt-4 dark:border-dark-600 space-y-4"
+        class="border-t border-[var(--brand-line)] pt-4 space-y-4"
       >
         <div class="mb-3">
           <h3 class="input-label mb-0 text-base font-semibold">{{ t('admin.accounts.quotaControl.title') }}</h3>
@@ -2044,7 +2044,7 @@
       <!-- 配额控制 (非 Anthropic apikey/bedrock) -->
       <div
         v-else-if="account?.type === 'apikey' || account?.type === 'bedrock'"
-        class="border-t border-gray-200 pt-4 dark:border-dark-600 space-y-4"
+        class="border-t border-[var(--brand-line)] pt-4 space-y-4"
       >
         <div class="mb-3">
           <h3 class="input-label mb-0 text-base font-semibold">{{ t('admin.accounts.quotaControl.title') }}</h3>
@@ -2096,7 +2096,7 @@
       <!-- OpenAI API 长上下文计费开关 -->
       <div
         v-if="account?.platform === 'openai' && !isSparkShadow && !hideAccountLongContextBilling && (account?.type === 'oauth' || account?.type === 'setup-token' || account?.type === 'apikey')"
-        class="border-t border-gray-200 pt-4 dark:border-dark-600"
+        class="border-t border-[var(--brand-line)] pt-4"
       >
         <div class="flex items-center justify-between gap-4">
           <div>
@@ -2115,7 +2115,7 @@
 
       <div
         v-if="account?.platform === 'openai' && (account?.type === 'oauth' || account?.type === 'setup-token')"
-        class="border-t border-gray-200 pt-4 dark:border-dark-600"
+        class="border-t border-[var(--brand-line)] pt-4"
       >
         <div class="flex items-center justify-between">
           <div>
@@ -2128,7 +2128,7 @@
         </div>
         <div
           v-if="codexCLIOnlyEnabled"
-          class="mt-4 flex items-center justify-between border-l-2 border-gray-200 pl-4 dark:border-dark-600"
+          class="mt-4 flex items-center justify-between border-l-2 border-[var(--brand-line)] pl-4"
         >
           <div>
             <KumoLabel class="input-label mb-0">{{ t('admin.accounts.openai.codexCLIOnlyAppServer') }}</KumoLabel>
@@ -2143,7 +2143,7 @@
       <!-- Codex 指纹收敛模式（仅 OpenAI OAuth） -->
       <div
         v-if="account?.platform === 'openai' && account?.type === 'oauth'"
-        class="border-t border-gray-200 pt-4 dark:border-dark-600"
+        class="border-t border-[var(--brand-line)] pt-4"
       >
         <div class="flex items-center justify-between gap-4">
           <div class="min-w-0">
@@ -2161,7 +2161,7 @@
       <!-- OpenAI 订阅档位手动覆盖（Plus/Pro/Free），仅 OAuth 非影子账号 -->
       <div
         v-if="account?.platform === 'openai' && account?.type === 'oauth' && !isSparkShadow"
-        class="border-t border-gray-200 pt-4 dark:border-dark-600"
+        class="border-t border-[var(--brand-line)] pt-4"
       >
         <div class="flex items-center justify-between gap-4">
           <div class="min-w-0">
@@ -2178,7 +2178,7 @@
 
       <div
         v-if="account?.platform === 'openai' && (account?.type === 'oauth' || account?.type === 'setup-token' || account?.type === 'apikey')"
-        class="border-t border-gray-200 pt-4 dark:border-dark-600 space-y-4"
+        class="border-t border-[var(--brand-line)] pt-4 space-y-4"
       >
         <div class="flex items-center justify-between">
           <div>
@@ -2191,7 +2191,7 @@
             <Select v-model="openAICompactMode" :options="openAICompactModeOptions" />
           </div>
         </div>
-        <div class="rounded-lg bg-gray-50 px-3 py-2 text-xs text-gray-600 dark:bg-dark-700 dark:text-gray-300">
+        <div class="px-3 py-2 text-xs text-gray-600 dark:text-gray-300 panel-section">
           <span class="font-medium">{{ t(openAICompactStatusKey) }}</span>
           <span
             v-if="account?.extra?.openai_compact_checked_at"
@@ -2250,7 +2250,7 @@
 
       <div
         v-if="account?.platform === 'openai'"
-        class="border-t border-gray-200 pt-4 dark:border-dark-600 space-y-4"
+        class="border-t border-[var(--brand-line)] pt-4 space-y-4"
       >
         <div class="space-y-2">
           <div class="flex items-center justify-between">
@@ -2298,7 +2298,7 @@
 
       <div
         v-if="account?.platform === 'openai' && account?.type === 'oauth' && !isSparkShadow"
-        class="space-y-4 border-t border-gray-200 pt-4 dark:border-dark-600"
+        class="space-y-4 border-t border-[var(--brand-line)] pt-4"
         data-testid="auto-reset-credit-settings"
       >
         <div class="flex items-center justify-between gap-4">
@@ -2344,7 +2344,7 @@
       <!-- 配额控制 (Anthropic OAuth/SetupToken: 亲和 + 窗口费用 + 会话 + RPM 等) -->
       <div
         v-if="account?.platform === 'anthropic' && (account?.type === 'oauth' || account?.type === 'setup-token')"
-        class="border-t border-gray-200 pt-4 dark:border-dark-600 space-y-4"
+        class="border-t border-[var(--brand-line)] pt-4 space-y-4"
       >
         <div class="mb-3">
           <h3 class="input-label mb-0 text-base font-semibold">{{ t('admin.accounts.quotaControl.title') }}</h3>
@@ -2354,7 +2354,7 @@
         </div>
 
         <!-- Window Cost Limit -->
-        <div class="rounded-lg border border-gray-200 p-4 dark:border-dark-600">
+        <div class="p-4 panel-section">
           <div class="mb-3 flex items-center justify-between">
             <div>
               <KumoLabel class="input-label mb-0">{{ t('admin.accounts.quotaControl.windowCost.label') }}</KumoLabel>
@@ -2400,7 +2400,7 @@
         </div>
 
         <!-- Session Limit -->
-        <div class="rounded-lg border border-gray-200 p-4 dark:border-dark-600">
+        <div class="p-4 panel-section">
           <div class="mb-3 flex items-center justify-between">
             <div>
               <KumoLabel class="input-label mb-0">{{ t('admin.accounts.quotaControl.sessionLimit.label') }}</KumoLabel>
@@ -2443,7 +2443,7 @@
         </div>
 
         <!-- RPM Limit -->
-        <div class="rounded-lg border border-gray-200 p-4 dark:border-dark-600">
+        <div class="p-4 panel-section">
           <div class="mb-3 flex items-center justify-between">
             <div>
               <KumoLabel class="input-label mb-0">{{ t('admin.accounts.quotaControl.rpmLimit.label') }}</KumoLabel>
@@ -2471,7 +2471,7 @@
 
             <div>
               <KumoLabel class="input-label">{{ t('admin.accounts.quotaControl.rpmLimit.strategy') }}</KumoLabel>
-              <div class="flex gap-2">
+              <div class="flex gap-2 ui-segmented">
                 <KumoButton
                   type="button"
                   @click="rpmStrategy = 'tiered'"
@@ -2479,7 +2479,7 @@
                     'flex-1 rounded-lg px-3 py-2 text-sm font-medium transition-all',
                     rpmStrategy === 'tiered'
                       ? 'bg-primary-100 text-primary-700 dark:bg-primary-900/30 dark:text-primary-400'
-                      : 'bg-gray-100 text-gray-600 hover:bg-gray-200 dark:bg-dark-600 dark:text-gray-400 dark:hover:bg-dark-500'
+                      : 'bg-gray-100 text-gray-600 hover:bg-[var(--brand-hover)] dark:bg-dark-600 dark:text-gray-400 hover:'
                   ]"
                 >
                   <div class="text-center">
@@ -2494,7 +2494,7 @@
                     'flex-1 rounded-lg px-3 py-2 text-sm font-medium transition-all',
                     rpmStrategy === 'sticky_exempt'
                       ? 'bg-primary-100 text-primary-700 dark:bg-primary-900/30 dark:text-primary-400'
-                      : 'bg-gray-100 text-gray-600 hover:bg-gray-200 dark:bg-dark-600 dark:text-gray-400 dark:hover:bg-dark-500'
+                      : 'bg-gray-100 text-gray-600 hover:bg-[var(--brand-hover)] dark:bg-dark-600 dark:text-gray-400 hover:'
                   ]"
                 >
                   <div class="text-center">
@@ -2533,7 +2533,7 @@
                   'px-3 py-1.5 text-sm rounded-md border transition-colors',
                   userMsgQueueMode === opt.value
                     ? 'bg-primary-600 text-white border-primary-600'
-                    : 'bg-white dark:bg-dark-700 text-gray-700 dark:text-gray-300 border-gray-300 dark:border-dark-500 hover:bg-gray-50 dark:hover:bg-dark-600'
+                    : 'bg-white dark:bg-dark-700 text-gray-700 dark:text-gray-300 border-[var(--brand-line)] border-[var(--brand-line)] hover:bg-[var(--brand-hover)] hover:'
                 ]">
                 {{ opt.label }}
               </KumoButton>
@@ -2542,7 +2542,7 @@
         </div>
 
         <!-- TLS Fingerprint -->
-        <div class="rounded-lg border border-gray-200 p-4 dark:border-dark-600">
+        <div class="p-4 panel-section">
           <div class="flex items-center justify-between">
             <div>
               <KumoLabel class="input-label mb-0">{{ t('admin.accounts.quotaControl.tlsFingerprint.label') }}</KumoLabel>
@@ -2563,7 +2563,7 @@
         </div>
 
         <!-- Session ID Masking -->
-        <div class="rounded-lg border border-gray-200 p-4 dark:border-dark-600">
+        <div class="p-4 panel-section">
           <div class="flex items-center justify-between">
             <div>
               <KumoLabel class="input-label mb-0">{{ t('admin.accounts.quotaControl.sessionIdMasking.label') }}</KumoLabel>
@@ -2576,7 +2576,7 @@
         </div>
 
         <!-- Cache TTL Override -->
-        <div class="rounded-lg border border-gray-200 p-4 dark:border-dark-600">
+        <div class="p-4 panel-section">
           <div class="flex items-center justify-between">
             <div>
               <KumoLabel class="input-label mb-0">{{ t('admin.accounts.quotaControl.cacheTTLOverride.label') }}</KumoLabel>
@@ -2590,7 +2590,7 @@
             <KumoLabel class="input-label text-xs">{{ t('admin.accounts.quotaControl.cacheTTLOverride.target') }}</KumoLabel>
             <KumoNativeSelect
               v-model="cacheTTLOverrideTarget"
-              class="mt-1 block w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-sm shadow-sm focus:border-primary-500 focus:outline-none focus:ring-1 focus:ring-primary-500 dark:border-dark-500 dark:bg-dark-700 dark:text-white"
+              class="mt-1 block w-full rounded-md border border-[var(--brand-line)] bg-[var(--brand-hover)] px-3 py-2 text-sm focus:border-primary-500 focus:outline-none focus:ring-1 focus:ring-primary-500 dark:text-white"
             >
               <option value="5m">5m</option>
               <option value="1h">1h</option>
@@ -2602,7 +2602,7 @@
         </div>
 
         <!-- Custom Base URL Relay -->
-        <div class="rounded-lg border border-gray-200 p-4 dark:border-dark-600">
+        <div class="p-4 panel-section">
           <div class="flex items-center justify-between">
             <div>
               <KumoLabel class="input-label mb-0">{{ t('admin.accounts.quotaControl.customBaseUrl.label') }}</KumoLabel>
@@ -2623,7 +2623,7 @@
         </div>
       </div>
 
-      <div class="border-t border-gray-200 pt-4 dark:border-dark-600">
+      <div class="border-t border-[var(--brand-line)] pt-4">
         <div>
           <KumoLabel class="input-label">{{ t('common.status') }}</KumoLabel>
           <Select v-model="form.status" :options="statusOptions" />
@@ -2636,14 +2636,14 @@
               type="checkbox"
               v-model="mixedScheduling"
               disabled
-              class="h-4 w-4 cursor-not-allowed rounded border-gray-300 text-primary-500 focus:ring-primary-500 dark:border-dark-500"
+              class="h-4 w-4 cursor-not-allowed rounded border-[var(--brand-line)] text-primary-500 focus:ring-primary-500"
             />
             <span class="text-sm font-medium text-gray-700 dark:text-gray-300">
               {{ t('admin.accounts.mixedScheduling') }}
             </span>
           </KumoLabel>
           <KumoTooltip  :label="t('common.help')" class="w-72 text-xs max-w-[calc(100vw-2rem)]" trigger-class="h-auto p-0 "><template #trigger><span
-              class="inline-flex h-4 w-4 cursor-help items-center justify-center rounded-full bg-gray-200 text-xs text-gray-500 hover:bg-gray-300 dark:bg-dark-600 dark:text-gray-400 dark:hover:bg-dark-500"
+              class="inline-flex h-4 w-4 cursor-help items-center justify-center rounded-full bg-gray-200 text-xs text-gray-500 hover:bg-[var(--brand-hover)] dark:bg-dark-600 dark:text-gray-400"
             >
               ?
             </span><!-- Tooltip（向下显示避免被弹窗裁剪） --></template>{{ t('admin.accounts.mixedSchedulingTooltip') }}
@@ -2654,14 +2654,14 @@
             <KumoCheckbox
               type="checkbox"
               v-model="allowOverages"
-              class="h-4 w-4 rounded border-gray-300 text-primary-500 focus:ring-primary-500 dark:border-dark-500"
+              class="h-4 w-4 rounded border-[var(--brand-line)] text-primary-500 focus:ring-primary-500"
             />
             <span class="text-sm font-medium text-gray-700 dark:text-gray-300">
               {{ t('admin.accounts.allowOverages') }}
             </span>
           </KumoLabel>
           <KumoTooltip  :label="t('common.help')" class="w-72 text-xs max-w-[calc(100vw-2rem)]" trigger-class="h-auto p-0 "><template #trigger><span
-              class="inline-flex h-4 w-4 cursor-help items-center justify-center rounded-full bg-gray-200 text-xs text-gray-500 hover:bg-gray-300 dark:bg-dark-600 dark:text-gray-400 dark:hover:bg-dark-500"
+              class="inline-flex h-4 w-4 cursor-help items-center justify-center rounded-full bg-gray-200 text-xs text-gray-500 hover:bg-[var(--brand-hover)] dark:bg-dark-600 dark:text-gray-400"
             >
               ?
             </span></template>{{ t('admin.accounts.allowOveragesTooltip') }}
@@ -3383,28 +3383,28 @@ const codexImageToolOptions = computed<Array<{
     value: 'inherit',
     label: t('admin.accounts.openai.codexImageToolInherit'),
     description: t('admin.accounts.openai.codexImageToolInheritDesc'),
-    selectedCardClass: 'border-sky-300 bg-sky-50 text-sky-900 shadow-sm ring-1 ring-sky-200 dark:border-sky-700 dark:bg-sky-900/25 dark:text-sky-100 dark:ring-sky-800',
+    selectedCardClass: 'ui-selected border-[var(--brand-line)]',
     selectedDotClass: 'border-sky-500 bg-sky-500 text-white'
   },
   {
     value: 'enabled',
     label: t('admin.accounts.openai.codexImageToolEnabled'),
     description: t('admin.accounts.openai.codexImageToolEnabledDesc'),
-    selectedCardClass: 'border-emerald-300 bg-emerald-50 text-emerald-900 shadow-sm ring-1 ring-emerald-200 dark:border-emerald-700 dark:bg-emerald-900/25 dark:text-emerald-100 dark:ring-emerald-800',
+    selectedCardClass: 'ui-selected border-[var(--brand-line)]',
     selectedDotClass: 'border-emerald-500 bg-emerald-500 text-white'
   },
   {
     value: 'disabled',
     label: t('admin.accounts.openai.codexImageToolDisabled'),
     description: t('admin.accounts.openai.codexImageToolDisabledDesc'),
-    selectedCardClass: 'border-amber-300 bg-amber-50 text-amber-900 shadow-sm ring-1 ring-amber-200 dark:border-amber-700 dark:bg-amber-900/25 dark:text-amber-100 dark:ring-amber-800',
+    selectedCardClass: 'ui-selected border-[var(--brand-line)]',
     selectedDotClass: 'border-amber-500 bg-amber-500 text-white'
   },
   {
     value: 'block',
     label: t('admin.accounts.openai.codexImageToolBlock'),
     description: t('admin.accounts.openai.codexImageToolBlockDesc'),
-    selectedCardClass: 'border-rose-300 bg-rose-50 text-rose-900 shadow-sm ring-1 ring-rose-200 dark:border-rose-700 dark:bg-rose-900/25 dark:text-rose-100 dark:ring-rose-800',
+    selectedCardClass: 'ui-selected border-[var(--brand-line)]',
     selectedDotClass: 'border-rose-500 bg-rose-500 text-white'
   }
 ])

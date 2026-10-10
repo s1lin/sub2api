@@ -1,7 +1,7 @@
 <template>
-  <KumoSurface class="card">
+  <Panel flush class="card">
     <!-- Header -->
-    <div class="border-b border-gray-100 px-4 py-3 dark:border-dark-700">
+    <div class="border-b border-[var(--brand-line)] px-4 py-3">
       <div class="flex items-center justify-between">
         <div>
           <h2 class="text-base font-semibold text-gray-900 dark:text-white">
@@ -88,11 +88,12 @@
         </KumoButton>
       </div>
     </div>
-  </KumoSurface>
+  </Panel>
 </template>
 
 <script setup lang="ts">
-import { KumoButton, KumoLoader, KumoSurface } from '@/components/kumo'
+import Panel from '@/components/common/Panel.vue'
+import { KumoButton, KumoLoader } from '@/components/kumo'
 
 import { ref, watch } from 'vue'
 import { useI18n } from 'vue-i18n'

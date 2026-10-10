@@ -1,7 +1,7 @@
 <template>
     <div class="space-y-6">
       <!-- S3 Storage Config -->
-      <KumoSurface class="card p-6">
+      <Panel flush class="card p-6">
         <div class="mb-4 flex flex-wrap items-center justify-between gap-3">
           <div>
             <h3 class="text-base font-semibold text-gray-900 dark:text-white">
@@ -52,10 +52,10 @@
             {{ savingS3 ? t('common.loading') : t('common.save') }}
           </KumoButton>
         </div>
-      </KumoSurface>
+      </Panel>
 
       <!-- Async image object storage -->
-      <KumoSurface class="card p-6">
+      <Panel flush class="card p-6">
         <div class="mb-4 flex flex-wrap items-center justify-between gap-3">
           <div>
             <h3 class="text-base font-semibold text-gray-900 dark:text-white">
@@ -127,10 +127,10 @@
             {{ savingImageStorage ? t('common.loading') : t('common.save') }}
           </KumoButton>
         </div>
-      </KumoSurface>
+      </Panel>
 
       <!-- Schedule Config -->
-      <KumoSurface class="card p-6" data-testid="backup-schedule">
+      <Panel flush class="card p-6" data-testid="backup-schedule">
         <div class="mb-4">
           <h3 class="text-base font-semibold text-gray-900 dark:text-white">
             {{ t('admin.backup.schedule.title') }}
@@ -164,7 +164,7 @@
         <p class="mt-2 text-xs text-gray-500 dark:text-gray-400">{{ t('admin.backup.schedule.ordinaryHint') }}</p>
         <BackupArchiveSettings v-model="archiveForm" />
         <p v-if="scheduleValidationError" class="mt-3 text-sm text-red-600 dark:text-red-400" role="alert">{{ scheduleValidationError }}</p>
-        <div class="mt-4 rounded-lg bg-gray-50 p-3 text-sm text-gray-700 dark:bg-dark-800 dark:text-gray-300" aria-live="polite">
+        <div class="mt-4 p-3 text-sm text-gray-700 dark:text-gray-300 panel-section" aria-live="polite">
           <p class="font-medium">{{ t('admin.backup.schedule.preview') }}</p>
           <p>{{ retentionPreview }}</p>
         </div>
@@ -173,10 +173,10 @@
             {{ savingSchedule ? t('common.loading') : t('common.save') }}
           </KumoButton>
         </div>
-      </KumoSurface>
+      </Panel>
 
       <!-- Backup Operations -->
-      <KumoSurface class="card p-6">
+      <Panel flush class="card p-6">
         <div class="mb-4 flex flex-wrap items-center justify-between gap-3">
           <div>
             <h3 class="text-base font-semibold text-gray-900 dark:text-white">
@@ -203,7 +203,7 @@
         <div class="overflow-x-auto">
           <KumoTable class="w-full min-w-[800px] text-sm">
             <KumoTableHeader>
-              <KumoTableRow class="border-b border-gray-200 text-left text-xs uppercase tracking-wide text-gray-500 dark:border-dark-700 dark:text-gray-400">
+              <KumoTableRow class="border-b border-[var(--brand-line)] text-left text-xs uppercase tracking-wide text-gray-500 dark:text-gray-400">
                 <KumoTableHead class="py-2 pr-4">ID</KumoTableHead>
                 <KumoTableHead class="py-2 pr-4">{{ t('admin.backup.columns.status') }}</KumoTableHead>
                 <KumoTableHead class="py-2 pr-4">{{ t('admin.backup.columns.fileName') }}</KumoTableHead>
@@ -216,7 +216,7 @@
               </KumoTableRow>
             </KumoTableHeader>
             <KumoTableBody>
-              <KumoTableRow v-for="record in backups" :key="record.id" class="border-b border-gray-100 align-top dark:border-dark-800">
+              <KumoTableRow v-for="record in backups" :key="record.id" class="border-b border-[var(--brand-line)] align-top">
                 <KumoTableCell class="py-3 pr-4 font-mono text-xs">{{ record.id }}</KumoTableCell>
                 <KumoTableCell class="py-3 pr-4">
                   <span
@@ -282,7 +282,7 @@
             </KumoTableBody>
           </KumoTable>
         </div>
-      </KumoSurface>
+      </Panel>
     </div>
 
     <!-- Cloudflare R2 Setup Guide Modal -->
@@ -341,10 +341,10 @@
                 <span class="flex h-6 w-6 items-center justify-center rounded-full bg-primary-100 text-xs font-bold text-primary-700 dark:bg-primary-900/40 dark:text-primary-300">4</span>
                 {{ t('admin.backup.r2Guide.step4.title') }}
               </h3>
-              <div class="ml-8 overflow-hidden rounded-lg border border-gray-200 dark:border-dark-600">
+              <div class="ml-8 overflow-hidden panel-section">
                 <KumoTable class="w-full text-sm">
                   <KumoTableBody>
-                    <KumoTableRow v-for="(row, i) in r2ConfigRows" :key="i" class="border-b border-gray-100 dark:border-dark-700 last:border-0">
+                    <KumoTableRow v-for="(row, i) in r2ConfigRows" :key="i" class="border-b border-[var(--brand-line)] last:border-0">
                       <KumoTableCell class="whitespace-nowrap bg-gray-50 px-3 py-2 font-medium text-gray-700 dark:bg-dark-700 dark:text-gray-300">{{ row.field }}</KumoTableCell>
                       <KumoTableCell class="px-3 py-2 text-gray-600 dark:text-gray-400"><code class="text-xs">{{ row.value }}</code></KumoTableCell>
                     </KumoTableRow>
@@ -381,7 +381,7 @@
               <div
                 v-for="part in downloadParts"
                 :key="part.index"
-                class="flex items-center justify-between gap-3 rounded-lg border border-gray-200 px-3 py-2 dark:border-dark-600"
+                class="flex items-center justify-between gap-3 px-3 py-2 panel-section"
               >
                 <span class="text-sm text-gray-700 dark:text-gray-300">
                   {{ t('admin.backup.actions.partLabel', { index: part.index }) }}
@@ -402,7 +402,8 @@
 </template>
 
 <script setup lang="ts">
-import { KumoButton, KumoCheckbox, KumoDialog, KumoInput, KumoLabel, KumoSurface, KumoTable, KumoTableBody, KumoTableCell, KumoTableHead, KumoTableHeader, KumoTableRow } from '@/components/kumo'
+import Panel from '@/components/common/Panel.vue'
+import { KumoButton, KumoCheckbox, KumoDialog, KumoInput, KumoLabel, KumoTable, KumoTableBody, KumoTableCell, KumoTableHead, KumoTableHeader, KumoTableRow } from '@/components/kumo'
 
 import { computed, onBeforeUnmount, onMounted, ref } from 'vue'
 import { useI18n } from 'vue-i18n'

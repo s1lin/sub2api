@@ -2,7 +2,7 @@
   <!-- 用量页"用户排行"tab 内容：无卡片外观，依赖父级统一卡片；筛选/时间范围复用页面级筛选栏 -->
   <div>
     <!-- Toolbar -->
-    <div class="flex flex-wrap items-center justify-between gap-3 border-b border-gray-100 px-4 py-3 dark:border-dark-700/50 sm:px-6">
+    <div class="flex flex-wrap items-center justify-between gap-3 border-b border-[var(--brand-line)] px-4 py-3 sm:px-6">
       <p class="text-xs text-gray-400 dark:text-gray-500">{{ t('admin.usage.tokenRanking.subtitle') }}</p>
       <div class="flex items-center gap-3">
         <span v-if="!loading && items.length > 0" class="text-xs text-gray-400 dark:text-gray-500">
@@ -26,7 +26,7 @@
             <KumoTableHead
               v-for="col in sortableColumns"
               :key="col.key"
-              class="cursor-pointer select-none whitespace-nowrap px-4 py-3 text-right text-xs font-medium uppercase tracking-wider transition-colors hover:bg-gray-100 dark:hover:bg-dark-700"
+              class="cursor-pointer select-none whitespace-nowrap px-4 py-3 text-right text-xs font-medium uppercase tracking-wider transition-colors hover:bg-[var(--brand-hover)]"
               :class="sortBy === col.key ? 'text-primary-600 dark:text-primary-400' : 'text-gray-500 dark:text-dark-400'"
               @click="setSort(col.key)"
             >
@@ -50,7 +50,7 @@
             v-for="(item, index) in items"
             v-else
             :key="item.user_id"
-            class="cursor-pointer transition-colors hover:bg-gray-50 dark:hover:bg-dark-700/40"
+            class="cursor-pointer transition-colors hover:bg-[var(--brand-hover)]"
             :title="t('admin.usage.tokenRanking.rowHint')"
             @click="$emit('select-user', item.user_id, item.email)"
           >

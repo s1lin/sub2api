@@ -28,7 +28,7 @@
       </div>
 
       <!-- Order Info -->
-      <div class="rounded-lg bg-gray-50 p-3 dark:bg-dark-700">
+      <div class="p-3 panel-section">
         <div class="flex justify-between text-sm">
           <span class="text-gray-500 dark:text-gray-400">{{ t('payment.orders.orderId') }}</span>
           <span class="font-mono text-gray-900 dark:text-white">#{{ order?.id }}</span>
@@ -54,7 +54,7 @@
             id="deduct-balance"
             v-model="form.deduct_balance"
             type="checkbox"
-            class="h-4 w-4 rounded border-gray-300 text-primary-600 focus:ring-primary-500"
+            class="h-4 w-4 rounded border-[var(--brand-line)] text-primary-600 focus:ring-primary-500"
           />
           <KumoLabel for="deduct-balance" class="text-sm text-gray-700 dark:text-gray-300">
             {{ t('payment.admin.deductBalance') }}
@@ -64,11 +64,11 @@
 
         <!-- User Balance Info (when deduct_balance is checked) -->
         <div v-if="form.deduct_balance && userBalance != null" class="mt-3 grid grid-cols-2 gap-3">
-          <div class="rounded-lg bg-gray-50 p-3 text-sm dark:bg-dark-700">
+          <div class="p-3 text-sm panel-section">
             <div class="text-gray-500 dark:text-gray-400">{{ t('payment.admin.userBalance') }}</div>
             <div class="mt-1 font-semibold text-gray-900 dark:text-white">{{ creditedAmountSymbol }}{{ userBalance.toFixed(2) }}</div>
           </div>
-          <div class="rounded-lg bg-gray-50 p-3 text-sm dark:bg-dark-700">
+          <div class="p-3 text-sm panel-section">
             <div class="text-gray-500 dark:text-gray-400">{{ t('payment.admin.orderAmount') }}</div>
             <div class="mt-1 font-semibold text-gray-900 dark:text-white">{{ creditedAmountSymbol }}{{ order?.amount?.toFixed(2) }}</div>
           </div>
@@ -137,7 +137,7 @@
           id="force-refund"
           v-model="form.force"
           type="checkbox"
-          class="h-4 w-4 rounded border-gray-300 text-red-600 focus:ring-red-500"
+          class="h-4 w-4 rounded border-[var(--brand-line)] text-red-600 focus:ring-red-500"
         />
         <KumoLabel for="force-refund" class="text-sm font-medium text-red-600 dark:text-red-400">
           {{ t('payment.admin.forceRefund') }}

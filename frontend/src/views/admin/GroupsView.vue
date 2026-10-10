@@ -1,6 +1,56 @@
 <template>
-  <AppLayout>
+  <AppLayout hide-page-header>
     <TablePageLayout>
+      <template #actions>
+        <div
+            class="flex w-full flex-shrink-0 flex-wrap items-center justify-end gap-3 lg:w-auto"
+          >
+            <KumoButton
+              @click="loadGroups"
+              :disabled="loading"
+              class="btn btn-secondary"
+              :title="t('common.refresh')"
+            >
+              <Icon
+                name="refresh"
+                size="md"
+                :class="loading ? 'animate-spin' : ''"
+              />
+            </KumoButton>
+            <KumoPopoverRoot v-model="showColumnDropdown"><KumoPopoverTrigger
+                class="btn btn-secondary"
+                :aria-label="t('admin.groups.columnSettings')"
+              >
+                <Icon name="grid" size="md" class="mr-2" />
+                <span class="hidden md:inline">{{
+                  t("admin.groups.columnSettings")
+                }}</span>
+              </KumoPopoverTrigger>
+<KumoPopoverContent
+                class="max-h-80 w-48 overflow-y-auto rounded-lg border border-[var(--brand-line)] bg-white py-1 dark:bg-dark-800"
+              >
+                <KumoLabel v-for="col in toggleableColumns" :key="col.key" class="flex w-full cursor-pointer items-center gap-2 px-3 py-2 text-sm"><KumoCheckbox :aria-label="col.label" :checked="isColumnVisible(col.key)"   @change="toggleColumn(col.key)" /><span>{{ col.label }}</span></KumoLabel>
+              </KumoPopoverContent></KumoPopoverRoot>
+            <KumoButton
+              v-if="!authStore.isSimpleMode"
+              @click="openSortModal"
+              class="btn btn-secondary"
+              :title="t('admin.groups.sortOrder')"
+            >
+              <Icon name="arrowsUpDown" size="md" class="mr-2" />
+              {{ t("admin.groups.sortOrder") }}
+            </KumoButton>
+            <KumoButton
+              @click="openCreateModal"
+              class="btn btn-primary"
+              data-tour="groups-create-btn"
+            >
+              <Icon name="plus" size="md" class="mr-2" />
+              {{ t("admin.groups.createGroup") }}
+            </KumoButton>
+          </div>
+      </template>
+
       <template #filters>
         <div
           class="flex flex-col justify-between gap-4 lg:flex-row lg:items-start"
@@ -45,54 +95,7 @@
             />
           </div>
 
-          <!-- Right: actions -->
-          <div
-            class="flex w-full flex-shrink-0 flex-wrap items-center justify-end gap-3 lg:w-auto"
-          >
-            <KumoButton
-              @click="loadGroups"
-              :disabled="loading"
-              class="btn btn-secondary"
-              :title="t('common.refresh')"
-            >
-              <Icon
-                name="refresh"
-                size="md"
-                :class="loading ? 'animate-spin' : ''"
-              />
-            </KumoButton>
-            <KumoPopoverRoot v-model="showColumnDropdown"><KumoPopoverTrigger
-                class="btn btn-secondary"
-                :aria-label="t('admin.groups.columnSettings')"
-              >
-                <Icon name="grid" size="md" class="mr-2" />
-                <span class="hidden md:inline">{{
-                  t("admin.groups.columnSettings")
-                }}</span>
-              </KumoPopoverTrigger>
-<KumoPopoverContent
-                class="max-h-80 w-48 overflow-y-auto rounded-lg border border-gray-200 bg-white py-1 shadow-lg dark:border-dark-600 dark:bg-dark-800"
-              >
-                <KumoLabel v-for="col in toggleableColumns" :key="col.key" class="flex w-full cursor-pointer items-center gap-2 px-3 py-2 text-sm"><KumoCheckbox :aria-label="col.label" :checked="isColumnVisible(col.key)"   @change="toggleColumn(col.key)" /><span>{{ col.label }}</span></KumoLabel>
-              </KumoPopoverContent></KumoPopoverRoot>
-            <KumoButton
-              v-if="!authStore.isSimpleMode"
-              @click="openSortModal"
-              class="btn btn-secondary"
-              :title="t('admin.groups.sortOrder')"
-            >
-              <Icon name="arrowsUpDown" size="md" class="mr-2" />
-              {{ t("admin.groups.sortOrder") }}
-            </KumoButton>
-            <KumoButton
-              @click="openCreateModal"
-              class="btn btn-primary"
-              data-tour="groups-create-btn"
-            >
-              <Icon name="plus" size="md" class="mr-2" />
-              {{ t("admin.groups.createGroup") }}
-            </KumoButton>
-          </div>
+
         </div>
       </template>
 
@@ -365,7 +368,7 @@
             <div class="flex items-center gap-1">
               <KumoButton
                 @click="handleEdit(row)"
-                class="flex flex-col items-center gap-0.5 rounded-lg p-1.5 text-gray-500 transition-colors hover:bg-gray-100 hover:text-primary-600 dark:hover:bg-dark-700 dark:hover:text-primary-400"
+                class="flex flex-col items-center gap-0.5 rounded-lg p-1.5 text-gray-500 transition-colors hover:bg-[var(--brand-hover)] hover:text-primary-600 dark:hover:text-primary-400"
               >
                 <Icon name="edit" size="sm" />
                 <span class="text-xs">{{ t("common.edit") }}</span>
@@ -380,7 +383,7 @@
                 "
                 :disabled="duplicatingGroupIds.has(row.id)"
                 @click="handleDuplicate(row)"
-                class="flex flex-col items-center gap-0.5 rounded-lg p-1.5 text-gray-500 transition-colors hover:bg-gray-100 hover:text-primary-600 disabled:cursor-not-allowed disabled:opacity-50 dark:hover:bg-dark-700 dark:hover:text-primary-400"
+                class="flex flex-col items-center gap-0.5 rounded-lg p-1.5 text-gray-500 transition-colors hover:bg-[var(--brand-hover)] hover:text-primary-600 disabled:cursor-not-allowed disabled:opacity-50 dark:hover:text-primary-400"
               >
                 <Icon name="copy" size="sm" />
                 <span class="text-xs">
@@ -395,7 +398,7 @@
                 v-if="!authStore.isSimpleMode && row.platform === 'composite'"
                 data-testid="group-composite-routes"
                 @click="handleCompositeRoutes(row)"
-                class="flex flex-col items-center gap-0.5 rounded-lg p-1.5 text-gray-500 transition-colors hover:bg-gray-100 hover:text-cyan-600 dark:hover:bg-dark-700 dark:hover:text-cyan-400"
+                class="flex flex-col items-center gap-0.5 rounded-lg p-1.5 text-gray-500 transition-colors hover:bg-[var(--brand-hover)] hover:text-cyan-600 dark:hover:text-cyan-400"
               >
                 <Icon name="swap" size="sm" />
                 <span class="text-xs">{{
@@ -406,7 +409,7 @@
                 v-if="!authStore.isSimpleMode"
                 data-testid="group-rate-multipliers"
                 @click="handleRateMultipliers(row)"
-                class="flex flex-col items-center gap-0.5 rounded-lg p-1.5 text-gray-500 transition-colors hover:bg-gray-100 hover:text-purple-600 dark:hover:bg-dark-700 dark:hover:text-purple-400"
+                class="flex flex-col items-center gap-0.5 rounded-lg p-1.5 text-gray-500 transition-colors hover:bg-[var(--brand-hover)] hover:text-purple-600 dark:hover:text-purple-400"
               >
                 <Icon name="dollar" size="sm" />
                 <span class="text-xs">{{
@@ -417,7 +420,7 @@
                 v-if="!authStore.isSimpleMode"
                 data-testid="group-rpm-overrides"
                 @click="handleRPMOverrides(row)"
-                class="flex flex-col items-center gap-0.5 rounded-lg p-1.5 text-gray-500 transition-colors hover:bg-gray-100 hover:text-orange-600 dark:hover:bg-dark-700 dark:hover:text-orange-400"
+                class="flex flex-col items-center gap-0.5 rounded-lg p-1.5 text-gray-500 transition-colors hover:bg-[var(--brand-hover)] hover:text-orange-600 dark:hover:text-orange-400"
               >
                 <Icon name="bolt" size="sm" />
                 <span class="text-xs">{{
@@ -633,7 +636,7 @@
                     {{ t("admin.groups.exclusiveTooltip.title") }}
                   </p><p class="mb-2 text-xs leading-relaxed text-gray-600 dark:text-gray-300">
                     {{ t("admin.groups.exclusiveTooltip.description") }}
-                  </p><div class="rounded bg-gray-800 p-2 dark:bg-gray-700">
+                  </p><div class="rounded p-2 panel-section">
                     <p class="text-xs leading-relaxed text-gray-600 dark:text-gray-300">
                       <span
                         class="inline-flex items-center gap-1 text-primary-400"
@@ -732,11 +735,11 @@
           </div>
           <div
             v-if="createModelAllowlistState.enabled"
-            class="overflow-hidden rounded-lg border border-gray-200 bg-gray-50/50 dark:border-dark-600 dark:bg-dark-800/40"
+            class="overflow-hidden panel-section"
           >
             <div
               v-if="!createModelAllowlistLoading && createModelAllowlistState.items.length > 0"
-              class="flex items-center justify-between gap-2 border-b border-gray-200 bg-gray-50 px-3 py-2 text-xs dark:border-dark-600 dark:bg-dark-800"
+              class="flex items-center justify-between gap-2 border-b border-[var(--brand-line)] px-3 py-2 text-xs"
             >
               <span class="text-gray-500 dark:text-gray-400">
                 {{
@@ -756,7 +759,7 @@
                 </KumoButton>
                 <KumoButton
                   type="button"
-                  class="rounded px-2 py-1 font-medium text-gray-600 transition-colors hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-dark-700"
+                  class="rounded px-2 py-1 font-medium text-gray-600 transition-colors hover:bg-[var(--brand-hover)] dark:text-gray-300"
                   @click="invertModelAllowlistSelection(createModelAllowlistState)"
                 >
                   {{ t("admin.groups.modelAllowlist.invertSelection") }}
@@ -778,12 +781,12 @@
               <div
                 v-for="(item, index) in createModelAllowlistState.items"
                 :key="item.id"
-                class="flex items-center gap-2 rounded border border-gray-200 bg-white px-3 py-2 dark:border-dark-600 dark:bg-dark-800"
+                class="flex items-center gap-2 rounded px-3 py-2 panel-section"
               >
                 <KumoCheckbox
                   v-model="item.selected"
                   type="checkbox"
-                  class="h-4 w-4 rounded border-gray-300 text-primary-600 focus:ring-primary-500"
+                  class="h-4 w-4 rounded border-[var(--brand-line)] text-primary-600 focus:ring-primary-500"
                 />
                 <span class="min-w-0 flex-1 break-all text-sm text-gray-700 dark:text-gray-300">
                   {{ item.id }}
@@ -797,7 +800,7 @@
                 <KumoButton
                   type="button"
                   :disabled="index === 0"
-                  class="rounded p-1 text-gray-400 hover:bg-gray-100 hover:text-gray-700 disabled:opacity-40 dark:hover:bg-dark-600 dark:hover:text-gray-200"
+                  class="rounded p-1 text-gray-400 hover:bg-[var(--brand-hover)] hover:text-gray-700 disabled:opacity-40 dark:hover:text-gray-200"
                   @click="moveCreateModelAllowlistItem(index, index - 1)"
                 >
                   <Icon name="arrowUp" size="sm" />
@@ -805,20 +808,20 @@
                 <KumoButton
                   type="button"
                   :disabled="index === createModelAllowlistState.items.length - 1"
-                  class="rounded p-1 text-gray-400 hover:bg-gray-100 hover:text-gray-700 disabled:opacity-40 dark:hover:bg-dark-600 dark:hover:text-gray-200"
+                  class="rounded p-1 text-gray-400 hover:bg-[var(--brand-hover)] hover:text-gray-700 disabled:opacity-40 dark:hover:text-gray-200"
                   @click="moveCreateModelAllowlistItem(index, index + 1)"
                 >
                   <Icon name="arrowDown" size="sm" />
                 </KumoButton>
               </div>
             </div>
-            <div class="border-t border-gray-200 px-3 py-2 dark:border-dark-600">
+            <div class="border-t border-[var(--brand-line)] px-3 py-2">
               <div class="flex items-center gap-2">
                 <KumoInput
                   v-model="createAllowlistCustomEntry"
                   type="text"
                   :placeholder="t('admin.groups.modelAllowlist.customPlaceholder')"
-                  class="min-w-0 flex-1 rounded border border-gray-300 bg-white px-2 py-1.5 text-sm text-gray-700 focus:border-primary-500 focus:outline-none dark:border-dark-500 dark:bg-dark-700 dark:text-gray-200"
+                  class="min-w-0 flex-1 rounded border border-[var(--brand-line)] bg-white px-2 py-1.5 text-sm text-gray-700 focus:border-primary-500 focus:outline-none dark:bg-dark-700 dark:text-gray-200"
                   @keydown.enter.prevent="submitCreateAllowlistCustomEntry"
                 />
                 <KumoButton
@@ -857,7 +860,7 @@
               <KumoCheckbox
                 v-model="createForm.allow_image_generation"
                 type="checkbox"
-                class="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
+                class="rounded border-[var(--brand-line)] text-blue-600 focus:ring-blue-500"
               />
               {{ t(imagePricingI18nKey(createForm.platform, "allowImageGeneration")) }}
             </KumoLabel>
@@ -865,7 +868,7 @@
               <KumoCheckbox
                 v-model="createForm.image_rate_independent"
                 type="checkbox"
-                class="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
+                class="rounded border-[var(--brand-line)] text-blue-600 focus:ring-blue-500"
               />
               {{ t(imagePricingI18nKey(createForm.platform, "independentMultiplier")) }}
             </KumoLabel>
@@ -924,7 +927,7 @@
           <p class="mt-3 text-xs text-gray-500 dark:text-gray-400">
             {{ t(imagePricingI18nKey(createForm.platform, "modeHint")) }}
           </p>
-          <div class="mt-2 rounded-lg bg-gray-50 p-3 text-xs text-gray-700 dark:bg-gray-800 dark:text-gray-300">
+          <div class="mt-2 p-3 text-xs text-gray-700 dark:text-gray-300 panel-section">
             <div class="mb-1 font-medium">
               {{ t(imagePricingI18nKey(createForm.platform, "finalPricePreview")) }}
             </div>
@@ -937,14 +940,14 @@
               </div>
             </div>
           </div>
-          <div v-if="createForm.platform === 'gemini' && createForm.allow_image_generation" class="mt-4 border-t border-dashed border-gray-200 pt-4 dark:border-dark-700">
+          <div v-if="createForm.platform === 'gemini' && createForm.allow_image_generation" class="mt-4 border-t border-dashed border-[var(--brand-line)] pt-4">
             <KumoLabel
               class="flex items-center gap-2 text-sm font-medium text-gray-700 dark:text-gray-300"
             >
               <KumoCheckbox
                 v-model="createForm.allow_batch_image_generation"
                 type="checkbox"
-                class="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
+                class="rounded border-[var(--brand-line)] text-blue-600 focus:ring-blue-500"
               />
               {{ t("admin.groups.imagePricing.allowBatchImageGeneration") }}
             </KumoLabel>
@@ -985,7 +988,7 @@
           </div>
           <p
             v-else-if="createForm.platform !== 'gemini'"
-            class="mt-4 border-t border-dashed border-gray-200 pt-4 text-xs text-gray-500 dark:border-dark-700 dark:text-gray-400"
+            class="mt-4 border-t border-dashed border-[var(--brand-line)] pt-4 text-xs text-gray-500 dark:text-gray-400"
           >
             {{ t("admin.groups.imagePricing.batchGeminiOnlyHint") }}
           </p>
@@ -1009,7 +1012,7 @@
               <KumoCheckbox
                 v-model="createForm.video_rate_independent"
                 type="checkbox"
-                class="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
+                class="rounded border-[var(--brand-line)] text-blue-600 focus:ring-blue-500"
               />
               {{ t(videoPricingI18nKey("independentMultiplier")) }}
             </KumoLabel>
@@ -1066,7 +1069,7 @@
             </div>
           </div>
           <div
-            class="mt-4 border-t border-dashed border-gray-200 pt-4 dark:border-dark-700"
+            class="mt-4 border-t border-dashed border-[var(--brand-line)] pt-4"
             data-testid="create-grok-video-model-prices"
           >
             <p class="text-sm font-medium text-gray-700 dark:text-gray-300">
@@ -1107,7 +1110,7 @@
           <p class="mt-3 text-xs text-gray-500 dark:text-gray-400">
             {{ t(videoPricingI18nKey("modeHint")) }}
           </p>
-          <div class="mt-2 rounded-lg bg-gray-50 p-3 text-xs text-gray-700 dark:bg-gray-800 dark:text-gray-300">
+          <div class="mt-2 p-3 text-xs text-gray-700 dark:text-gray-300 panel-section">
             <div class="mb-1 font-medium">
               {{ t(videoPricingI18nKey("finalPricePreview")) }}
             </div>
@@ -1129,7 +1132,7 @@
               <KumoCheckbox
                 v-model="createForm.peak_rate_enabled"
                 type="checkbox"
-                class="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
+                class="rounded border-[var(--brand-line)] text-blue-600 focus:ring-blue-500"
               />
               <span>{{ t("admin.groups.peakRate.enable") }}</span>
             </KumoLabel>
@@ -1175,7 +1178,7 @@
             <KumoCheckbox
               v-model="createForm.profit_control_enabled"
               type="checkbox"
-              class="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
+              class="rounded border-[var(--brand-line)] text-blue-600 focus:ring-blue-500"
             />
             <span>{{ t("admin.groups.profitControl.enable") }}</span>
           </KumoLabel>
@@ -1241,7 +1244,7 @@
                 type="checkbox"
                 :checked="createForm.supported_model_scopes.includes('claude')"
                 @change="toggleCreateScope('claude')"
-                class="h-4 w-4 rounded border-gray-300 text-primary-600 focus:ring-primary-500 dark:border-dark-600 dark:bg-dark-700"
+                class="h-4 w-4 rounded border-[var(--brand-line)] text-primary-600 focus:ring-primary-500 dark:bg-dark-700"
               />
               <span class="text-sm text-gray-700 dark:text-gray-300">{{
                 t("admin.groups.supportedScopes.claude")
@@ -1254,7 +1257,7 @@
                   createForm.supported_model_scopes.includes('gemini_text')
                 "
                 @change="toggleCreateScope('gemini_text')"
-                class="h-4 w-4 rounded border-gray-300 text-primary-600 focus:ring-primary-500 dark:border-dark-600 dark:bg-dark-700"
+                class="h-4 w-4 rounded border-[var(--brand-line)] text-primary-600 focus:ring-primary-500 dark:bg-dark-700"
               />
               <span class="text-sm text-gray-700 dark:text-gray-300">{{
                 t("admin.groups.supportedScopes.geminiText")
@@ -1267,7 +1270,7 @@
                   createForm.supported_model_scopes.includes('gemini_image')
                 "
                 @change="toggleCreateScope('gemini_image')"
-                class="h-4 w-4 rounded border-gray-300 text-primary-600 focus:ring-primary-500 dark:border-dark-600 dark:bg-dark-700"
+                class="h-4 w-4 rounded border-[var(--brand-line)] text-primary-600 focus:ring-primary-500 dark:bg-dark-700"
               />
               <span class="text-sm text-gray-700 dark:text-gray-300">{{
                 t("admin.groups.supportedScopes.geminiImage")
@@ -1351,7 +1354,7 @@
         <!-- Codex 网页搜索按次计费（仅 openai 平台） -->
         <div
           v-if="createForm.platform === 'openai'"
-          class="border-t border-gray-200 dark:border-dark-400 pt-4 mt-4"
+          class="border-t border-[var(--brand-line)] pt-4 mt-4"
         >
           <h4 class="text-sm font-medium text-gray-700 dark:text-gray-300 mb-3">
             {{ t("admin.groups.webSearchPricing.title") }}
@@ -1372,7 +1375,7 @@
               {{ t("admin.groups.webSearchPricing.pricePerCallHint") }}
             </p>
             <div
-              class="mt-2 rounded-lg bg-gray-50 p-3 text-xs text-gray-600 dark:bg-dark-700 dark:text-gray-300"
+              class="mt-2 p-3 text-xs text-gray-600 dark:text-gray-300 panel-section"
             >
               {{
                 t("admin.groups.webSearchPricing.finalPricePreview", {
@@ -1384,7 +1387,7 @@
         </div>
 
 
-        <div class="border-t border-gray-200 pt-4 mt-4 dark:border-dark-400">
+        <div class="border-t border-[var(--brand-line)] pt-4 mt-4">
           <div class="flex flex-wrap items-start justify-between gap-3">
             <div class="min-w-0 flex-1">
               <h4 class="text-sm font-medium text-gray-700 dark:text-gray-300">{{ t("admin.groups.modelPricing.title") }}</h4>
@@ -1406,7 +1409,7 @@
         <!-- Grok Voice 显式定价（仅 grok 平台） -->
         <div
           v-if="createForm.platform === 'grok'"
-          class="border-t border-gray-200 dark:border-dark-400 pt-4 mt-4"
+          class="border-t border-[var(--brand-line)] pt-4 mt-4"
         >
           <h4 class="text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
             {{ t("admin.groups.explicitPricing.title") }}
@@ -1468,7 +1471,7 @@
         <!-- OpenAI Fast 开关（OpenAI 与 Composite 平台） -->
         <div
           v-if="supportsGroupOpenAIFast(createForm.platform)"
-          class="border-t border-gray-200 dark:border-dark-400 pt-4 mt-4"
+          class="border-t border-[var(--brand-line)] pt-4 mt-4"
         >
           <h4 class="text-sm font-medium text-gray-700 dark:text-gray-300 mb-3">
             {{ t("admin.groups.openaiFast.title") }}
@@ -1504,7 +1507,7 @@
         <!-- Codex Live 开关（OpenAI 与 Composite 平台） -->
         <div
           v-if="supportsLivePlatform(createForm.platform)"
-          class="border-t border-gray-200 dark:border-dark-400 pt-4 mt-4"
+          class="border-t border-[var(--brand-line)] pt-4 mt-4"
         >
           <h4 class="text-sm font-medium text-gray-700 dark:text-gray-300 mb-3">
             {{ t("admin.groups.openaiLive.title") }}
@@ -1526,7 +1529,7 @@
         <!-- OpenAI Messages 调度配置（OpenAI 与 Composite 平台） -->
         <div
           v-if="supportsMessagesDispatchPlatform(createForm.platform)"
-          class="border-t border-gray-200 dark:border-dark-400 pt-4 mt-4"
+          class="border-t border-[var(--brand-line)] pt-4 mt-4"
         >
           <h4 class="text-sm font-medium text-gray-700 dark:text-gray-300 mb-3">
             {{ t("admin.groups.openaiMessages.title") }}
@@ -1551,10 +1554,10 @@
             class="mt-3"
           >
             <div
-              class="relative overflow-hidden rounded-xl border border-gray-200 bg-white shadow-sm dark:border-dark-600 dark:bg-dark-800"
+              class="relative overflow-hidden panel-section"
             >
               <div
-                class="border-b border-gray-100 bg-gray-50/80 px-4 py-3 dark:border-dark-700 dark:bg-dark-700/50"
+                class="border-b border-[var(--brand-line)] px-4 py-3"
               >
                 <div class="flex items-center gap-2">
                   <div class="h-2 w-2 rounded-full bg-blue-500"></div>
@@ -1615,7 +1618,7 @@
             </div>
 
             <div
-              class="mt-5 relative overflow-hidden rounded-xl border border-primary-200 bg-white shadow-sm dark:border-primary-900/50 dark:bg-dark-800"
+              class="mt-5 relative overflow-hidden panel-section"
             >
               <div
                 class="border-b border-primary-100 bg-primary-50/80 px-4 py-3 dark:border-primary-900/40 dark:bg-primary-900/20"
@@ -1643,7 +1646,7 @@
               <div class="p-4 bg-gray-50/30 dark:bg-dark-800/30">
                 <div
                   v-if="createForm.exact_model_mappings.length === 0"
-                  class="flex items-center justify-between gap-3 rounded-xl border-2 border-dashed border-primary-200 bg-white px-5 py-4 text-sm text-primary-700 transition-colors hover:border-primary-300 dark:border-primary-900/40 dark:bg-dark-800 dark:text-primary-300 dark:hover:border-primary-800"
+                  class="flex items-center justify-between gap-3 px-5 py-4 text-sm text-primary-700 transition-colors dark:text-primary-300 panel-section"
                 >
                   <span>{{
                     t("admin.groups.openaiMessages.noExactMappings")
@@ -1662,7 +1665,7 @@
                   <div
                     v-for="row in createForm.exact_model_mappings"
                     :key="getCreateMessagesDispatchRowKey(row)"
-                    class="group relative rounded-xl border border-gray-200 bg-white p-4 shadow-sm transition-all hover:border-primary-300 hover:shadow-md dark:border-dark-600 dark:bg-dark-700 dark:hover:border-primary-700"
+                    class="group relative p-4 transition-all panel-section"
                   >
                     <div class="flex items-center gap-4">
                       <div
@@ -1724,7 +1727,7 @@
                   <KumoButton
                     type="button"
                     @click="addCreateMessagesDispatchMapping"
-                    class="flex w-full items-center justify-center gap-2 rounded-xl border-2 border-dashed border-gray-300 bg-white py-3 text-sm font-medium text-gray-500 transition-all hover:border-primary-300 hover:bg-primary-50/50 hover:text-primary-600 dark:border-dark-600 dark:bg-dark-800 dark:text-gray-400 dark:hover:border-primary-800 dark:hover:bg-primary-900/20 dark:hover:text-primary-400"
+                    class="flex w-full items-center justify-center gap-2 rounded-md border-2 border-dashed border-[var(--brand-line)] bg-white py-3 text-sm font-medium text-gray-500 transition-all hover:border-primary-300 hover:bg-primary-50/50 hover:text-primary-600 dark:bg-dark-800 dark:text-gray-400 dark:hover:border-primary-800 dark:hover:bg-primary-900/20 dark:hover:text-primary-400"
                   >
                     <Icon name="plus" size="sm" />
                     {{ t("admin.groups.openaiMessages.addExactMapping") }}
@@ -1742,7 +1745,7 @@
               createForm.platform,
             )
           "
-          class="border-t border-gray-200 dark:border-dark-400 pt-4 mt-4 space-y-4"
+          class="border-t border-[var(--brand-line)] pt-4 mt-4 space-y-4"
         >
           <h4 class="text-sm font-medium text-gray-700 dark:text-gray-300 mb-3">
             {{ t("admin.groups.accountFilters.title") }}
@@ -1845,7 +1848,7 @@
             <div
               v-for="rule in createModelRoutingRules"
               :key="getCreateRuleRenderKey(rule)"
-              class="rounded-lg border border-gray-200 p-3 dark:border-dark-600"
+              class="p-3 panel-section"
             >
               <div class="flex items-start gap-3">
                 <div class="flex-1 space-y-2">
@@ -2133,7 +2136,7 @@
                     {{ t("admin.groups.exclusiveTooltip.title") }}
                   </p><p class="mb-2 text-xs leading-relaxed text-gray-600 dark:text-gray-300">
                     {{ t("admin.groups.exclusiveTooltip.description") }}
-                  </p><div class="rounded bg-gray-800 p-2 dark:bg-gray-700">
+                  </p><div class="rounded p-2 panel-section">
                     <p class="text-xs leading-relaxed text-gray-600 dark:text-gray-300">
                       <span
                         class="inline-flex items-center gap-1 text-primary-400"
@@ -2237,11 +2240,11 @@
           </div>
           <div
             v-if="editModelAllowlistState.enabled"
-            class="overflow-hidden rounded-lg border border-gray-200 bg-gray-50/50 dark:border-dark-600 dark:bg-dark-800/40"
+            class="overflow-hidden panel-section"
           >
             <div
               v-if="!editModelAllowlistLoading && editModelAllowlistState.items.length > 0"
-              class="flex items-center justify-between gap-2 border-b border-gray-200 bg-gray-50 px-3 py-2 text-xs dark:border-dark-600 dark:bg-dark-800"
+              class="flex items-center justify-between gap-2 border-b border-[var(--brand-line)] px-3 py-2 text-xs"
             >
               <span class="text-gray-500 dark:text-gray-400">
                 {{
@@ -2261,7 +2264,7 @@
                 </KumoButton>
                 <KumoButton
                   type="button"
-                  class="rounded px-2 py-1 font-medium text-gray-600 transition-colors hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-dark-700"
+                  class="rounded px-2 py-1 font-medium text-gray-600 transition-colors hover:bg-[var(--brand-hover)] dark:text-gray-300"
                   @click="invertModelAllowlistSelection(editModelAllowlistState)"
                 >
                   {{ t("admin.groups.modelAllowlist.invertSelection") }}
@@ -2283,12 +2286,12 @@
               <div
                 v-for="(item, index) in editModelAllowlistState.items"
                 :key="item.id"
-                class="flex items-center gap-2 rounded border border-gray-200 bg-white px-3 py-2 dark:border-dark-600 dark:bg-dark-800"
+                class="flex items-center gap-2 rounded px-3 py-2 panel-section"
               >
                 <KumoCheckbox
                   v-model="item.selected"
                   type="checkbox"
-                  class="h-4 w-4 rounded border-gray-300 text-primary-600 focus:ring-primary-500"
+                  class="h-4 w-4 rounded border-[var(--brand-line)] text-primary-600 focus:ring-primary-500"
                 />
                 <span class="min-w-0 flex-1 break-all text-sm text-gray-700 dark:text-gray-300">
                   {{ item.id }}
@@ -2302,7 +2305,7 @@
                 <KumoButton
                   type="button"
                   :disabled="index === 0"
-                  class="rounded p-1 text-gray-400 hover:bg-gray-100 hover:text-gray-700 disabled:opacity-40 dark:hover:bg-dark-600 dark:hover:text-gray-200"
+                  class="rounded p-1 text-gray-400 hover:bg-[var(--brand-hover)] hover:text-gray-700 disabled:opacity-40 dark:hover:text-gray-200"
                   @click="moveEditModelAllowlistItem(index, index - 1)"
                 >
                   <Icon name="arrowUp" size="sm" />
@@ -2310,20 +2313,20 @@
                 <KumoButton
                   type="button"
                   :disabled="index === editModelAllowlistState.items.length - 1"
-                  class="rounded p-1 text-gray-400 hover:bg-gray-100 hover:text-gray-700 disabled:opacity-40 dark:hover:bg-dark-600 dark:hover:text-gray-200"
+                  class="rounded p-1 text-gray-400 hover:bg-[var(--brand-hover)] hover:text-gray-700 disabled:opacity-40 dark:hover:text-gray-200"
                   @click="moveEditModelAllowlistItem(index, index + 1)"
                 >
                   <Icon name="arrowDown" size="sm" />
                 </KumoButton>
               </div>
             </div>
-            <div class="border-t border-gray-200 px-3 py-2 dark:border-dark-600">
+            <div class="border-t border-[var(--brand-line)] px-3 py-2">
               <div class="flex items-center gap-2">
                 <KumoInput
                   v-model="editAllowlistCustomEntry"
                   type="text"
                   :placeholder="t('admin.groups.modelAllowlist.customPlaceholder')"
-                  class="min-w-0 flex-1 rounded border border-gray-300 bg-white px-2 py-1.5 text-sm text-gray-700 focus:border-primary-500 focus:outline-none dark:border-dark-500 dark:bg-dark-700 dark:text-gray-200"
+                  class="min-w-0 flex-1 rounded border border-[var(--brand-line)] bg-white px-2 py-1.5 text-sm text-gray-700 focus:border-primary-500 focus:outline-none dark:bg-dark-700 dark:text-gray-200"
                   @keydown.enter.prevent="submitEditAllowlistCustomEntry"
                 />
                 <KumoButton
@@ -2362,7 +2365,7 @@
               <KumoCheckbox
                 v-model="editForm.allow_image_generation"
                 type="checkbox"
-                class="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
+                class="rounded border-[var(--brand-line)] text-blue-600 focus:ring-blue-500"
               />
               {{ t(imagePricingI18nKey(editForm.platform, "allowImageGeneration")) }}
             </KumoLabel>
@@ -2370,7 +2373,7 @@
               <KumoCheckbox
                 v-model="editForm.image_rate_independent"
                 type="checkbox"
-                class="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
+                class="rounded border-[var(--brand-line)] text-blue-600 focus:ring-blue-500"
               />
               {{ t(imagePricingI18nKey(editForm.platform, "independentMultiplier")) }}
             </KumoLabel>
@@ -2429,7 +2432,7 @@
           <p class="mt-3 text-xs text-gray-500 dark:text-gray-400">
             {{ t(imagePricingI18nKey(editForm.platform, "modeHint")) }}
           </p>
-          <div class="mt-2 rounded-lg bg-gray-50 p-3 text-xs text-gray-700 dark:bg-gray-800 dark:text-gray-300">
+          <div class="mt-2 p-3 text-xs text-gray-700 dark:text-gray-300 panel-section">
             <div class="mb-1 font-medium">
               {{ t(imagePricingI18nKey(editForm.platform, "finalPricePreview")) }}
             </div>
@@ -2442,14 +2445,14 @@
               </div>
             </div>
           </div>
-          <div v-if="editForm.platform === 'gemini' && editForm.allow_image_generation" class="mt-4 border-t border-dashed border-gray-200 pt-4 dark:border-dark-700">
+          <div v-if="editForm.platform === 'gemini' && editForm.allow_image_generation" class="mt-4 border-t border-dashed border-[var(--brand-line)] pt-4">
             <KumoLabel
               class="flex items-center gap-2 text-sm font-medium text-gray-700 dark:text-gray-300"
             >
               <KumoCheckbox
                 v-model="editForm.allow_batch_image_generation"
                 type="checkbox"
-                class="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
+                class="rounded border-[var(--brand-line)] text-blue-600 focus:ring-blue-500"
               />
               {{ t("admin.groups.imagePricing.allowBatchImageGeneration") }}
             </KumoLabel>
@@ -2490,7 +2493,7 @@
           </div>
           <p
             v-else-if="editForm.platform !== 'gemini'"
-            class="mt-4 border-t border-dashed border-gray-200 pt-4 text-xs text-gray-500 dark:border-dark-700 dark:text-gray-400"
+            class="mt-4 border-t border-dashed border-[var(--brand-line)] pt-4 text-xs text-gray-500 dark:text-gray-400"
           >
             {{ t("admin.groups.imagePricing.batchGeminiOnlyHint") }}
           </p>
@@ -2514,7 +2517,7 @@
               <KumoCheckbox
                 v-model="editForm.video_rate_independent"
                 type="checkbox"
-                class="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
+                class="rounded border-[var(--brand-line)] text-blue-600 focus:ring-blue-500"
               />
               {{ t(videoPricingI18nKey("independentMultiplier")) }}
             </KumoLabel>
@@ -2571,7 +2574,7 @@
             </div>
           </div>
           <div
-            class="mt-4 border-t border-dashed border-gray-200 pt-4 dark:border-dark-700"
+            class="mt-4 border-t border-dashed border-[var(--brand-line)] pt-4"
             data-testid="edit-grok-video-model-prices"
           >
             <p class="text-sm font-medium text-gray-700 dark:text-gray-300">
@@ -2612,7 +2615,7 @@
           <p class="mt-3 text-xs text-gray-500 dark:text-gray-400">
             {{ t(videoPricingI18nKey("modeHint")) }}
           </p>
-          <div class="mt-2 rounded-lg bg-gray-50 p-3 text-xs text-gray-700 dark:bg-gray-800 dark:text-gray-300">
+          <div class="mt-2 p-3 text-xs text-gray-700 dark:text-gray-300 panel-section">
             <div class="mb-1 font-medium">
               {{ t(videoPricingI18nKey("finalPricePreview")) }}
             </div>
@@ -2634,7 +2637,7 @@
               <KumoCheckbox
                 v-model="editForm.peak_rate_enabled"
                 type="checkbox"
-                class="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
+                class="rounded border-[var(--brand-line)] text-blue-600 focus:ring-blue-500"
               />
               <span>{{ t("admin.groups.peakRate.enable") }}</span>
             </KumoLabel>
@@ -2680,7 +2683,7 @@
             <KumoCheckbox
               v-model="editForm.profit_control_enabled"
               type="checkbox"
-              class="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
+              class="rounded border-[var(--brand-line)] text-blue-600 focus:ring-blue-500"
             />
             <span>{{ t("admin.groups.profitControl.enable") }}</span>
           </KumoLabel>
@@ -2746,7 +2749,7 @@
                 type="checkbox"
                 :checked="editForm.supported_model_scopes.includes('claude')"
                 @change="toggleEditScope('claude')"
-                class="h-4 w-4 rounded border-gray-300 text-primary-600 focus:ring-primary-500 dark:border-dark-600 dark:bg-dark-700"
+                class="h-4 w-4 rounded border-[var(--brand-line)] text-primary-600 focus:ring-primary-500 dark:bg-dark-700"
               />
               <span class="text-sm text-gray-700 dark:text-gray-300">{{
                 t("admin.groups.supportedScopes.claude")
@@ -2759,7 +2762,7 @@
                   editForm.supported_model_scopes.includes('gemini_text')
                 "
                 @change="toggleEditScope('gemini_text')"
-                class="h-4 w-4 rounded border-gray-300 text-primary-600 focus:ring-primary-500 dark:border-dark-600 dark:bg-dark-700"
+                class="h-4 w-4 rounded border-[var(--brand-line)] text-primary-600 focus:ring-primary-500 dark:bg-dark-700"
               />
               <span class="text-sm text-gray-700 dark:text-gray-300">{{
                 t("admin.groups.supportedScopes.geminiText")
@@ -2772,7 +2775,7 @@
                   editForm.supported_model_scopes.includes('gemini_image')
                 "
                 @change="toggleEditScope('gemini_image')"
-                class="h-4 w-4 rounded border-gray-300 text-primary-600 focus:ring-primary-500 dark:border-dark-600 dark:bg-dark-700"
+                class="h-4 w-4 rounded border-[var(--brand-line)] text-primary-600 focus:ring-primary-500 dark:bg-dark-700"
               />
               <span class="text-sm text-gray-700 dark:text-gray-300">{{
                 t("admin.groups.supportedScopes.geminiImage")
@@ -2856,7 +2859,7 @@
         <!-- Codex 网页搜索按次计费（仅 openai 平台） -->
         <div
           v-if="editForm.platform === 'openai'"
-          class="border-t border-gray-200 dark:border-dark-400 pt-4 mt-4"
+          class="border-t border-[var(--brand-line)] pt-4 mt-4"
         >
           <h4 class="text-sm font-medium text-gray-700 dark:text-gray-300 mb-3">
             {{ t("admin.groups.webSearchPricing.title") }}
@@ -2877,7 +2880,7 @@
               {{ t("admin.groups.webSearchPricing.pricePerCallHint") }}
             </p>
             <div
-              class="mt-2 rounded-lg bg-gray-50 p-3 text-xs text-gray-600 dark:bg-dark-700 dark:text-gray-300"
+              class="mt-2 p-3 text-xs text-gray-600 dark:text-gray-300 panel-section"
             >
               {{
                 t("admin.groups.webSearchPricing.finalPricePreview", {
@@ -2899,7 +2902,7 @@
         />
 
 
-        <div class="border-t border-gray-200 pt-4 mt-4 dark:border-dark-400">
+        <div class="border-t border-[var(--brand-line)] pt-4 mt-4">
           <div class="flex flex-wrap items-start justify-between gap-3">
             <div class="min-w-0 flex-1">
               <h4 class="text-sm font-medium text-gray-700 dark:text-gray-300">{{ t("admin.groups.modelPricing.title") }}</h4>
@@ -2921,7 +2924,7 @@
         <!-- Grok Voice 显式定价（仅 grok 平台） -->
         <div
           v-if="editForm.platform === 'grok'"
-          class="border-t border-gray-200 dark:border-dark-400 pt-4 mt-4"
+          class="border-t border-[var(--brand-line)] pt-4 mt-4"
         >
           <h4 class="text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
             {{ t("admin.groups.explicitPricing.title") }}
@@ -2983,7 +2986,7 @@
         <!-- OpenAI Fast 开关（OpenAI 与 Composite 平台） -->
         <div
           v-if="supportsGroupOpenAIFast(editForm.platform)"
-          class="border-t border-gray-200 dark:border-dark-400 pt-4 mt-4"
+          class="border-t border-[var(--brand-line)] pt-4 mt-4"
         >
           <h4 class="text-sm font-medium text-gray-700 dark:text-gray-300 mb-3">
             {{ t("admin.groups.openaiFast.title") }}
@@ -3019,7 +3022,7 @@
         <!-- Codex Live 开关（OpenAI 与 Composite 平台） -->
         <div
           v-if="supportsLivePlatform(editForm.platform)"
-          class="border-t border-gray-200 dark:border-dark-400 pt-4 mt-4"
+          class="border-t border-[var(--brand-line)] pt-4 mt-4"
         >
           <h4 class="text-sm font-medium text-gray-700 dark:text-gray-300 mb-3">
             {{ t("admin.groups.openaiLive.title") }}
@@ -3041,7 +3044,7 @@
         <!-- OpenAI Messages 调度配置（OpenAI 与 Composite 平台） -->
         <div
           v-if="supportsMessagesDispatchPlatform(editForm.platform)"
-          class="border-t border-gray-200 dark:border-dark-400 pt-4 mt-4"
+          class="border-t border-[var(--brand-line)] pt-4 mt-4"
         >
           <h4 class="text-sm font-medium text-gray-700 dark:text-gray-300 mb-3">
             {{ t("admin.groups.openaiMessages.title") }}
@@ -3065,10 +3068,10 @@
             class="mt-3"
           >
             <div
-              class="relative overflow-hidden rounded-xl border border-gray-200 bg-white shadow-sm dark:border-dark-600 dark:bg-dark-800"
+              class="relative overflow-hidden panel-section"
             >
               <div
-                class="border-b border-gray-100 bg-gray-50/80 px-4 py-3 dark:border-dark-700 dark:bg-dark-700/50"
+                class="border-b border-[var(--brand-line)] px-4 py-3"
               >
                 <div class="flex items-center gap-2">
                   <div class="h-2 w-2 rounded-full bg-blue-500"></div>
@@ -3129,7 +3132,7 @@
             </div>
 
             <div
-              class="mt-5 relative overflow-hidden rounded-xl border border-primary-200 bg-white shadow-sm dark:border-primary-900/50 dark:bg-dark-800"
+              class="mt-5 relative overflow-hidden panel-section"
             >
               <div
                 class="border-b border-primary-100 bg-primary-50/80 px-4 py-3 dark:border-primary-900/40 dark:bg-primary-900/20"
@@ -3157,7 +3160,7 @@
               <div class="p-4 bg-gray-50/30 dark:bg-dark-800/30">
                 <div
                   v-if="editForm.exact_model_mappings.length === 0"
-                  class="flex items-center justify-between gap-3 rounded-xl border-2 border-dashed border-primary-200 bg-white px-5 py-4 text-sm text-primary-700 transition-colors hover:border-primary-300 dark:border-primary-900/40 dark:bg-dark-800 dark:text-primary-300 dark:hover:border-primary-800"
+                  class="flex items-center justify-between gap-3 px-5 py-4 text-sm text-primary-700 transition-colors dark:text-primary-300 panel-section"
                 >
                   <span>{{
                     t("admin.groups.openaiMessages.noExactMappings")
@@ -3176,7 +3179,7 @@
                   <div
                     v-for="row in editForm.exact_model_mappings"
                     :key="getEditMessagesDispatchRowKey(row)"
-                    class="group relative rounded-xl border border-gray-200 bg-white p-4 shadow-sm transition-all hover:border-primary-300 hover:shadow-md dark:border-dark-600 dark:bg-dark-700 dark:hover:border-primary-700"
+                    class="group relative p-4 transition-all panel-section"
                   >
                     <div class="flex items-center gap-4">
                       <div
@@ -3238,7 +3241,7 @@
                   <KumoButton
                     type="button"
                     @click="addEditMessagesDispatchMapping"
-                    class="flex w-full items-center justify-center gap-2 rounded-xl border-2 border-dashed border-gray-300 bg-white py-3 text-sm font-medium text-gray-500 transition-all hover:border-primary-300 hover:bg-primary-50/50 hover:text-primary-600 dark:border-dark-600 dark:bg-dark-800 dark:text-gray-400 dark:hover:border-primary-800 dark:hover:bg-primary-900/20 dark:hover:text-primary-400"
+                    class="flex w-full items-center justify-center gap-2 rounded-md border-2 border-dashed border-[var(--brand-line)] bg-white py-3 text-sm font-medium text-gray-500 transition-all hover:border-primary-300 hover:bg-primary-50/50 hover:text-primary-600 dark:bg-dark-800 dark:text-gray-400 dark:hover:border-primary-800 dark:hover:bg-primary-900/20 dark:hover:text-primary-400"
                   >
                     <Icon name="plus" size="sm" />
                     {{ t("admin.groups.openaiMessages.addExactMapping") }}
@@ -3256,7 +3259,7 @@
               editForm.platform,
             )
           "
-          class="border-t border-gray-200 dark:border-dark-400 pt-4 mt-4 space-y-4"
+          class="border-t border-[var(--brand-line)] pt-4 mt-4 space-y-4"
         >
           <h4 class="text-sm font-medium text-gray-700 dark:text-gray-300 mb-3">
             {{ t("admin.groups.accountFilters.title") }}
@@ -3359,7 +3362,7 @@
             <div
               v-for="rule in editModelRoutingRules"
               :key="getEditRuleRenderKey(rule)"
-              class="rounded-lg border border-gray-200 p-3 dark:border-dark-600"
+              class="p-3 panel-section"
             >
               <div class="flex items-start gap-3">
                 <div class="flex-1 space-y-2">
@@ -3516,7 +3519,7 @@
           <div
             v-for="group in sortableGroups"
             :key="group.id"
-            class="flex cursor-grab items-center gap-3 rounded-lg border border-gray-200 bg-white p-3 transition-shadow hover:shadow-md active:cursor-grabbing dark:border-dark-600 dark:bg-dark-700"
+            class="flex cursor-grab items-center gap-3 p-3 transition-shadow active:cursor-grabbing panel-section"
           >
             <div class="text-gray-400">
               <Icon name="menu" size="md" />
@@ -3614,7 +3617,7 @@
           </div>
 
           <div
-            class="overflow-hidden rounded-lg border border-gray-200 dark:border-dark-600"
+            class="overflow-hidden panel-section"
           >
             <div
               v-if="compositeRoutesLoading"
@@ -3690,7 +3693,7 @@
                       <div class="flex justify-end gap-1">
                         <KumoButton
                           type="button"
-                          class="rounded p-1.5 text-gray-500 hover:bg-gray-100 hover:text-primary-600 dark:hover:bg-dark-700 dark:hover:text-primary-400"
+                          class="rounded p-1.5 text-gray-500 hover:bg-[var(--brand-hover)] hover:text-primary-600 dark:hover:text-primary-400"
                           :title="t('common.edit')"
                           @click="editCompositeRoute(route)"
                         >
@@ -3822,7 +3825,7 @@
                 <KumoCheckbox
                   v-model="compositeRouteForm.enabled"
                   type="checkbox"
-                  class="h-4 w-4 rounded border-gray-300 text-primary-600 focus:ring-primary-500 dark:border-dark-600 dark:bg-dark-700"
+                  class="h-4 w-4 rounded border-[var(--brand-line)] text-primary-600 focus:ring-primary-500 dark:bg-dark-700"
                 />
                 {{ t("admin.groups.compositeRoutes.enabled") }}
               </KumoLabel>
@@ -3842,7 +3845,7 @@
             </div>
           </form>
 
-          <div class="border-t border-gray-200 pt-4 dark:border-dark-600">
+          <div class="border-t border-[var(--brand-line)] pt-4">
             <h3 class="mb-3 text-sm font-semibold text-gray-900 dark:text-white">
               {{ t("admin.groups.compositeRoutes.preview") }}
             </h3>
@@ -3872,7 +3875,7 @@
 
               <div
                 v-if="compositePreviewDecision"
-                class="rounded-lg border border-gray-200 bg-gray-50 p-3 text-sm dark:border-dark-600 dark:bg-dark-800"
+                class="p-3 text-sm panel-section"
               >
                 <div class="mb-2 flex items-center gap-2">
                   <span

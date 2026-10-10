@@ -1,7 +1,7 @@
 <template>
   <AppLayout>
     <div class="custom-page-layout">
-      <KumoSurface class="card flex-1 min-h-0 overflow-hidden">
+      <Panel flush class="card flex-1 min-h-0 overflow-hidden">
         <div v-if="loading" class="flex h-full items-center justify-center py-12">
           <KumoLoader
             class="h-8 w-8"
@@ -14,7 +14,7 @@
         >
           <div class="max-w-md">
             <div
-              class="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-gray-100 dark:bg-dark-700"
+              class="mx-auto mb-4 flex h-12 w-12 items-center justify-center panel-section"
             >
               <Icon name="link" size="lg" class="text-gray-400" />
             </div>
@@ -80,7 +80,7 @@
         <div v-else-if="!isValidUrl" class="flex h-full items-center justify-center p-10 text-center">
           <div class="max-w-md">
             <div
-              class="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-gray-100 dark:bg-dark-700"
+              class="mx-auto mb-4 flex h-12 w-12 items-center justify-center panel-section"
             >
               <Icon name="link" size="lg" class="text-gray-400" />
             </div>
@@ -120,13 +120,14 @@
             allowfullscreen
           ></iframe>
         </div>
-      </KumoSurface>
+      </Panel>
     </div>
   </AppLayout>
 </template>
 
 <script setup lang="ts">
-import { KumoButton, KumoLoader, KumoSurface } from '@/components/kumo'
+import Panel from '@/components/common/Panel.vue'
+import { KumoButton, KumoLoader } from '@/components/kumo'
 
 import { getRequestAuthToken } from '@/auth/clerk'
 import { computed, nextTick, onMounted, onUnmounted, ref, watch } from 'vue'
@@ -467,7 +468,7 @@ onUnmounted(() => {
     width: 70%;
     max-width: 240px;
     height: 100%;
-    box-shadow: 2px 0 8px rgba(0, 0, 0, 0.1);
+    border-right: 1px solid var(--brand-line);
   }
 }
 
@@ -505,19 +506,18 @@ onUnmounted(() => {
   @apply absolute left-2 top-2 z-10 flex items-center px-2 py-1.5 rounded-md text-sm;
   @apply bg-white dark:bg-dark-700 border border-gray-200 dark:border-dark-500;
   @apply text-gray-600 dark:text-dark-300 hover:bg-gray-100 dark:hover:bg-dark-600;
-  @apply shadow-sm transition-colors cursor-pointer;
+  @apply  transition-colors cursor-pointer;
 }
 
 .custom-embed-shell {
   @apply relative;
-  @apply h-full w-full overflow-hidden rounded-2xl;
-  @apply bg-gradient-to-b from-gray-50 to-white dark:from-dark-900 dark:to-dark-950;
+  @apply h-full w-full overflow-hidden rounded-lg;
   @apply p-0;
 }
 
 .custom-open-fab {
   @apply absolute right-3 top-3 z-10 w-max max-w-full touch-none select-none transition-colors;
-  @apply shadow-sm backdrop-blur supports-[backdrop-filter]:bg-white/80 dark:supports-[backdrop-filter]:bg-dark-800/80;
+  @apply   supports-[backdrop-filter]:bg-white/80 dark:supports-[backdrop-filter]:bg-dark-800/80;
 }
 
 .custom-embed-frame {

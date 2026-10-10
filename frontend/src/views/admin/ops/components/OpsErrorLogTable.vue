@@ -153,7 +153,7 @@
         <template #cell-actions="{ row }">
           <KumoButton
             type="button"
-            class="rounded p-1 text-gray-400 transition-colors hover:bg-gray-100 hover:text-primary-600 dark:hover:bg-dark-600 dark:hover:text-primary-400"
+            class="rounded p-1 text-gray-400 transition-colors hover:bg-[var(--brand-hover)] hover:text-primary-600 dark:hover:text-primary-400"
             :title="t('admin.ops.errorLog.details')"
             @click.stop="emit('openErrorDetail', row.id)"
           >
@@ -161,7 +161,11 @@
           </KumoButton>
         </template>
 
-        <template #empty><EmptyState :message="t('admin.ops.errorLog.noErrors')" /></template>
+        <template #empty>
+          <EmptyState :message="t('admin.ops.errorLog.noErrors')">
+            <template #icon><Icon name="document" size="xl" class="empty-state-icon" aria-hidden="true" /></template>
+          </EmptyState>
+        </template>
       </DataTable>
     </div>
 
@@ -185,6 +189,7 @@ import { computed } from 'vue'
 import { useI18n } from 'vue-i18n'
 import DataTable from '@/components/common/DataTable.vue'
 import EmptyState from '@/components/common/EmptyState.vue'
+import Icon from '@/components/icons/Icon.vue'
 import Pagination from '@/components/common/Pagination.vue'
 import IpGeoCell from '@/components/common/IpGeoCell.vue'
 import IpGeoBatchToolbar from '@/components/common/IpGeoBatchToolbar.vue'

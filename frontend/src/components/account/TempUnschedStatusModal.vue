@@ -10,7 +10,7 @@
         <KumoLoader class="h-6 w-6 animate-spin text-gray-400" />
       </div>
 
-      <div v-else-if="!isActive" class="rounded-lg border border-gray-200 p-4 text-sm text-gray-500 dark:border-dark-600 dark:text-gray-400">
+      <div v-else-if="!isActive" class="p-4 text-sm text-gray-500 dark:text-gray-400 panel-section">
         {{ t('admin.accounts.tempUnschedulable.notActive') }}
       </div>
 
@@ -19,7 +19,7 @@
           {{ t('admin.accounts.recoverStateHint') }}
         </div>
 
-        <div class="rounded-lg border border-gray-200 p-4 dark:border-dark-600">
+        <div class="p-4 panel-section">
           <p class="text-xs text-gray-500 dark:text-gray-400">
             {{ t('admin.accounts.tempUnschedulable.accountName') }}
           </p>
@@ -29,7 +29,7 @@
         </div>
 
         <div class="grid grid-cols-1 gap-3 sm:grid-cols-2">
-          <div class="rounded-lg border border-gray-200 p-3 dark:border-dark-600">
+          <div class="p-3 panel-section">
             <p class="text-xs text-gray-500 dark:text-gray-400">
               {{ t('admin.accounts.tempUnschedulable.triggeredAt') }}
             </p>
@@ -37,7 +37,7 @@
               {{ triggeredAtText }}
             </p>
           </div>
-          <div class="rounded-lg border border-gray-200 p-3 dark:border-dark-600">
+          <div class="p-3 panel-section">
             <p class="text-xs text-gray-500 dark:text-gray-400">
               {{ t('admin.accounts.tempUnschedulable.until') }}
             </p>
@@ -45,7 +45,7 @@
               {{ untilText }}
             </p>
           </div>
-          <div class="rounded-lg border border-gray-200 p-3 dark:border-dark-600">
+          <div class="p-3 panel-section">
             <p class="text-xs text-gray-500 dark:text-gray-400">
               {{ t('admin.accounts.tempUnschedulable.remaining') }}
             </p>
@@ -53,7 +53,7 @@
               {{ remainingText }}
             </p>
           </div>
-          <div class="rounded-lg border border-gray-200 p-3 dark:border-dark-600">
+          <div class="p-3 panel-section">
             <p class="text-xs text-gray-500 dark:text-gray-400">
               {{ t('admin.accounts.tempUnschedulable.errorCode') }}
             </p>
@@ -61,7 +61,7 @@
               {{ state?.status_code || '-' }}
             </p>
           </div>
-          <div class="rounded-lg border border-gray-200 p-3 dark:border-dark-600">
+          <div class="p-3 panel-section">
             <p class="text-xs text-gray-500 dark:text-gray-400">
               {{ t('admin.accounts.tempUnschedulable.matchedKeyword') }}
             </p>
@@ -69,7 +69,7 @@
               {{ state?.matched_keyword || '-' }}
             </p>
           </div>
-          <div class="rounded-lg border border-gray-200 p-3 dark:border-dark-600">
+          <div class="p-3 panel-section">
             <p class="text-xs text-gray-500 dark:text-gray-400">
               {{ t('admin.accounts.tempUnschedulable.ruleOrder') }}
             </p>
@@ -79,11 +79,11 @@
           </div>
         </div>
 
-        <div class="rounded-lg border border-gray-200 p-3 dark:border-dark-600">
+        <div class="p-3 panel-section">
           <p class="text-xs text-gray-500 dark:text-gray-400">
             {{ t('admin.accounts.tempUnschedulable.errorMessage') }}
           </p>
-          <div class="mt-2 rounded bg-gray-50 p-2 text-xs text-gray-700 dark:bg-dark-700 dark:text-gray-300">
+          <div class="mt-2 rounded p-2 text-xs text-gray-700 dark:text-gray-300 panel-section">
             {{ state?.error_message || '-' }}
           </div>
         </div>

@@ -1,43 +1,8 @@
 <template>
-  <AppLayout>
+  <AppLayout hide-page-header>
     <TablePageLayout>
-      <template #filters>
-        <div class="flex flex-wrap items-center gap-3">
-          <!-- Left: Search + Filters -->
-          <div class="relative w-full sm:w-64">
-            <Icon
-              name="search"
-              size="md"
-              class="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 dark:text-gray-500"
-            />
-            <KumoInput
-              v-model="searchQuery"
-              type="text"
-              :placeholder="t('admin.proxies.searchProxies')"
-              class="input pl-10"
-              @input="handleSearch"
-            />
-          </div>
-
-          <div class="w-full sm:w-40">
-            <Select
-              v-model="filters.protocol"
-              :options="protocolOptions"
-              :placeholder="t('admin.proxies.allProtocols')"
-              @change="handleFilterChange"
-            />
-          </div>
-          <div class="w-full sm:w-36">
-            <Select
-              v-model="filters.status"
-              :options="statusOptions"
-              :placeholder="t('admin.proxies.allStatus')"
-              @change="handleFilterChange"
-            />
-          </div>
-
-          <!-- Right: All action buttons -->
-          <div class="flex flex-1 flex-wrap items-center justify-end gap-2">
+      <template #actions>
+        <div class="flex flex-1 flex-wrap items-center justify-end gap-2">
             <KumoButton
               @click="loadProxies"
               :disabled="loading"
@@ -84,6 +49,45 @@
               {{ t('admin.proxies.createProxy') }}
             </KumoButton>
           </div>
+      </template>
+
+      <template #filters>
+        <div class="flex flex-wrap items-center gap-3">
+          <!-- Left: Search + Filters -->
+          <div class="relative w-full sm:w-64">
+            <Icon
+              name="search"
+              size="md"
+              class="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 dark:text-gray-500"
+            />
+            <KumoInput
+              v-model="searchQuery"
+              type="text"
+              :placeholder="t('admin.proxies.searchProxies')"
+              class="input pl-10"
+              @input="handleSearch"
+            />
+          </div>
+
+          <div class="w-full sm:w-40">
+            <Select
+              v-model="filters.protocol"
+              :options="protocolOptions"
+              :placeholder="t('admin.proxies.allProtocols')"
+              @change="handleFilterChange"
+            />
+          </div>
+          <div class="w-full sm:w-36">
+            <Select
+              v-model="filters.status"
+              :options="statusOptions"
+              :placeholder="t('admin.proxies.allStatus')"
+              @change="handleFilterChange"
+            />
+          </div>
+
+          <!-- Right: All action buttons -->
+
         </div>
       </template>
 
@@ -101,7 +105,7 @@
           <template #header-select>
             <KumoCheckbox
               type="checkbox"
-              class="h-4 w-4 cursor-pointer rounded border-gray-300 text-primary-600 focus:ring-primary-500"
+              class="h-4 w-4 cursor-pointer rounded border-[var(--brand-line)] text-primary-600 focus:ring-primary-500"
               :checked="allVisibleSelected"
               @click.stop
               @change="toggleSelectAllVisible($event)"
@@ -111,7 +115,7 @@
           <template #cell-select="{ row }">
             <KumoCheckbox
               type="checkbox"
-              class="h-4 w-4 cursor-pointer rounded border-gray-300 text-primary-600 focus:ring-primary-500"
+              class="h-4 w-4 cursor-pointer rounded border-[var(--brand-line)] text-primary-600 focus:ring-primary-500"
               :checked="selectedProxyIds.has(row.id)"
               @click.stop
               @change="toggleSelectRow(row.id, $event)"
@@ -151,7 +155,7 @@
                   <KumoDropdownItem
                     v-for="fmt in getCopyFormats(row)"
                     :key="fmt.label"
-                    class="flex w-full items-center gap-2 px-3 py-1.5 text-left text-xs hover:bg-gray-100 dark:hover:bg-dark-600"
+                    class="flex w-full items-center gap-2 px-3 py-1.5 text-left text-xs hover:bg-[var(--brand-hover)]"
                     @click.stop="copyFormat(fmt.value)"
                   >
                     <span class="truncate font-mono text-gray-600 dark:text-gray-300">{{ fmt.label }}</span>
@@ -200,7 +204,7 @@
             <KumoButton
               v-if="(value || 0) > 0"
               type="button"
-              class="inline-flex items-center rounded bg-gray-100 px-2 py-0.5 text-xs font-medium text-primary-700 hover:bg-gray-200 dark:bg-dark-600 dark:text-primary-300 dark:hover:bg-dark-500"
+              class="inline-flex items-center rounded bg-gray-100 px-2 py-0.5 text-xs font-medium text-primary-700 hover:bg-[var(--brand-hover)] dark:bg-dark-600 dark:text-primary-300"
               @click="openAccountsModal(row)"
             >
               {{ t('admin.groups.accountsCount', { count: value || 0 }) }}
@@ -287,7 +291,7 @@
               </KumoButton>
               <KumoButton
                 @click="handleEdit(row)"
-                class="flex flex-col items-center gap-0.5 rounded-lg p-1.5 text-gray-500 transition-colors hover:bg-gray-100 hover:text-primary-600 dark:hover:bg-dark-700 dark:hover:text-primary-400"
+                class="flex flex-col items-center gap-0.5 rounded-lg p-1.5 text-gray-500 transition-colors hover:bg-[var(--brand-hover)] hover:text-primary-600 dark:hover:text-primary-400"
               >
                 <Icon name="edit" size="sm" />
                 <span class="text-xs">{{ t('common.edit') }}</span>
@@ -335,9 +339,9 @@
     >
       <!-- Tab Switch -->
       <div
-        class="mb-6 flex items-center justify-between gap-3 border-b border-gray-200 dark:border-dark-600"
+        class="mb-6 flex items-center justify-between gap-3 border-b border-[var(--brand-line)]"
       >
-        <div class="flex min-w-0 shrink-0">
+        <div class="flex min-w-0 shrink-0 ui-segmented">
           <KumoButton
             type="button"
             @click="createMode = 'standard'"
@@ -507,7 +511,7 @@
         </div>
 
         <!-- Parse Result -->
-        <div v-if="batchParseResult.total > 0" class="rounded-lg bg-gray-50 p-4 dark:bg-dark-700">
+        <div v-if="batchParseResult.total > 0" class="p-4 panel-section">
             <div class="flex items-center gap-4 text-sm">
               <div class="flex items-center gap-1.5">
               <Icon name="checkCircle" size="sm" :stroke-width="2" class="text-primary-500" />
@@ -750,7 +754,7 @@
       @close="closeQualityReportDialog"
     >
       <div v-if="qualityReport" class="space-y-4">
-        <div class="rounded-lg border border-gray-200 bg-gray-50 p-4 dark:border-dark-600 dark:bg-dark-700">
+        <div class="p-4 panel-section">
           <div class="flex items-center justify-between gap-4">
             <div>
               <div class="text-sm text-gray-500 dark:text-gray-400">
@@ -780,7 +784,7 @@
           </div>
         </div>
 
-        <div class="max-h-80 overflow-auto rounded-lg border border-gray-200 dark:border-dark-600">
+        <div class="max-h-80 overflow-auto panel-section">
           <KumoTable class="min-w-full divide-y divide-gray-200 text-sm dark:divide-dark-700">
             <KumoTableHeader class="bg-gray-50 text-xs uppercase text-gray-500 dark:bg-dark-800 dark:text-dark-400">
               <KumoTableRow>

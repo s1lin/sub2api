@@ -1,6 +1,6 @@
 <template>
   <div class="space-y-4">
-    <KumoSurface class="card p-4">
+    <Panel flush class="card p-4">
       <div class="flex flex-wrap items-center gap-3">
         <div class="flex-1 sm:max-w-64">
           <KumoInput
@@ -40,7 +40,7 @@
           </KumoButton>
         </div>
       </div>
-    </KumoSurface>
+    </Panel>
 
     <DataTable :columns="columns" :data="orders" :loading="loading">
       <template #cell-id="{ value }">
@@ -92,7 +92,7 @@
         <div class="flex items-center gap-2">
           <KumoButton
             @click="emit('detail', row)"
-            class="flex flex-col items-center gap-0.5 rounded-lg p-1.5 text-gray-500 transition-colors hover:bg-gray-50 hover:text-gray-700 dark:hover:bg-gray-800/50 dark:hover:text-gray-300"
+            class="flex flex-col items-center gap-0.5 rounded-lg p-1.5 text-gray-500 transition-colors hover:bg-[var(--brand-hover)] hover:text-gray-700 dark:hover:text-gray-300"
           >
             <Icon name="eye" size="sm" />
             <span class="text-xs">{{ t('common.view') }}</span>
@@ -137,7 +137,8 @@
 </template>
 
 <script setup lang="ts">
-import { KumoButton, KumoInput, KumoSurface } from '@/components/kumo'
+import Panel from '@/components/common/Panel.vue'
+import { KumoButton, KumoInput } from '@/components/kumo'
 
 import { ref, reactive, computed } from 'vue'
 import { useI18n } from 'vue-i18n'

@@ -2,7 +2,7 @@
   <div
     :class="[
       'group relative rounded-lg border transition-all',
-      enabled ? 'border-gray-200 dark:border-dark-600' : 'border-gray-200 bg-gray-50 opacity-50 dark:border-dark-700 dark:bg-dark-800/50',
+      enabled ? 'border-[var(--brand-line)] border-[var(--brand-line)]' : 'border-[var(--brand-line)] bg-gray-50 opacity-50 border-[var(--brand-line)] dark:bg-dark-800/50',
     ]"
     :title="!enabled ? t('admin.settings.payment.typeDisabled') + ' — ' + t('admin.settings.payment.enableTypesFirst') : undefined"
   >
@@ -47,7 +47,7 @@
         <ToggleSwitch :label="t('common.enabled')" :checked="provider.enabled" @toggle="emit('toggleField', 'enabled')" />
         <ToggleSwitch v-if="provider.provider_key !== 'nowpayments'" :label="t('admin.settings.payment.refundEnabled')" :checked="provider.refund_enabled" @toggle="emit('toggleField', 'refund_enabled')" />
         <ToggleSwitch v-if="provider.refund_enabled" :label="t('admin.settings.payment.allowUserRefund')" :checked="provider.allow_user_refund" @toggle="emit('toggleField', 'allow_user_refund')" />
-        <div class="flex items-center gap-2 border-l border-gray-200 pl-3 dark:border-dark-600">
+        <div class="flex items-center gap-2 border-l border-[var(--brand-line)] pl-3">
           <KumoButton type="button" @click="emit('edit')" class="flex flex-col items-center gap-0.5 rounded-lg p-1.5 text-gray-500 transition-colors hover:bg-blue-50 hover:text-blue-600 dark:hover:bg-blue-900/20 dark:hover:text-blue-400">
             <Icon name="edit" size="sm" />
             <span class="text-xs">{{ t('common.edit') }}</span>

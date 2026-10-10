@@ -1,7 +1,7 @@
 <template>
-  <KumoSurface class="card" data-testid="recharge-bonus-tier-editor">
+  <Panel flush class="card" data-testid="recharge-bonus-tier-editor">
     <!-- Header：与服务商管理卡片同款 -->
-    <div class="border-b border-gray-100 px-4 py-3 dark:border-dark-700">
+    <div class="border-b border-[var(--brand-line)] px-4 py-3">
       <div class="flex items-center justify-between gap-3">
         <div class="min-w-0">
           <h2 class="text-base font-semibold text-gray-900 dark:text-white">
@@ -31,7 +31,7 @@
           {{ t('admin.settings.payment.rechargeBonus.modeLabel') }}
         </span>
         <div
-          class="inline-flex rounded-lg border border-gray-200 bg-gray-50 p-0.5 dark:border-dark-600 dark:bg-dark-800"
+          class="inline-flex p-0.5 panel-section"
           role="group"
         >
           <KumoButton
@@ -41,7 +41,7 @@
             :class="[
               'rounded-md px-3 py-1 text-sm font-medium transition-colors',
               currentMode === option.value
-                ? 'bg-white text-gray-900 shadow-sm dark:bg-dark-700 dark:text-white'
+                ? 'bg-[var(--brand-hover)] text-gray-900   dark:text-white'
                 : 'text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200',
             ]"
             :aria-pressed="currentMode === option.value"
@@ -61,11 +61,11 @@
       <!-- 档位列表：紧凑表格 -->
       <div
         v-if="tiers.length === 0"
-        class="rounded-xl border border-dashed border-gray-300 px-4 py-3 text-sm text-gray-500 dark:border-dark-600 dark:text-gray-400"
+        class="px-4 py-3 text-sm text-gray-500 dark:text-gray-400 panel-section"
       >
         {{ t('admin.settings.payment.rechargeBonus.empty') }}
       </div>
-      <div v-else class="overflow-hidden rounded-xl border border-gray-200 dark:border-dark-600">
+      <div v-else class="overflow-hidden panel-section">
         <div
           class="grid grid-cols-[minmax(0,1fr)_minmax(0,1fr)_2rem] items-center gap-3 bg-gray-50 px-3 py-2 text-xs font-medium text-gray-500 dark:bg-dark-800 dark:text-gray-400"
         >
@@ -113,7 +113,7 @@
             </div>
             <KumoButton
               type="button"
-              class="flex h-8 w-8 items-center justify-center rounded-lg text-gray-400 hover:bg-red-50 hover:text-red-600 dark:hover:bg-dark-700 dark:hover:text-red-400"
+              class="flex h-8 w-8 items-center justify-center rounded-lg text-gray-400 hover:bg-red-50 hover:text-red-600 hover:bg-[var(--brand-hover)] dark:hover:text-red-400"
               :title="t('admin.settings.payment.rechargeBonus.removeTier')"
               data-testid="recharge-bonus-tier-remove"
               @click="removeTier(index)"
@@ -155,7 +155,7 @@
       </p>
 
       <!-- 活动文案 -->
-      <div class="border-t border-gray-100 pt-4 dark:border-dark-700">
+      <div class="border-t border-[var(--brand-line)] pt-4">
         <KumoLabel class="input-label">
           {{ t('admin.settings.payment.rechargeBonus.noticeLabel') }}
         </KumoLabel>
@@ -172,11 +172,12 @@
         </p>
       </div>
     </div>
-  </KumoSurface>
+  </Panel>
 </template>
 
 <script setup lang="ts">
-import { KumoButton, KumoInput, KumoLabel, KumoSurface, KumoTextarea } from '@/components/kumo'
+import Panel from '@/components/common/Panel.vue'
+import { KumoButton, KumoInput, KumoLabel, KumoTextarea } from '@/components/kumo'
 
 import { computed } from 'vue'
 import { useI18n } from 'vue-i18n'

@@ -39,6 +39,9 @@ frontend/dist/
 *.tsbuildinfo
 vite.config.d.ts
 vite.config.js.timestamp-*
+# TypeScript build outputs for the Vite Kumo stylesheet plugin
+/frontend/tooling/kumoStyles.js
+/frontend/tooling/kumoStyles.d.ts
 
 # 日志
 npm-debug.log*

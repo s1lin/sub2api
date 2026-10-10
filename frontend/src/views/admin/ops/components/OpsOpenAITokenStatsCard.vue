@@ -1,11 +1,13 @@
 <script setup lang="ts">
-import { KumoButton, KumoSurface, KumoTable, KumoTableBody, KumoTableCell, KumoTableHead, KumoTableHeader, KumoTableRow } from '@/components/kumo'
+import Panel from '@/components/common/Panel.vue'
+import { KumoButton, KumoTable, KumoTableBody, KumoTableCell, KumoTableHead, KumoTableHeader, KumoTableRow } from '@/components/kumo'
 
 import { computed, ref, watch } from 'vue'
 import { useMediaQuery } from '@vueuse/core'
 import { useI18n } from 'vue-i18n'
 import Select from '@/components/common/Select.vue'
 import EmptyState from '@/components/common/EmptyState.vue'
+import Icon from '@/components/icons/Icon.vue'
 import { opsAPI, type OpsOpenAITokenStatsResponse, type OpsOpenAITokenStatsTimeRange } from '@/api/admin/ops'
 import { formatNumber } from '@/utils/format'
 
@@ -160,7 +162,7 @@ function onNextPage() {
 </script>
 
 <template>
-  <KumoSurface class="card p-4 md:p-5">
+  <Panel flush class="card p-4 md:p-5">
     <div class="mb-4 flex flex-wrap items-center justify-between gap-3">
       <h3 class="text-sm font-bold text-gray-900 dark:text-white">
         {{ t('admin.ops.openaiTokenStats.title') }}
@@ -212,10 +214,12 @@ function onNextPage() {
       v-else-if="items.length === 0"
       :title="t('common.noData')"
       :description="t('admin.ops.openaiTokenStats.empty')"
-    />
+    >
+      <template #icon><Icon name="chart" size="xl" class="empty-state-icon" aria-hidden="true" /></template>
+    </EmptyState>
 
     <div v-else class="space-y-3">
-      <div class="overflow-hidden rounded-xl border border-gray-200 dark:border-dark-700">
+      <div class="overflow-hidden panel-section">
         <div class="max-h-[420px] overflow-auto">
           <div v-if="!isDesktopViewport" class="divide-y divide-gray-100 dark:divide-dark-800">
             <div v-for="row in items" :key="row.model" class="space-y-2 p-3">
@@ -250,7 +254,7 @@ function onNextPage() {
           </div>
           <KumoTable v-else class="min-w-full text-left text-xs md:text-sm">
             <KumoTableHeader class="sticky top-0 z-10 bg-white dark:bg-dark-800">
-              <KumoTableRow class="border-b border-gray-200 text-gray-500 dark:border-dark-700 dark:text-gray-400">
+              <KumoTableRow class="border-b border-[var(--brand-line)] text-gray-500 dark:text-gray-400">
                 <KumoTableHead class="px-2 py-2 font-semibold">{{ t('admin.ops.openaiTokenStats.table.model') }}</KumoTableHead>
                 <KumoTableHead class="px-2 py-2 font-semibold">{{ t('admin.ops.openaiTokenStats.table.requestCount') }}</KumoTableHead>
                 <KumoTableHead class="px-2 py-2 font-semibold">{{ t('admin.ops.openaiTokenStats.table.avgTokensPerSec') }}</KumoTableHead>
@@ -264,7 +268,7 @@ function onNextPage() {
               <KumoTableRow
                 v-for="row in items"
                 :key="row.model"
-                class="border-b border-gray-100 text-gray-700 last:border-b-0 dark:border-dark-800 dark:text-gray-200"
+                class="border-b border-[var(--brand-line)] text-gray-700 last:border-b-0 dark:text-gray-200"
               >
                 <KumoTableCell class="px-2 py-2 font-medium">{{ row.model }}</KumoTableCell>
                 <KumoTableCell class="px-2 py-2">{{ formatInt(row.request_count) }}</KumoTableCell>
@@ -282,5 +286,5 @@ function onNextPage() {
         {{ t('admin.ops.openaiTokenStats.totalModels', { total }) }}
       </div>
     </div>
-  </KumoSurface>
+  </Panel>
 </template>

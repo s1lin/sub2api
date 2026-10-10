@@ -13,7 +13,7 @@
     </div>
     <div v-else class="overflow-x-auto">
       <KumoTable class="w-full text-left text-sm">
-        <KumoTableHeader class="border-b border-gray-200 dark:border-dark-700">
+        <KumoTableHeader class="border-b border-[var(--brand-line)]">
           <KumoTableRow class="text-xs uppercase tracking-wider text-gray-500 dark:text-gray-400">
             <KumoTableHead class="py-2 pr-3">{{ t('channelStatus.detailColumns.model') }}</KumoTableHead>
             <KumoTableHead class="py-2 pr-3">{{ t('channelStatus.detailColumns.latestStatus') }}</KumoTableHead>
@@ -28,7 +28,7 @@
           <KumoTableRow
             v-for="m in detail.models"
             :key="m.model"
-            class="border-b border-gray-100 dark:border-dark-800"
+            class="border-b border-[var(--brand-line)]"
           >
             <KumoTableCell class="py-2 pr-3 font-medium text-gray-900 dark:text-gray-100">{{ formatMonitorModel(m.model) }}</KumoTableCell>
             <KumoTableCell class="py-2 pr-3">

@@ -190,12 +190,12 @@ const kindBadgeClass = (kind: string) => {
 
         <!-- Table -->
         <div v-else class="flex min-h-0 flex-1 flex-col">
-          <div v-if="items.length === 0" class="rounded-xl border border-dashed border-gray-200 p-10 text-center dark:border-dark-700">
+          <div v-if="items.length === 0" class="p-10 text-center panel-section">
             <div class="text-sm font-medium text-gray-600 dark:text-gray-300">{{ t('admin.ops.requestDetails.empty') }}</div>
             <div class="mt-1 text-xs text-gray-400">{{ t('admin.ops.requestDetails.emptyHint') }}</div>
           </div>
 
-          <div v-else class="flex min-h-0 flex-1 flex-col overflow-hidden rounded-xl border border-gray-200 dark:border-dark-700">
+          <div v-else class="flex min-h-0 flex-1 flex-col overflow-hidden panel-section">
             <div class="min-h-0 flex-1 overflow-auto">
               <div v-if="!isDesktopViewport" class="divide-y divide-gray-100 dark:divide-dark-800">
                 <div v-for="(row, idx) in items" :key="idx" class="space-y-2 p-4">
@@ -216,7 +216,7 @@ const kindBadgeClass = (kind: string) => {
                       {{ row.request_id }}
                     </span>
                     <KumoButton
-                      class="shrink-0 rounded-md bg-gray-100 px-2 py-1 text-[10px] font-bold text-gray-600 hover:bg-gray-200 dark:bg-dark-700 dark:text-gray-300 dark:hover:bg-dark-600"
+                      class="shrink-0 rounded-md bg-gray-100 px-2 py-1 text-[10px] font-bold text-gray-600 hover:bg-[var(--brand-hover)] dark:bg-dark-700 dark:text-gray-300"
                       @click="handleCopyRequestId(row.request_id)"
                     >
                       {{ t('admin.ops.requestDetails.copy') }}
@@ -261,7 +261,7 @@ const kindBadgeClass = (kind: string) => {
                 </KumoTableRow>
               </KumoTableHeader>
               <KumoTableBody class="divide-y divide-gray-200 bg-white dark:divide-dark-700 dark:bg-dark-800">
-                <KumoTableRow v-for="(row, idx) in items" :key="idx" class="hover:bg-gray-50 dark:hover:bg-dark-700/50">
+                <KumoTableRow v-for="(row, idx) in items" :key="idx" class="hover:bg-[var(--brand-hover)]">
                   <KumoTableCell class="whitespace-nowrap px-4 py-3 text-xs text-gray-600 dark:text-gray-300">
                     {{ formatDateTime(row.created_at) }}
                   </KumoTableCell>
@@ -288,7 +288,7 @@ const kindBadgeClass = (kind: string) => {
                         {{ row.request_id }}
                       </span>
                       <KumoButton
-                        class="rounded-md bg-gray-100 px-2 py-1 text-[10px] font-bold text-gray-600 hover:bg-gray-200 dark:bg-dark-700 dark:text-gray-300 dark:hover:bg-dark-600"
+                        class="rounded-md bg-gray-100 px-2 py-1 text-[10px] font-bold text-gray-600 hover:bg-[var(--brand-hover)] dark:bg-dark-700 dark:text-gray-300"
                         @click="handleCopyRequestId(row.request_id)"
                       >
                         {{ t('admin.ops.requestDetails.copy') }}

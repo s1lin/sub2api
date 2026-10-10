@@ -1,7 +1,7 @@
 <template>
-  <div class="stat-card">
-    <div :class="['stat-icon', iconClass]">
-      <component v-if="icon" :is="icon" class="h-6 w-6" aria-hidden="true" />
+  <section class="stat-card">
+    <div v-if="icon || $slots.icon" :class="['stat-icon', iconClass]">
+      <slot name="icon"><component :is="icon" class="h-5 w-5" aria-hidden="true" /></slot>
     </div>
     <div class="min-w-0 flex-1">
       <p class="stat-label truncate">{{ title }}</p>
@@ -17,8 +17,9 @@
           {{ formattedChange }}
         </span>
       </div>
+      <div v-if="$slots.default" class="mt-1 text-xs text-[var(--brand-muted)]"><slot /></div>
     </div>
-  </div>
+  </section>
 </template>
 
 <script setup lang="ts">

@@ -154,9 +154,10 @@ func (s *PaymentService) toPaid(ctx context.Context, o *dbent.PaymentOrder, trad
 	now := time.Now()
 	grace := now.Add(-paymentGraceMinutes * time.Minute)
 	recoverableExpiry := paymentorder.And(paymentorder.StatusEQ(OrderStatusExpired), paymentorder.UpdatedAtGTE(grace))
-	// A signed, fully paid USDT invoice can finish after blockchain confirmation
-	// delays or delayed IPN delivery. Its original order must still be fulfilled.
-	if pk == payment.TypeNOWPayments {
+	// Verified Stripe payments and fully paid USDT invoices can arrive after
+	// delayed confirmation or webhook delivery. Fulfill their original orders
+	// even when the local expiry grace period has elapsed.
+	if pk == payment.TypeStripe || pk == payment.TypeNOWPayments {
 		recoverableExpiry = paymentorder.StatusEQ(OrderStatusExpired)
 	}
 	c, err := s.entClient.PaymentOrder.Update().Where(

@@ -1,5 +1,5 @@
 <template>
-  <div class="rounded-lg border border-gray-200 bg-gray-50 p-3 dark:border-dark-600 dark:bg-dark-800">
+  <div class="rounded-lg border border-[var(--brand-line)] bg-gray-50 p-3 dark:bg-dark-800">
     <!-- Collapsed summary header (clickable) -->
     <div class="flex items-center gap-2">
       <KumoButton class="flex min-w-0 flex-1 items-center gap-2 text-left" :aria-expanded="!collapsed" @click="collapsed = !collapsed">
@@ -218,7 +218,7 @@
               @remove="removeInterval(idx)"
             />
           </div>
-          <div v-else class="mt-2 rounded border border-dashed border-gray-300 p-3 text-center text-xs text-gray-400 dark:border-dark-500">
+          <div v-else class="mt-2 rounded border border-dashed border-[var(--brand-line)] p-3 text-center text-xs text-gray-400">
             {{ t('admin.channels.form.noTiersYet') }}
           </div>
         </div>
@@ -256,7 +256,7 @@
           </div>
         </div>
 
-        <div class="mt-3 border-t border-gray-200 pt-3 dark:border-dark-600" data-testid="reasoning-effort-multipliers">
+        <div class="mt-3 border-t border-[var(--brand-line)] pt-3" data-testid="reasoning-effort-multipliers">
           <div class="flex items-center justify-between gap-2">
             <KumoLabel class="text-xs font-medium text-gray-500 dark:text-gray-400">
               {{ t('admin.channels.form.reasoningEffortMultipliers') }}

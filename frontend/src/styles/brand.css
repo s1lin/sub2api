@@ -14,7 +14,7 @@
   font-display: swap;
 }
 
-/* Copper + Graphite. These semantic tokens are shared by every brand surface. */
+/* Phosphor Jade + Graphite. These semantic tokens are shared by every brand surface. */
 :root {
   --brand-canvas: #f4f5f3;
   --brand-surface: #fafbf8;
@@ -22,12 +22,17 @@
   --brand-ink: #202522;
   --brand-muted: #59615b;
   --brand-line: #d8ddd6;
-  --brand-accent: #a74d30;
-  --brand-accent-hover: #8d3e25;
+  --brand-accent: #0f7a6c;
+  --brand-accent-hover: #0b6458;
   --brand-on-accent: #fafbf8;
-  --brand-accent-soft: #f0e4dd;
+  --brand-accent-soft: #dcefe9;
   --brand-font: 'Geist', 'PingFang SC', 'Microsoft YaHei', system-ui, sans-serif;
   --brand-mono: 'Geist Mono', ui-monospace, monospace;
+  --brand-control-radius: 6px;
+  --brand-panel-radius: 8px;
+  --brand-panel: #ffffff;
+  --brand-hover: #e9ece7;
+  --brand-overlay-shadow: 0 4px 16px rgb(32 37 34 / 10%);
 }
 
 .dark {
@@ -37,10 +42,13 @@
   --brand-ink: #eef0ec;
   --brand-muted: #b0b9af;
   --brand-line: #354037;
-  --brand-accent: #e89b7b;
-  --brand-accent-hover: #f2b296;
+  --brand-accent: #3fd1b5;
+  --brand-accent-hover: #6be0c9;
   --brand-on-accent: #141816;
-  --brand-accent-soft: #35271f;
+  --brand-accent-soft: #15302b;
+  --brand-panel: #1c221e;
+  --brand-hover: #262e28;
+  --brand-overlay-shadow: 0 4px 16px rgb(0 0 0 / 20%);
 }
 
 body { font-family: var(--brand-font); }
@@ -84,6 +92,7 @@ body { font-family: var(--brand-font); }
 .brand-theme-toggle { display: grid; place-items: center; width: 40px; height: 40px; border-radius: 10px; transition: background-color 160ms ease; }
 .brand-theme-toggle:hover { background: var(--brand-inset); }
 .public-account-link { padding-block: 12px; }
+.storefront-docs-link { display: inline-flex; align-items: center; gap: 8px; margin-top: 20px; color: var(--brand-accent); font-size: 14px; }
 .brand-button { display: inline-flex; min-height: 48px; justify-content: center; align-items: center; gap: 12px; padding: 13px 22px; border-radius: 10px; background: var(--brand-accent); color: var(--brand-on-accent); font-weight: 600; font-size: 15px; line-height: 1.4; white-space: nowrap; transition: background-color 180ms ease, transform 180ms ease; }
 .brand-button:hover { background: var(--brand-accent-hover); }
 .brand-button:active { transform: scale(.98); }
@@ -98,7 +107,9 @@ body { font-family: var(--brand-font); }
   .public-nav { min-height: 72px; gap: 12px; }
   .brand-wordmark { font-size: 24px; }
   .public-nav-actions { gap: 8px; font-size: 13px; }
-  .public-docs { display: none; }
+  .public-docs { display: inline-flex; padding-block: 12px; }
+  .public-nav .brand-wordmark { font-size: 21px; gap: 6px; }
+  .public-nav .brand-wordmark img { width: 24px; height: 24px; }
   .brand-theme-toggle { width: 36px; height: 40px; }
   .brand-footer { flex-direction: column; gap: 12px; }
 }

@@ -31,6 +31,12 @@ const routes: RouteRecordRaw[] = [
 
   // ==================== Public Routes ====================
   {
+    path: '/docs/:page?',
+    name: 'Documentation',
+    component: () => import('@/views/public/DocsView.vue'),
+    meta: { requiresAuth: false, title: 'Docs', titleKey: 'home.docs' }
+  },
+  {
     path: '/',
     name: 'CreditsHome',
     component: () => import('@/views/public/PricingView.vue'),
@@ -741,10 +747,13 @@ const routes: RouteRecordRaw[] = [
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes,
-  scrollBehavior(_to, _from, savedPosition) {
+  scrollBehavior(to, _from, savedPosition) {
     // Scroll to saved position when using browser back/forward
     if (savedPosition) {
       return savedPosition
+    }
+    if (to.name === 'Documentation' && to.hash) {
+      return { el: to.hash, top: 24 }
     }
     // Scroll to top for new routes
     return { top: 0 }

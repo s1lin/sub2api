@@ -12,19 +12,19 @@ export default {
   theme: {
     extend: {
       colors: {
-        // Copper is the action color; semantic status/provider colors stay distinct.
+        // Phosphor jade is the action color; semantic status/provider colors stay distinct.
         primary: {
-          50: '#fbf3ee',
-          100: '#f5e5da',
-          200: '#efcbb6',
-          300: '#edb99f',
-          400: '#e89b7b',
-          500: '#bd6847',
-          600: '#a74d30',
-          700: '#8d3e25',
-          800: '#743522',
-          900: '#542b20',
-          950: '#35271f'
+          50: '#eefaf6',
+          100: '#d6f3eb',
+          200: '#aee6d7',
+          300: '#7ad8c2',
+          400: '#3fd1b5',
+          500: '#14a08b',
+          600: '#0f7a6c',
+          700: '#0b6458',
+          800: '#0c4f46',
+          900: '#0d3f39',
+          950: '#15302b'
         },
         // Mineral accent surfaces
         accent: graphite,

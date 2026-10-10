@@ -6,6 +6,8 @@ import PricingView from '../PricingView.vue'
 import SubscriptionPlanCard from '@/components/payment/SubscriptionPlanCard.vue'
 import en from '@/i18n/locales/en/storefront'
 import zh from '@/i18n/locales/zh/storefront'
+import enLanding from '@/i18n/locales/en/landing'
+import zhLanding from '@/i18n/locales/zh/landing'
 
 const state = vi.hoisted(() => ({
   settings: {} as Record<string, unknown>,
@@ -38,7 +40,7 @@ const plans = [
 function render(locale = 'en') {
   return mountWithControls(PricingView, {
     global: {
-      plugins: [createI18n({ legacy: false, locale, messages: { en, zh }, messageCompiler: message => () => String(message) })],
+      plugins: [createI18n({ legacy: false, locale, messages: { en: { ...en, ...enLanding }, zh: { ...zh, ...zhLanding } }, messageCompiler: message => () => String(message) })],
       stubs: {
         RouterLink: RouterLinkStub,
         KumoLabel: { template: '<label><slot /></label>' },
@@ -66,7 +68,7 @@ describe('Public storefront purchase journeys', () => {
     await flushPromises()
     expect(wrapper.text()).toContain(en.storefront.paymentDisabled)
     expect(state.getPlans).not.toHaveBeenCalled()
-    expect(wrapper.findAllComponents(RouterLinkStub)).toHaveLength(0)
+    expect(wrapper.findAllComponents(RouterLinkStub).every(link => link.props('to') === '/docs')).toBe(true)
     expect(wrapper.findAllComponents(SubscriptionPlanCard)).toHaveLength(0)
   })
 

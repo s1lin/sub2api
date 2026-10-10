@@ -1,8 +1,5 @@
 <template>
-  <KumoSurface class="card p-4">
-    <h3 class="mb-4 text-sm font-semibold text-gray-900 dark:text-white">
-      {{ t('admin.dashboard.tokenUsageTrend') }}
-    </h3>
+  <Panel class="card" :title="t('admin.dashboard.tokenUsageTrend')">
     <div v-if="loading" class="flex h-48 items-center justify-center">
       <LoadingSpinner />
     </div>
@@ -15,11 +12,11 @@
     >
       {{ t('admin.dashboard.noDataAvailable') }}
     </div>
-  </KumoSurface>
+  </Panel>
 </template>
 
 <script setup lang="ts">
-import { KumoSurface } from '@/components/kumo'
+import Panel from '@/components/common/Panel.vue'
 
 import { computed } from 'vue'
 import { useTheme } from '@/composables/useTheme'
@@ -62,7 +59,7 @@ const { isDark: isDarkMode } = useTheme()
 const chartColors = computed(() => ({
   text: isDarkMode.value ? '#b0b9af' : '#59615b',
   grid: isDarkMode.value ? '#354037' : '#d8ddd6',
-  input: isDarkMode.value ? '#e89b7b' : '#a74d30',
+  input: isDarkMode.value ? '#3fd1b5' : '#0f7a6c',
   output: isDarkMode.value ? '#8fb5a2' : '#58786a',
   cacheCreation: '#bf9453',
   cacheRead: '#788da1',

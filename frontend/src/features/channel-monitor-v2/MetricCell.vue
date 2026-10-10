@@ -1,6 +1,6 @@
 <template>
-  <div
-    class="stat-card !min-h-[6.5rem] !rounded-3xl !border-0 !p-4 shadow-sm ring-1 ring-gray-900/5 dark:!bg-dark-800 dark:ring-dark-700"
+  <section
+    class="stat-card min-h-[6.5rem] p-4"
     :title="title || undefined"
   >
     <div
@@ -30,7 +30,7 @@
         class="mt-1.5 block text-[11px] leading-snug text-gray-400 dark:text-dark-400"
       >{{ detail }}</small>
     </div>
-  </div>
+  </section>
 </template>
 
 <script setup lang="ts">

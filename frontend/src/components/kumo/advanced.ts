@@ -90,7 +90,7 @@ export const KumoTabs = bridge('KumoTabs', props => {
     }
   })
   return el('div', { className: 'contents', ref: container }, el(Tabs as ComponentType<any>, {
-  ...domProps(props), value: String(props.modelValue ?? props.value ?? ''),
+  ...domProps(props), className: `platform-tabs ${props.className ?? ''}`, value: String(props.modelValue ?? props.value ?? ''),
   tabs: props.tabs?.map((tab: ControlProps) => ({ ...tab, value: String(tab.value), label: props.tab?.({ tab }) ?? tab.label, render: el('button', { id: tab.id, disabled: tab.disabled, 'data-test': tab.dataTest, 'aria-controls': tab.controls }) })),
   onValueChange: (value: string) => {
     const actual = props.tabs?.find((tab: ControlProps) => String(tab.value) === value)?.value ?? value

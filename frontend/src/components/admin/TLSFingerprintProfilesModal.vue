@@ -23,7 +23,7 @@
       </div>
 
       <div v-else-if="profiles.length === 0" class="py-8 text-center">
-        <div class="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-gray-100 dark:bg-dark-700">
+        <div class="mx-auto mb-4 flex h-12 w-12 items-center justify-center panel-section">
           <Icon name="shield" size="lg" class="text-gray-400" />
         </div>
         <h4 class="mb-1 text-sm font-medium text-gray-900 dark:text-white">
@@ -34,7 +34,7 @@
         </p>
       </div>
 
-      <div v-else class="max-h-96 overflow-auto rounded-lg border border-gray-200 dark:border-dark-600">
+      <div v-else class="max-h-96 overflow-auto panel-section">
         <KumoTable class="min-w-full divide-y divide-gray-200 dark:divide-dark-700">
           <KumoTableHeader class="sticky top-0 bg-gray-50 dark:bg-dark-700">
             <KumoTableRow>
@@ -56,7 +56,7 @@
             </KumoTableRow>
           </KumoTableHeader>
           <KumoTableBody class="divide-y divide-gray-200 bg-white dark:divide-dark-700 dark:bg-dark-800">
-            <KumoTableRow v-for="profile in profiles" :key="profile.id" class="hover:bg-gray-50 dark:hover:bg-dark-700">
+            <KumoTableRow v-for="profile in profiles" :key="profile.id" class="hover:bg-[var(--brand-hover)]">
               <KumoTableCell class="px-3 py-2">
                 <div class="font-medium text-gray-900 dark:text-white text-sm">{{ profile.name }}</div>
               </KumoTableCell>
@@ -150,7 +150,7 @@
           </div>
         </div>
 
-        <hr class="border-gray-200 dark:border-dark-600" />
+        <hr class="border-[var(--brand-line)]" />
 
         <!-- Basic Info -->
         <div class="grid grid-cols-2 gap-4">

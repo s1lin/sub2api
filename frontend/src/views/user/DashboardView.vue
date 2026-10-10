@@ -1,13 +1,7 @@
 <template>
-  <AppLayout>
+  <AppLayout hide-page-header>
     <div class="space-y-6">
-      <section class="workspace-intro">
-        <div>
-          <h2>{{ t('dashboard.workspaceTitle') }}</h2>
-          <p>{{ t('dashboard.workspaceDescription') }}</p>
-        </div>
-        <div class="workspace-art"><AsciiArtwork variant="network" /></div>
-      </section>
+      <PageHeader class="workspace-intro" :title="t('dashboard.workspaceTitle')" :description="t('dashboard.workspaceDescription')" />
       <div v-if="loading" class="flex items-center justify-center py-12"><LoadingSpinner /></div>
       <template v-else-if="stats">
         <UserDashboardStats :stats="stats" :balance="user?.balance || 0" :is-simple="authStore.isSimpleMode" :platform-quotas="platformQuotas" />
@@ -23,7 +17,7 @@
 
 <script setup lang="ts">
 import { useI18n } from 'vue-i18n'
-import AsciiArtwork from '@/components/brand/AsciiArtwork.vue'
+import PageHeader from '@/components/layout/PageHeader.vue'
 import { ref, computed, onMounted } from 'vue'; import { useAuthStore } from '@/stores/auth'; import { usageAPI, type UserDashboardStats as UserStatsType } from '@/api/usage'
 import AppLayout from '@/components/layout/AppLayout.vue'; import LoadingSpinner from '@/components/common/LoadingSpinner.vue'
 import UserDashboardStats from '@/components/user/dashboard/UserDashboardStats.vue'; import UserDashboardCharts from '@/components/user/dashboard/UserDashboardCharts.vue'

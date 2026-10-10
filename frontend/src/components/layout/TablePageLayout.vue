@@ -1,9 +1,9 @@
 <template>
   <div class="table-page-layout" :class="{ 'mobile-mode': isMobile }">
     <!-- 固定区域：操作按钮 -->
-    <div v-if="$slots.actions" class="layout-section-fixed platform-table-toolbar">
-      <slot name="actions" />
-    </div>
+    <PageHeader v-if="!hidePageHeader" class="layout-section-fixed platform-table-toolbar" :title="title" :description="description">
+      <template v-if="$slots.actions" #actions><slot name="actions" /></template>
+    </PageHeader>
 
     <!-- 固定区域：搜索和过滤器 -->
     <div v-if="$slots.filters" class="layout-section-fixed platform-table-toolbar">
@@ -12,9 +12,9 @@
 
     <!-- 滚动区域：表格 -->
     <div class="layout-section-scrollable">
-      <KumoSurface class="card table-scroll-container">
+      <div class="table-scroll-container">
         <slot name="table" />
-      </KumoSurface>
+      </div>
     </div>
 
     <!-- 固定区域：分页器 -->
@@ -25,7 +25,11 @@
 </template>
 
 <script setup lang="ts">
-import { KumoSurface } from '@/components/kumo'
+import PageHeader from './PageHeader.vue'
+import { usePageHeading } from '@/composables/usePageHeading'
+
+const { title, description } = usePageHeading()
+defineProps<{ hidePageHeader?: boolean }>()
 
 import { ref, onMounted, onUnmounted } from 'vue'
 
@@ -63,9 +67,9 @@ onUnmounted(() => {
 
 /* 表格滚动容器 - 增强版表体滚动方案 */
 .table-scroll-container {
-  @apply flex flex-col overflow-hidden h-full rounded-2xl;
-  background: var(--brand-surface);
-  border: 1px solid var(--brand-line);
+  @apply flex flex-col overflow-hidden h-full;
+  background: var(--brand-panel);
+  border-radius: var(--brand-panel-radius);
 }
 
 .table-scroll-container :deep(.table-wrapper) {
@@ -81,7 +85,7 @@ onUnmounted(() => {
 }
 
 .table-scroll-container :deep(thead) {
-  background: var(--brand-inset);
+  background: var(--brand-panel);
 }
 
 .table-scroll-container :deep(tbody) {
@@ -89,17 +93,19 @@ onUnmounted(() => {
 }
 
 .table-scroll-container :deep(th) {
-  @apply text-gray-600 dark:text-dark-300 border-b border-gray-200 dark:border-dark-700;
+  @apply text-gray-600 dark:text-dark-300 border-b;
+  border-color: var(--brand-line);
 }
 
 .table-scroll-container :deep(td) {
-  @apply text-gray-700 dark:text-gray-300 border-b border-gray-100 dark:border-dark-800;
+  @apply text-gray-700 dark:text-gray-300 border-b;
+  border-color: var(--brand-line);
 }
 
 /* 移动端：恢复正常滚动 */
 .table-page-layout.mobile-mode { height: auto; }
 .table-page-layout.mobile-mode .table-scroll-container {
-  @apply h-auto overflow-visible border-none shadow-none bg-transparent;
+  @apply h-auto overflow-visible border-none  bg-transparent;
 }
 
 .table-page-layout.mobile-mode .layout-section-scrollable {

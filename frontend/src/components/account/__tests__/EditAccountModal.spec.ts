@@ -1,7 +1,7 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import { enableAutoUnmount } from '@vue/test-utils'
 import { defineComponent } from 'vue'
-import { mount } from '@/__tests__/render'
+import { mount, flushPromises } from '@/__tests__/render'
 
 enableAutoUnmount(afterEach)
 
@@ -383,6 +383,7 @@ describe('EditAccountModal', () => {
     updateAccountMock.mockReset().mockResolvedValue(account)
     checkMixedChannelRiskMock.mockReset().mockResolvedValue({ has_risk: false })
     const wrapper = mountModal(account)
+    await flushPromises()
     const button = wrapper.findAll('button').find((candidate) => candidate.text() === 'payment.oneYear')!
     await button.trigger('click')
     const input = wrapper.get<HTMLInputElement>('input[type="datetime-local"]')

@@ -133,7 +133,7 @@ const dailyFixedHint = computed(() =>
 </script>
 
 <template>
-  <div class="rounded-lg border border-gray-200 dark:border-dark-600">
+  <div class="rounded-lg border border-[var(--brand-line)]">
       <!-- Header: toggle + collapse -->
       <div class="flex items-center justify-between p-4" :class="{ 'pb-0': localEnabled && !collapsed }">
         <KumoButton class="flex items-center gap-2 flex-1 text-left" :disabled="!localEnabled" :aria-expanded="localEnabled && !collapsed" @click="collapsed = !collapsed">

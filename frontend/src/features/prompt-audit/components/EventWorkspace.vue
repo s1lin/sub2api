@@ -56,7 +56,7 @@
       </div>
     </form>
     <div v-if="error" role="alert" class="mt-4 rounded-lg bg-red-50 px-4 py-3 text-sm text-red-700 dark:bg-red-950/30 dark:text-red-300">{{ error }}</div>
-    <div class="mt-5 overflow-x-auto rounded-xl border border-gray-200 dark:border-dark-700/60">
+    <div class="mt-5 overflow-x-auto rounded-lg border border-[var(--brand-line)]">
       <KumoTable class="min-w-[1120px] w-full text-left text-sm">
         <KumoTableHeader class="bg-gray-50 text-xs uppercase tracking-wide text-gray-500 dark:bg-dark-900/70 dark:text-dark-400">
           <KumoTableRow>
@@ -73,7 +73,7 @@
         <KumoTableBody class="divide-y divide-gray-100 bg-white dark:divide-dark-700 dark:bg-transparent">
           <KumoTableRow v-if="loading"><KumoTableCell colspan="8" class="px-4 py-12 text-center text-gray-500" aria-busy="true">{{ t('common.loading') }}</KumoTableCell></KumoTableRow>
           <KumoTableRow v-else-if="events.length === 0"><KumoTableCell colspan="8" class="px-4 py-12 text-center text-gray-500">{{ t('admin.promptAudit.events.empty') }}</KumoTableCell></KumoTableRow>
-          <KumoTableRow v-for="event in events" v-else :key="event.id" :data-test="`event-${event.id}`" class="align-top hover:bg-gray-50/70 dark:hover:bg-dark-800/70">
+          <KumoTableRow v-for="event in events" v-else :key="event.id" :data-test="`event-${event.id}`" class="align-top hover:bg-[var(--brand-hover)]">
             <KumoTableCell class="px-3 py-3"><KumoCheckbox type="checkbox" :checked="selectedIds.includes(event.id)" :aria-label="t('admin.promptAudit.events.selectEvent', { id: event.id })" @change="toggleOne(event.id)" /></KumoTableCell>
             <KumoTableCell class="whitespace-nowrap px-3 py-3 text-xs text-gray-600 dark:text-dark-300">{{ formatDate(event.created_at) }}</KumoTableCell>
             <KumoTableCell class="px-3 py-3">

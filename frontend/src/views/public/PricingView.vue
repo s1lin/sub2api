@@ -113,6 +113,7 @@
         <div class="section-intro">
           <h2 id="getting-started-title">{{ t('storefront.setupTitle') }}</h2>
           <p>{{ t('storefront.setupDescription') }}</p>
+          <router-link to="/docs" class="brand-text-link storefront-docs-link">{{ t('home.viewDocs') }} <Icon name="arrowRight" size="sm" /></router-link>
         </div>
         <div class="setup-layout">
           <ol class="setup-sequence">
@@ -138,7 +139,7 @@
     </main>
     <footer class="brand-container brand-footer">
       <span>© {{ new Date().getFullYear() }} {{ appStore.siteName }}</span>
-      <a v-if="docUrl" :href="docUrl" target="_blank" rel="noopener noreferrer" class="brand-text-link">{{ t('home.viewDocs') }}</a>
+      <router-link to="/docs" class="brand-text-link">{{ t('home.docs') }}</router-link>
     </footer>
   </div>
 </template>
@@ -158,7 +159,6 @@ import PublicHeader from '@/components/layout/PublicHeader.vue'
 import AsciiOrbit from '@/components/brand/AsciiOrbit.vue'
 import Icon from '@/components/icons/Icon.vue'
 import { platformLabel } from '@/utils/platformColors'
-import { sanitizeUrl } from '@/utils/url'
 
 const { t } = useI18n()
 const router = useRouter()
@@ -171,7 +171,6 @@ const selectedPlatform = ref('')
 const paymentEnabled = computed(() => appStore.cachedPublicSettings?.payment_enabled === true)
 const subscriptionsEnabled = computed(() => appStore.cachedPublicSettings?.subscription_enabled !== false)
 const balanceEnabled = computed(() => appStore.cachedPublicSettings?.payment_balance_disabled !== true)
-const docUrl = computed(() => sanitizeUrl(appStore.docUrl || ''))
 const platforms = computed(() => [...new Set(plans.value.map(plan => plan.group_platform || '').filter(Boolean))])
 const filteredPlans = computed(() => plans.value.filter(plan => !selectedPlatform.value || plan.group_platform === selectedPlatform.value))
 const steps = computed(() => [

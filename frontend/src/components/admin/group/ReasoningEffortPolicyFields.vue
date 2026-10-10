@@ -33,7 +33,7 @@
       <p class="input-hint">{{ t("admin.groups.form.maxReasoningEffortOverLimitHint") }}</p>
     </div>
 
-    <div class="border-t border-gray-200 pt-4 dark:border-dark-600">
+    <div class="border-t border-[var(--brand-line)] pt-4">
       <div class="mb-3 flex items-center justify-between gap-3">
         <div>
           <KumoLabel class="input-label mb-0">
@@ -57,7 +57,7 @@
         <div
           v-for="group in mappings"
           :key="group.id"
-          class="space-y-3 rounded-lg border border-gray-200 bg-gray-50/40 p-3 dark:border-dark-600 dark:bg-dark-800/40"
+          class="space-y-3 rounded-lg border border-[var(--brand-line)] bg-gray-50/40 p-3 dark:bg-dark-800/40"
         >
           <div
             class="grid grid-cols-1 items-start gap-3 md:grid-cols-[minmax(0,1fr)_1.25rem_minmax(0,1fr)_2.75rem]"

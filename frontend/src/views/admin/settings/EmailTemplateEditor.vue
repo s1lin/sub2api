@@ -1,7 +1,7 @@
 <template>
-  <KumoSurface class="card">
+  <Panel flush class="card">
     <div
-      class="flex flex-col gap-3 border-b border-gray-100 px-6 py-4 dark:border-dark-700 lg:flex-row lg:items-start lg:justify-between"
+      class="flex flex-col gap-3 border-b border-[var(--brand-line)] px-6 py-4 lg:flex-row lg:items-start lg:justify-between"
     >
       <div>
         <h2 class="text-lg font-semibold text-gray-900 dark:text-white">
@@ -101,7 +101,7 @@
               {{ selectedEventMeta.label }}
             </div>
             <span
-              class="rounded-full bg-white px-2.5 py-1 text-xs font-medium text-gray-600 shadow-sm ring-1 ring-gray-200 dark:bg-dark-800 dark:text-gray-300 dark:ring-dark-600"
+              class="rounded-full bg-[var(--brand-hover)] px-2.5 py-1 text-xs font-medium text-gray-600 ring-1 ring-gray-200 dark:text-gray-300 dark:ring-dark-600"
             >
               {{ selectedEventMeta.categoryLabel }}
             </span>
@@ -165,7 +165,7 @@
             </div>
 
             <div
-              class="rounded-lg border border-gray-200 bg-gray-50 p-4 dark:border-dark-700 dark:bg-dark-800/60"
+              class="p-4 panel-section"
             >
               <div class="text-sm font-medium text-gray-900 dark:text-white">
                 {{ t("admin.settings.emailTemplates.placeholders") }}
@@ -178,7 +178,7 @@
                   v-for="placeholder in placeholderList"
                   :key="placeholder"
                   type="button"
-                  class="rounded-full border border-gray-200 bg-white px-3 py-1 font-mono text-xs text-gray-700 transition-colors hover:border-primary-300 hover:text-primary-600 dark:border-dark-600 dark:bg-dark-700 dark:text-gray-200 dark:hover:border-primary-500 dark:hover:text-primary-300"
+                  class="rounded-full border border-[var(--brand-line)] bg-white px-3 py-1 font-mono text-xs text-gray-700 transition-colors hover:border-primary-300 hover:text-primary-600 dark:bg-dark-700 dark:text-gray-200 dark:hover:border-primary-500 dark:hover:text-primary-300"
                   @click="copyPlaceholder(placeholder)"
                 >
                   {{ placeholder }}
@@ -189,10 +189,10 @@
 
           <div class="space-y-4">
             <div
-              class="rounded-lg border border-gray-200 bg-white dark:border-dark-700 dark:bg-dark-800"
+              class="panel-section"
             >
               <div
-                class="flex items-center justify-between border-b border-gray-100 px-4 py-3 dark:border-dark-700"
+                class="flex items-center justify-between border-b border-[var(--brand-line)] px-4 py-3"
               >
                 <div>
                   <div class="text-sm font-medium text-gray-900 dark:text-white">
@@ -211,7 +211,7 @@
               </div>
               <div class="bg-gray-100 p-3 dark:bg-dark-900">
                 <iframe
-                  class="h-[36rem] w-full rounded-md border border-gray-200 bg-white dark:border-dark-700"
+                  class="h-[36rem] w-full rounded-md border border-[var(--brand-line)] bg-white"
                   sandbox=""
                   :srcdoc="previewHtml"
                   :title="t('admin.settings.emailTemplates.livePreview')"
@@ -226,11 +226,12 @@
         </div>
       </template>
     </div>
-  </KumoSurface>
+  </Panel>
 </template>
 
 <script setup lang="ts">
-import { KumoButton, KumoInput, KumoLabel, KumoLoader, KumoNativeSelect, KumoSurface, KumoTextarea } from '@/components/kumo'
+import Panel from '@/components/common/Panel.vue'
+import { KumoButton, KumoInput, KumoLabel, KumoLoader, KumoNativeSelect, KumoTextarea } from '@/components/kumo'
 
 import { computed, onMounted, ref, watch } from "vue";
 import { useI18n } from "vue-i18n";

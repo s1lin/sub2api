@@ -1,7 +1,96 @@
 <template>
-  <AppLayout>
+  <AppLayout hide-page-header>
     <TablePageLayout>
       <!-- Single Row: Search, Filters, and Actions -->
+      <template #actions>
+        <div class="flex flex-wrap items-center justify-end gap-2">
+            <!-- Mobile: Secondary buttons (icon only) -->
+            <div class="flex items-center gap-2 md:contents">
+              <!-- Refresh Button -->
+              <KumoButton
+                @click="loadUsers"
+                :disabled="loading"
+                class="btn btn-secondary px-2 md:px-3"
+                :title="t('common.refresh')"
+              >
+                <Icon name="refresh" size="md" :class="loading ? 'animate-spin' : ''" />
+              </KumoButton>
+              <!-- Filter Settings Dropdown -->
+              <KumoPopoverRoot v-model="showFilterDropdown"><KumoPopoverTrigger
+                  class="btn btn-secondary px-2 md:px-3"
+                  :aria-label="t('admin.users.filterSettings')"
+                >
+                  <Icon name="filter" size="sm" class="md:mr-1.5" />
+                  <span class="hidden md:inline">{{ t('admin.users.filterSettings') }}</span>
+                </KumoPopoverTrigger>
+<KumoPopoverContent
+                  class="w-48 rounded-lg border border-[var(--brand-line)] bg-white py-1 dark:bg-dark-800"
+                >
+                  <!-- Built-in filters -->
+                  <KumoLabel v-for="filter in builtInFilters" :key="filter.key" class="flex w-full cursor-pointer items-center gap-2 px-3 py-2 text-sm"><KumoCheckbox :aria-label="filter.name" :checked="visibleFilters.has(filter.key)"   @change="toggleBuiltInFilter(filter.key)" /><span>{{ filter.name }}</span></KumoLabel>
+                  <!-- Divider if custom attributes exist -->
+                  <div
+                    v-if="filterableAttributes.length > 0"
+                    class="my-1 border-t border-[var(--brand-line)]"
+                  ></div>
+                  <!-- Custom attribute filters -->
+                  <KumoLabel v-for="attr in filterableAttributes" :key="attr.id" class="flex w-full cursor-pointer items-center gap-2 px-3 py-2 text-sm"><KumoCheckbox :aria-label="attr.name" :checked="visibleFilters.has(`attr_${attr.id}`)"   @change="toggleAttributeFilter(attr)" /><span>{{ attr.name }}</span></KumoLabel>
+                </KumoPopoverContent></KumoPopoverRoot>
+              <!-- Column Settings Dropdown -->
+              <KumoPopoverRoot v-model="showColumnDropdown"><KumoPopoverTrigger
+                  class="btn btn-secondary px-2 md:px-3"
+                  :aria-label="t('admin.users.columnSettings')"
+                >
+                  <svg class="h-4 w-4 md:mr-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M9 4.5v15m6-15v15m-10.875 0h15.75c.621 0 1.125-.504 1.125-1.125V5.625c0-.621-.504-1.125-1.125-1.125H4.125C3.504 4.5 3 5.004 3 5.625v12.75c0 .621.504 1.125 1.125 1.125z" />
+                  </svg>
+                  <span class="hidden md:inline">{{ t('admin.users.columnSettings') }}</span>
+                </KumoPopoverTrigger>
+<KumoPopoverContent
+                  class="max-h-80 w-48 overflow-y-auto rounded-lg border border-[var(--brand-line)] bg-white py-1 dark:bg-dark-800"
+                >
+                  <KumoLabel v-for="col in toggleableColumns" :key="col.key" class="flex w-full cursor-pointer items-center gap-2 px-3 py-2 text-sm"><KumoCheckbox :aria-label="col.label" :checked="isColumnVisible(col.key)" :disabled="isForcedVisibleColumn(col.key)"  @change="toggleColumn(col.key)" /><span>{{ col.label }}</span></KumoLabel>
+                </KumoPopoverContent></KumoPopoverRoot>
+              <!-- Attributes Config Button -->
+              <KumoButton
+                @click="showAttributesModal = true"
+                class="btn btn-secondary px-2 md:px-3"
+                :title="t('admin.users.attributes.configButton')"
+              >
+                <Icon name="cog" size="sm" class="md:mr-1.5" />
+                <span class="hidden md:inline">{{ t('admin.users.attributes.configButton') }}</span>
+              </KumoButton>
+            </div>
+
+            <KumoButton
+              v-if="selectedCount > 0"
+              class="btn btn-secondary flex-1 md:flex-initial"
+              data-test="bulk-edit-limits"
+              @click="showBulkEditModal = true"
+            >
+              <Icon name="users" size="md" class="mr-2" />
+              {{ t('admin.users.bulkLimits.action', { count: selectedCount }) }}
+            </KumoButton>
+
+            <KumoButton
+              v-if="selectedCount > 0"
+              class="btn btn-danger flex-1 md:flex-initial"
+              data-test="bulk-delete-users"
+              :disabled="bulkDeleting"
+              @click="bulkDeleteIds = [...selectedIds]"
+            >
+              <Icon name="trash" size="md" class="mr-2" />
+              {{ t('admin.users.bulkDelete.action', { count: selectedCount }) }}
+            </KumoButton>
+
+            <!-- Create User Button (full width on mobile, auto width on desktop) -->
+            <KumoButton @click="showCreateModal = true" class="btn btn-primary flex-1 md:flex-initial">
+              <Icon name="plus" size="md" class="mr-2" />
+              {{ t('admin.users.createUser') }}
+            </KumoButton>
+          </div>
+      </template>
+
       <template #filters>
         <div class="flex flex-wrap items-center gap-3">
           <!-- Left: Search + Active Filters -->
@@ -124,92 +213,7 @@
           </div>
 
           <!-- Right: Actions and Settings -->
-          <div class="flex flex-wrap items-center justify-end gap-2">
-            <!-- Mobile: Secondary buttons (icon only) -->
-            <div class="flex items-center gap-2 md:contents">
-              <!-- Refresh Button -->
-              <KumoButton
-                @click="loadUsers"
-                :disabled="loading"
-                class="btn btn-secondary px-2 md:px-3"
-                :title="t('common.refresh')"
-              >
-                <Icon name="refresh" size="md" :class="loading ? 'animate-spin' : ''" />
-              </KumoButton>
-              <!-- Filter Settings Dropdown -->
-              <KumoPopoverRoot v-model="showFilterDropdown"><KumoPopoverTrigger
-                  class="btn btn-secondary px-2 md:px-3"
-                  :aria-label="t('admin.users.filterSettings')"
-                >
-                  <Icon name="filter" size="sm" class="md:mr-1.5" />
-                  <span class="hidden md:inline">{{ t('admin.users.filterSettings') }}</span>
-                </KumoPopoverTrigger>
-<KumoPopoverContent
-                  class="w-48 rounded-lg border border-gray-200 bg-white py-1 shadow-lg dark:border-dark-600 dark:bg-dark-800"
-                >
-                  <!-- Built-in filters -->
-                  <KumoLabel v-for="filter in builtInFilters" :key="filter.key" class="flex w-full cursor-pointer items-center gap-2 px-3 py-2 text-sm"><KumoCheckbox :aria-label="filter.name" :checked="visibleFilters.has(filter.key)"   @change="toggleBuiltInFilter(filter.key)" /><span>{{ filter.name }}</span></KumoLabel>
-                  <!-- Divider if custom attributes exist -->
-                  <div
-                    v-if="filterableAttributes.length > 0"
-                    class="my-1 border-t border-gray-100 dark:border-dark-700"
-                  ></div>
-                  <!-- Custom attribute filters -->
-                  <KumoLabel v-for="attr in filterableAttributes" :key="attr.id" class="flex w-full cursor-pointer items-center gap-2 px-3 py-2 text-sm"><KumoCheckbox :aria-label="attr.name" :checked="visibleFilters.has(`attr_${attr.id}`)"   @change="toggleAttributeFilter(attr)" /><span>{{ attr.name }}</span></KumoLabel>
-                </KumoPopoverContent></KumoPopoverRoot>
-              <!-- Column Settings Dropdown -->
-              <KumoPopoverRoot v-model="showColumnDropdown"><KumoPopoverTrigger
-                  class="btn btn-secondary px-2 md:px-3"
-                  :aria-label="t('admin.users.columnSettings')"
-                >
-                  <svg class="h-4 w-4 md:mr-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M9 4.5v15m6-15v15m-10.875 0h15.75c.621 0 1.125-.504 1.125-1.125V5.625c0-.621-.504-1.125-1.125-1.125H4.125C3.504 4.5 3 5.004 3 5.625v12.75c0 .621.504 1.125 1.125 1.125z" />
-                  </svg>
-                  <span class="hidden md:inline">{{ t('admin.users.columnSettings') }}</span>
-                </KumoPopoverTrigger>
-<KumoPopoverContent
-                  class="max-h-80 w-48 overflow-y-auto rounded-lg border border-gray-200 bg-white py-1 shadow-lg dark:border-dark-600 dark:bg-dark-800"
-                >
-                  <KumoLabel v-for="col in toggleableColumns" :key="col.key" class="flex w-full cursor-pointer items-center gap-2 px-3 py-2 text-sm"><KumoCheckbox :aria-label="col.label" :checked="isColumnVisible(col.key)" :disabled="isForcedVisibleColumn(col.key)"  @change="toggleColumn(col.key)" /><span>{{ col.label }}</span></KumoLabel>
-                </KumoPopoverContent></KumoPopoverRoot>
-              <!-- Attributes Config Button -->
-              <KumoButton
-                @click="showAttributesModal = true"
-                class="btn btn-secondary px-2 md:px-3"
-                :title="t('admin.users.attributes.configButton')"
-              >
-                <Icon name="cog" size="sm" class="md:mr-1.5" />
-                <span class="hidden md:inline">{{ t('admin.users.attributes.configButton') }}</span>
-              </KumoButton>
-            </div>
 
-            <KumoButton
-              v-if="selectedCount > 0"
-              class="btn btn-secondary flex-1 md:flex-initial"
-              data-test="bulk-edit-limits"
-              @click="showBulkEditModal = true"
-            >
-              <Icon name="users" size="md" class="mr-2" />
-              {{ t('admin.users.bulkLimits.action', { count: selectedCount }) }}
-            </KumoButton>
-
-            <KumoButton
-              v-if="selectedCount > 0"
-              class="btn btn-danger flex-1 md:flex-initial"
-              data-test="bulk-delete-users"
-              :disabled="bulkDeleting"
-              @click="bulkDeleteIds = [...selectedIds]"
-            >
-              <Icon name="trash" size="md" class="mr-2" />
-              {{ t('admin.users.bulkDelete.action', { count: selectedCount }) }}
-            </KumoButton>
-
-            <!-- Create User Button (full width on mobile, auto width on desktop) -->
-            <KumoButton @click="showCreateModal = true" class="btn btn-primary flex-1 md:flex-initial">
-              <Icon name="plus" size="md" class="mr-2" />
-              {{ t('admin.users.createUser') }}
-            </KumoButton>
-          </div>
         </div>
       </template>
 
@@ -286,7 +290,7 @@
           <template #cell-groups="{ row }">
             <div v-if="allGroups.length > 0" class="flex flex-col gap-1">
               <!-- 专属分组行 -->
-              <KumoDropdown v-if="getUserGroups(row).exclusive.length > 0" :model-value="expandedGroupUserId === row.id" @update:model-value="expandedGroupUserId = $event ? row.id : null"><KumoDropdownTrigger class="inline-flex h-auto items-center gap-1 p-0 text-xs"><Icon name="shield" size="xs" class="h-3.5 w-3.5 text-purple-500 dark:text-purple-400" /><span class="font-medium text-purple-600 dark:text-purple-400">{{ getUserGroups(row).exclusive.length }}</span><span class="text-gray-500 dark:text-dark-400">{{ t('admin.users.exclusiveLabel') }}</span><!-- Hover tooltip（操作菜单未打开时显示） --><!-- 点击展开分组操作菜单 --></KumoDropdownTrigger><KumoDropdownContent align="start" class="min-w-40"><div class="border-b border-gray-100 px-3 py-1.5 text-[10px] font-medium uppercase tracking-wider text-gray-400 dark:border-dark-600 dark:text-dark-400">
+              <KumoDropdown v-if="getUserGroups(row).exclusive.length > 0" :model-value="expandedGroupUserId === row.id" @update:model-value="expandedGroupUserId = $event ? row.id : null"><KumoDropdownTrigger class="inline-flex h-auto items-center gap-1 p-0 text-xs"><Icon name="shield" size="xs" class="h-3.5 w-3.5 text-purple-500 dark:text-purple-400" /><span class="font-medium text-purple-600 dark:text-purple-400">{{ getUserGroups(row).exclusive.length }}</span><span class="text-gray-500 dark:text-dark-400">{{ t('admin.users.exclusiveLabel') }}</span><!-- Hover tooltip（操作菜单未打开时显示） --><!-- 点击展开分组操作菜单 --></KumoDropdownTrigger><KumoDropdownContent align="start" class="min-w-40"><div class="border-b border-[var(--brand-line)] px-3 py-1.5 text-[10px] font-medium uppercase tracking-wider text-gray-400 dark:text-dark-400">
                     {{ t('admin.users.clickToReplace') }}
                   </div><KumoDropdownItem
                     v-for="g in getUserGroups(row).exclusive"
@@ -376,7 +380,7 @@
               <span>{{ column.label }}</span>
               <KumoDropdown :model-value="openUsageSortMenu === usageKey" @update:model-value="openUsageSortMenu = $event ? usageKey : null"><KumoDropdownTrigger
                   type="button"
-                  class="flex items-center gap-1 rounded px-1 py-0.5 transition-colors hover:bg-gray-200 dark:hover:bg-dark-700"
+                  class="flex items-center gap-1 rounded px-1 py-0.5 transition-colors hover:bg-[var(--brand-hover)]"
                   :class="usageSort && usageSort.key === usageKey
                     ? 'text-primary-600 dark:text-primary-400'
                     : 'text-gray-400 dark:text-dark-500'"
@@ -407,7 +411,7 @@
                     v-for="metric in (['today', 'total'] as const)"
                     :key="metric"
                     type="button"
-                    class="flex w-full items-center justify-between gap-3 px-3 py-1.5 text-left text-xs normal-case tracking-normal hover:bg-gray-100 dark:hover:bg-dark-700"
+                    class="flex w-full items-center justify-between gap-3 px-3 py-1.5 text-left text-xs normal-case tracking-normal hover:bg-[var(--brand-hover)]"
                     :class="isUsageSortActive(usageKey, metric)
                       ? 'font-medium text-primary-600 dark:text-primary-400'
                       : 'text-gray-700 dark:text-gray-300'"
@@ -428,7 +432,7 @@
                         clip-rule="evenodd"
                       />
                     </svg>
-                  </KumoDropdownItem><div class="mt-1 border-t border-gray-100 px-3 py-1 text-[10px] normal-case tracking-normal text-gray-400 dark:border-dark-700 dark:text-dark-500">
+                  </KumoDropdownItem><div class="mt-1 border-t border-[var(--brand-line)] px-3 py-1 text-[10px] normal-case tracking-normal text-gray-400 dark:text-dark-500">
                     {{ t('admin.users.sortCurrentPageOnly') }}
                   </div></KumoDropdownContent></KumoDropdown>
             </div>
@@ -500,7 +504,7 @@
               <!-- Edit Button -->
               <KumoButton
                 @click="handleEdit(row)"
-                class="flex flex-col items-center gap-0.5 rounded-lg p-1.5 text-gray-500 transition-colors hover:bg-gray-100 hover:text-primary-600 dark:hover:bg-dark-700 dark:hover:text-primary-400"
+                class="flex flex-col items-center gap-0.5 rounded-lg p-1.5 text-gray-500 transition-colors hover:bg-[var(--brand-hover)] hover:text-primary-600 dark:hover:text-primary-400"
               >
                 <Icon name="edit" size="sm" />
                 <span class="text-xs">{{ t('common.edit') }}</span>
@@ -524,32 +528,32 @@
 
               <!-- More Actions Menu Trigger -->
               <KumoDropdown :model-value="activeMenuId === row.id" @update:model-value="activeMenuId = $event ? row.id : null"><KumoDropdownTrigger
-                class="action-menu-trigger flex flex-col items-center gap-0.5 rounded-lg p-1.5 text-gray-500 transition-colors hover:bg-gray-100 hover:text-gray-900 dark:hover:bg-dark-700 dark:hover:text-white"
+                class="action-menu-trigger flex flex-col items-center gap-0.5 rounded-lg p-1.5 text-gray-500 transition-colors hover:bg-[var(--brand-hover)] hover:text-gray-900 dark:hover:text-white"
                 :class="{ 'bg-gray-100 text-gray-900 dark:bg-dark-700 dark:text-white': activeMenuId === row.id }"
               >
                 <Icon name="more" size="sm" />
                 <span class="text-xs">{{ t('common.more') }}</span>
               </KumoDropdownTrigger><KumoDropdownContent class="action-menu-content w-48 max-h-[calc(100dvh-2rem)] overflow-y-auto"><!-- View API Keys --><KumoDropdownItem
                 @click="handleViewApiKeys(row)"
-                class="flex w-full items-center gap-2 px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-dark-700"
+                class="flex w-full items-center gap-2 px-4 py-2 text-sm text-gray-700 hover:bg-[var(--brand-hover)] dark:text-gray-300"
               >
                 <Icon name="key" size="sm" class="text-gray-400" :stroke-width="2" />
                 {{ t('admin.users.apiKeys') }}
               </KumoDropdownItem><!-- Allowed Groups --><KumoDropdownItem
                 @click="handleAllowedGroups(row)"
-                class="flex w-full items-center gap-2 px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-dark-700"
+                class="flex w-full items-center gap-2 px-4 py-2 text-sm text-gray-700 hover:bg-[var(--brand-hover)] dark:text-gray-300"
               >
                 <Icon name="users" size="sm" class="text-gray-400" :stroke-width="2" />
                 {{ t('admin.users.groups') }}
-              </KumoDropdownItem><div class="my-1 border-t border-gray-100 dark:border-dark-700"></div><!-- Deposit --><KumoDropdownItem
+              </KumoDropdownItem><div class="my-1 border-t border-[var(--brand-line)]"></div><!-- Deposit --><KumoDropdownItem
                 @click="handleDeposit(row)"
-                class="flex w-full items-center gap-2 px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-dark-700"
+                class="flex w-full items-center gap-2 px-4 py-2 text-sm text-gray-700 hover:bg-[var(--brand-hover)] dark:text-gray-300"
               >
                 <Icon name="plus" size="sm" class="text-emerald-500" :stroke-width="2" />
                 {{ t('admin.users.deposit') }}
               </KumoDropdownItem><!-- Withdraw --><KumoDropdownItem
                 @click="handleWithdraw(row)"
-                class="flex w-full items-center gap-2 px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-dark-700"
+                class="flex w-full items-center gap-2 px-4 py-2 text-sm text-gray-700 hover:bg-[var(--brand-hover)] dark:text-gray-300"
               >
                 <svg class="h-4 w-4 text-amber-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 12H4" />
@@ -557,17 +561,17 @@
                 {{ t('admin.users.withdraw') }}
               </KumoDropdownItem><!-- Platform Quotas --><KumoDropdownItem
                 @click="handlePlatformQuota(row)"
-                class="flex w-full items-center gap-2 px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-dark-700"
+                class="flex w-full items-center gap-2 px-4 py-2 text-sm text-gray-700 hover:bg-[var(--brand-hover)] dark:text-gray-300"
               >
                 <Icon name="chartBar" size="sm" class="text-gray-400" :stroke-width="2" />
                 {{ t('admin.users.platformQuota.menuItem') }}
               </KumoDropdownItem><!-- Balance History --><KumoDropdownItem
                 @click="handleBalanceHistory(row)"
-                class="flex w-full items-center gap-2 px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-dark-700"
+                class="flex w-full items-center gap-2 px-4 py-2 text-sm text-gray-700 hover:bg-[var(--brand-hover)] dark:text-gray-300"
               >
                 <Icon name="dollar" size="sm" class="text-gray-400" :stroke-width="2" />
                 {{ t('admin.users.balanceHistory') }}
-              </KumoDropdownItem><div class="my-1 border-t border-gray-100 dark:border-dark-700"></div><!-- Delete (not for admin) --><KumoDropdownItem
+              </KumoDropdownItem><div class="my-1 border-t border-[var(--brand-line)]"></div><!-- Delete (not for admin) --><KumoDropdownItem
                 v-if="row.role !== 'admin'"
                 @click="handleDelete(row)"
                 class="flex w-full items-center gap-2 px-4 py-2 text-sm text-red-600 hover:bg-red-50 dark:text-red-400 dark:hover:bg-red-900/20"

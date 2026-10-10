@@ -6,7 +6,7 @@
     </div>
 
     <div class="mt-5 grid gap-4 lg:grid-cols-[minmax(0,1fr)_minmax(260px,0.45fr)]">
-      <div class="rounded-xl border border-gray-200 p-4 dark:border-dark-700/60 dark:bg-dark-900/20 sm:p-5">
+      <div class="rounded-lg border border-[var(--brand-line)] p-4 dark:bg-dark-900/20 sm:p-5">
         <fieldset>
           <legend class="text-sm font-medium text-gray-900 dark:text-white">{{ t('admin.promptAudit.policy.scope') }}</legend>
           <KumoRadioGroup :model-value="(draft.all_groups) ? 0 : (!draft.all_groups) ? 1 : null" name="prompt-audit-scope" class="contents">
@@ -28,8 +28,8 @@
             <span>{{ t('admin.promptAudit.policy.searchGroups') }}</span>
             <KumoInput v-model="groupSearch" type="search" class="input mt-1.5 w-full" :aria-label="t('admin.promptAudit.policy.searchGroups')" />
           </KumoLabel>
-          <div class="mt-3 max-h-52 overflow-y-auto rounded-lg border border-gray-200 p-2 dark:border-dark-700">
-            <KumoLabel v-for="group in filteredGroups" :key="group.id" class="flex cursor-pointer items-center justify-between gap-3 rounded-md px-2 py-2 text-sm hover:bg-gray-50 dark:hover:bg-dark-800">
+          <div class="mt-3 max-h-52 overflow-y-auto rounded-lg border border-[var(--brand-line)] p-2">
+            <KumoLabel v-for="group in filteredGroups" :key="group.id" class="flex cursor-pointer items-center justify-between gap-3 rounded-md px-2 py-2 text-sm hover:bg-[var(--brand-hover)]">
               <span class="flex items-center gap-2 text-gray-800 dark:text-dark-100">
                 <KumoCheckbox type="checkbox" :checked="draft.group_ids.includes(group.id)" @change="toggleGroup(group.id)" />
                 {{ group.name }}
@@ -44,10 +44,10 @@
           <p class="mt-2 text-xs text-gray-500 dark:text-dark-400">{{ t('admin.promptAudit.policy.selectedCount', { count: draft.group_ids.length }) }}</p>
         </div>
 
-        <fieldset class="mt-5 border-t border-gray-100 pt-5 dark:border-dark-800">
+        <fieldset class="mt-5 border-t border-[var(--brand-line)] pt-5">
           <legend class="text-sm font-medium text-gray-900 dark:text-white">{{ t('admin.promptAudit.policy.scanners') }}</legend>
           <div class="mt-3 grid gap-2 sm:grid-cols-2">
-            <KumoLabel v-for="scanner in SCANNER_CATALOG" :key="scanner.id" class="flex items-center gap-2 rounded-md px-2 py-1.5 text-sm text-gray-700 hover:bg-gray-50 dark:text-dark-200 dark:hover:bg-dark-800">
+            <KumoLabel v-for="scanner in SCANNER_CATALOG" :key="scanner.id" class="flex items-center gap-2 rounded-md px-2 py-1.5 text-sm text-gray-700 hover:bg-[var(--brand-hover)] dark:text-dark-200">
               <KumoCheckbox type="checkbox" :checked="draft.scanners.includes(scanner.id)" :aria-label="scannerLabel(scanner.id)" @change="toggleScanner(scanner.id)" />
               <span>{{ scannerLabel(scanner.id) }}</span>
             </KumoLabel>
@@ -55,7 +55,7 @@
         </fieldset>
       </div>
 
-      <div class="space-y-4 rounded-xl border border-gray-200 p-4 dark:border-dark-700/60 dark:bg-dark-900/20 sm:p-5">
+      <div class="space-y-4 rounded-lg border border-[var(--brand-line)] p-4 dark:bg-dark-900/20 sm:p-5">
         <KumoLabel class="block text-sm text-gray-700 dark:text-dark-200">
           <span>{{ t('admin.promptAudit.policy.workerCount') }}</span>
           <KumoInput :value="draft.worker_count" type="number" min="1" max="32" class="input mt-1.5 w-full" :aria-label="t('admin.promptAudit.policy.workerCount')" @input="patch({ worker_count: Number(($event.target as HTMLInputElement).value) })" />

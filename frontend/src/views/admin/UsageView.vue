@@ -4,7 +4,7 @@
       <UsageStatsCards :stats="usageStats" />
       <!-- Charts Section -->
       <div class="space-y-4">
-        <KumoSurface class="card p-4">
+        <Panel flush class="card p-4">
           <div class="flex flex-wrap items-center gap-4">
             <div class="flex items-center gap-2">
               <span class="text-sm font-medium text-gray-700 dark:text-gray-300">{{ t('admin.dashboard.timeRange') }}:</span>
@@ -21,7 +21,7 @@
               </div>
             </div>
           </div>
-        </KumoSurface>
+        </Panel>
         <div class="grid grid-cols-1 gap-6 lg:grid-cols-2">
           <ModelDistributionChart
             v-model:source="modelDistributionSource"
@@ -65,10 +65,10 @@
         </div>
       </div>
       <!-- 明细区：tab 栏 + 筛选 + 内容收进同一张卡片，消除割裂感 -->
-      <KumoSurface class="card">
+      <Panel flush class="card">
         <KumoTabs :model-value="activeTab" :tabs="detailTabs.map(tab => ({ value: tab.key, label: tab.label }))" :aria-label="t('nav.usage')" @update:model-value="switchTab" class="px-4 py-2" />
 
-        <UsageFilters v-model="filters" ref="usageFiltersRef" flat :mode="activeTab" class="border-b border-gray-100 dark:border-dark-700/50" :start-date="startDate" :end-date="endDate" :exporting="exporting" :model-options="modelNameOptions" @change="applyFilters" @refresh="refreshData" @reset="resetFilters" @cleanup="openCleanupDialog" @export="exportToExcel">
+        <UsageFilters v-model="filters" ref="usageFiltersRef" flat :mode="activeTab" class="border-b border-[var(--brand-line)]" :start-date="startDate" :end-date="endDate" :exporting="exporting" :model-options="modelNameOptions" @change="applyFilters" @refresh="refreshData" @reset="resetFilters" @cleanup="openCleanupDialog" @export="exportToExcel">
           <template #after-reset>
             <KumoPopoverRoot v-model="showColumnDropdown" v-if="activeTab !== 'ranking'"><KumoPopoverTrigger
                 data-testid="usage-column-settings"
@@ -81,14 +81,14 @@
                 <span class="hidden md:inline">{{ t('admin.users.columnSettings') }}</span>
               </KumoPopoverTrigger>
 <KumoPopoverContent
-                class="max-h-80 w-48 overflow-y-auto rounded-lg border border-gray-200 bg-white py-1 shadow-lg dark:border-dark-600 dark:bg-dark-800"
+                class="max-h-80 w-48 overflow-y-auto rounded-lg border border-[var(--brand-line)] bg-white py-1 dark:bg-dark-800"
               >
                 <KumoLabel v-for="col in currentToggleableColumns" :key="col.key" class="flex w-full cursor-pointer items-center gap-2 px-3 py-2 text-sm"><KumoCheckbox :checked="isCurrentColumnVisible(col.key)"  :data-testid="`usage-column-toggle-${col.key}`" @change="toggleCurrentColumn(col.key)" /><span>{{ col.label }}</span></KumoLabel>
               </KumoPopoverContent></KumoPopoverRoot>
           </template>
         </UsageFilters>
 
-        <div v-show="activeTab === 'usage'" class="overflow-hidden rounded-b-2xl">
+        <div v-show="activeTab === 'usage'" class="overflow-hidden rounded-b-lg">
           <UsageTable
             flat
             :data="usageLogs"
@@ -103,7 +103,7 @@
           />
           <Pagination v-if="pagination.total > 0" :page="pagination.page" :total="pagination.total" :page-size="pagination.page_size" @update:page="handlePageChange" @update:pageSize="handlePageSizeChange" />
         </div>
-        <div v-show="activeTab === 'errors'" class="overflow-hidden rounded-b-2xl">
+        <div v-show="activeTab === 'errors'" class="overflow-hidden rounded-b-lg">
           <OpsErrorLogTable
             flat
             :rows="errRows" :total="errTotal" :loading="errLoading"
@@ -118,7 +118,7 @@
             @ipGeoBatchFailed="handleIpGeoBatchFailed" />
         </div>
         <!-- 懒挂载：首次切到该 tab 才请求排行数据，之后随筛选自动刷新 -->
-        <div v-if="rankingMounted" v-show="activeTab === 'ranking'" class="overflow-hidden rounded-b-2xl">
+        <div v-if="rankingMounted" v-show="activeTab === 'ranking'" class="overflow-hidden rounded-b-lg">
           <UserTokenRanking
             ref="rankingRef"
             :start-date="startDate"
@@ -128,7 +128,7 @@
             @select-user="handleRankingSelectUser"
           />
         </div>
-      </KumoSurface>
+      </Panel>
       <OpsErrorDetailModal v-model:show="showErrorModal" :error-id="selectedErrorId" :error-type="'request'" />
     </div>
   </AppLayout>
@@ -150,7 +150,8 @@
 </template>
 
 <script setup lang="ts">
-import { KumoCheckbox, KumoLabel, KumoPopoverContent, KumoPopoverRoot, KumoPopoverTrigger, KumoSurface, KumoTabs } from '@/components/kumo'
+import Panel from '@/components/common/Panel.vue'
+import { KumoCheckbox, KumoLabel, KumoPopoverContent, KumoPopoverRoot, KumoPopoverTrigger, KumoTabs } from '@/components/kumo'
 
 import { ref, reactive, computed, onMounted, onUnmounted, watch } from 'vue'
 import { useI18n } from 'vue-i18n'

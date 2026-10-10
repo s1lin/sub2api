@@ -1,13 +1,13 @@
 <template>
   <KumoButton
     type="button"
-    class="group text-left p-5 rounded-2xl min-h-[280px] w-full bg-[var(--brand-surface)] border border-[var(--brand-line)] hover:border-[var(--brand-accent)] transition-colors duration-300 ease-out flex flex-col"
+    class="group text-left p-5 rounded-md min-h-[280px] w-full bg-[var(--brand-surface)] border border-[var(--brand-line)] hover:border-[var(--brand-accent)] transition-colors duration-300 ease-out flex flex-col"
     @click="emit('click')"
   >
     <!-- Header: icon + name/model + status chip -->
     <div class="flex items-start gap-3">
       <span
-        class="w-9 h-9 rounded-xl ring-1 ring-black/5 dark:ring-white/10 grid place-items-center flex-shrink-0"
+        class="w-9 h-9 rounded-lg ring-1 ring-black/5 dark:ring-white/10 grid place-items-center flex-shrink-0"
         :class="[providerGradient(item.provider), providerTintClass]"
       >
         <ProviderIcon :provider="item.provider" :size="20" />
@@ -59,7 +59,7 @@
     <MonitorQuotaView v-if="quotaVisible" :snapshot="item.latest_quota" class="mt-2" />
 
     <!-- Divider -->
-    <div class="mt-4 border-t border-gray-100 dark:border-dark-700/60"></div>
+    <div class="mt-4 border-t border-[var(--brand-line)]"></div>
 
     <!-- Availability row -->
     <MonitorAvailabilityRow

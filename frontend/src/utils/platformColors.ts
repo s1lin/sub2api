@@ -102,7 +102,7 @@ const ACCENT: Record<Platform, string> = {
   typesafe: '#0ea5e9', // sky-500
   composite: '#06b6d4', // cyan-500
 }
-const ACCENT_DEFAULT = '#a74d30' // brand copper
+const ACCENT_DEFAULT = '#0f7a6c' // brand jade
 
 // ── Accent bar (gradient) ───────────────────────────────────────────
 const ACCENT_BAR: Record<Platform, string> = {

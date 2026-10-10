@@ -238,7 +238,7 @@ const handleBatchTest = async () => {
 <style scoped>
 .select-trigger {
   @apply flex w-full items-center justify-between gap-2;
-  @apply rounded-xl px-4 py-2.5 text-sm;
+  @apply rounded-lg px-4 py-2.5 text-sm;
   @apply bg-white dark:bg-dark-800;
   @apply border border-gray-200 dark:border-dark-600;
   @apply text-gray-900 dark:text-gray-100;
@@ -268,9 +268,8 @@ const handleBatchTest = async () => {
   width: min(var(--anchor-width), calc(100vw - 2rem));
   min-width: min(320px, calc(100vw - 2rem));
   @apply bg-white dark:bg-dark-800;
-  @apply rounded-xl;
+  @apply rounded-lg;
   @apply border border-gray-200 dark:border-dark-700;
-  @apply shadow-lg shadow-black/10 dark:shadow-black/30;
   @apply overflow-hidden;
 }
 

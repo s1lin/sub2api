@@ -19,7 +19,7 @@
       <div>
         <KumoLabel class="input-label">{{ t('admin.proxies.dataImportFile') }}</KumoLabel>
         <div
-          class="flex items-center justify-between gap-3 rounded-lg border border-dashed border-gray-300 bg-gray-50 px-4 py-3 dark:border-dark-600 dark:bg-dark-800"
+          class="flex items-center justify-between gap-3 px-4 py-3 panel-section"
         >
           <div class="min-w-0">
             <div class="truncate text-sm text-gray-700 dark:text-dark-200">
@@ -42,7 +42,7 @@
 
       <div
         v-if="result"
-        class="space-y-2 rounded-xl border border-gray-200 p-4 dark:border-dark-700"
+        class="space-y-2 p-4 panel-section"
       >
         <div class="text-sm font-medium text-gray-900 dark:text-white">
           {{ t('admin.proxies.dataImportResult') }}
@@ -56,7 +56,7 @@
             {{ t('admin.proxies.dataImportErrors') }}
           </div>
           <div
-            class="mt-2 max-h-48 overflow-auto rounded-lg bg-gray-50 p-3 font-mono text-xs dark:bg-dark-800"
+            class="mt-2 max-h-48 overflow-auto p-3 font-mono text-xs panel-section"
           >
             <div v-for="(item, idx) in errorItems" :key="idx" class="whitespace-pre-wrap">
               {{ item.kind }} {{ item.name || item.proxy_key || '-' }} — {{ item.message }}

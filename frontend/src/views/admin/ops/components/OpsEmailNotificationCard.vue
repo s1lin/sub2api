@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import Panel from '@/components/common/Panel.vue'
 import { KumoButton, KumoCheckbox, KumoInput, KumoLabel } from '@/components/kumo'
 
 import { ref, onMounted, computed } from 'vue'
@@ -183,7 +184,7 @@ onMounted(() => {
 </script>
 
 <template>
-  <div class="rounded-3xl bg-white p-6 shadow-sm ring-1 ring-gray-900/5 dark:bg-dark-800 dark:ring-dark-700">
+  <Panel flush class="rounded-lg p-6">
     <div class="mb-4 flex items-start justify-between gap-4">
       <div>
         <h3 class="text-sm font-bold text-gray-900 dark:text-white">{{ t('admin.ops.email.title') }}</h3>
@@ -191,7 +192,7 @@ onMounted(() => {
       </div>
       <div class="flex items-center gap-2">
         <KumoButton
-          class="flex items-center gap-1.5 rounded-lg bg-gray-100 px-3 py-1.5 text-xs font-bold text-gray-700 transition-colors hover:bg-gray-200 disabled:cursor-not-allowed disabled:opacity-50 dark:bg-dark-700 dark:text-gray-300 dark:hover:bg-dark-600"
+          class="flex items-center gap-1.5 rounded-lg bg-gray-100 px-3 py-1.5 text-xs font-bold text-gray-700 transition-colors hover:bg-[var(--brand-hover)] disabled:cursor-not-allowed disabled:opacity-50 dark:bg-dark-700 dark:text-gray-300"
           :disabled="loading"
           @click="loadConfig"
         >
@@ -210,7 +211,7 @@ onMounted(() => {
     </div>
 
     <div v-else class="space-y-6">
-      <div class="rounded-2xl bg-gray-50 p-4 dark:bg-dark-700/50">
+      <div class="p-4 panel-section">
         <h4 class="mb-2 text-sm font-semibold text-gray-900 dark:text-white">{{ t('admin.ops.email.alertTitle') }}</h4>
         <div class="grid grid-cols-1 gap-3 md:grid-cols-2">
           <div class="text-xs text-gray-600 dark:text-gray-300">
@@ -236,7 +237,7 @@ onMounted(() => {
         </div>
       </div>
 
-      <div class="rounded-2xl bg-gray-50 p-4 dark:bg-dark-700/50">
+      <div class="p-4 panel-section">
         <h4 class="mb-2 text-sm font-semibold text-gray-900 dark:text-white">{{ t('admin.ops.email.reportTitle') }}</h4>
         <div class="grid grid-cols-1 gap-3 md:grid-cols-2">
           <div class="text-xs text-gray-600 dark:text-gray-300">
@@ -252,7 +253,7 @@ onMounted(() => {
         </div>
       </div>
     </div>
-  </div>
+  </Panel>
 
   <BaseDialog :show="showEditor" :title="t('admin.ops.email.title')" width="extra-wide" @close="showEditor = false">
     <div v-if="draft" class="space-y-6">
@@ -265,13 +266,13 @@ onMounted(() => {
           <li v-for="msg in editorValidation.errors" :key="msg">{{ msg }}</li>
         </ul>
       </div>
-      <div class="rounded-2xl bg-gray-50 p-4 dark:bg-dark-700/50">
+      <div class="p-4 panel-section">
         <h4 class="mb-3 text-sm font-semibold text-gray-900 dark:text-white">{{ t('admin.ops.email.alertTitle') }}</h4>
         <div class="grid grid-cols-1 gap-4 md:grid-cols-2">
           <div>
             <div class="mb-1 text-xs font-medium text-gray-600 dark:text-gray-300">{{ t('common.enabled') }}</div>
             <KumoLabel class="inline-flex items-center gap-2 text-sm text-gray-700 dark:text-gray-300">
-              <KumoCheckbox :aria-label="t('admin.ops.settings.enableAlert')" v-model="draft.alert.enabled" type="checkbox" class="h-4 w-4 rounded border-gray-300" />
+              <KumoCheckbox :aria-label="t('admin.ops.settings.enableAlert')" v-model="draft.alert.enabled" type="checkbox" class="h-4 w-4 rounded border-[var(--brand-line)]" />
               <span>{{ draft.alert.enabled ? t('common.enabled') : t('common.disabled') }}</span>
             </KumoLabel>
           </div>
@@ -328,20 +329,20 @@ onMounted(() => {
           <div>
             <div class="mb-1 text-xs font-medium text-gray-600 dark:text-gray-300">{{ t('admin.ops.email.includeResolved') }}</div>
             <KumoLabel class="inline-flex items-center gap-2 text-sm text-gray-700 dark:text-gray-300">
-              <KumoCheckbox :aria-label="t('admin.ops.email.includeResolved')" v-model="draft.alert.include_resolved_alerts" type="checkbox" class="h-4 w-4 rounded border-gray-300" />
+              <KumoCheckbox :aria-label="t('admin.ops.email.includeResolved')" v-model="draft.alert.include_resolved_alerts" type="checkbox" class="h-4 w-4 rounded border-[var(--brand-line)]" />
               <span>{{ draft.alert.include_resolved_alerts ? t('common.enabled') : t('common.disabled') }}</span>
             </KumoLabel>
           </div>
         </div>
       </div>
 
-      <div class="rounded-2xl bg-gray-50 p-4 dark:bg-dark-700/50">
+      <div class="p-4 panel-section">
         <h4 class="mb-3 text-sm font-semibold text-gray-900 dark:text-white">{{ t('admin.ops.email.reportTitle') }}</h4>
         <div class="grid grid-cols-1 gap-4 md:grid-cols-2">
           <div>
             <div class="mb-1 text-xs font-medium text-gray-600 dark:text-gray-300">{{ t('common.enabled') }}</div>
             <KumoLabel class="inline-flex items-center gap-2 text-sm text-gray-700 dark:text-gray-300">
-              <KumoCheckbox :aria-label="t('admin.ops.settings.enableReport')" v-model="draft.report.enabled" type="checkbox" class="h-4 w-4 rounded border-gray-300" />
+              <KumoCheckbox :aria-label="t('admin.ops.settings.enableReport')" v-model="draft.report.enabled" type="checkbox" class="h-4 w-4 rounded border-[var(--brand-line)]" />
               <span>{{ draft.report.enabled ? t('common.enabled') : t('common.disabled') }}</span>
             </KumoLabel>
           </div>
@@ -385,7 +386,7 @@ onMounted(() => {
                 <div class="mb-1 text-xs font-medium text-gray-600 dark:text-gray-300">{{ t('admin.ops.email.dailySummary') }}</div>
                 <div class="flex items-center gap-2">
                   <KumoLabel class="inline-flex items-center gap-2 text-sm text-gray-700 dark:text-gray-300">
-                    <KumoCheckbox :aria-label="t('admin.ops.email.dailySummary')" v-model="draft.report.daily_summary_enabled" type="checkbox" class="h-4 w-4 rounded border-gray-300" />
+                    <KumoCheckbox :aria-label="t('admin.ops.email.dailySummary')" v-model="draft.report.daily_summary_enabled" type="checkbox" class="h-4 w-4 rounded border-[var(--brand-line)]" />
                   </KumoLabel>
                   <KumoInput :aria-label="t('admin.ops.email.dailySummary') + ' — ' + t('admin.ops.email.cronPlaceholder')" v-model="draft.report.daily_summary_schedule" type="text" class="input" :placeholder="t('admin.ops.email.cronPlaceholder')" />
                 </div>
@@ -394,7 +395,7 @@ onMounted(() => {
                 <div class="mb-1 text-xs font-medium text-gray-600 dark:text-gray-300">{{ t('admin.ops.email.weeklySummary') }}</div>
                 <div class="flex items-center gap-2">
                   <KumoLabel class="inline-flex items-center gap-2 text-sm text-gray-700 dark:text-gray-300">
-                    <KumoCheckbox :aria-label="t('admin.ops.email.weeklySummary')" v-model="draft.report.weekly_summary_enabled" type="checkbox" class="h-4 w-4 rounded border-gray-300" />
+                    <KumoCheckbox :aria-label="t('admin.ops.email.weeklySummary')" v-model="draft.report.weekly_summary_enabled" type="checkbox" class="h-4 w-4 rounded border-[var(--brand-line)]" />
                   </KumoLabel>
                   <KumoInput :aria-label="t('admin.ops.email.weeklySummary') + ' — ' + t('admin.ops.email.cronPlaceholder')" v-model="draft.report.weekly_summary_schedule" type="text" class="input" :placeholder="t('admin.ops.email.cronPlaceholder')" />
                 </div>
@@ -403,7 +404,7 @@ onMounted(() => {
                 <div class="mb-1 text-xs font-medium text-gray-600 dark:text-gray-300">{{ t('admin.ops.email.errorDigest') }}</div>
                 <div class="flex items-center gap-2">
                   <KumoLabel class="inline-flex items-center gap-2 text-sm text-gray-700 dark:text-gray-300">
-                    <KumoCheckbox :aria-label="t('admin.ops.email.errorDigest')" v-model="draft.report.error_digest_enabled" type="checkbox" class="h-4 w-4 rounded border-gray-300" />
+                    <KumoCheckbox :aria-label="t('admin.ops.email.errorDigest')" v-model="draft.report.error_digest_enabled" type="checkbox" class="h-4 w-4 rounded border-[var(--brand-line)]" />
                   </KumoLabel>
                   <KumoInput :aria-label="t('admin.ops.email.errorDigest') + ' — ' + t('admin.ops.email.cronPlaceholder')" v-model="draft.report.error_digest_schedule" type="text" class="input" :placeholder="t('admin.ops.email.cronPlaceholder')" />
                 </div>
@@ -416,7 +417,7 @@ onMounted(() => {
                 <div class="mb-1 text-xs font-medium text-gray-600 dark:text-gray-300">{{ t('admin.ops.email.accountHealth') }}</div>
                 <div class="flex items-center gap-2">
                   <KumoLabel class="inline-flex items-center gap-2 text-sm text-gray-700 dark:text-gray-300">
-                    <KumoCheckbox :aria-label="t('admin.ops.email.accountHealth')" v-model="draft.report.account_health_enabled" type="checkbox" class="h-4 w-4 rounded border-gray-300" />
+                    <KumoCheckbox :aria-label="t('admin.ops.email.accountHealth')" v-model="draft.report.account_health_enabled" type="checkbox" class="h-4 w-4 rounded border-[var(--brand-line)]" />
                   </KumoLabel>
                   <KumoInput :aria-label="t('admin.ops.email.accountHealth') + ' — ' + t('admin.ops.email.cronPlaceholder')" v-model="draft.report.account_health_schedule" type="text" class="input" :placeholder="t('admin.ops.email.cronPlaceholder')" />
                 </div>

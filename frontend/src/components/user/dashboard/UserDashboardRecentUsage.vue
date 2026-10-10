@@ -1,21 +1,21 @@
 <template>
-  <KumoSurface class="card">
-    <div class="flex items-center justify-between border-b border-gray-100 px-6 py-4 dark:border-dark-700">
-      <h2 class="text-lg font-semibold text-gray-900 dark:text-white">{{ t('dashboard.recentUsage') }}</h2>
+  <Panel flush class="card">
+    <div class="flex items-center justify-between border-b border-[var(--brand-line)] px-6 py-4">
+      <h2 class="text-sm font-semibold text-gray-900 dark:text-white">{{ t('dashboard.recentUsage') }}</h2>
       <KumoBadge class="badge badge-gray">{{ t('dashboard.last7Days') }}</KumoBadge>
     </div>
     <div class="p-6">
       <div v-if="loading" class="flex items-center justify-center py-12">
         <LoadingSpinner size="lg" />
       </div>
-      <div v-else-if="data.length === 0" class="py-8">
+      <div v-else-if="data.length === 0">
         <EmptyState :title="t('dashboard.noUsageRecords')" :description="t('dashboard.startUsingApi')" />
       </div>
       <div v-else class="space-y-3">
-        <div v-for="log in data" :key="log.id" class="flex items-center justify-between rounded-xl bg-gray-50 p-4 transition-colors hover:bg-gray-100 dark:bg-dark-800/50 dark:hover:bg-dark-800">
+        <div v-for="log in data" :key="log.id" class="flex items-center justify-between p-4 transition-colors hover:bg-[var(--brand-hover)] panel-section">
           <div class="flex items-center gap-4">
-            <div class="flex h-10 w-10 items-center justify-center rounded-xl bg-primary-100 dark:bg-primary-900/30">
-              <Icon name="beaker" size="md" class="text-primary-600 dark:text-primary-400" />
+            <div class="quick-action-icon">
+              <Icon name="beaker" size="md" />
             </div>
             <div>
               <p class="text-sm font-medium text-gray-900 dark:text-white">{{ log.model }}</p>
@@ -37,11 +37,12 @@
         </router-link>
       </div>
     </div>
-  </KumoSurface>
+  </Panel>
 </template>
 
 <script setup lang="ts">
-import { KumoBadge, KumoSurface } from '@/components/kumo'
+import Panel from '@/components/common/Panel.vue'
+import { KumoBadge } from '@/components/kumo'
 
 import { useI18n } from 'vue-i18n'
 import LoadingSpinner from '@/components/common/LoadingSpinner.vue'

@@ -17,7 +17,7 @@
         {{ t('admin.accounts.syncFromCrsDesc') }}
       </div>
       <div
-        class="rounded-lg bg-gray-50 p-3 text-xs text-gray-500 dark:bg-dark-700/60 dark:text-dark-400"
+        class="p-3 text-xs text-gray-500 dark:text-dark-400 panel-section"
       >
         {{ t('admin.accounts.crsUpdateBehaviorNote') }}
       </div>
@@ -62,7 +62,7 @@
           <KumoCheckbox
             v-model="form.sync_proxies"
             type="checkbox"
-            class="rounded border-gray-300 dark:border-dark-600"
+            class="rounded border-[var(--brand-line)]"
           />
           {{ t('admin.accounts.syncProxies') }}
         </KumoLabel>
@@ -74,7 +74,7 @@
       <!-- Existing accounts (read-only info) -->
       <div
         v-if="previewResult.existing_accounts.length"
-        class="rounded-lg bg-gray-50 p-3 dark:bg-dark-700/60"
+        class="p-3 panel-section"
       >
         <div class="mb-2 text-sm font-medium text-gray-700 dark:text-dark-300">
           {{ t('admin.accounts.crsExistingAccounts') }}
@@ -115,17 +115,17 @@
           </div>
         </div>
         <div
-          class="max-h-48 overflow-auto rounded-lg border border-gray-200 p-2 dark:border-dark-600"
+          class="max-h-48 overflow-auto p-2 panel-section"
         >
           <KumoLabel
             v-for="acc in previewResult.new_accounts"
             :key="acc.crs_account_id"
-            class="flex cursor-pointer items-center gap-2 rounded px-2 py-1.5 hover:bg-gray-50 dark:hover:bg-dark-700/40"
+            class="flex cursor-pointer items-center gap-2 rounded px-2 py-1.5 hover:bg-[var(--brand-hover)]"
           >
             <KumoCheckbox
               type="checkbox"
               :checked="selectedIds.has(acc.crs_account_id)"
-              class="rounded border-gray-300 dark:border-dark-600"
+              class="rounded border-[var(--brand-line)]"
               @change="toggleSelect(acc.crs_account_id)"
             />
             <span
@@ -150,7 +150,7 @@
       <!-- No new accounts -->
       <div
         v-if="!previewResult.new_accounts.length"
-        class="rounded-lg bg-gray-50 p-4 text-center text-sm text-gray-500 dark:bg-dark-700/60 dark:text-dark-400"
+        class="p-4 text-center text-sm text-gray-500 dark:text-dark-400 panel-section"
       >
         {{ t('admin.accounts.crsNoNewAccounts') }}
         <span v-if="previewResult.existing_accounts.length">
@@ -162,7 +162,7 @@
     <!-- Step 3: Result -->
     <div v-else-if="currentStep === 'result' && result" class="space-y-4">
       <div
-        class="space-y-2 rounded-xl border border-gray-200 p-4 dark:border-dark-700"
+        class="space-y-2 p-4 panel-section"
       >
         <div class="text-sm font-medium text-gray-900 dark:text-white">
           {{ t('admin.accounts.syncResult') }}
@@ -176,7 +176,7 @@
             {{ t('admin.accounts.syncErrors') }}
           </div>
           <div
-            class="mt-2 max-h-48 overflow-auto rounded-lg bg-gray-50 p-3 font-mono text-xs dark:bg-dark-800"
+            class="mt-2 max-h-48 overflow-auto p-3 font-mono text-xs panel-section"
           >
             <div v-for="(item, idx) in errorItems" :key="idx" class="whitespace-pre-wrap">
               {{ item.kind }} {{ item.crs_account_id }} — {{ item.action

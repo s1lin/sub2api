@@ -2,7 +2,7 @@
   <AppLayout>
     <div class="space-y-6">
       <section
-        class="flex flex-col gap-4 border-b border-gray-200 pb-5 dark:border-dark-700 sm:flex-row sm:items-end sm:justify-between"
+        class="flex flex-col gap-4 border-b border-[var(--brand-line)] pb-5 sm:flex-row sm:items-end sm:justify-between"
       >
         <div class="min-w-0">
           <h2 class="text-lg font-semibold text-gray-900 dark:text-white">
@@ -73,7 +73,7 @@
 
       <div
         v-else-if="plugins.length === 0"
-        class="flex min-h-56 flex-col items-center justify-center border border-dashed border-gray-300 px-6 text-center dark:border-dark-600"
+        class="flex min-h-56 flex-col items-center justify-center border border-dashed border-[var(--brand-line)] px-6 text-center"
       >
         <Icon name="cube" size="xl" class="text-gray-400" />
         <p class="mt-3 font-medium text-gray-800 dark:text-gray-200">
@@ -85,13 +85,13 @@
       </div>
 
       <div v-else class="grid grid-cols-1 gap-4 xl:grid-cols-2">
-        <KumoSurface
+        <Panel flush
           v-for="plugin in plugins"
           :key="plugin.id"
-          class="card overflow-hidden border border-gray-200 dark:border-dark-700"
+          class="card overflow-hidden border border-[var(--brand-line)]"
         >
           <div
-            class="flex flex-wrap items-start justify-between gap-3 border-b border-gray-100 p-5 dark:border-dark-700"
+            class="flex flex-wrap items-start justify-between gap-3 border-b border-[var(--brand-line)] p-5"
           >
             <div class="min-w-0">
               <div class="flex flex-wrap items-center gap-2">
@@ -236,7 +236,7 @@
           </div>
 
           <div
-            class="flex flex-wrap justify-end gap-2 border-t border-gray-100 px-5 py-4 dark:border-dark-700"
+            class="flex flex-wrap justify-end gap-2 border-t border-[var(--brand-line)] px-5 py-4"
           >
             <KumoButton
               type="button"
@@ -281,7 +281,7 @@
               {{ t("admin.plugins.uninstall") }}
             </KumoButton>
           </div>
-        </KumoSurface>
+        </Panel>
       </div>
 
       <BaseDialog
@@ -333,7 +333,8 @@
 </template>
 
 <script setup lang="ts">
-import { KumoButton, KumoInput, KumoLabel, KumoSurface } from '@/components/kumo'
+import Panel from '@/components/common/Panel.vue'
+import { KumoButton, KumoInput, KumoLabel } from '@/components/kumo'
 
 import { onBeforeUnmount, onMounted, ref } from "vue";
 import { useI18n } from "vue-i18n";

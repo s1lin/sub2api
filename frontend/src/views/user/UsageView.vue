@@ -4,7 +4,7 @@
       <UsageStatsCards :stats="usageStats" :show-account-cost="false" :strike-standard-cost="true" />
 
       <div class="space-y-4">
-        <KumoSurface class="card p-4">
+        <Panel flush class="card p-4">
           <div class="flex flex-wrap items-center gap-4">
             <div class="flex items-center gap-2">
               <span class="text-sm font-medium text-gray-700 dark:text-gray-300">{{ t('admin.dashboard.timeRange') }}:</span>
@@ -21,7 +21,7 @@
               </div>
             </div>
           </div>
-        </KumoSurface>
+        </Panel>
 
         <div class="grid grid-cols-1 gap-6 lg:grid-cols-2">
           <ModelDistributionChart
@@ -66,7 +66,7 @@
         </div>
       </div>
 
-      <KumoSurface class="card p-6">
+      <Panel flush class="card p-6">
         <div class="flex flex-wrap items-end justify-between gap-4">
           <div v-if="activeTab === 'errors'" class="flex flex-1 flex-wrap items-end gap-4">
             <div class="w-full sm:w-auto sm:min-w-[220px]">
@@ -142,7 +142,7 @@
                 <span class="hidden md:inline">{{ t('admin.users.columnSettings') }}</span>
               </KumoPopoverTrigger>
 <KumoPopoverContent
-                class="max-h-80 w-48 overflow-y-auto rounded-lg border border-gray-200 bg-white py-1 shadow-lg dark:border-dark-600 dark:bg-dark-800"
+                class="max-h-80 w-48 overflow-y-auto rounded-lg border border-[var(--brand-line)] bg-white py-1 dark:bg-dark-800"
               >
                 <KumoLabel v-for="col in currentToggleableColumns" :key="col.key" class="flex w-full cursor-pointer items-center gap-2 px-3 py-2 text-sm"><KumoCheckbox :checked="isCurrentColumnVisible(col.key)"  :data-testid="`usage-column-toggle-${col.key}`" @change="toggleCurrentColumn(col.key)" /><span>{{ col.label }}</span></KumoLabel>
               </KumoPopoverContent></KumoPopoverRoot>
@@ -151,7 +151,7 @@
             </KumoButton>
           </div>
         </div>
-      </KumoSurface>
+      </Panel>
 
       <KumoTabs v-if="errorViewEnabled" :model-value="activeTab" :tabs="[{ value: 'usage', label: t('usage.tabs.usage') }, { value: 'errors', label: t('usage.tabs.errors') }]" :aria-label="t('nav.usage')" @update:model-value="$event === 'errors' ? switchToErrors() : activeTab = 'usage'" />
 
@@ -198,7 +198,8 @@
 </template>
 
 <script setup lang="ts">
-import { KumoButton, KumoCheckbox, KumoLabel, KumoPopoverContent, KumoPopoverRoot, KumoPopoverTrigger, KumoSurface, KumoTabs } from '@/components/kumo'
+import Panel from '@/components/common/Panel.vue'
+import { KumoButton, KumoCheckbox, KumoLabel, KumoPopoverContent, KumoPopoverRoot, KumoPopoverTrigger, KumoTabs } from '@/components/kumo'
 
 import { computed, onMounted, onUnmounted, reactive, ref, watch } from 'vue'
 import { useI18n } from 'vue-i18n'

@@ -20,9 +20,9 @@
         <!-- Tab: Security — Admin API Key -->
         <div v-show="activeTab === 'security'" class="space-y-6">
           <!-- Admin API Key Settings -->
-          <KumoSurface class="card">
+          <Panel flush class="card">
             <div
-              class="border-b border-gray-100 px-6 py-4 dark:border-dark-700"
+              class="border-b border-[var(--brand-line)] px-6 py-4"
             >
               <h2 class="text-lg font-semibold text-gray-900 dark:text-white">
                 {{ t("admin.settings.adminApiKey.title") }}
@@ -151,16 +151,16 @@
                 </div>
               </div>
             </div>
-          </KumoSurface>
+          </Panel>
         </div>
         <!-- /Tab: Security — Admin API Key -->
 
         <!-- Tab: Gateway -->
         <div v-show="activeTab === 'gateway'" class="space-y-6">
           <!-- Overload Cooldown (529) Settings -->
-          <KumoSurface class="card">
+          <Panel flush class="card">
             <div
-              class="border-b border-gray-100 px-6 py-4 dark:border-dark-700"
+              class="border-b border-[var(--brand-line)] px-6 py-4"
             >
               <h2 class="text-lg font-semibold text-gray-900 dark:text-white">
                 {{ t("admin.settings.overloadCooldown.title") }}
@@ -195,7 +195,7 @@
 
                 <div
                   v-if="overloadCooldownForm.enabled"
-                  class="space-y-4 border-t border-gray-100 pt-4 dark:border-dark-700"
+                  class="space-y-4 border-t border-[var(--brand-line)] pt-4"
                 >
                   <div>
                     <KumoLabel
@@ -219,7 +219,7 @@
                 </div>
 
                 <div
-                  class="flex justify-end border-t border-gray-100 pt-4 dark:border-dark-700"
+                  class="flex justify-end border-t border-[var(--brand-line)] pt-4"
                 >
                   <KumoButton
                     type="button"
@@ -237,12 +237,12 @@
                 </div>
               </template>
             </div>
-          </KumoSurface>
+          </Panel>
 
           <!-- Rate Limit Cooldown (429) Settings -->
-          <KumoSurface class="card">
+          <Panel flush class="card">
             <div
-              class="border-b border-gray-100 px-6 py-4 dark:border-dark-700"
+              class="border-b border-[var(--brand-line)] px-6 py-4"
             >
               <h2 class="text-lg font-semibold text-gray-900 dark:text-white">
                 {{ t("admin.settings.rateLimit429Cooldown.title") }}
@@ -277,7 +277,7 @@
 
                 <div
                   v-if="rateLimit429CooldownForm.enabled"
-                  class="space-y-4 border-t border-gray-100 pt-4 dark:border-dark-700"
+                  class="space-y-4 border-t border-[var(--brand-line)] pt-4"
                 >
                   <div>
                     <KumoLabel
@@ -307,7 +307,7 @@
                 </div>
 
                 <div
-                  class="flex justify-end border-t border-gray-100 pt-4 dark:border-dark-700"
+                  class="flex justify-end border-t border-[var(--brand-line)] pt-4"
                 >
                   <KumoButton
                     type="button"
@@ -325,12 +325,12 @@
                 </div>
               </template>
             </div>
-          </KumoSurface>
+          </Panel>
 
           <!-- Stream Timeout Settings -->
-          <KumoSurface class="card">
+          <Panel flush class="card">
             <div
-              class="border-b border-gray-100 px-6 py-4 dark:border-dark-700"
+              class="border-b border-[var(--brand-line)] px-6 py-4"
             >
               <h2 class="text-lg font-semibold text-gray-900 dark:text-white">
                 {{ t("admin.settings.streamTimeout.title") }}
@@ -368,7 +368,7 @@
                 <!-- Settings - Only show when enabled -->
                 <div
                   v-if="streamTimeoutForm.enabled"
-                  class="space-y-4 border-t border-gray-100 pt-4 dark:border-dark-700"
+                  class="space-y-4 border-t border-[var(--brand-line)] pt-4"
                 >
                   <!-- Action -->
                   <div>
@@ -468,7 +468,7 @@
 
                 <!-- Save Button -->
                 <div
-                  class="flex justify-end border-t border-gray-100 pt-4 dark:border-dark-700"
+                  class="flex justify-end border-t border-[var(--brand-line)] pt-4"
                 >
                   <KumoButton
                     type="button"
@@ -486,12 +486,12 @@
                 </div>
               </template>
             </div>
-          </KumoSurface>
+          </Panel>
 
           <!-- Request Rectifier Settings -->
-          <KumoSurface class="card">
+          <Panel flush class="card">
             <div
-              class="border-b border-gray-100 px-6 py-4 dark:border-dark-700"
+              class="border-b border-[var(--brand-line)] px-6 py-4"
             >
               <h2 class="text-lg font-semibold text-gray-900 dark:text-white">
                 {{ t("admin.settings.rectifier.title") }}
@@ -529,7 +529,7 @@
                 <!-- Sub-toggles (only show when master is enabled) -->
                 <div
                   v-if="rectifierForm.enabled"
-                  class="space-y-4 border-t border-gray-100 pt-4 dark:border-dark-700"
+                  class="space-y-4 border-t border-[var(--brand-line)] pt-4"
                 >
                   <!-- Thinking Signature Rectifier -->
                   <div class="flex items-center justify-between">
@@ -586,7 +586,7 @@
                   <!-- Custom Patterns (only when apikey_signature_enabled) -->
                   <div
                     v-if="rectifierForm.apikey_signature_enabled"
-                    class="ml-4 space-y-3 border-l-2 border-gray-200 pl-4 dark:border-dark-600"
+                    class="ml-4 space-y-3 border-l-2 border-[var(--brand-line)] pl-4"
                   >
                     <div>
                       <KumoLabel
@@ -651,7 +651,7 @@
 
                 <!-- Save Button -->
                 <div
-                  class="flex justify-end border-t border-gray-100 pt-4 dark:border-dark-700"
+                  class="flex justify-end border-t border-[var(--brand-line)] pt-4"
                 >
                   <KumoButton
                     type="button"
@@ -667,11 +667,11 @@
                 </div>
               </template>
             </div>
-          </KumoSurface>
+          </Panel>
           <!-- Beta Policy Settings -->
-          <KumoSurface class="card">
+          <Panel flush class="card">
             <div
-              class="border-b border-gray-100 px-6 py-4 dark:border-dark-700"
+              class="border-b border-[var(--brand-line)] px-6 py-4"
             >
               <h2 class="text-lg font-semibold text-gray-900 dark:text-white">
                 {{ t("admin.settings.betaPolicy.title") }}
@@ -697,7 +697,7 @@
                 <div
                   v-for="rule in betaPolicyForm.rules"
                   :key="rule.beta_token"
-                  class="rounded-lg border border-gray-200 p-4 dark:border-dark-600"
+                  class="p-4 panel-section"
                 >
                   <div class="mb-3 flex items-center gap-2">
                     <span
@@ -862,7 +862,7 @@
                         v-for="pattern in commonModelPatterns"
                         :key="pattern"
                         type="button"
-                        class="rounded border border-gray-200 px-2 py-0.5 text-xs text-gray-600 transition-colors hover:border-primary-300 hover:bg-primary-50 hover:text-primary-700 dark:border-dark-600 dark:text-gray-400 dark:hover:border-primary-700 dark:hover:bg-primary-900/30 dark:hover:text-primary-300"
+                        class="rounded border border-[var(--brand-line)] px-2 py-0.5 text-xs text-gray-600 transition-colors hover:border-primary-300 hover:bg-primary-50 hover:text-primary-700 dark:text-gray-400 dark:hover:border-primary-700 dark:hover:bg-primary-900/30 dark:hover:text-primary-300"
                         @click="addQuickPattern(rule, pattern)"
                       >
                         {{ pattern }}
@@ -911,7 +911,7 @@
 
                 <!-- Save Button -->
                 <div
-                  class="flex justify-end border-t border-gray-100 pt-4 dark:border-dark-700"
+                  class="flex justify-end border-t border-[var(--brand-line)] pt-4"
                 >
                   <KumoButton
                     type="button"
@@ -927,11 +927,11 @@
                 </div>
               </template>
             </div>
-          </KumoSurface>
+          </Panel>
           <!-- OpenAI Fast/Flex Policy Settings -->
-          <KumoSurface class="card">
+          <Panel flush class="card">
             <div
-              class="border-b border-gray-100 px-6 py-4 dark:border-dark-700"
+              class="border-b border-[var(--brand-line)] px-6 py-4"
             >
               <h2 class="text-lg font-semibold text-gray-900 dark:text-white">
                 {{ t("admin.settings.openaiFastPolicy.title") }}
@@ -944,7 +944,7 @@
               <!-- Empty state -->
               <div
                 v-if="openaiFastPolicyForm.rules.length === 0"
-                class="rounded-lg border border-dashed border-gray-200 p-6 text-center text-sm text-gray-500 dark:border-dark-600 dark:text-gray-400"
+                class="p-6 text-center text-sm text-gray-500 dark:text-gray-400 panel-section"
               >
                 {{ t("admin.settings.openaiFastPolicy.empty") }}
               </div>
@@ -953,7 +953,7 @@
               <div
                 v-for="(rule, ruleIndex) in openaiFastPolicyForm.rules"
                 :key="ruleIndex"
-                class="rounded-lg border border-gray-200 p-4 dark:border-dark-600"
+                class="p-4 panel-section"
               >
                 <div class="mb-3 flex items-center justify-between">
                   <span
@@ -1276,16 +1276,16 @@
                 </p>
               </div>
             </div>
-          </KumoSurface>
+          </Panel>
         </div>
         <!-- /Tab: Gateway -->
 
         <!-- Tab: Security — Registration, Turnstile, LinuxDo -->
         <div v-show="activeTab === 'security'" class="space-y-6">
           <!-- Registration Settings -->
-          <KumoSurface class="card">
+          <Panel flush class="card">
             <div
-              class="border-b border-gray-100 px-6 py-4 dark:border-dark-700"
+              class="border-b border-[var(--brand-line)] px-6 py-4"
             >
               <h2 class="text-lg font-semibold text-gray-900 dark:text-white">
                 {{ t("admin.settings.registration.title") }}
@@ -1312,7 +1312,7 @@
 
               <!-- Email Verification -->
               <div
-                class="flex items-center justify-between border-t border-gray-100 pt-4 dark:border-dark-700"
+                class="flex items-center justify-between border-t border-[var(--brand-line)] pt-4"
               >
                 <div>
                   <KumoLabel class="font-medium text-gray-900 dark:text-white">{{
@@ -1326,7 +1326,7 @@
               </div>
 
               <!-- Email Suffix Whitelist -->
-              <div class="border-t border-gray-100 pt-4 dark:border-dark-700">
+              <div class="border-t border-[var(--brand-line)] pt-4">
                 <KumoLabel class="font-medium text-gray-900 dark:text-white">{{
                   t("admin.settings.registration.emailSuffixWhitelist")
                 }}</KumoLabel>
@@ -1336,7 +1336,7 @@
                   }}
                 </p>
                 <div
-                  class="mt-3 rounded-lg border border-gray-300 bg-white p-2 dark:border-dark-500 dark:bg-dark-700"
+                  class="mt-3 p-2 panel-section"
                 >
                   <div class="flex flex-wrap items-center gap-2">
                     <span
@@ -1347,7 +1347,7 @@
                       <span>{{ suffix }}</span>
                       <KumoButton
                         type="button"
-                        class="rounded-full text-gray-500 hover:bg-gray-200 hover:text-gray-700 dark:text-gray-300 dark:hover:bg-dark-500 dark:hover:text-white"
+                        class="rounded-full text-gray-500 hover:bg-[var(--brand-hover)] hover:text-gray-700 dark:text-gray-300 dark:hover:text-white"
                         @click="
                           removeRegistrationEmailSuffixWhitelistTag(suffix)
                         "
@@ -1396,7 +1396,7 @@
 
               <!-- Email Domain Quota -->
               <div
-                class="flex items-center justify-between border-t border-gray-100 pt-4 dark:border-dark-700"
+                class="flex items-center justify-between border-t border-[var(--brand-line)] pt-4"
               >
                 <div>
                   <KumoLabel class="font-medium text-gray-900 dark:text-white">{{
@@ -1413,7 +1413,7 @@
 
               <!-- Promo Code -->
               <div
-                class="flex items-center justify-between border-t border-gray-100 pt-4 dark:border-dark-700"
+                class="flex items-center justify-between border-t border-[var(--brand-line)] pt-4"
               >
                 <div>
                   <KumoLabel class="font-medium text-gray-900 dark:text-white">{{
@@ -1428,7 +1428,7 @@
 
               <!-- Invitation Code -->
               <div
-                class="flex items-center justify-between border-t border-gray-100 pt-4 dark:border-dark-700"
+                class="flex items-center justify-between border-t border-[var(--brand-line)] pt-4"
               >
                 <div>
                   <KumoLabel class="font-medium text-gray-900 dark:text-white">{{
@@ -1443,7 +1443,7 @@
               <!-- Password Reset - Only show when email verification is enabled -->
               <div
                 v-if="form.email_verify_enabled"
-                class="flex items-center justify-between border-t border-gray-100 pt-4 dark:border-dark-700"
+                class="flex items-center justify-between border-t border-[var(--brand-line)] pt-4"
               >
                 <div>
                   <KumoLabel class="font-medium text-gray-900 dark:text-white">{{
@@ -1458,7 +1458,7 @@
               <!-- Frontend URL - Only show when password reset is enabled -->
               <div
                 v-if="form.email_verify_enabled && form.password_reset_enabled"
-                class="border-t border-gray-100 pt-4 dark:border-dark-700"
+                class="border-t border-[var(--brand-line)] pt-4"
               >
                 <KumoLabel
                   class="mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300"
@@ -1480,7 +1480,7 @@
 
               <!-- TOTP 2FA -->
               <div
-                class="flex items-center justify-between border-t border-gray-100 pt-4 dark:border-dark-700"
+                class="flex items-center justify-between border-t border-[var(--brand-line)] pt-4"
               >
                 <div>
                   <KumoLabel class="font-medium text-gray-900 dark:text-white">{{
@@ -1505,7 +1505,7 @@
 
               <!-- Passkey sign-in -->
               <div
-                class="border-t border-gray-100 pt-4 dark:border-dark-700"
+                class="border-t border-[var(--brand-line)] pt-4"
                 data-testid="passkey-settings"
               >
                 <div class="flex items-start justify-between gap-4">
@@ -1564,7 +1564,7 @@
 
               <!-- 敏感操作 step-up 2FA -->
               <div
-                class="flex items-center justify-between border-t border-gray-100 pt-4 dark:border-dark-700"
+                class="flex items-center justify-between border-t border-[var(--brand-line)] pt-4"
               >
                 <div>
                   <KumoLabel class="font-medium text-gray-900 dark:text-white">{{
@@ -1579,7 +1579,7 @@
 
               <!-- 会话 IP/UA 绑定 -->
               <div
-                class="flex items-center justify-between border-t border-gray-100 pt-4 dark:border-dark-700"
+                class="flex items-center justify-between border-t border-[var(--brand-line)] pt-4"
               >
                 <div>
                   <KumoLabel class="font-medium text-gray-900 dark:text-white">{{
@@ -1594,7 +1594,7 @@
 
               <!-- 审计日志保留天数 -->
               <div
-                class="flex items-center justify-between border-t border-gray-100 pt-4 dark:border-dark-700"
+                class="flex items-center justify-between border-t border-[var(--brand-line)] pt-4"
               >
                 <div>
                   <KumoLabel class="font-medium text-gray-900 dark:text-white">{{
@@ -1612,12 +1612,12 @@
                 />
               </div>
             </div>
-          </KumoSurface>
+          </Panel>
 
           <!-- API Key IP ACL Settings -->
-          <KumoSurface class="card">
+          <Panel flush class="card">
             <div
-              class="border-b border-gray-100 px-6 py-4 dark:border-dark-700"
+              class="border-b border-[var(--brand-line)] px-6 py-4"
             >
               <h2 class="text-lg font-semibold text-gray-900 dark:text-white">
                 {{ t("admin.settings.apiKeyAcl.title") }}
@@ -1641,7 +1641,7 @@
 
               <div
                 v-if="form.api_key_acl_trust_forwarded_ip"
-                class="border-t border-gray-100 pt-4 dark:border-dark-700"
+                class="border-t border-[var(--brand-line)] pt-4"
               >
                 <KumoLabel
                   for="forwarded-client-ip-headers"
@@ -1653,7 +1653,7 @@
                   {{ t("admin.settings.apiKeyAcl.forwardedClientIpHeadersHint") }}
                 </p>
                 <div
-                  class="mt-3 rounded-lg border border-gray-300 bg-white p-2 dark:border-dark-500 dark:bg-dark-700"
+                  class="mt-3 p-2 panel-section"
                 >
                   <div class="flex flex-wrap items-center gap-2">
                     <span
@@ -1665,7 +1665,7 @@
                       <span>{{ header }}</span>
                       <KumoButton
                         type="button"
-                        class="rounded-full text-gray-500 hover:bg-gray-200 hover:text-gray-700 dark:text-gray-300 dark:hover:bg-dark-500 dark:hover:text-white"
+                        class="rounded-full text-gray-500 hover:bg-[var(--brand-hover)] hover:text-gray-700 dark:text-gray-300 dark:hover:text-white"
                         :aria-label="t('admin.settings.apiKeyAcl.removeForwardedClientIpHeader', { header })"
                         @click="removeForwardedClientIpHeader(header)"
                       >
@@ -1699,12 +1699,12 @@
                 </p>
               </div>
             </div>
-          </KumoSurface>
+          </Panel>
 
           <!-- Panel API Rate Limit Settings -->
-          <KumoSurface class="card">
+          <Panel flush class="card">
             <div
-              class="border-b border-gray-100 px-6 py-4 dark:border-dark-700"
+              class="border-b border-[var(--brand-line)] px-6 py-4"
             >
               <div class="flex items-center gap-2">
                 <Icon
@@ -1762,7 +1762,7 @@
 
                 <div
                   v-if="panelRateLimitForm.enabled"
-                  class="space-y-5 border-t border-gray-100 pt-4 dark:border-dark-700"
+                  class="space-y-5 border-t border-[var(--brand-line)] pt-4"
                 >
                   <div class="grid grid-cols-1 gap-6 sm:grid-cols-2">
                     <div>
@@ -1837,7 +1837,7 @@
                   </div>
 
                   <div
-                    class="flex items-center justify-between border-t border-gray-100 pt-4 dark:border-dark-700"
+                    class="flex items-center justify-between border-t border-[var(--brand-line)] pt-4"
                   >
                     <div>
                       <KumoLabel class="font-medium text-gray-900 dark:text-white">{{
@@ -1852,7 +1852,7 @@
                 </div>
 
                 <div
-                  class="flex justify-end border-t border-gray-100 pt-4 dark:border-dark-700"
+                  class="flex justify-end border-t border-[var(--brand-line)] pt-4"
                 >
                   <KumoButton
                     type="button"
@@ -1871,12 +1871,12 @@
                 </div>
               </template>
             </div>
-          </KumoSurface>
+          </Panel>
 
           <!-- 人机验证 Settings -->
-          <KumoSurface class="card">
+          <Panel flush class="card">
             <div
-              class="border-b border-gray-100 px-6 py-4 dark:border-dark-700"
+              class="border-b border-[var(--brand-line)] px-6 py-4"
             >
               <h2 class="text-lg font-semibold text-gray-900 dark:text-white">
                 {{ t("admin.settings.captcha.title") }}
@@ -1905,7 +1905,7 @@
               <!-- Provider fields - Only show when enabled -->
               <div
                 v-if="captchaMasterEnabled"
-                class="border-t border-gray-100 pt-4 dark:border-dark-700"
+                class="border-t border-[var(--brand-line)] pt-4"
               >
                 <!-- Provider Selector -->
                 <div class="mb-6">
@@ -1915,41 +1915,41 @@
                     {{ t("admin.settings.captcha.provider") }}
                   </KumoLabel>
                   <div
-                    class="grid grid-cols-3 gap-2 rounded-lg bg-gray-100 p-1 dark:bg-dark-700"
+                    class="grid grid-cols-3 gap-2 p-1 ui-segmented"
                   >
-                    <KumoButton
+                    <KumoButton :aria-pressed="captchaProviderSelection === 'turnstile'"
                       type="button"
                       data-testid="captcha-provider-turnstile"
                       class="inline-flex items-center justify-center gap-2 rounded-md px-3 py-2 text-sm font-medium transition"
                       :class="
                         captchaProviderSelection === 'turnstile'
-                          ? 'bg-white text-primary-700 shadow-sm dark:bg-dark-800 dark:text-primary-300'
+                          ? 'bg-[var(--brand-hover)] text-primary-700   dark:text-primary-300'
                           : 'text-gray-600 hover:text-gray-900 dark:text-dark-300 dark:hover:text-white'
                       "
                       @click="selectCaptchaProvider('turnstile')"
                     >
                       {{ t("admin.settings.captcha.providerTurnstile") }}
                     </KumoButton>
-                    <KumoButton
+                    <KumoButton :aria-pressed="captchaProviderSelection === 'tencent'"
                       type="button"
                       data-testid="captcha-provider-tencent"
                       class="inline-flex items-center justify-center gap-2 rounded-md px-3 py-2 text-sm font-medium transition"
                       :class="
                         captchaProviderSelection === 'tencent'
-                          ? 'bg-white text-primary-700 shadow-sm dark:bg-dark-800 dark:text-primary-300'
+                          ? 'bg-[var(--brand-hover)] text-primary-700   dark:text-primary-300'
                           : 'text-gray-600 hover:text-gray-900 dark:text-dark-300 dark:hover:text-white'
                       "
                       @click="selectCaptchaProvider('tencent')"
                     >
                       {{ t("admin.settings.captcha.providerTencent") }}
                     </KumoButton>
-                    <KumoButton
+                    <KumoButton :aria-pressed="captchaProviderSelection === 'aliyun'"
                       type="button"
                       data-testid="captcha-provider-aliyun"
                       class="inline-flex items-center justify-center gap-2 rounded-md px-3 py-2 text-sm font-medium transition"
                       :class="
                         captchaProviderSelection === 'aliyun'
-                          ? 'bg-white text-primary-700 shadow-sm dark:bg-dark-800 dark:text-primary-300'
+                          ? 'bg-[var(--brand-hover)] text-primary-700   dark:text-primary-300'
                           : 'text-gray-600 hover:text-gray-900 dark:text-dark-300 dark:hover:text-white'
                       "
                       @click="selectCaptchaProvider('aliyun')"
@@ -2018,27 +2018,27 @@
                     <KumoLabel class="mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300">
                       {{ t("admin.settings.tencentCaptcha.region") }}
                     </KumoLabel>
-                    <div class="grid grid-cols-2 gap-2 rounded-lg bg-gray-100 p-1 dark:bg-dark-700">
-                      <KumoButton
+                    <div class="grid grid-cols-2 gap-2 p-1 ui-segmented">
+                      <KumoButton :aria-pressed="form.tencent_captcha_region !== 'intl'"
                         type="button"
                         data-testid="tencent-captcha-region-cn"
                         class="inline-flex items-center justify-center rounded-md px-3 py-1.5 text-sm font-medium transition"
                         :class="
                           form.tencent_captcha_region !== 'intl'
-                            ? 'bg-white text-primary-700 shadow-sm dark:bg-dark-800 dark:text-primary-300'
+                            ? 'bg-[var(--brand-hover)] text-primary-700   dark:text-primary-300'
                             : 'text-gray-600 hover:text-gray-900 dark:text-dark-300 dark:hover:text-white'
                         "
                         @click="form.tencent_captcha_region = 'cn'"
                       >
                         {{ t("admin.settings.tencentCaptcha.regionCn") }}
                       </KumoButton>
-                      <KumoButton
+                      <KumoButton :aria-pressed="form.tencent_captcha_region === 'intl'"
                         type="button"
                         data-testid="tencent-captcha-region-intl"
                         class="inline-flex items-center justify-center rounded-md px-3 py-1.5 text-sm font-medium transition"
                         :class="
                           form.tencent_captcha_region === 'intl'
-                            ? 'bg-white text-primary-700 shadow-sm dark:bg-dark-800 dark:text-primary-300'
+                            ? 'bg-[var(--brand-hover)] text-primary-700   dark:text-primary-300'
                             : 'text-gray-600 hover:text-gray-900 dark:text-dark-300 dark:hover:text-white'
                         "
                         @click="form.tencent_captcha_region = 'intl'"
@@ -2086,7 +2086,7 @@
                         {{ form.tencent_captcha_app_secret_key_configured ? t("admin.settings.tencentCaptcha.configured") : t("admin.settings.tencentCaptcha.required") }}
                       </p>
                     </div>
-                    <div class="border-t border-gray-100 pt-5 md:col-span-2 dark:border-dark-700">
+                    <div class="border-t border-[var(--brand-line)] pt-5 md:col-span-2">
                       <h3 class="text-sm font-semibold text-gray-900 dark:text-white">
                         {{ t("admin.settings.tencentCaptcha.cloudCredentialsTitle") }}
                       </h3>
@@ -2169,26 +2169,26 @@
                         {{ t("admin.settings.aliyunCaptcha.region") }}
                       </KumoLabel>
                       <div
-                        class="grid grid-cols-2 gap-2 rounded-lg bg-gray-100 p-1 dark:bg-dark-700"
+                        class="grid grid-cols-2 gap-2 p-1 ui-segmented"
                       >
-                        <KumoButton
+                        <KumoButton :aria-pressed="form.aliyun_captcha_region !== 'sgp'"
                           type="button"
                           class="inline-flex items-center justify-center rounded-md px-3 py-1.5 text-sm font-medium transition"
                           :class="
                             form.aliyun_captcha_region !== 'sgp'
-                              ? 'bg-white text-primary-700 shadow-sm dark:bg-dark-800 dark:text-primary-300'
+                              ? 'bg-[var(--brand-hover)] text-primary-700   dark:text-primary-300'
                               : 'text-gray-600 hover:text-gray-900 dark:text-dark-300 dark:hover:text-white'
                           "
                           @click="form.aliyun_captcha_region = 'cn'"
                         >
                           {{ t("admin.settings.aliyunCaptcha.regionCn") }}
                         </KumoButton>
-                        <KumoButton
+                        <KumoButton :aria-pressed="form.aliyun_captcha_region === 'sgp'"
                           type="button"
                           class="inline-flex items-center justify-center rounded-md px-3 py-1.5 text-sm font-medium transition"
                           :class="
                             form.aliyun_captcha_region === 'sgp'
-                              ? 'bg-white text-primary-700 shadow-sm dark:bg-dark-800 dark:text-primary-300'
+                              ? 'bg-[var(--brand-hover)] text-primary-700   dark:text-primary-300'
                               : 'text-gray-600 hover:text-gray-900 dark:text-dark-300 dark:hover:text-white'
                           "
                           @click="form.aliyun_captcha_region = 'sgp'"
@@ -2275,12 +2275,12 @@
                 </div>
               </div>
             </div>
-          </KumoSurface>
+          </Panel>
 
           <!-- LinuxDo Connect OAuth 登录 -->
-          <KumoSurface class="card">
+          <Panel flush class="card">
             <div
-              class="border-b border-gray-100 px-6 py-4 dark:border-dark-700"
+              class="border-b border-[var(--brand-line)] px-6 py-4"
             >
               <h2 class="text-lg font-semibold text-gray-900 dark:text-white">
                 {{ t("admin.settings.linuxdo.title") }}
@@ -2304,7 +2304,7 @@
 
               <div
                 v-if="form.linuxdo_connect_enabled"
-                class="border-t border-gray-100 pt-4 dark:border-dark-700"
+                class="border-t border-[var(--brand-line)] pt-4"
               >
                 <div class="grid grid-cols-1 gap-6">
                   <div>
@@ -2393,12 +2393,12 @@
                 </div>
               </div>
             </div>
-          </KumoSurface>
+          </Panel>
 
           <!-- GitHub / Google 邮箱快捷登录 -->
-          <KumoSurface class="card">
+          <Panel flush class="card">
             <div
-              class="border-b border-gray-100 px-6 py-4 dark:border-dark-700"
+              class="border-b border-[var(--brand-line)] px-6 py-4"
             >
               <h2 class="text-lg font-semibold text-gray-900 dark:text-white">
                 {{ localText("邮箱快捷登录", "Email OAuth Sign-in") }}
@@ -2414,7 +2414,7 @@
             </div>
             <div class="space-y-6 p-6">
               <div class="grid grid-cols-1 gap-6 xl:grid-cols-2">
-                <div class="rounded-lg border border-gray-200 p-4 dark:border-dark-700">
+                <div class="p-4 panel-section">
                   <div class="flex items-start justify-between gap-4">
                     <div>
                       <h3 class="font-medium text-gray-900 dark:text-white">
@@ -2433,7 +2433,7 @@
                   </div>
 
                   <div v-if="form.github_oauth_enabled" class="mt-4 space-y-4">
-                    <div class="rounded-lg bg-gray-50 px-3 py-2 text-xs text-gray-600 dark:bg-dark-800 dark:text-gray-300">
+                    <div class="px-3 py-2 text-xs text-gray-600 dark:text-gray-300 panel-section">
                       <template v-if="isZhLocale">
                         开通引导：GitHub Settings → Developer settings →
                         <a
@@ -2524,7 +2524,7 @@
                   </div>
                 </div>
 
-                <div class="rounded-lg border border-gray-200 p-4 dark:border-dark-700">
+                <div class="p-4 panel-section">
                   <div class="flex items-start justify-between gap-4">
                     <div>
                       <h3 class="font-medium text-gray-900 dark:text-white">
@@ -2543,7 +2543,7 @@
                   </div>
 
                   <div v-if="form.google_oauth_enabled" class="mt-4 space-y-4">
-                    <div class="rounded-lg bg-gray-50 px-3 py-2 text-xs text-gray-600 dark:bg-dark-800 dark:text-gray-300">
+                    <div class="px-3 py-2 text-xs text-gray-600 dark:text-gray-300 panel-section">
                       {{
                         localText(
                           "开通引导：Google Cloud Console → APIs & Services → OAuth consent screen 完成同意屏幕；Credentials → Create Credentials → OAuth client ID，类型选择 Web application，并把下面地址加入 Authorized redirect URIs。",
@@ -2619,12 +2619,12 @@
                 </div>
               </div>
             </div>
-          </KumoSurface>
+          </Panel>
 
           <!-- WeChat Connect OAuth 登录 -->
-          <KumoSurface class="card">
+          <Panel flush class="card">
             <div
-              class="border-b border-gray-100 px-6 py-4 dark:border-dark-700"
+              class="border-b border-[var(--brand-line)] px-6 py-4"
             >
               <h2 class="text-lg font-semibold text-gray-900 dark:text-white">
                 {{ t("admin.settings.wechatConnect.title") }}
@@ -2651,11 +2651,11 @@
 
               <div
                 v-if="form.wechat_connect_enabled"
-                class="space-y-6 border-t border-gray-100 pt-4 dark:border-dark-700"
+                class="space-y-6 border-t border-[var(--brand-line)] pt-4"
               >
                 <div class="space-y-4">
                   <div
-                    class="rounded-lg border border-gray-200 p-4 dark:border-dark-700"
+                    class="p-4 panel-section"
                   >
                     <div class="flex items-start justify-between gap-4">
                       <div>
@@ -2728,7 +2728,7 @@
                   </div>
 
                   <div
-                    class="rounded-lg border border-gray-200 p-4 dark:border-dark-700"
+                    class="p-4 panel-section"
                   >
                     <div class="flex items-start justify-between gap-4">
                       <div>
@@ -2806,7 +2806,7 @@
                   </div>
 
                   <div
-                    class="rounded-lg border border-gray-200 p-4 dark:border-dark-700"
+                    class="p-4 panel-section"
                   >
                     <div class="flex items-start justify-between gap-4">
                       <div>
@@ -2961,12 +2961,12 @@
                 </div>
               </div>
             </div>
-          </KumoSurface>
+          </Panel>
 
           <!-- DingTalk Connect OAuth 登录 -->
-          <KumoSurface class="card">
+          <Panel flush class="card">
             <div
-              class="border-b border-gray-100 px-6 py-4 dark:border-dark-700"
+              class="border-b border-[var(--brand-line)] px-6 py-4"
             >
               <h2 class="text-lg font-semibold text-gray-900 dark:text-white">
                 {{ t("admin.settings.dingtalk.title") }}
@@ -2990,7 +2990,7 @@
 
               <div
                 v-if="form.dingtalk_connect_enabled"
-                class="border-t border-gray-100 pt-4 dark:border-dark-700"
+                class="border-t border-[var(--brand-line)] pt-4"
               >
                 <div class="grid grid-cols-1 gap-6">
                   <div>
@@ -3061,7 +3061,7 @@
                   </div>
 
                   <!-- Corp Restriction Policy -->
-                  <div class="border-t border-gray-100 pt-4 dark:border-dark-700">
+                  <div class="border-t border-[var(--brand-line)] pt-4">
                     <KumoLabel class="mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300">
                       {{ t("admin.settings.dingtalk.corpPolicy.label") }}
                     </KumoLabel>
@@ -3089,7 +3089,7 @@
                   <!-- bypass_registration toggle（仅 internal_only 模式下可见可用） -->
                   <div
                     v-if="form.dingtalk_connect_corp_restriction_policy === 'internal_only'"
-                    class="flex items-center justify-between pt-4 border-t border-gray-100 dark:border-dark-700"
+                    class="flex items-center justify-between pt-4 border-t border-[var(--brand-line)]"
                   >
                     <div>
                       <KumoLabel class="font-medium text-gray-900 dark:text-white">{{
@@ -3105,7 +3105,7 @@
                   <!-- 身份同步开关（仅 internal_only 模式下可见） -->
                   <div
                     v-if="form.dingtalk_connect_corp_restriction_policy === 'internal_only'"
-                    class="pt-4 border-t border-gray-100 dark:border-dark-700 space-y-2"
+                    class="pt-4 border-t border-[var(--brand-line)] space-y-2"
                   >
                     <div class="flex items-center justify-between">
                       <div>
@@ -3148,7 +3148,7 @@
                   </div>
                   <div
                     v-if="form.dingtalk_connect_corp_restriction_policy === 'internal_only'"
-                    class="pt-4 border-t border-gray-100 dark:border-dark-700 space-y-2"
+                    class="pt-4 border-t border-[var(--brand-line)] space-y-2"
                   >
                     <div class="flex items-center justify-between">
                       <div>
@@ -3194,7 +3194,7 @@
                   </div>
                   <div
                     v-if="form.dingtalk_connect_corp_restriction_policy === 'internal_only'"
-                    class="pt-4 border-t border-gray-100 dark:border-dark-700 space-y-2"
+                    class="pt-4 border-t border-[var(--brand-line)] space-y-2"
                   >
                     <div class="flex items-center justify-between">
                       <div>
@@ -3241,12 +3241,12 @@
                 </div>
               </div>
             </div>
-          </KumoSurface>
+          </Panel>
 
           <!-- Generic OIDC OAuth 登录 -->
-          <KumoSurface class="card">
+          <Panel flush class="card">
             <div
-              class="border-b border-gray-100 px-6 py-4 dark:border-dark-700"
+              class="border-b border-[var(--brand-line)] px-6 py-4"
             >
               <h2 class="text-lg font-semibold text-gray-900 dark:text-white">
                 {{ t("admin.settings.oidc.title") }}
@@ -3270,7 +3270,7 @@
 
               <div
                 v-if="form.oidc_connect_enabled"
-                class="space-y-6 border-t border-gray-100 pt-4 dark:border-dark-700"
+                class="space-y-6 border-t border-[var(--brand-line)] pt-4"
               >
                 <div class="grid grid-cols-1 gap-6 lg:grid-cols-3">
                   <div>
@@ -3558,7 +3558,7 @@
 
                 <div class="grid grid-cols-1 gap-6 lg:grid-cols-3">
                   <div
-                    class="flex items-center justify-between rounded border border-gray-200 px-4 py-3 dark:border-dark-700"
+                    class="flex items-center justify-between rounded px-4 py-3 panel-section"
                   >
                     <div>
                       <KumoLabel class="font-medium text-gray-900 dark:text-white">
@@ -3572,7 +3572,7 @@
                   </div>
 
                   <div
-                    class="flex items-center justify-between rounded border border-gray-200 px-4 py-3 dark:border-dark-700"
+                    class="flex items-center justify-between rounded px-4 py-3 panel-section"
                   >
                     <div>
                       <KumoLabel class="font-medium text-gray-900 dark:text-white">
@@ -3586,7 +3586,7 @@
                   </div>
 
                   <div
-                    class="flex items-center justify-between rounded border border-gray-200 px-4 py-3 dark:border-dark-700"
+                    class="flex items-center justify-between rounded px-4 py-3 panel-section"
                   >
                     <div>
                       <KumoLabel class="font-medium text-gray-900 dark:text-white">
@@ -3650,16 +3650,16 @@
                 </div>
               </div>
             </div>
-          </KumoSurface>
+          </Panel>
         </div>
         <!-- /Tab: Security — Registration, Turnstile, LinuxDo, OIDC -->
 
         <!-- Tab: Users -->
         <div v-show="activeTab === 'users'" class="space-y-6">
           <!-- Default Settings -->
-          <KumoSurface class="card">
+          <Panel flush class="card">
             <div
-              class="border-b border-gray-100 px-6 py-4 dark:border-dark-700"
+              class="border-b border-[var(--brand-line)] px-6 py-4"
             >
               <h2 class="text-lg font-semibold text-gray-900 dark:text-white">
                 {{ t("admin.settings.defaults.title") }}
@@ -3725,7 +3725,7 @@
                 </div>
               </div>
 
-              <div class="border-t border-gray-100 pt-4 dark:border-dark-700">
+              <div class="border-t border-[var(--brand-line)] pt-4">
                 <div class="mb-3 flex items-center justify-between">
                   <div>
                     <KumoLabel class="font-medium text-gray-900 dark:text-white">
@@ -3749,7 +3749,7 @@
 
                 <div
                   v-if="form.default_subscriptions.length === 0"
-                  class="rounded border border-dashed border-gray-300 px-4 py-3 text-sm text-gray-500 dark:border-dark-600 dark:text-gray-400"
+                  class="rounded px-4 py-3 text-sm text-gray-500 dark:text-gray-400 panel-section"
                 >
                   {{ t("admin.settings.defaults.defaultSubscriptionsEmpty") }}
                 </div>
@@ -3758,7 +3758,7 @@
                   <div
                     v-for="(item, index) in form.default_subscriptions"
                     :key="`default-sub-${index}`"
-                    class="grid grid-cols-1 gap-3 rounded border border-gray-200 p-3 md:grid-cols-[1fr_160px_auto] dark:border-dark-600"
+                    class="grid grid-cols-1 gap-3 rounded p-3 md:grid-cols-[1fr_160px_auto] panel-section"
                   >
                     <div>
                       <KumoLabel
@@ -3864,7 +3864,7 @@
               </div>
 
               <!-- ★ 新增：系统全局默认平台限额矩阵 -->
-              <div class="border-t border-gray-100 pt-4 dark:border-dark-700">
+              <div class="border-t border-[var(--brand-line)] pt-4">
                 <div class="mb-3">
                   <KumoLabel class="font-medium text-gray-900 dark:text-white">
                     {{ t("admin.settings.defaults.defaultPlatformQuotas") }}
@@ -3928,11 +3928,11 @@
               </div>
               <!-- /全局平台限额矩阵 -->
             </div>
-          </KumoSurface>
+          </Panel>
 
-          <KumoSurface class="card">
+          <Panel flush class="card">
             <div
-              class="border-b border-gray-100 px-6 py-4 dark:border-dark-700"
+              class="border-b border-[var(--brand-line)] px-6 py-4"
             >
               <h2 class="text-lg font-semibold text-gray-900 dark:text-white">
                 {{ t("admin.settings.authSourceDefaults.title") }}
@@ -3943,7 +3943,7 @@
             </div>
             <div class="space-y-6 p-6">
               <div
-                class="flex items-center justify-between rounded border border-gray-200 px-4 py-3 dark:border-dark-700"
+                class="flex items-center justify-between rounded px-4 py-3 panel-section"
               >
                 <div>
                   <KumoLabel class="font-medium text-gray-900 dark:text-white">
@@ -3960,7 +3960,7 @@
                 <div
                   v-for="authSource in authSourceDefaultsMeta"
                   :key="authSource.source"
-                  class="rounded-xl border border-gray-200 p-4 dark:border-dark-700"
+                  class="p-4 panel-section"
                 >
                   <div class="flex items-center justify-between gap-4">
                     <div>
@@ -3982,7 +3982,7 @@
                   <div
                     v-if="authSourceDefaults[authSource.source].grant_on_signup"
                     :data-testid="`auth-source-${authSource.source}-panel`"
-                    class="mt-4 space-y-4 border-t border-gray-100 pt-4 dark:border-dark-700"
+                    class="mt-4 space-y-4 border-t border-[var(--brand-line)] pt-4"
                   >
                     <p class="text-sm text-gray-500 dark:text-gray-400">
                       {{ t("admin.settings.authSourceDefaults.enabledHint") }}
@@ -4025,7 +4025,7 @@
                     </div>
 
                     <div
-                      class="flex items-center justify-between rounded border border-gray-200 px-4 py-3 dark:border-dark-700"
+                      class="flex items-center justify-between rounded px-4 py-3 panel-section"
                     >
                       <div>
                         <KumoLabel
@@ -4077,7 +4077,7 @@
                         authSourceDefaults[authSource.source].subscriptions
                           .length === 0
                       "
-                      class="rounded border border-dashed border-gray-300 px-4 py-3 text-sm text-gray-500 dark:border-dark-600 dark:text-gray-400"
+                      class="rounded px-4 py-3 text-sm text-gray-500 dark:text-gray-400 panel-section"
                     >
                       {{ t("admin.settings.authSourceDefaults.noSourceSubscriptions") }}
                     </div>
@@ -4088,7 +4088,7 @@
                           authSource.source
                         ].subscriptions"
                         :key="`${authSource.source}-sub-${index}`"
-                        class="grid grid-cols-1 gap-3 rounded border border-gray-200 p-3 md:grid-cols-[1fr_160px_auto] dark:border-dark-600"
+                        class="grid grid-cols-1 gap-3 rounded p-3 md:grid-cols-[1fr_160px_auto] panel-section"
                       >
                         <div>
                           <KumoLabel
@@ -4202,7 +4202,7 @@
                     </div>
 
                     <!-- ★ 新增：auth source 平台限额覆盖区块 -->
-                    <div class="border-t border-gray-100 pt-4 dark:border-dark-700">
+                    <div class="border-t border-[var(--brand-line)] pt-4">
                       <div class="mb-3">
                         <KumoLabel class="font-medium text-gray-900 dark:text-white">
                           {{ t("admin.settings.authSourceDefaults.platformQuotasOverride") }}
@@ -4266,16 +4266,16 @@
                 </div>
               </div>
             </div>
-          </KumoSurface>
+          </Panel>
         </div>
         <!-- /Tab: Users -->
 
         <!-- Tab: Gateway — Claude Code, Scheduling -->
         <div v-show="activeTab === 'gateway'" class="space-y-6">
           <!-- Claude Code Settings -->
-          <KumoSurface class="card">
+          <Panel flush class="card">
             <div
-              class="border-b border-gray-100 px-6 py-4 dark:border-dark-700"
+              class="border-b border-[var(--brand-line)] px-6 py-4"
             >
               <h2 class="text-lg font-semibold text-gray-900 dark:text-white">
                 {{ t("admin.settings.claudeCode.title") }}
@@ -4322,12 +4322,12 @@
                 </p>
               </div>
             </div>
-          </KumoSurface>
+          </Panel>
 
           <!-- Codex Settings -->
-          <KumoSurface class="card">
+          <Panel flush class="card">
             <div
-              class="border-b border-gray-100 px-6 py-4 dark:border-dark-700"
+              class="border-b border-[var(--brand-line)] px-6 py-4"
             >
               <h2 class="text-lg font-semibold text-gray-900 dark:text-white">
                 {{ t("admin.settings.gatewayForwarding.codexHardeningTitle") }}
@@ -4570,12 +4570,12 @@
                   </KumoButton>
                 </div>
             </div>
-          </KumoSurface>
+          </Panel>
 
           <!-- Upstream Billing Probe Settings -->
-          <KumoSurface class="card" data-testid="upstream-billing-probe-settings">
+          <Panel flush class="card" data-testid="upstream-billing-probe-settings">
             <div
-              class="border-b border-gray-100 px-6 py-4 dark:border-dark-700"
+              class="border-b border-[var(--brand-line)] px-6 py-4"
             >
               <h2 class="text-lg font-semibold text-gray-900 dark:text-white">
                 {{ t("admin.settings.upstreamBillingProbe.title") }}
@@ -4614,7 +4614,7 @@
 
                 <div
                   v-if="upstreamBillingProbeForm.enabled"
-                  class="border-t border-gray-100 pt-4 dark:border-dark-700"
+                  class="border-t border-[var(--brand-line)] pt-4"
                 >
                   <KumoLabel
                     class="mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300"
@@ -4638,7 +4638,7 @@
                 </div>
 
                 <div
-                  class="flex justify-end border-t border-gray-100 pt-4 dark:border-dark-700"
+                  class="flex justify-end border-t border-[var(--brand-line)] pt-4"
                 >
                   <KumoButton
                     type="button"
@@ -4656,11 +4656,11 @@
                 </div>
               </template>
             </div>
-          </KumoSurface>
+          </Panel>
 
           <!-- Ollama Cloud Usage Settings -->
-          <KumoSurface class="card" data-testid="ollama-cloud-usage-global-settings">
-            <div class="border-b border-gray-100 px-6 py-4 dark:border-dark-700">
+          <Panel flush class="card" data-testid="ollama-cloud-usage-global-settings">
+            <div class="border-b border-[var(--brand-line)] px-6 py-4">
               <h2 class="text-lg font-semibold text-gray-900 dark:text-white">
                 {{ t("admin.settings.ollamaCloudUsage.title") }}
               </h2>
@@ -4689,7 +4689,7 @@
                     data-testid="ollama-cloud-usage-global-enabled"
                   />
                 </div>
-                <div v-if="ollamaCloudUsageForm.enabled" class="space-y-4 border-t border-gray-100 pt-4 dark:border-dark-700">
+                <div v-if="ollamaCloudUsageForm.enabled" class="space-y-4 border-t border-[var(--brand-line)] pt-4">
                   <div>
                     <KumoLabel class="mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300" for="ollama-cloud-usage-debounce">
                       {{ t("admin.settings.ollamaCloudUsage.debounceMinutes") }}
@@ -4727,7 +4727,7 @@
                     </p>
                   </div>
                 </div>
-                <div class="flex justify-end border-t border-gray-100 pt-4 dark:border-dark-700">
+                <div class="flex justify-end border-t border-[var(--brand-line)] pt-4">
                   <KumoButton
                     type="button"
                     class="btn btn-primary btn-sm"
@@ -4740,11 +4740,11 @@
                 </div>
               </template>
             </div>
-          </KumoSurface>
+          </Panel>
 
           <!-- OpenCode Go Usage Settings -->
-          <KumoSurface class="card" data-testid="opencode-go-usage-global-settings">
-            <div class="border-b border-gray-100 px-6 py-4 dark:border-dark-700">
+          <Panel flush class="card" data-testid="opencode-go-usage-global-settings">
+            <div class="border-b border-[var(--brand-line)] px-6 py-4">
               <h2 class="text-lg font-semibold text-gray-900 dark:text-white">
                 {{ t("admin.settings.opencodeGoUsage.title") }}
               </h2>
@@ -4773,7 +4773,7 @@
                     data-testid="opencode-go-usage-global-enabled"
                   />
                 </div>
-                <div v-if="opencodeGoUsageForm.enabled" class="space-y-4 border-t border-gray-100 pt-4 dark:border-dark-700">
+                <div v-if="opencodeGoUsageForm.enabled" class="space-y-4 border-t border-[var(--brand-line)] pt-4">
                   <div>
                     <KumoLabel class="mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300" for="opencode-go-usage-debounce">
                       {{ t("admin.settings.opencodeGoUsage.debounceMinutes") }}
@@ -4811,7 +4811,7 @@
                     </p>
                   </div>
                 </div>
-                <div class="flex justify-end border-t border-gray-100 pt-4 dark:border-dark-700">
+                <div class="flex justify-end border-t border-[var(--brand-line)] pt-4">
                   <KumoButton
                     type="button"
                     class="btn btn-primary btn-sm"
@@ -4824,12 +4824,12 @@
                 </div>
               </template>
             </div>
-          </KumoSurface>
+          </Panel>
 
           <!-- Gateway Scheduling Settings -->
-          <KumoSurface class="card">
+          <Panel flush class="card">
             <div
-              class="border-b border-gray-100 px-6 py-4 dark:border-dark-700"
+              class="border-b border-[var(--brand-line)] px-6 py-4"
             >
               <h2 class="text-lg font-semibold text-gray-900 dark:text-white">
                 {{ t("admin.settings.scheduling.title") }}
@@ -4853,7 +4853,7 @@
                 <Toggle v-model="form.allow_ungrouped_key_scheduling" />
               </div>
 
-              <div class="border-t border-gray-100 pt-4 dark:border-dark-700">
+              <div class="border-t border-[var(--brand-line)] pt-4">
                 <div class="mb-3">
                   <KumoLabel class="font-medium text-gray-900 dark:text-white">
                     {{
@@ -4888,7 +4888,7 @@
                   <div
                     v-for="platform in schedulingThresholdPlatforms"
                     :key="platform"
-                    class="rounded-lg border border-gray-200 p-4 dark:border-dark-700"
+                    class="p-4 panel-section"
                   >
                     <div class="flex items-start justify-between gap-3">
                       <div>
@@ -4927,7 +4927,7 @@
 
               <div
                 v-if="!form.openai_advanced_scheduler_enabled"
-                class="flex items-center justify-between border-t border-gray-100 pt-5 dark:border-dark-700"
+                class="flex items-center justify-between border-t border-[var(--brand-line)] pt-5"
               >
                 <div>
                   <KumoLabel
@@ -4949,7 +4949,7 @@
 
               <div
                 v-if="!form.openai_advanced_scheduler_enabled && form.openai_low_upstream_rate_priority_enabled"
-                class="flex flex-col items-stretch gap-3 border-t border-gray-100 pt-5 sm:flex-row sm:items-start sm:justify-between sm:gap-6 dark:border-dark-700"
+                class="flex flex-col items-stretch gap-3 border-t border-[var(--brand-line)] pt-5 sm:flex-row sm:items-start sm:justify-between sm:gap-6"
               >
                 <div class="min-w-0">
                   <KumoLabel
@@ -4978,7 +4978,7 @@
                 </div>
               </div>
 
-              <div class="flex items-center justify-between border-t border-gray-100 pt-5 dark:border-dark-700">
+              <div class="flex items-center justify-between border-t border-[var(--brand-line)] pt-5">
                 <div>
                   <KumoLabel
                     class="text-sm font-medium text-gray-700 dark:text-gray-300"
@@ -4999,7 +4999,7 @@
 
               <div
                 v-if="form.openai_advanced_scheduler_enabled"
-                class="flex items-center justify-between border-t border-gray-100 pt-5 dark:border-dark-700"
+                class="flex items-center justify-between border-t border-[var(--brand-line)] pt-5"
               >
                 <div>
                   <KumoLabel
@@ -5018,7 +5018,7 @@
 
               <div
                 v-if="form.openai_advanced_scheduler_enabled"
-                class="flex items-center justify-between border-t border-gray-100 pt-5 dark:border-dark-700"
+                class="flex items-center justify-between border-t border-[var(--brand-line)] pt-5"
               >
                 <div>
                   <KumoLabel
@@ -5037,7 +5037,7 @@
 
               <div
                 v-if="form.openai_advanced_scheduler_enabled"
-                class="flex flex-col items-stretch gap-3 border-t border-gray-100 pt-5 sm:flex-row sm:items-start sm:justify-between sm:gap-6 dark:border-dark-700"
+                class="flex flex-col items-stretch gap-3 border-t border-[var(--brand-line)] pt-5 sm:flex-row sm:items-start sm:justify-between sm:gap-6"
               >
                 <div class="min-w-0">
                   <KumoLabel
@@ -5068,7 +5068,7 @@
 
               <div
                 v-if="form.openai_advanced_scheduler_enabled"
-                class="border-t border-gray-100 pt-5 dark:border-dark-700"
+                class="border-t border-[var(--brand-line)] pt-5"
               >
                 <div>
                   <KumoLabel
@@ -5103,12 +5103,12 @@
                 </div>
               </div>
             </div>
-          </KumoSurface>
+          </Panel>
 
           <!-- Gateway Forwarding Behavior -->
-          <KumoSurface class="card">
+          <Panel flush class="card">
             <div
-              class="border-b border-gray-100 px-6 py-4 dark:border-dark-700"
+              class="border-b border-[var(--brand-line)] px-6 py-4"
             >
               <h2 class="text-lg font-semibold text-gray-900 dark:text-white">
                 {{ t("admin.settings.gatewayForwarding.title") }}
@@ -5118,7 +5118,7 @@
               </p>
             </div>
             <div class="space-y-5 p-6">
-              <div class="grid gap-5 border-b border-gray-100 pb-5 dark:border-dark-700 md:grid-cols-[minmax(0,1fr)_auto] md:items-end">
+              <div class="grid gap-5 border-b border-[var(--brand-line)] pb-5 md:grid-cols-[minmax(0,1fr)_auto] md:items-end">
                 <div>
                   <KumoLabel
                     for="grok-default-text-model"
@@ -5184,7 +5184,7 @@
                 </div>
 
               <!-- OpenAI Responses 首 token 统计 -->
-              <div class="border-b border-gray-100 pb-5 dark:border-dark-700 md:col-span-2">
+              <div class="border-b border-[var(--brand-line)] pb-5 md:col-span-2">
                 <KumoLabel
                   for="openai-ttft-mode"
                   class="text-sm font-medium text-gray-700 dark:text-gray-300"
@@ -5307,7 +5307,7 @@
                   <div
                     v-for="(block, index) in claudeOAuthSystemPromptBlocks"
                     :key="block.id"
-                    class="rounded-lg border border-gray-200 bg-gray-50 p-4 dark:border-dark-700 dark:bg-dark-800/60"
+                    class="p-4 panel-section"
                   >
                     <div
                       :class="[
@@ -5747,12 +5747,12 @@
               </div>
 
             </div>
-          </KumoSurface>
+          </Panel>
 
           <!-- Web Search Emulation -->
-          <KumoSurface class="card">
+          <Panel flush class="card">
             <div
-              class="border-b border-gray-100 px-6 py-4 dark:border-dark-700"
+              class="border-b border-[var(--brand-line)] px-6 py-4"
             >
               <h2 class="text-lg font-semibold text-gray-900 dark:text-white">
                 {{ t("admin.settings.webSearchEmulation.title") }}
@@ -5796,7 +5796,7 @@
 
                 <div
                   v-if="webSearchConfig.providers.length === 0"
-                  class="rounded-lg border border-dashed border-gray-300 p-4 text-center text-sm text-gray-400 dark:border-dark-600"
+                  class="p-4 text-center text-sm text-gray-400 panel-section"
                 >
                   {{ t("admin.settings.webSearchEmulation.noProviders") }}
                 </div>
@@ -5804,7 +5804,7 @@
                 <div
                   v-for="(provider, pIdx) in webSearchConfig.providers"
                   :key="pIdx"
-                  class="rounded-lg border border-gray-200 dark:border-dark-600"
+                  class="panel-section"
                 >
                   <!-- Collapsible header -->
                   <div
@@ -5873,7 +5873,7 @@
                   <!-- Expanded content -->
                   <div
                     v-if="expandedProviders[pIdx]"
-                    class="space-y-3 border-t border-gray-100 px-4 pb-4 pt-3 dark:border-dark-700"
+                    class="space-y-3 border-t border-[var(--brand-line)] px-4 pb-4 pt-3"
                   >
                     <!-- API Key with inline show/copy -->
                     <div>
@@ -6039,7 +6039,7 @@
                           provider.quota_limit != null &&
                           provider.quota_limit > 0
                         "
-                        class="flex-1 rounded-full bg-gray-200 dark:bg-dark-600"
+                        class="flex-1 panel-section"
                         style="height: 6px"
                       >
                         <div
@@ -6100,7 +6100,7 @@
                 </div>
               </div>
             </div>
-          </KumoSurface>
+          </Panel>
 
           <!-- Web Search Test Dialog -->
           <KumoDialog v-if="wsTestDialogOpen" :show="true" custom-layout width="normal" :title="t('admin.settings.webSearchEmulation.testResultTitle')" :close-on-click-outside="true"  @close="wsTestDialogOpen = false">
@@ -6136,7 +6136,7 @@
               <!-- Test results -->
               <div
                 v-if="wsTestResult"
-                class="mt-4 max-h-80 overflow-y-auto rounded-lg bg-gray-50 p-4 dark:bg-dark-700"
+                class="mt-4 max-h-80 overflow-y-auto p-4 panel-section"
               >
                 <p
                   class="mb-2 text-sm font-medium text-gray-700 dark:text-gray-300"
@@ -6154,7 +6154,7 @@
                 <div
                   v-for="(r, rIdx) in wsTestResult.results"
                   :key="rIdx"
-                  class="mt-2 border-t border-gray-200 pt-2 first:mt-0 first:border-0 first:pt-0 dark:border-dark-600"
+                  class="mt-2 border-t border-[var(--brand-line)] pt-2 first:mt-0 first:border-0 first:pt-0"
                 >
                   <a
                     :href="r.url"
@@ -6181,8 +6181,8 @@
   </KumoDialog>
 
         <!-- Usage Records Settings -->
-        <KumoSurface class="card">
-          <div class="border-b border-gray-100 px-6 py-4 dark:border-dark-700">
+        <Panel flush class="card">
+          <div class="border-b border-[var(--brand-line)] px-6 py-4">
             <h2 class="text-lg font-semibold text-gray-900 dark:text-white">
               {{ t('admin.settings.usageRecords.title') }}
             </h2>
@@ -6207,16 +6207,16 @@
               </KumoLabel>
             </div>
           </div>
-        </KumoSurface>
+        </Panel>
         </div>
         <!-- /Tab: Gateway — Claude Code, Scheduling -->
 
         <!-- Tab: General -->
         <div v-show="activeTab === 'general'" class="space-y-6">
           <!-- Site Settings -->
-          <KumoSurface class="card">
+          <Panel flush class="card">
             <div
-              class="border-b border-gray-100 px-6 py-4 dark:border-dark-700"
+              class="border-b border-[var(--brand-line)] px-6 py-4"
             >
               <h2 class="text-lg font-semibold text-gray-900 dark:text-white">
                 {{ t("admin.settings.site.title") }}
@@ -6297,7 +6297,7 @@
               </div>
 
               <!-- Global Table Preferences -->
-              <div class="border-t border-gray-100 pt-4 dark:border-dark-700">
+              <div class="border-t border-[var(--brand-line)] pt-4">
                 <h3 class="text-sm font-medium text-gray-900 dark:text-white">
                   {{ t("admin.settings.site.tablePreferencesTitle") }}
                 </h3>
@@ -6359,7 +6359,7 @@
                   <div
                     v-for="(ep, index) in form.custom_endpoints"
                     :key="index"
-                    class="rounded-lg border border-gray-200 p-4 dark:border-dark-600"
+                    class="p-4 panel-section"
                   >
                     <div class="mb-3 flex items-center justify-between">
                       <span
@@ -6455,7 +6455,7 @@
 
                 <KumoButton
                   type="button"
-                  class="mt-3 flex w-full items-center justify-center gap-2 rounded-lg border-2 border-dashed border-gray-300 px-4 py-2.5 text-sm text-gray-500 transition-colors hover:border-primary-400 hover:text-primary-600 dark:border-dark-600 dark:text-gray-400 dark:hover:border-primary-500 dark:hover:text-primary-400"
+                  class="mt-3 flex w-full items-center justify-center gap-2 rounded-lg border-2 border-dashed border-[var(--brand-line)] px-4 py-2.5 text-sm text-gray-500 transition-colors hover:border-primary-400 hover:text-primary-600 dark:text-gray-400 dark:hover:border-primary-500 dark:hover:text-primary-400"
                   @click="addEndpoint"
                 >
                   <svg
@@ -6551,7 +6551,7 @@
               </div>
 
               <!-- Compact Home Page -->
-              <div class="flex items-center justify-between border-t border-gray-100 pt-4 dark:border-dark-700">
+              <div class="flex items-center justify-between border-t border-[var(--brand-line)] pt-4">
                 <div>
                   <KumoLabel class="font-medium text-gray-900 dark:text-white">{{
                     t("admin.settings.site.compactHome")
@@ -6565,7 +6565,7 @@
 
               <!-- Hide CCS Import Button -->
               <div
-                class="flex items-center justify-between border-t border-gray-100 pt-4 dark:border-dark-700"
+                class="flex items-center justify-between border-t border-[var(--brand-line)] pt-4"
               >
                 <div>
                   <KumoLabel class="font-medium text-gray-900 dark:text-white">{{
@@ -6578,12 +6578,12 @@
                 <Toggle v-model="form.hide_ccs_import_button" />
               </div>
             </div>
-          </KumoSurface>
+          </Panel>
 
           <!-- Custom Menu Items -->
-          <KumoSurface class="card">
+          <Panel flush class="card">
             <div
-              class="border-b border-gray-100 px-6 py-4 dark:border-dark-700"
+              class="border-b border-[var(--brand-line)] px-6 py-4"
             >
               <h2 class="text-lg font-semibold text-gray-900 dark:text-white">
                 {{ t("admin.settings.customMenu.title") }}
@@ -6597,7 +6597,7 @@
               <div
                 v-for="(item, index) in form.custom_menu_items"
                 :key="item.id || index"
-                class="rounded-lg border border-gray-200 p-4 dark:border-dark-600"
+                class="p-4 panel-section"
               >
                 <div class="mb-3 flex items-center justify-between">
                   <span
@@ -6612,7 +6612,7 @@
                     <KumoButton
                       v-if="index > 0"
                       type="button"
-                      class="rounded p-1 text-gray-400 hover:bg-gray-100 hover:text-gray-600 dark:hover:bg-dark-700"
+                      class="rounded p-1 text-gray-400 hover:bg-[var(--brand-hover)] hover:text-gray-600"
                       :title="t('admin.settings.customMenu.moveUp')"
                       @click="moveMenuItem(index, -1)"
                     >
@@ -6634,7 +6634,7 @@
                     <KumoButton
                       v-if="index < form.custom_menu_items.length - 1"
                       type="button"
-                      class="rounded p-1 text-gray-400 hover:bg-gray-100 hover:text-gray-600 dark:hover:bg-dark-700"
+                      class="rounded p-1 text-gray-400 hover:bg-[var(--brand-hover)] hover:text-gray-600"
                       :title="t('admin.settings.customMenu.moveDown')"
                       @click="moveMenuItem(index, 1)"
                     >
@@ -6761,7 +6761,7 @@
               <!-- Add button -->
               <KumoButton
                 type="button"
-                class="flex w-full items-center justify-center gap-2 rounded-lg border-2 border-dashed border-gray-300 py-3 text-sm text-gray-500 transition-colors hover:border-primary-400 hover:text-primary-600 dark:border-dark-600 dark:text-gray-400 dark:hover:border-primary-500 dark:hover:text-primary-400"
+                class="flex w-full items-center justify-center gap-2 rounded-lg border-2 border-dashed border-[var(--brand-line)] py-3 text-sm text-gray-500 transition-colors hover:border-primary-400 hover:text-primary-600 dark:text-gray-400 dark:hover:border-primary-500 dark:hover:text-primary-400"
                 @click="addMenuItem"
               >
                 <svg
@@ -6780,14 +6780,14 @@
                 {{ t("admin.settings.customMenu.add") }}
               </KumoButton>
             </div>
-          </KumoSurface>
+          </Panel>
 	        </div>
 	        <!-- /Tab: General -->
 
 	        <!-- Tab: Login Agreement -->
 	        <div v-show="activeTab === 'agreement'" class="space-y-6">
-	          <KumoSurface class="card">
-	            <div class="border-b border-gray-100 px-6 py-4 dark:border-dark-700">
+	          <Panel flush class="card">
+	            <div class="border-b border-[var(--brand-line)] px-6 py-4">
 	              <div class="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
 	                <div>
 	                  <h2 class="text-lg font-semibold text-gray-900 dark:text-white">
@@ -6817,13 +6817,13 @@
 	                  <KumoLabel class="mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300">
 	                    {{ localText("展示形式", "Display mode") }}
 	                  </KumoLabel>
-	                  <div class="grid grid-cols-2 gap-2 rounded-lg bg-gray-100 p-1 dark:bg-dark-700">
-                    <KumoButton
+	                  <div class="grid grid-cols-2 gap-2 p-1 ui-segmented">
+                    <KumoButton :aria-pressed="form.login_agreement_mode === 'modal'"
                       type="button"
                       class="inline-flex items-center justify-center gap-2 rounded-md px-3 py-2 text-sm font-medium transition"
                       :class="
                         form.login_agreement_mode === 'modal'
-                          ? 'bg-white text-primary-700 shadow-sm dark:bg-dark-800 dark:text-primary-300'
+                          ? 'bg-[var(--brand-hover)] text-primary-700   dark:text-primary-300'
                           : 'text-gray-600 hover:text-gray-900 dark:text-dark-300 dark:hover:text-white'
                       "
                       @click="form.login_agreement_mode = 'modal'"
@@ -6831,12 +6831,12 @@
                       <Icon name="shield" size="sm" />
                       {{ localText("弹窗", "Modal") }}
                     </KumoButton>
-                    <KumoButton
+                    <KumoButton :aria-pressed="form.login_agreement_mode === 'checkbox'"
                       type="button"
                       class="inline-flex items-center justify-center gap-2 rounded-md px-3 py-2 text-sm font-medium transition"
                       :class="
                         form.login_agreement_mode === 'checkbox'
-                          ? 'bg-white text-primary-700 shadow-sm dark:bg-dark-800 dark:text-primary-300'
+                          ? 'bg-[var(--brand-hover)] text-primary-700   dark:text-primary-300'
                           : 'text-gray-600 hover:text-gray-900 dark:text-dark-300 dark:hover:text-white'
                       "
                       @click="form.login_agreement_mode = 'checkbox'"
@@ -6898,7 +6898,7 @@
                   <div
                     v-for="(doc, index) in form.login_agreement_documents"
                     :key="doc.id || index"
-                    class="rounded-lg border border-gray-200 bg-white p-4 dark:border-dark-700 dark:bg-dark-800/60"
+                    class="p-4 panel-section"
                   >
                     <div class="mb-3 flex items-center justify-between gap-3">
                       <div class="flex min-w-0 items-center gap-3">
@@ -6954,8 +6954,8 @@
                         <KumoLabel class="mb-1 block text-xs font-medium text-gray-600 dark:text-gray-400">
                           {{ localText("路由标识", "Route slug") }}
                         </KumoLabel>
-                        <div class="flex overflow-hidden rounded-lg border border-gray-300 bg-white focus-within:border-primary-500 focus-within:ring-1 focus-within:ring-primary-500 dark:border-dark-600 dark:bg-dark-900">
-                          <span class="inline-flex flex-shrink-0 items-center border-r border-gray-200 bg-gray-50 px-3 text-sm text-gray-500 dark:border-dark-700 dark:bg-dark-800 dark:text-dark-400">
+                        <div class="flex overflow-hidden panel-section">
+                          <span class="inline-flex flex-shrink-0 items-center border-r border-[var(--brand-line)] bg-gray-50 px-3 text-sm text-gray-500 dark:bg-dark-800 dark:text-dark-400">
                             /legal/
                           </span>
                           <KumoInput :aria-label="localText('文档路径', 'Document path')"
@@ -6982,15 +6982,15 @@
                 </div>
               </div>
             </div>
-          </KumoSurface>
+          </Panel>
         </div>
         <!-- /Tab: Login Agreement -->
 
 	        <!-- Tab: Features (功能开关) -->
         <div v-show="activeTab === 'features'" class="space-y-6">
 
-        <KumoSurface class="card">
-          <div class="border-b border-gray-100 px-6 py-4 dark:border-dark-700">
+        <Panel flush class="card">
+          <div class="border-b border-[var(--brand-line)] px-6 py-4">
             <h2 class="text-lg font-semibold text-gray-900 dark:text-white">
               {{ t('admin.settings.features.channelMonitor.title') }}
             </h2>
@@ -7025,25 +7025,25 @@
                 <KumoLabel class="input-label">
                   {{ t('admin.settings.features.channelMonitor.mode') }}
                 </KumoLabel>
-                <div class="mt-1.5 inline-flex w-full max-w-md rounded-lg border border-gray-200 bg-gray-50 p-1 dark:border-dark-600 dark:bg-dark-900/40">
-                  <KumoButton
+                <div class="mt-1.5 inline-flex w-full max-w-md p-1 ui-segmented">
+                  <KumoButton :aria-pressed="form.channel_monitor_mode === 'v2'"
                     type="button"
                     class="inline-flex flex-1 items-center justify-center gap-2 rounded-md px-3 py-2 text-sm font-medium transition"
                     :class="
                       form.channel_monitor_mode === 'v2'
-                        ? 'bg-white text-primary-700 shadow-sm dark:bg-dark-800 dark:text-primary-300'
+                        ? 'bg-[var(--brand-hover)] text-primary-700   dark:text-primary-300'
                         : 'text-gray-600 hover:text-gray-900 dark:text-dark-300 dark:hover:text-white'
                     "
                     @click="form.channel_monitor_mode = 'v2'"
                   >
                     {{ t('admin.settings.features.channelMonitor.modeV2') }}
                   </KumoButton>
-                  <KumoButton
+                  <KumoButton :aria-pressed="form.channel_monitor_mode === 'v1'"
                     type="button"
                     class="inline-flex flex-1 items-center justify-center gap-2 rounded-md px-3 py-2 text-sm font-medium transition"
                     :class="
                       form.channel_monitor_mode === 'v1'
-                        ? 'bg-white text-primary-700 shadow-sm dark:bg-dark-800 dark:text-primary-300'
+                        ? 'bg-[var(--brand-hover)] text-primary-700   dark:text-primary-300'
                         : 'text-gray-600 hover:text-gray-900 dark:text-dark-300 dark:hover:text-white'
                     "
                     @click="form.channel_monitor_mode = 'v1'"
@@ -7118,10 +7118,10 @@
               </div>
             </div>
           </div>
-        </KumoSurface>
+        </Panel>
 
-        <KumoSurface class="card">
-          <div class="border-b border-gray-100 px-6 py-4 dark:border-dark-700">
+        <Panel flush class="card">
+          <div class="border-b border-[var(--brand-line)] px-6 py-4">
             <h2 class="text-lg font-semibold text-gray-900 dark:text-white">
               {{ t('admin.settings.features.availableChannels.title') }}
             </h2>
@@ -7151,10 +7151,10 @@
               <Toggle v-model="form.available_channels_enabled" />
             </div>
           </div>
-        </KumoSurface>
+        </Panel>
 
-        <KumoSurface class="card">
-          <div class="border-b border-gray-100 px-6 py-4 dark:border-dark-700">
+        <Panel flush class="card">
+          <div class="border-b border-[var(--brand-line)] px-6 py-4">
             <h2 class="text-lg font-semibold text-gray-900 dark:text-white">
               {{ t('admin.settings.features.modelPlaza.title') }}
             </h2>
@@ -7201,10 +7201,10 @@
               ></KumoTextarea>
             </div>
           </div>
-        </KumoSurface>
+        </Panel>
 
-        <KumoSurface class="card">
-          <div class="border-b border-gray-100 px-6 py-4 dark:border-dark-700">
+        <Panel flush class="card">
+          <div class="border-b border-[var(--brand-line)] px-6 py-4">
             <h2 class="text-lg font-semibold text-gray-900 dark:text-white">
               {{ t('admin.settings.features.siteBillingMode.title') }}
             </h2>
@@ -7231,10 +7231,10 @@
               </div>
             </div>
           </div>
-        </KumoSurface>
+        </Panel>
 
-        <KumoSurface class="card">
-          <div class="border-b border-gray-100 px-6 py-4 dark:border-dark-700">
+        <Panel flush class="card">
+          <div class="border-b border-[var(--brand-line)] px-6 py-4">
             <h2 class="text-lg font-semibold text-gray-900 dark:text-white">
               {{ t('admin.settings.features.pluginManagement.title') }}
             </h2>
@@ -7255,10 +7255,10 @@
               <Toggle v-model="form.plugin_management_enabled" />
             </div>
           </div>
-        </KumoSurface>
+        </Panel>
 
-        <KumoSurface class="card">
-          <div class="border-b border-gray-100 px-6 py-4 dark:border-dark-700">
+        <Panel flush class="card">
+          <div class="border-b border-[var(--brand-line)] px-6 py-4">
             <h2 class="text-lg font-semibold text-gray-900 dark:text-white">
               {{ t('admin.settings.features.riskControl.title') }}
             </h2>
@@ -7325,11 +7325,11 @@
               />
             </div>
           </div>
-        </KumoSurface>
+        </Panel>
 
         <!-- Affiliate (邀请返利) feature card -->
-        <KumoSurface class="card">
-          <div class="border-b border-gray-100 px-6 py-4 dark:border-dark-700">
+        <Panel flush class="card">
+          <div class="border-b border-[var(--brand-line)] px-6 py-4">
             <h2 class="text-lg font-semibold text-gray-900 dark:text-white">
               {{ t('admin.settings.features.affiliate.title') }}
             </h2>
@@ -7435,7 +7435,7 @@
               </div>
 
               <!-- 专属用户管理 -->
-              <div class="border-t border-gray-100 pt-6 dark:border-dark-700">
+              <div class="border-t border-[var(--brand-line)] pt-6">
                 <div class="mb-3 flex items-center justify-between">
                   <div>
                     <h3 class="text-sm font-semibold text-gray-900 dark:text-white">
@@ -7472,7 +7472,7 @@
                   </KumoButton>
                 </div>
 
-                <div class="overflow-x-auto rounded-lg border border-gray-200 dark:border-dark-700">
+                <div class="overflow-x-auto panel-section">
                   <KumoTable class="min-w-full divide-y divide-gray-200 dark:divide-dark-700">
                     <KumoTableHeader class="bg-gray-50 dark:bg-dark-800">
                       <KumoTableRow>
@@ -7568,7 +7568,7 @@
               </div>
             </div>
           </div>
-        </KumoSurface>
+        </Panel>
 
         <!-- Affiliate add/edit modal -->
         <KumoDialog v-if="affiliateModal.open" :show="true" custom-layout width="narrow" :title="affiliateModal.mode === 'add' ? t('admin.settings.features.affiliate.modal.addTitle') : t('admin.settings.features.affiliate.modal.editTitle')" :close-on-click-outside="true"  @close="closeAffiliateModal">
@@ -7608,13 +7608,13 @@
                   />
                   <div
                     v-if="affiliateModal.userResults.length > 0"
-                    class="mt-1 max-h-40 overflow-y-auto rounded border border-gray-200 dark:border-dark-700"
+                    class="mt-1 max-h-40 overflow-y-auto rounded panel-section"
                   >
                     <KumoButton
                       v-for="u in affiliateModal.userResults"
                       :key="u.id"
                       type="button"
-                      class="w-full px-3 py-1.5 text-left text-sm hover:bg-gray-100 dark:hover:bg-dark-800"
+                      class="w-full px-3 py-1.5 text-left text-sm hover:bg-[var(--brand-hover)]"
                       @click="selectAffiliateUser(u)"
                     >
                       {{ u.email }} <span class="text-xs text-gray-500">({{ u.username }})</span>
@@ -7739,9 +7739,9 @@
         <!-- Tab: Payment -->
         <div v-show="activeTab === 'payment'" class="space-y-6">
           <!-- Payment System Settings -->
-          <KumoSurface class="card">
+          <Panel flush class="card">
             <div
-              class="border-b border-gray-100 px-6 py-4 dark:border-dark-700"
+              class="border-b border-[var(--brand-line)] px-6 py-4"
             >
               <h2 class="text-lg font-semibold text-gray-900 dark:text-white">
                 {{ t("admin.settings.payment.title") }}
@@ -7814,7 +7814,7 @@
                       t("admin.settings.payment.preview")
                     }}</KumoLabel>
                     <div
-                      class="rounded-lg border border-gray-200 bg-gray-50 px-3 py-2 text-sm text-gray-600 dark:border-dark-600 dark:bg-dark-800 dark:text-gray-300"
+                      class="px-3 py-2 text-sm text-gray-600 dark:text-gray-300 panel-section"
                     >
                       {{
                         (form.payment_product_name_prefix || "Sub2API") +
@@ -8141,8 +8141,8 @@
                       :class="[
                         'rounded-lg border px-3 py-1.5 text-sm font-medium transition-all',
                         isPaymentTypeEnabled(pt.value)
-                          ? 'border-primary-500 bg-primary-500 text-white shadow-sm'
-                          : 'border-gray-300 bg-white text-gray-600 hover:border-gray-400 hover:bg-gray-50 dark:border-dark-600 dark:bg-dark-800 dark:text-gray-300 dark:hover:border-dark-500',
+                          ? 'border-primary-500 bg-primary-500 text-white '
+                          : 'border-[var(--brand-line)] bg-white text-gray-600 hover:border-[var(--brand-line)] hover:bg-[var(--brand-hover)] border-[var(--brand-line)] dark:bg-dark-800 dark:text-gray-300 dark:hover:border-[var(--brand-line)]',
                       ]"
                     >
                       {{ pt.label }}
@@ -8204,7 +8204,7 @@
                 </div>
               </template>
             </div>
-          </KumoSurface>
+          </Panel>
 
           <!-- 充值优惠阶梯（独立卡片，与服务商管理同级） -->
           <RechargeBonusTierEditor
@@ -8235,7 +8235,7 @@
 
         <div v-show="activeTab === 'email'" class="space-y-6">
           <!-- Email disabled hint - show when email_verify_enabled is off -->
-          <KumoSurface v-if="!form.email_verify_enabled" class="card">
+          <Panel flush v-if="!form.email_verify_enabled" class="card">
             <div class="p-6">
               <div class="flex items-start gap-3">
                 <Icon
@@ -8253,12 +8253,12 @@
                 </div>
               </div>
             </div>
-          </KumoSurface>
+          </Panel>
 
           <!-- SMTP Settings - Only show when email verification is enabled -->
-          <KumoSurface v-if="form.email_verify_enabled" class="card">
+          <Panel flush v-if="form.email_verify_enabled" class="card">
             <div
-              class="flex items-center justify-between border-b border-gray-100 px-6 py-4 dark:border-dark-700"
+              class="flex items-center justify-between border-b border-[var(--brand-line)] px-6 py-4"
             >
               <div>
                 <h2 class="text-lg font-semibold text-gray-900 dark:text-white">
@@ -8384,7 +8384,7 @@
 
               <!-- Use TLS Toggle -->
               <div
-                class="flex items-center justify-between border-t border-gray-100 pt-4 dark:border-dark-700"
+                class="flex items-center justify-between border-t border-[var(--brand-line)] pt-4"
               >
                 <div>
                   <KumoLabel class="font-medium text-gray-900 dark:text-white">{{
@@ -8397,12 +8397,12 @@
                 <Toggle v-model="form.smtp_use_tls" />
               </div>
             </div>
-          </KumoSurface>
+          </Panel>
 
           <!-- Send Test Email - Only show when email verification is enabled -->
-          <KumoSurface v-if="form.email_verify_enabled" class="card">
+          <Panel flush v-if="form.email_verify_enabled" class="card">
             <div
-              class="border-b border-gray-100 px-6 py-4 dark:border-dark-700"
+              class="border-b border-[var(--brand-line)] px-6 py-4"
             >
               <h2 class="text-lg font-semibold text-gray-900 dark:text-white">
                 {{ t("admin.settings.testEmail.title") }}
@@ -8445,12 +8445,12 @@
                 </KumoButton>
               </div>
             </div>
-          </KumoSurface>
+          </Panel>
 
           <!-- 订阅到期提醒 -->
-          <KumoSurface class="card">
+          <Panel flush class="card">
             <div
-              class="border-b border-gray-100 px-6 py-4 dark:border-dark-700"
+              class="border-b border-[var(--brand-line)] px-6 py-4"
             >
               <h3 class="text-base font-medium text-gray-900 dark:text-white">
                 {{ t("admin.settings.subscriptionExpiryNotify.title") }}
@@ -8474,14 +8474,14 @@
                 <Toggle v-model="form.subscription_expiry_notify_enabled" />
               </div>
             </div>
-          </KumoSurface>
+          </Panel>
 
           <EmailTemplateEditor />
 
           <!-- Balance Low Notification -->
-          <KumoSurface class="card">
+          <Panel flush class="card">
             <div
-              class="border-b border-gray-100 px-6 py-4 dark:border-dark-700"
+              class="border-b border-[var(--brand-line)] px-6 py-4"
             >
               <h3 class="text-base font-medium text-gray-900 dark:text-white">
                 {{ t("admin.settings.balanceNotify.title") }}
@@ -8536,12 +8536,12 @@
                 </p>
               </div>
             </div>
-          </KumoSurface>
+          </Panel>
 
           <!-- Account Quota Notification -->
-          <KumoSurface class="card">
+          <Panel flush class="card">
             <div
-              class="border-b border-gray-100 px-6 py-4 dark:border-dark-700"
+              class="border-b border-[var(--brand-line)] px-6 py-4"
             >
               <h3 class="text-base font-medium text-gray-900 dark:text-white">
                 {{ t("admin.settings.quotaNotify.title") }}
@@ -8580,7 +8580,7 @@
                         class="sr-only peer"
                       />
                       <div
-                        class="w-9 h-5 bg-gray-200 peer-focus:outline-none rounded-full peer dark:bg-gray-600 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all dark:after:border-gray-500 peer-checked:bg-primary-600"
+                        class="w-9 h-5 peer-focus:outline-none peer peer-checked:after:translate-x-full after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:h-4 after:w-4 after:transition-all peer-checked:bg-primary-600 panel-section"
                       ></div>
                     </KumoLabel>
                     <KumoInput :aria-label="t('admin.settings.quotaNotify.emailPlaceholder')"
@@ -8612,7 +8612,7 @@
                 </p>
               </div>
             </div>
-          </KumoSurface>
+          </Panel>
         </div>
         <!-- /Tab: Email -->
 
@@ -8676,7 +8676,8 @@
 </template>
 
 <script setup lang="ts">
-import { KumoButton, KumoCheckbox, KumoDialog, KumoInput, KumoLabel, KumoLoader, KumoNativeSelect, KumoRadio, KumoRadioGroup, KumoSurface, KumoSwitch, KumoTable, KumoTableBody, KumoTableCell, KumoTableHead, KumoTableHeader, KumoTableRow, KumoTabs, KumoTextarea } from '@/components/kumo'
+import Panel from '@/components/common/Panel.vue'
+import { KumoButton, KumoCheckbox, KumoDialog, KumoInput, KumoLabel, KumoLoader, KumoNativeSelect, KumoRadio, KumoRadioGroup, KumoSwitch, KumoTable, KumoTableBody, KumoTableCell, KumoTableHead, KumoTableHeader, KumoTableRow, KumoTabs, KumoTextarea } from '@/components/kumo'
 
 import { ref, reactive, computed, onMounted, watch } from "vue";
 import { useI18n } from "vue-i18n";
@@ -12950,129 +12951,29 @@ watch(
 </script>
 
 <style scoped>
-.default-sub-group-select :deep(.select-trigger) {
-  @apply h-[42px];
-}
-
-.default-sub-delete-btn {
-  @apply h-[42px];
-}
-
-/* ============ 系统设置 Tab 导航 ============ */
+.default-sub-group-select :deep(.select-trigger), .default-sub-delete-btn { min-height: 36px; }
 .settings-tabs-shell {
-  @apply sticky z-20 -mx-1 rounded-2xl border border-white/80 bg-white/90 p-1.5 backdrop-blur-xl;
-  top: 4.75rem;
-  box-shadow:
-    0 12px 28px rgb(15 23 42 / 0.07),
-    0 1px 0 rgb(255 255 255 / 0.9) inset;
+  position: sticky;
+  top: 4rem;
+  z-index: 20;
+  overflow-x: auto;
+  border-bottom: 1px solid var(--brand-line);
+  background: var(--brand-canvas);
 }
-
-.settings-tabs-scroll {
-  @apply overflow-x-auto;
-  -ms-overflow-style: none;
-  scrollbar-width: none;
+/* Kumo's underline list caps height at 30px and draws its own border; the shell owns the hairline. */
+.settings-tabs-shell :deep(.kumo-tabs-list) { height: auto; gap: 1.25rem; padding-bottom: 0; border-bottom: 0; }
+.settings-tabs-shell :deep([role="tab"]) {
+  gap: .375rem;
+  padding: .75rem 0;
+  border-radius: 0;
+  background: transparent;
+  color: var(--brand-muted);
+  font-size: .875rem;
+  font-weight: 500;
 }
-
-.settings-tabs-scroll::-webkit-scrollbar {
-  display: none;
-}
-
-.settings-tabs {
-  @apply flex min-w-max items-center gap-1;
-}
-
-.settings-tab {
-  @apply relative isolate flex h-10 min-w-[6.75rem] shrink-0 items-center justify-center gap-1.5 whitespace-nowrap rounded-xl border border-transparent px-3 text-sm font-medium text-gray-600 outline-none transition-colors duration-200 ease-out dark:text-gray-300;
-}
-
-@media (min-width: 768px) {
-  .settings-tabs {
-    @apply min-w-full;
-  }
-
-  .settings-tab {
-    @apply min-w-0 flex-1 basis-0 overflow-hidden px-2 text-[13px];
-  }
-
-  .settings-tab-icon {
-    @apply h-6 w-6;
-  }
-}
-
-.settings-tab::before {
-  @apply absolute inset-0 -z-10 rounded-xl opacity-0 transition-opacity duration-200;
-  content: "";
-  background: linear-gradient(135deg, rgb(248 250 252 / 0.95), rgb(241 245 249 / 0.8));
-}
-
-.settings-tab:hover::before,
-.settings-tab:focus-visible::before {
-  opacity: 1;
-}
-
-.settings-tab:focus-visible {
-  @apply ring-2 ring-primary-500/40 ring-offset-2 ring-offset-white dark:ring-offset-dark-900;
-}
-
-.settings-tab-active {
-  @apply border-primary-200/80 bg-white text-primary-700 shadow-sm dark:border-primary-400/30 dark:bg-dark-700/95 dark:text-primary-200;
-  box-shadow:
-    0 8px 18px rgb(15 23 42 / 0.08),
-    0 1px 0 rgb(255 255 255 / 0.92) inset;
-}
-
-.settings-tab-active::before {
-  opacity: 0;
-}
-
-.settings-tab-active::after {
-  position: absolute;
-  right: 0.75rem;
-  bottom: 0.25rem;
-  left: 0.75rem;
-  height: 2px;
-  border-radius: 9999px;
-  content: "";
-  background: var(--brand-accent);
-}
-
-.settings-tab-icon {
-  @apply flex h-7 w-7 shrink-0 items-center justify-center rounded-lg text-gray-500 transition-colors duration-200 dark:text-gray-400;
-}
-
-.settings-tab:hover .settings-tab-icon,
-.settings-tab:focus-visible .settings-tab-icon {
-  @apply text-gray-700 dark:text-gray-200;
-}
-
-.settings-tab-active .settings-tab-icon {
-  @apply bg-primary-50 text-primary-600 dark:bg-primary-400/10 dark:text-primary-300;
-}
-
-.settings-tab-label {
-  @apply min-w-0 overflow-hidden text-ellipsis whitespace-nowrap leading-none;
-}
-</style>
-
-<style>
-/* Dark-mode overrides for the settings tabs shell. Kept in an UNSCOPED block
-   because Vue's scoped-CSS compiler was dropping the `:global(.dark) ...`
-   rules in the production build, leaving inactive tabs unreadable on dark. */
-.dark .settings-tabs-shell {
-  border-color: rgb(51 65 85 / 0.65);
-  background: rgb(15 23 42 / 0.86);
-  box-shadow:
-    0 16px 36px rgb(0 0 0 / 0.28),
-    0 1px 0 rgb(255 255 255 / 0.06) inset;
-}
-
-.dark .settings-tab::before {
-  background: linear-gradient(135deg, rgb(30 41 59 / 0.9), rgb(51 65 85 / 0.62));
-}
-
-.dark .settings-tab-active {
-  box-shadow:
-    0 12px 26px rgb(0 0 0 / 0.22),
-    0 1px 0 rgb(255 255 255 / 0.08) inset;
-}
+.settings-tabs-shell :deep([role="tab"]:hover),
+.settings-tabs-shell :deep([role="tab"][aria-selected="true"]) { background: transparent; color: var(--brand-ink); }
+.settings-tabs-shell :deep([role="tab"] svg) { width: 1rem; height: 1rem; }
+.settings-tabs-shell :deep([role="tab"][aria-selected="true"]::after) { content: ''; position: absolute; inset: auto 0 0; height: 2px; background: var(--brand-accent); }
+.settings-tabs-shell :deep(.kumo-tabs-list > div:not([role])) { display: none; }
 </style>

@@ -50,7 +50,7 @@
       </div>
     </div>
     <div
-      class="mb-2 flex items-center gap-2 rounded-lg border border-dashed border-gray-200 bg-gray-50 px-3 py-2 text-xs text-gray-500 dark:border-dark-600 dark:bg-dark-800/60 dark:text-gray-400"
+      class="mb-2 flex items-center gap-2 rounded-lg border border-dashed border-[var(--brand-line)] bg-gray-50 px-3 py-2 text-xs text-gray-500 dark:bg-dark-800/60 dark:text-gray-400"
       data-testid="opencode-go-protocol-fallback"
     >
       <span class="flex-1 font-mono">*</span>
@@ -58,7 +58,7 @@
     </div>
     <KumoButton
       type="button"
-      class="w-full rounded-lg border-2 border-dashed border-gray-300 px-4 py-2 text-gray-600 transition-colors hover:border-gray-400 hover:text-gray-700 dark:border-dark-500 dark:text-gray-400 dark:hover:border-dark-400 dark:hover:text-gray-300"
+      class="w-full rounded-lg border-2 border-dashed border-[var(--brand-line)] px-4 py-2 text-gray-600 transition-colors hover:border-[var(--brand-line)] hover:text-gray-700 dark:text-gray-400 dark:hover:border-[var(--brand-line)] dark:hover:text-gray-300"
       data-testid="opencode-go-protocol-add-rule"
       @click="addRow"
     >

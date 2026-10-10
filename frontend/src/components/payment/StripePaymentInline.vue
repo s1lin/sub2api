@@ -1,5 +1,5 @@
 <template>
-  <div class="space-y-4">
+  <div class="space-y-4" data-ui-branded>
     <div v-if="loading" class="flex items-center justify-center py-12">
       <KumoLoader class="h-8 w-8" />
     </div>

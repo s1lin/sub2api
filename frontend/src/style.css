@@ -249,7 +249,7 @@
 
   /* ============ 统计卡片 ============ */
   .stat-card {
-    @apply card p-5;
+    @apply p-4;
     @apply flex items-start gap-4;
   }
 
@@ -533,8 +533,7 @@
   .sidebar {
     @apply fixed inset-y-0 left-0 z-40;
     @apply w-64;
-    background: var(--brand-surface);
-    @apply border-r border-gray-200 dark:border-dark-800;
+    background: var(--brand-canvas);
     @apply flex flex-col;
     @apply transition-transform duration-300;
     transition-property: width, transform;
@@ -543,7 +542,6 @@
   .sidebar-header {
     @apply h-16 px-6;
     @apply flex items-center gap-3;
-    @apply border-b border-gray-100 dark:border-dark-800;
     transition:
       padding 0.2s ease,
       gap 0.2s ease;

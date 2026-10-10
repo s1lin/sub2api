@@ -1,8 +1,8 @@
 <template>
-  <header class="glass sticky top-0 z-30 border-b border-gray-200 dark:border-dark-700">
+  <header class="platform-header sticky top-0 z-30">
     <div class="platform-header-inner flex h-16 items-center justify-between gap-2">
       <!-- Left: Mobile Menu Toggle + Page Title -->
-      <div class="flex shrink-0 items-center gap-2 sm:gap-4">
+      <div class="flex min-w-0 flex-1 items-center gap-2 sm:gap-4">
         <KumoButton
           @click="toggleMobileSidebar"
           class="platform-nav-control btn-ghost btn-icon lg:hidden"
@@ -11,18 +11,15 @@
           <Icon name="menu" size="md" />
         </KumoButton>
 
-        <div class="hidden lg:block">
-          <h1 class="text-lg font-semibold text-gray-900 dark:text-white">
-            {{ pageTitle }}
-          </h1>
-          <p v-if="pageDescription" class="text-xs text-gray-500 dark:text-dark-400">
-            {{ pageDescription }}
-          </p>
-        </div>
+        <nav class="platform-breadcrumb" :aria-label="t('common.breadcrumb')">
+          <router-link :to="authStore.isAdmin ? '/admin/dashboard' : '/dashboard'">{{ appStore.siteName }}</router-link>
+          <span aria-hidden="true">/</span>
+          <span aria-current="page">{{ pageTitle }}</span>
+        </nav>
       </div>
 
       <!-- Right: Announcements + Docs + Language + Subscriptions + Balance + User Dropdown -->
-      <div class="flex min-w-0 items-center gap-1 sm:gap-3">
+      <div class="flex shrink-0 items-center gap-1 sm:gap-3">
         <!-- Announcement Bell -->
         <AnnouncementBell v-if="user" />
 
@@ -32,7 +29,7 @@
           :href="docUrl"
           target="_blank"
           rel="noopener noreferrer"
-          class="platform-nav-control hidden items-center gap-1.5 rounded-lg px-2.5 py-1.5 text-gray-600 transition-colors hover:bg-gray-100 hover:text-gray-900 dark:text-dark-400 dark:hover:bg-dark-800 dark:hover:text-white sm:flex"
+          class="platform-nav-control hidden items-center gap-1.5 rounded-lg px-2.5 py-1.5 text-gray-600 transition-colors hover:bg-[var(--brand-hover)] hover:text-gray-900 dark:text-dark-400 dark:hover:text-white sm:flex"
         >
           <Icon name="book" size="sm" />
           <span class="hidden sm:inline">{{ t('nav.docs') }}</span>
@@ -44,7 +41,7 @@
           :to="{ path: '/model-plaza', query: { embedded: '1' } }"
           :title="t('nav.modelPlaza')"
           :aria-label="t('nav.modelPlaza')"
-          class="platform-nav-control flex items-center gap-1.5 rounded-lg px-2.5 py-1.5 text-gray-600 transition-colors hover:bg-gray-100 hover:text-gray-900 dark:text-dark-400 dark:hover:bg-dark-800 dark:hover:text-white"
+          class="platform-nav-control flex items-center gap-1.5 rounded-lg px-2.5 py-1.5 text-gray-600 transition-colors hover:bg-[var(--brand-hover)] hover:text-gray-900 dark:text-dark-400 dark:hover:text-white"
         >
           <Icon name="grid" size="sm" />
           <span class="hidden sm:inline">{{ t('nav.modelPlaza') }}</span>
@@ -57,7 +54,7 @@
         <SubscriptionProgressMini v-if="user && subscriptionFeatureEnabled" />
 
         <!-- Balance Display -->
-        <div v-if="user" class="hidden sm:block"><KumoTooltip :label="t('common.balance')" class="w-56" trigger-class="platform-nav-control flex items-center gap-2 rounded-xl bg-primary-50 px-3 py-1.5 dark:bg-primary-900/20"><template #trigger><svg
+        <div v-if="user" class="hidden sm:block"><KumoTooltip :label="t('common.balance')" class="w-56" trigger-class="platform-nav-control flex items-center gap-2 rounded-lg bg-primary-50 px-3 py-1.5 dark:bg-primary-900/20"><template #trigger><svg
             class="h-4 w-4 text-primary-600 dark:text-primary-400"
             fill="none"
             viewBox="0 0 24 24"
@@ -82,7 +79,7 @@
             </div><div class="mt-2 flex items-center justify-between">
               <span class="text-gray-500 dark:text-dark-400">{{ balanceFrozenText }}</span>
               <span class="font-medium text-amber-700 dark:text-amber-200">{{ formatHeaderMoney(frozenBalance) }}</span>
-            </div><div class="mt-2 border-t border-gray-100 pt-2 dark:border-dark-700">
+            </div><div class="mt-2 border-t border-[var(--brand-line)] pt-2">
               <div class="flex items-center justify-between">
                 <span class="text-gray-500 dark:text-dark-400">{{ balanceTotalText }}</span>
                 <span class="font-semibold text-gray-900 dark:text-white">{{ formatHeaderMoney(totalBalance) }}</span>
@@ -92,10 +89,10 @@
         <!-- User Dropdown -->
         <KumoDropdown v-model="dropdownOpen" v-if="user">
           <KumoDropdownTrigger
-            class="platform-nav-control flex items-center gap-2 rounded-xl p-1.5 transition-colors hover:bg-gray-100 dark:hover:bg-dark-800"
+            class="platform-nav-control flex items-center gap-2 rounded-lg p-1.5 transition-colors hover:bg-[var(--brand-hover)]"
             :aria-label="t('common.userMenu')"
           >
-            <div class="flex h-8 w-8 items-center justify-center overflow-hidden rounded-[10px] bg-primary-600 text-sm font-medium text-white dark:bg-primary-400 dark:text-dark-950">
+            <div class="flex h-8 w-8 items-center justify-center overflow-hidden rounded-lg bg-primary-600 text-sm font-medium text-white dark:bg-primary-400 dark:text-dark-950">
               <img
                 v-if="avatarUrl"
                 :src="avatarUrl"
@@ -119,7 +116,7 @@
 
             <KumoDropdownContent class="platform-nav-menu w-56">
               <!-- User Info -->
-              <div class="border-b border-gray-100 px-4 py-3 dark:border-dark-700">
+              <div class="border-b border-[var(--brand-line)] px-4 py-3">
                 <div class="text-sm font-medium text-gray-900 dark:text-white">
                   {{ displayName }}
                 </div>
@@ -127,7 +124,7 @@
               </div>
 
               <!-- Balance (mobile only) -->
-              <div class="border-b border-gray-100 px-4 py-2 dark:border-dark-700 sm:hidden">
+              <div class="border-b border-[var(--brand-line)] px-4 py-2 sm:hidden">
                 <div class="text-xs text-gray-500 dark:text-dark-400">
                   {{ t('common.balance') }}
                 </div>
@@ -172,7 +169,7 @@
               <!-- Contact Support (only show if configured) -->
               <div
                 v-if="contactInfo"
-                class="border-t border-gray-100 px-4 py-2.5 dark:border-dark-700"
+                class="border-t border-[var(--brand-line)] px-4 py-2.5"
               >
                 <div class="flex items-center gap-2 text-xs text-gray-500 dark:text-gray-400">
                   <svg
@@ -195,7 +192,7 @@
                 </div>
               </div>
 
-              <div v-if="showOnboardingButton" class="border-t border-gray-100 py-1 dark:border-dark-700">
+              <div v-if="showOnboardingButton" class="border-t border-[var(--brand-line)] py-1">
                 <KumoDropdownItem @click="handleReplayGuide" class="dropdown-item w-full">
                   <svg class="h-4 w-4" fill="currentColor" viewBox="0 0 24 24">
                     <path
@@ -206,7 +203,7 @@
                 </KumoDropdownItem>
               </div>
 
-              <div class="border-t border-gray-100 py-1 dark:border-dark-700">
+              <div class="border-t border-[var(--brand-line)] py-1">
                 <KumoDropdownItem
                   @click="handleLogout"
                   class="dropdown-item w-full text-red-600 hover:bg-red-50 dark:text-red-400 dark:hover:bg-red-900/20"
@@ -320,14 +317,6 @@ const pageTitle = computed(() => {
     return t(titleKey)
   }
   return (route.meta.title as string) || ''
-})
-
-const pageDescription = computed(() => {
-  const descKey = routeMetaKeys.value.descriptionKey
-  if (descKey) {
-    return t(descKey)
-  }
-  return (route.meta.description as string) || ''
 })
 
 function toggleMobileSidebar() {

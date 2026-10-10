@@ -1,17 +1,8 @@
 <template>
-  <AppLayout>
+  <AppLayout hide-page-header>
     <TablePageLayout>
-      <template #filters>
-        <div class="flex flex-wrap-reverse items-start justify-between gap-3">
-          <AccountTableFilters
-            v-model:searchQuery="params.search"
-            :filters="params"
-            :groups="groups"
-            @update:filters="(newFilters) => Object.assign(params, newFilters)"
-            @change="debouncedReload"
-            @update:searchQuery="debouncedReload"
-          />
-          <AccountTableActions
+      <template #actions>
+        <AccountTableActions
             :loading="loading"
             @refresh="handleManualRefresh"
             @create="showCreate = true"
@@ -32,17 +23,17 @@
                   </span>
                 </KumoPopoverTrigger>
 <KumoPopoverContent
-                  class="w-56 rounded-lg border border-gray-200 bg-white shadow-lg dark:border-dark-700 dark:bg-dark-800"
+                  class="w-56 rounded-lg border border-[var(--brand-line)] bg-white dark:bg-dark-800"
                 >
                   <div class="p-2">
                     <KumoButton :aria-pressed="autoRefreshEnabled"
                       @click="setAutoRefreshEnabled(!autoRefreshEnabled)"
-                      class="flex w-full items-center justify-between rounded-md px-3 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-200 dark:hover:bg-dark-700"
+                      class="flex w-full items-center justify-between rounded-md px-3 py-2 text-sm text-gray-700 hover:bg-[var(--brand-hover)] dark:text-gray-200"
                     >
                       <span>{{ t('admin.accounts.enableAutoRefresh') }}</span>
                       <Icon v-if="autoRefreshEnabled" name="check" size="sm" class="text-primary-500" />
                     </KumoButton>
-                    <div class="my-1 border-t border-gray-100 dark:border-dark-700"></div>
+                    <div class="my-1 border-t border-[var(--brand-line)]"></div>
                     <KumoRadioGroup :model-value="autoRefreshIntervalSeconds" :aria-label="t('admin.accounts.autoRefresh')">
                       <KumoRadio v-for="sec in autoRefreshIntervals" :key="sec" :value="sec" class="px-3 py-2 text-sm" @change="setAutoRefreshInterval(sec)">{{ autoRefreshIntervalLabel(sec) }}</KumoRadio>
                     </KumoRadioGroup>
@@ -60,7 +51,7 @@
                   <Icon name="chevronDown" size="xs" class="ml-1 hidden md:inline" />
                 </KumoPopoverTrigger>
 <KumoPopoverContent
-                    class="w-80 max-w-[calc(100vw-2rem)] overflow-hidden rounded-lg border border-gray-200 bg-white shadow-xl dark:border-dark-700 dark:bg-dark-800"
+                    class="w-80 max-w-[calc(100vw-2rem)] overflow-hidden rounded-lg border border-[var(--brand-line)] bg-white dark:bg-dark-800"
                   >
                     <div class="overflow-y-auto p-2" style="max-height: min(36rem, calc(100dvh - 6rem))">
                       <div class="px-2 py-2">
@@ -95,7 +86,7 @@
                         </span>
                       </KumoButton>
 
-                      <div class="my-2 border-t border-gray-100 dark:border-dark-700"></div>
+                      <div class="my-2 border-t border-[var(--brand-line)]"></div>
                       <div class="px-2 py-2">
                         <div class="text-xs font-semibold uppercase tracking-wide text-gray-400 dark:text-gray-500">
                           {{ t('admin.accounts.toolActions') }}
@@ -114,7 +105,7 @@
                         <span class="flex-1 text-left">{{ t('admin.tlsFingerprintProfiles.title') }}</span>
                       </KumoButton>
 
-                      <div class="my-2 border-t border-gray-100 dark:border-dark-700"></div>
+                      <div class="my-2 border-t border-[var(--brand-line)]"></div>
                       <div class="px-2 py-2">
                         <div class="flex items-center justify-between gap-3">
                           <span class="text-xs font-semibold uppercase tracking-wide text-gray-400 dark:text-gray-500">
@@ -130,6 +121,19 @@
                   </KumoPopoverContent></KumoPopoverRoot>
             </template>
           </AccountTableActions>
+      </template>
+
+      <template #filters>
+        <div class="flex flex-wrap-reverse items-start justify-between gap-3">
+          <AccountTableFilters
+            v-model:searchQuery="params.search"
+            :filters="params"
+            :groups="groups"
+            @update:filters="(newFilters) => Object.assign(params, newFilters)"
+            @change="debouncedReload"
+            @update:searchQuery="debouncedReload"
+          />
+
         </div>
         <div
           v-if="hasPendingListSync"
@@ -181,14 +185,14 @@
             <KumoCheckbox
               :aria-label="t('common.selectAll')"
               type="checkbox"
-              class="h-4 w-4 cursor-pointer rounded border-gray-300 text-primary-600 focus:ring-primary-500"
+              class="h-4 w-4 cursor-pointer rounded border-[var(--brand-line)] text-primary-600 focus:ring-primary-500"
               :checked="allVisibleSelected"
               @click.stop
               @change="toggleSelectAllVisible($event)"
             />
           </template>
           <template #cell-select="{ row }">
-            <KumoCheckbox :aria-label="row.name" type="checkbox" :checked="isSelected(row.id)" @change="toggleSel(row.id)" class="rounded border-gray-300 text-primary-600 focus:ring-primary-500" />
+            <KumoCheckbox :aria-label="row.name" type="checkbox" :checked="isSelected(row.id)" @change="toggleSel(row.id)" class="rounded border-[var(--brand-line)] text-primary-600 focus:ring-primary-500" />
           </template>
           <template #cell-id="{ value }">
             <span class="font-mono text-xs text-gray-500 dark:text-gray-400">#{{ value }}</span>
@@ -206,7 +210,7 @@
                     :href="accountHomepageUrl(row)"
                     target="_blank"
                     rel="noopener noreferrer"
-                    class="border-b border-dotted border-gray-300 font-medium text-gray-900 dark:border-dark-600 dark:text-white"
+                    class="border-b border-dotted border-[var(--brand-line)] font-medium text-gray-900 dark:text-white"
                   >
                     {{ value }}
                   </a>
@@ -312,7 +316,7 @@
                 <span class="inline-flex items-center px-1.5 py-0.5 rounded text-xs font-medium bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200" :title="t('admin.accounts.fallbackActiveTip', { origin: row.proxy_fallback_origin_name })">
                   {{ t('admin.accounts.fallbackActive') }}
                 </span>
-                <KumoButton class="text-xs px-1.5 py-0.5 rounded border border-gray-300 dark:border-dark-600 text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-dark-700" @click="onRevertFallback(row)">{{ t('admin.accounts.revertProxy') }}</KumoButton>
+                <KumoButton class="text-xs px-1.5 py-0.5 rounded border border-[var(--brand-line)] text-gray-600 dark:text-gray-300 hover:bg-[var(--brand-hover)]" @click="onRevertFallback(row)">{{ t('admin.accounts.revertProxy') }}</KumoButton>
               </div>
             </div>
           </template>
@@ -404,7 +408,7 @@
           </template>
           <template #cell-actions="{ row }">
             <div class="flex items-center gap-1">
-              <KumoButton @click="handleEdit(row)" class="flex flex-col items-center gap-0.5 rounded-lg p-1.5 text-gray-500 transition-colors hover:bg-gray-100 hover:text-primary-600 dark:hover:bg-dark-700 dark:hover:text-primary-400">
+              <KumoButton @click="handleEdit(row)" class="flex flex-col items-center gap-0.5 rounded-lg p-1.5 text-gray-500 transition-colors hover:bg-[var(--brand-hover)] hover:text-primary-600 dark:hover:text-primary-400">
                 <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L10.582 16.07a4.5 4.5 0 01-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 011.13-1.897l8.932-8.931zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0115.75 21H5.25A2.25 2.25 0 013 18.75V8.25A2.25 2.25 0 015.25 6H10" /></svg>
                 <span class="text-xs">{{ t('common.edit') }}</span>
               </KumoButton>
@@ -412,7 +416,7 @@
                 <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M14.74 9l-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 01-2.244 2.077H8.084a2.25 2.25 0 01-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 00-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 013.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 00-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 00-7.5 0" /></svg>
                 <span class="text-xs">{{ t('common.delete') }}</span>
               </KumoButton>
-              <KumoButton @click="openMenu(row, $event)" class="flex flex-col items-center gap-0.5 rounded-lg p-1.5 text-gray-500 transition-colors hover:bg-gray-100 hover:text-gray-900 dark:hover:bg-dark-700 dark:hover:text-white">
+              <KumoButton @click="openMenu(row, $event)" class="flex flex-col items-center gap-0.5 rounded-lg p-1.5 text-gray-500 transition-colors hover:bg-[var(--brand-hover)] hover:text-gray-900 dark:hover:text-white">
                 <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M6.75 12a.75.75 0 11-1.5 0 .75.75 0 011.5 0zM12.75 12a.75.75 0 11-1.5 0 .75.75 0 011.5 0zM18.75 12a.75.75 0 11-1.5 0 .75.75 0 011.5 0z" /></svg>
                 <span class="text-xs">{{ t('common.more') }}</span>
               </KumoButton>
@@ -448,7 +452,7 @@
     <ConfirmDialog :show="showCreateShadowDialog" :title="t('admin.accounts.createSparkShadow')" :message="t('admin.accounts.createSparkShadowConfirm', { name: creatingShadowAcc?.name })" @confirm="confirmCreateSparkShadow" @cancel="showCreateShadowDialog = false" />
     <ConfirmDialog :show="showExportDataDialog" :title="t('admin.accounts.dataExport')" :message="t('admin.accounts.dataExportConfirmMessage')" :confirm-text="t('admin.accounts.dataExportConfirm')" :cancel-text="t('common.cancel')" @confirm="handleExportData" @cancel="showExportDataDialog = false">
       <KumoLabel class="flex items-center gap-2 text-sm text-gray-700 dark:text-gray-300">
-        <KumoCheckbox :aria-label="t('admin.accounts.dataExportIncludeProxies')" type="checkbox" class="h-4 w-4 rounded border-gray-300 text-primary-600 focus:ring-primary-500" v-model="includeProxyOnExport" />
+        <KumoCheckbox :aria-label="t('admin.accounts.dataExportIncludeProxies')" type="checkbox" class="h-4 w-4 rounded border-[var(--brand-line)] text-primary-600 focus:ring-primary-500" v-model="includeProxyOnExport" />
         <span>{{ t('admin.accounts.dataExportIncludeProxies') }}</span>
       </KumoLabel>
     </ConfirmDialog>
@@ -1683,13 +1687,13 @@ function getOpenAICompactMeta(row: any): { label: string; className: string; dot
       return {
         label: t('admin.accounts.openai.compactSupported'),
         className: 'text-emerald-600 dark:text-emerald-300',
-        dotClass: 'bg-emerald-500 shadow-[0_0_0_2px_rgba(16,185,129,0.14)]'
+        dotClass: 'bg-emerald-500'
       }
     case 'blocked':
       return {
         label: t('admin.accounts.openai.compactUnsupported'),
         className: 'text-rose-600 dark:text-rose-300',
-        dotClass: 'bg-rose-500 shadow-[0_0_0_2px_rgba(244,63,94,0.14)]'
+        dotClass: 'bg-rose-500'
       }
     case 'auto':
       return {

@@ -1,5 +1,5 @@
 <template>
-  <section class="mt-5 border-t border-gray-200 pt-5 dark:border-dark-600" aria-labelledby="backup-archive-title">
+  <section class="mt-5 border-t border-[var(--brand-line)] pt-5" aria-labelledby="backup-archive-title">
     <div class="mb-3 flex items-center justify-between gap-3">
       <h4 id="backup-archive-title" class="text-sm font-medium text-gray-900 dark:text-white">{{ t('admin.backup.archive.title') }}</h4>
       <KumoLabel class="inline-flex items-center gap-2 text-sm text-gray-700 dark:text-gray-300">
@@ -30,11 +30,11 @@
                 <KumoButton type="button" class="min-h-9 px-2 text-primary-600 dark:text-primary-400" @click="closeDates(true)">{{ t('admin.backup.archive.done') }}</KumoButton>
               </div>
               <div class="grid grid-cols-4 gap-1" role="group" :aria-label="t('admin.backup.archive.dates')">
-                <KumoLabel v-for="day in 31" :key="day" class="flex min-h-10 cursor-pointer items-center gap-1.5 rounded px-1 text-xs hover:bg-gray-100 dark:hover:bg-dark-700">
+                <KumoLabel v-for="day in 31" :key="day" class="flex min-h-10 cursor-pointer items-center gap-1.5 rounded px-1 text-xs hover:bg-[var(--brand-hover)]">
                   <KumoCheckbox type="checkbox" :value="day" :checked="modelValue.days.includes(day)" :aria-label="t('admin.backup.archive.day', { day })" @change="toggleDay(day)" />
                   {{ day }}
                 </KumoLabel>
-                <KumoLabel class="flex min-h-10 cursor-pointer items-center gap-1.5 rounded px-1 text-xs hover:bg-gray-100 dark:hover:bg-dark-700">
+                <KumoLabel class="flex min-h-10 cursor-pointer items-center gap-1.5 rounded px-1 text-xs hover:bg-[var(--brand-hover)]">
                   <KumoCheckbox type="checkbox" value="last" :checked="modelValue.include_month_end" :aria-label="t('admin.backup.archive.monthEnd')" @change="update({ include_month_end: ($event.target as HTMLInputElement).checked })" />
                   {{ t('admin.backup.archive.monthEnd') }}
                 </KumoLabel>

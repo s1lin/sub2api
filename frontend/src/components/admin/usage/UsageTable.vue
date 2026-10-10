@@ -2,7 +2,7 @@
   <div :class="flat ? '' : 'card overflow-hidden'">
     <div
       v-if="showIpGeoToolbar"
-      class="flex items-center justify-end gap-2 border-b border-gray-200 px-4 py-2 dark:border-dark-700"
+      class="flex items-center justify-end gap-2 border-b border-[var(--brand-line)] px-4 py-2"
     >
       <span v-if="pendingIpCount > 0" class="text-xs text-gray-500 dark:text-gray-400">
         {{ t('usage.ipGeo.pending', { count: pendingIpCount }) }}
@@ -193,7 +193,7 @@
               </div>
             </div>
             <!-- Token Detail Tooltip -->
-            <KumoTooltip :label="t('usage.tokenDetails')" class="max-w-[calc(100vw-2rem)] text-xs" trigger-class="h-5 w-5 p-0" side="right"><template #trigger><div class="flex h-4 w-4 cursor-help items-center justify-center rounded-full bg-gray-100 transition-colors group-hover:bg-blue-100 dark:bg-gray-700 dark:group-hover:bg-blue-900/50">
+            <KumoTooltip :label="t('usage.tokenDetails')" class="max-w-[calc(100vw-2rem)] text-xs" trigger-class="h-5 w-5 p-0" side="right"><template #trigger><div class="flex h-4 w-4 cursor-help items-center justify-center transition-colors group-hover:bg-blue-100 dark:group-hover:bg-blue-900/50 panel-section">
                 <Icon name="infoCircle" size="xs" class="text-gray-400 group-hover:text-blue-500 dark:text-gray-500 dark:group-hover:text-blue-400" />
               </div></template><div class="space-y-1.5">
           <div>
@@ -258,7 +258,7 @@
               <span class="font-medium text-gray-900 dark:text-white">{{ row.cache_read_tokens.toLocaleString() }}</span>
             </div>
           </div>
-          <div class="flex items-center justify-between gap-6 border-t border-gray-700 pt-1.5">
+          <div class="flex items-center justify-between gap-6 border-t border-[var(--brand-line)] pt-1.5">
             <span class="text-gray-600 dark:text-gray-400">{{ t('usage.totalTokens') }}</span>
             <span class="font-semibold text-blue-600 dark:text-blue-400">{{ ((row?.input_tokens || 0) + (row?.output_tokens || 0) + (row?.cache_creation_tokens || 0) + (row?.cache_read_tokens || 0)).toLocaleString() }}</span>
           </div>
@@ -276,11 +276,11 @@
                 class="inline-flex items-center rounded px-1 py-px text-[10px] font-semibold leading-tight bg-amber-100 text-amber-700 ring-1 ring-inset ring-amber-200 dark:bg-amber-500/20 dark:text-amber-300 dark:ring-amber-500/30"
               >x2</span>
               <!-- Cost Detail Tooltip -->
-              <KumoTooltip :label="t('usage.costDetails')" class="max-w-[calc(100vw-2rem)] text-xs" trigger-class="h-5 w-5 p-0" side="right"><template #trigger><div class="flex h-4 w-4 cursor-help items-center justify-center rounded-full bg-gray-100 transition-colors group-hover:bg-blue-100 dark:bg-gray-700 dark:group-hover:bg-blue-900/50">
+              <KumoTooltip :label="t('usage.costDetails')" class="max-w-[calc(100vw-2rem)] text-xs" trigger-class="h-5 w-5 p-0" side="right"><template #trigger><div class="flex h-4 w-4 cursor-help items-center justify-center transition-colors group-hover:bg-blue-100 dark:group-hover:bg-blue-900/50 panel-section">
                   <Icon name="infoCircle" size="xs" class="text-gray-400 group-hover:text-blue-500 dark:text-gray-500 dark:group-hover:text-blue-400" />
                 </div></template><div class="space-y-1.5">
           <!-- Cost Breakdown -->
-          <div class="mb-2 border-b border-gray-700 pb-1.5">
+          <div class="mb-2 border-b border-[var(--brand-line)] pb-1.5">
             <div class="text-xs font-semibold text-gray-600 dark:text-gray-300 mb-1">{{ t('usage.costDetails') }}</div>
             <div v-if="row && row.input_cost > 0" class="flex items-center justify-between gap-4">
               <span class="text-gray-600 dark:text-gray-400">{{ t('admin.usage.inputCost') }}</span>
@@ -383,7 +383,7 @@
           </div>
           <!-- Account billing (separated from user billing) -->
           <template v-if="showAccountBilling">
-            <div class="flex items-center justify-between gap-6 border-t border-gray-700 pt-1.5">
+            <div class="flex items-center justify-between gap-6 border-t border-[var(--brand-line)] pt-1.5">
               <span class="text-gray-600 dark:text-gray-400">{{ t('usage.accountMultiplier') }}</span>
               <span class="font-semibold text-blue-600 dark:text-blue-400">{{ formatMultiplier(row?.account_rate_multiplier ?? 1) }}x</span>
             </div>
@@ -412,7 +412,7 @@
             <span
               class="w-1 shrink-0 rounded-full"
               :class="row.first_token_ms != null
-                ? ['bg-gradient-to-b from-40% to-60%', LATENCY_BAR_FROM_CLASSES[firstTokenSeverity(row.first_token_ms)], LATENCY_BAR_TO_CLASSES[durationSeverity(row.duration_ms ?? 0)]]
+                ? ['  ', LATENCY_BAR_FROM_CLASSES[firstTokenSeverity(row.first_token_ms)], LATENCY_BAR_TO_CLASSES[durationSeverity(row.duration_ms ?? 0)]]
                 : LATENCY_BAR_CLASSES[durationSeverity(row.duration_ms ?? 0)]"
               aria-hidden="true"
             ></span>
@@ -437,7 +437,7 @@
             </span>
             <KumoButton
               type="button"
-              class="shrink-0 rounded p-0.5 text-gray-400 transition-colors hover:bg-gray-100 hover:text-gray-600 dark:hover:bg-dark-700 dark:hover:text-gray-300"
+              class="shrink-0 rounded p-0.5 text-gray-400 transition-colors hover:bg-[var(--brand-hover)] hover:text-gray-600 dark:hover:text-gray-300"
               :class="copiedRequestId === row.request_id ? 'text-green-500 hover:text-green-500' : ''"
               :title="copiedRequestId === row.request_id ? t('keys.copied') : t('keys.copyToClipboard')"
               @click="copyRequestId(row.request_id)"
@@ -455,7 +455,7 @@
             </span>
             <KumoButton
               type="button"
-              class="shrink-0 rounded p-0.5 text-gray-400 transition-colors hover:bg-gray-100 hover:text-gray-600 dark:hover:bg-dark-700 dark:hover:text-gray-300"
+              class="shrink-0 rounded p-0.5 text-gray-400 transition-colors hover:bg-[var(--brand-hover)] hover:text-gray-600 dark:hover:text-gray-300"
               :class="copiedRequestId === row.upstream_request_id ? 'text-green-500 hover:text-green-500' : ''"
               :title="copiedRequestId === row.upstream_request_id ? t('keys.copied') : t('keys.copyToClipboard')"
               @click="copyUpstreamRequestId(row.upstream_request_id)"

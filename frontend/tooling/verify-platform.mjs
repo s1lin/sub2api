@@ -5,7 +5,9 @@ import { fileURLToPath } from 'node:url'
 import { resolve } from 'node:path'
 
 // Browser-only fixtures. No account or billing configuration is changed.
-const outputRoot = fileURLToPath(new URL('../../output/kumo/', import.meta.url))
+const outputRoot = process.env.PLATFORM_OUTPUT_DIR
+  ? resolve(process.env.PLATFORM_OUTPUT_DIR) + '/'
+  : fileURLToPath(new URL('../../output/kumo/', import.meta.url))
 await mkdir(outputRoot, { recursive: true })
 const outputPath = name => outputRoot + name
 const baseURL = process.env.KUMO_PREVIEW_URL || 'http://127.0.0.1:3002'
@@ -24,6 +26,50 @@ const chartTrend = Array.from({ length: 7 }, (_, index) => ({ date: `2026-10-0${
 const chartModels = [{ model: 'gemini-2.5-pro', requests: 150, total_tokens: 120000, input_tokens: 70000, output_tokens: 50000, cost: 12, actual_cost: 9 }, { model: 'gpt-4.1', requests: 75, total_tokens: 90000, input_tokens: 60000, output_tokens: 30000, cost: 8, actual_cost: 6 }]
 const chartUsers = chartTrend.map(point => ({ ...point, user_id: user.id, username: user.username, email: user.email, tokens: point.total_tokens }))
 const results = []
+const opsOverview = {
+  start_time: '2026-10-08T00:00:00Z', end_time: '2026-10-09T00:00:00Z', platform: '', health_score: 98,
+  success_count: 12800, error_count_total: 47, business_limited_count: 20, error_count_sla: 27,
+  request_count_total: 12847, request_count_sla: 12827, token_consumed: 1842056, sla: 0.9979,
+  error_rate: 0.0021, upstream_error_rate: 0.0012, upstream_error_count_excl_429_529: 15, upstream_429_count: 9, upstream_529_count: 2,
+  qps: { current: 12, peak: 38, avg: 8 }, tps: { current: 1430, peak: 3800, avg: 980 },
+  duration: { p50_ms: 850, p90_ms: 1800, p95_ms: 2300, p99_ms: 3400, avg_ms: 1100, max_ms: 4500 },
+  ttft: { p50_ms: 160, p90_ms: 240, p95_ms: 280, p99_ms: 420, avg_ms: 180, max_ms: 620 },
+  system_metrics: { id: 1, created_at: '2026-10-09T00:00:00Z', window_minutes: 1, cpu_usage_percent: 24,
+    memory_used_mb: 1240, memory_total_mb: 8192, memory_usage_percent: 15, db_ok: true, redis_ok: true,
+    db_max_open_conns: 100, redis_pool_size: 50, redis_conn_total: 16, redis_conn_idle: 12,
+    db_conn_active: 8, db_conn_idle: 16, db_conn_waiting: 0, goroutine_count: 128 }, job_heartbeats: [],
+}
+
+async function checkInterior(page, errors) {
+  const metrics = await page.evaluate(() => {
+    const visible = el => el.getBoundingClientRect().width > 0 && el.getBoundingClientRect().height > 0
+    const styles = selector => [...document.querySelectorAll(selector)].filter(visible).map(el => {
+      const style = getComputedStyle(el)
+      return { radius: parseFloat(style.borderTopLeftRadius), shadow: style.boxShadow, border: style.borderTopWidth,
+        background: style.backgroundImage, transform: style.textTransform }
+    })
+    const header = document.querySelector('.platform-header')
+    const active = document.querySelector('.sidebar-link-active')
+    return {
+      panels: styles('main .panel, main .metric-strip'), tables: styles('main .platform-table th'),
+      buttons: styles('main :is([data-kumo-component="Button"], .platform-dropdown-trigger, .date-picker-trigger, button[data-kumo-component="Popover"]):not([data-ui-branded] *)'),
+      inputs: styles('main :is([data-platform-control="input"], [data-platform-control="textarea"]):not([data-ui-branded] *)'),
+      headings: [...document.querySelectorAll('main h1')].filter(visible).length,
+      headerBlur: header ? getComputedStyle(header).backdropFilter : null,
+      accentWidth: active ? getComputedStyle(active, '::before').width : null,
+      metricStrips: [...document.querySelectorAll('main .metric-strip')].map(strip => ({ cells: strip.children.length, width: strip.getBoundingClientRect().width })),
+    }
+  })
+  const elevated = shadow => (shadow.match(/-?[\d.]+px/g) || []).some(value => parseFloat(value) !== 0)
+  if (metrics.panels.some(panel => panel.radius > 8 || elevated(panel.shadow))) errors.push('Interior panel radius or shadow violates UI rules')
+  if (metrics.buttons.some(button => button.radius > 6 || elevated(button.shadow) || button.background !== 'none')) errors.push('Interior button radius, shadow or gradient violates UI rules')
+  if (metrics.inputs.some(input => input.radius > 6 || input.border !== '1px' || elevated(input.shadow))) errors.push('Interior input is missing its flat 1px outline')
+  if (metrics.tables.some(cell => cell.transform !== 'uppercase')) errors.push('Table headings are not uppercase')
+  if (metrics.headings !== 1) errors.push(`Expected one page title, found ${metrics.headings}`)
+  if (metrics.headerBlur !== 'none') errors.push('App header has a blur effect')
+  if (metrics.accentWidth && metrics.accentWidth !== '2px') errors.push('Sidebar active accent is not 2px')
+  return metrics
+}
 
 async function checkSidebarAlignment(page, errors, state) {
   const geometry = await page.locator('.sidebar-link:has(.sidebar-label)').evaluateAll(rows => rows.map(row => {
@@ -41,7 +87,9 @@ async function checkSidebarAlignment(page, errors, state) {
 async function checkDashboard(page, entry, errors) {
   const expectedCharts = entry.admin ? 3 : 2
   await page.waitForFunction(count => document.querySelectorAll('canvas').length === count, expectedCharts)
-  const readCharts = () => page.evaluate(async () => {
+  const readCharts = async () => {
+    await page.waitForFunction(() => [...document.querySelectorAll('canvas')].every(canvas => canvas.getBoundingClientRect().width >= 150 && canvas.width > 0 && canvas.height > 0), undefined, { timeout: 10000 })
+    return page.evaluate(async () => {
     const moduleURL = performance.getEntriesByType('resource').find(resource => resource.name.includes('/chart__js.js'))?.name
     const { Chart } = await import(moduleURL)
     return [...document.querySelectorAll('canvas')].map(canvas => {
@@ -51,7 +99,8 @@ async function checkDashboard(page, entry, errors) {
       for (let i = 3; i < pixels.length; i += 4) if (pixels[i]) drawn++
       return { width: rect.width, height: rect.height, drawn, type: chart?.config.type, labelColor: chart?.options.scales?.x?.ticks.color, points: chart?.data.datasets[0].data.length }
     })
-  })
+    })
+  }
   const checkCharts = (charts, theme) => {
     if (charts.length !== expectedCharts || charts.some(chart => chart.width < 150 || chart.height < 150 || chart.drawn < 100 || !chart.points)) errors.push(`Dashboard charts are missing or empty (${theme})`)
     if (charts.filter(chart => chart.type === 'line').some(chart => chart.labelColor !== (theme === 'dark' ? '#b0b9af' : '#59615b'))) errors.push(`Chart labels have stale ${theme} theme colors`)
@@ -72,7 +121,7 @@ async function checkDashboard(page, entry, errors) {
   const alternateCharts = await readCharts()
   checkCharts(alternateCharts, alternateTheme)
   const themeState = await page.evaluate(() => ({ mode: document.documentElement.dataset.mode, persisted: localStorage.getItem('theme'), card: getComputedStyle(document.querySelector('main .card')).backgroundColor }))
-  if (themeState.mode !== alternateTheme || themeState.persisted !== alternateTheme || themeState.card !== (alternateTheme === 'dark' ? 'rgb(28, 34, 30)' : 'rgb(250, 251, 248)')) errors.push('Dashboard theme and surface colors disagree')
+  if (themeState.mode !== alternateTheme || themeState.persisted !== alternateTheme || themeState.card !== (alternateTheme === 'dark' ? 'rgb(28, 34, 30)' : 'rgb(255, 255, 255)')) errors.push('Dashboard theme and surface colors disagree')
   await toggle(alternateTheme === 'dark')
 
   await page.locator('.date-picker-trigger').first().click()
@@ -85,7 +134,7 @@ async function checkDashboard(page, entry, errors) {
     return { viewportFits: rect.x >= 0 && rect.y >= 0 && rect.right <= innerWidth && rect.bottom <= innerHeight, unoccluded: el.contains(center), width: rect.width, height: rect.height, smallestDay: Math.min(...days.map(day => Math.min(day.width, day.height))), background: getComputedStyle(el).backgroundColor, overflow: el.scrollWidth > el.clientWidth }
   })
   if (!metrics.viewportFits || !metrics.unoccluded || metrics.smallestDay < 32 || metrics.overflow) errors.push('Calendar is clipped, obscured, or has undersized date cells')
-  if (metrics.background !== (entry.theme === 'dark' ? 'rgb(28, 34, 30)' : 'rgb(250, 251, 248)')) errors.push('Calendar uses the wrong theme surface')
+  if (metrics.background !== (entry.theme === 'dark' ? 'rgb(28, 34, 30)' : 'rgb(255, 255, 255)')) errors.push('Calendar uses the wrong theme surface')
   await page.screenshot({ path: resolve(outputPath(entry.name + '-calendar.png')) })
 
   await calendar.getByRole('button', { name: entry.locale === 'zh' ? '上月' : 'Last Month', exact: true }).click()
@@ -142,6 +191,11 @@ try {
     { name: name + '-desktop-light', route, ready, width: 1440, height: 900, theme: 'light', locale: 'en', auth: !['storefront', 'not-found'].includes(name), admin: name.startsWith('admin-') },
     { name: name + '-mobile-dark', route, ready, width: 390, height: 844, theme: 'dark', locale: 'zh', auth: !['storefront', 'not-found'].includes(name), admin: name.startsWith('admin-') }
   ]);
+  if (process.env.PLATFORM_UI_AUDIT) {
+    for (const [name, route, ready] of routes) {
+      entries.push({ name: name + '-desktop-dark', route, ready, width: 1440, height: 900, theme: 'dark', locale: 'en', auth: !['storefront', 'not-found'].includes(name), admin: name.startsWith('admin-') })
+    }
+  }
   if (process.env.PLATFORM_CHARTS) {
     for (const [name, route, ready] of routes.filter(([name]) => name === 'dashboard' || name === 'admin-dashboard')) {
       entries.push({ name: name + '-narrow-light', route, ready, width: 320, height: 700, theme: 'light', locale: 'en', auth: true, admin: name.startsWith('admin-') })
@@ -178,6 +232,13 @@ try {
     })
     await page.route('**/*', async route => {
       const request = route.request(), url = new URL(request.url())
+      // Fixtures use the existing local-token session path. Disable Clerk only
+      // in this browser response, independent of the developer's .env.local.
+      if (url.origin === baseURL && url.pathname === '/src/auth/clerk.ts') {
+        const response = await route.fetch()
+        const body = (await response.text()).replace(/export const clerkEnabled = [^;]+;/, 'export const clerkEnabled = false;')
+        return route.fulfill({ response, body })
+      }
       if (request.isNavigationRequest() && request.resourceType() === 'document' && url.origin === baseURL) {
         const response = await route.fetch()
         const body = (await response.text()).replace(/window\.__APP_CONFIG__=.*?;<\/script>/, `window.__APP_CONFIG__=${JSON.stringify(settings)};</script>`)
@@ -217,6 +278,11 @@ try {
         else if (path.includes('/dashboard/users-trend')) data = { trend: chartUsers, users: [user] }
         else if (path.includes('/dashboard/users-spending-ranking')) data = { items: [], total_actual_cost: 0, total_requests: 0, total_tokens: 0 }
         else if (path === '/admin/settings') data = settings
+        else if (path === '/admin/settings/email-templates') data = { events: [], locales: ['en', 'zh'], placeholders: [] }
+        else if (path === '/admin/backups/image-storage') data = { config: { enabled: false, reuse_backup_s3: true, prefix: 'images/', region: 'auto' }, secret_configured: false }
+        else if (path === '/admin/backups/s3-config') data = { enabled: false, prefix: 'backups/', region: 'auto' }
+        else if (path === '/admin/backups/schedule') data = { enabled: false, cron_expr: '0 2 * * *', retain_days: 7, retain_count: 10 }
+        else if (path === '/admin/backups') data = { items: [] }
         else if (path === '/admin/users') data = list([{ ...user, notes: 'Video production team', allowed_groups: [3], group_rates: {}, rpm_limit: 60 }])
         else if (path === '/admin/groups') data = list([group])
         else if (path === '/admin/accounts') data = list([account])
@@ -225,7 +291,7 @@ try {
         else if (path === '/admin/ops/email-notification/config') data = { alert: { enabled: false, recipients: [], min_severity: 'P1', rate_limit_per_hour: 10, batching_window_seconds: 60 }, report: { enabled: false, recipients: [], daily_summary_enabled: true, daily_summary_schedule: '0 9 * * *', weekly_summary_enabled: true, weekly_summary_schedule: '0 9 * * 1' } }
         else if (path === '/admin/ops/runtime/logging') data = { level: 'info', persist_access_logs: false, enable_sampling: false, sampling_initial: 100, sampling_thereafter: 100, caller: true, stacktrace_level: 'error', retention_days: 30, request_retention_days: 90 }
         else if (path === '/admin/ops/dashboard/openai-token-stats') data = { time_range: '30d', start_time: '2026-09-08T00:00:00Z', end_time: '2026-10-08T00:00:00Z', total: 1, items: [{ model: 'gpt-4.1-production', request_count: 12847, avg_tokens_per_sec: 83.42, avg_first_token_ms: 247.18, total_output_tokens: 1842056, avg_duration_ms: 1534, requests_with_first_token: 12790 }] }
-        else if (path === '/admin/ops/dashboard/snapshot-v2') data = { overview: null, throughput_trend: { points: [], by_platform: [], top_groups: [] }, error_trend: { points: [] } }
+        else if (path === '/admin/ops/dashboard/snapshot-v2') data = { overview: process.env.PLATFORM_OPS_DATA ? opsOverview : null, throughput_trend: { points: [], by_platform: [], top_groups: [] }, error_trend: { points: [] } }
         else if (path.startsWith('/admin/ops/')) data = path.includes('alert-events') || path.includes('alert-rules') ? [] : { points: [], buckets: [], items: [], accounts: [], groups: [], platforms: [], users: [], total: 0, page: 1, page_size: 20 }
         else if (path === '/admin/system/version') data = { version: 'design-preview', build_type: 'source' }
         else if (path === '/user/batch-image/access') data = { allowed: true }
@@ -239,11 +305,12 @@ try {
     let ready = true
     await page.locator(entry.ready).first().waitFor({ timeout: 15000 }).catch(() => { ready = false })
     await page.evaluate(() => document.fonts.ready)
-    await page.waitForTimeout(350)
+    await page.waitForTimeout(1000)
     if (process.env.PLATFORM_CHARTS && entry.name.includes('dashboard-')) {
       await checkDashboard(page, entry, errors)
     }
     if (entry.auth) {
+      if (process.env.PLATFORM_UI_AUDIT) console.log(JSON.stringify({ name: entry.name, interior: await checkInterior(page, errors) }))
       if (process.env.PLATFORM_DENSITY) await checkDensity(page, errors, entry.name)
       const layout = await page.evaluate(() => {
         const boxes = element => {
@@ -399,6 +466,7 @@ try {
     }
     const metrics = await page.evaluate(() => ({ overflow: document.documentElement.scrollWidth > innerWidth, theme: document.documentElement.classList.contains('dark') ? 'dark' : 'light', heading: document.querySelector('h1')?.textContent, primary: getComputedStyle(document.querySelector('.btn-primary, .brand-button') || document.body).backgroundColor }))
     results.push({ ...entry, ready, ...metrics, errors, unknown, writes, unnamed, actualRoute: new URL(page.url()).pathname })
+    if (metrics.overflow) console.log(JSON.stringify({ name: entry.name, overflowingElements: await page.locator('main *, .platform-header *').evaluateAll(elements => elements.filter(el => el.getBoundingClientRect().right > innerWidth + 1).slice(0, 16).map(el => ({ tag: el.tagName, class: el.className, text: el.textContent.slice(0, 60), width: el.getBoundingClientRect().width, right: el.getBoundingClientRect().right, whiteSpace: getComputedStyle(el).whiteSpace }))) }))
     console.log(JSON.stringify(results.at(-1)))
     await context.close()
   }

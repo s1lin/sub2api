@@ -3,7 +3,7 @@
         'inline-flex cursor-help items-center gap-1 rounded-md border px-2 py-0.5 text-xs font-medium transition-colors',
         effectivePlatform
           ? platformBadgeClass(effectivePlatform)
-          : 'border-gray-200 bg-gray-50 text-gray-700 dark:border-dark-600 dark:bg-dark-800 dark:text-gray-300',
+          : 'border-[var(--brand-line)] bg-gray-50 text-gray-700 border-[var(--brand-line)] dark:bg-dark-800 dark:text-gray-300',
       ]"
     >
       <PlatformIcon
@@ -19,7 +19,7 @@
       </span>
       {{ model.name }}
     </KumoBadge></template><div
-        class="w-80 max-w-[min(22rem,calc(100vw-1rem))] rounded-lg border bg-white text-xs shadow-xl dark:bg-dark-800"
+        class="w-80 max-w-[min(22rem,calc(100vw-1rem))] rounded-lg border bg-white text-xs dark:bg-dark-800"
         :class="[popoverBorderClass]"
       >
         <!-- Header：平台主题色背景，含模型名 + 平台徽章 -->

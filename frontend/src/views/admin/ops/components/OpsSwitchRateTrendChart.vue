@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import Panel from '@/components/common/Panel.vue'
 import { computed } from 'vue'
 import { useTheme } from '@/composables/useTheme'
 import { useI18n } from 'vue-i18n'
@@ -19,6 +20,7 @@ import type { ChartState } from '../types'
 import { formatHistoryLabel, sumNumbers } from '../utils/opsFormatters'
 import HelpTooltip from '@/components/common/HelpTooltip.vue'
 import EmptyState from '@/components/common/EmptyState.vue'
+import Icon from '@/components/icons/Icon.vue'
 
 ChartJS.register(Title, Tooltip, Legend, LineElement, LinearScale, PointElement, CategoryScale, Filler)
 
@@ -129,7 +131,7 @@ const options = computed(() => {
 </script>
 
 <template>
-  <div class="flex h-full flex-col rounded-3xl bg-white p-6 shadow-sm ring-1 ring-gray-900/5 dark:bg-dark-800 dark:ring-dark-700">
+  <Panel flush class="flex h-full flex-col rounded-lg p-6">
     <div class="mb-4 flex shrink-0 items-center justify-between">
       <h3 class="flex items-center gap-2 text-sm font-bold text-gray-900 dark:text-white">
         <svg class="h-4 w-4 text-teal-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -144,8 +146,10 @@ const options = computed(() => {
       <Line v-if="state === 'ready' && chartData" :data="chartData" :options="options" />
       <div v-else class="flex h-full items-center justify-center">
         <div v-if="state === 'loading'" class="animate-pulse text-sm text-gray-400">{{ t('common.loading') }}</div>
-        <EmptyState v-else :title="t('common.noData')" :description="t('admin.ops.charts.emptyRequest')" />
+        <EmptyState v-else :title="t('common.noData')" :description="t('admin.ops.charts.emptyRequest')">
+          <template #icon><Icon name="swap" size="xl" class="empty-state-icon" aria-hidden="true" /></template>
+        </EmptyState>
       </div>
     </div>
-  </div>
+  </Panel>
 </template>

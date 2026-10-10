@@ -1,4 +1,4 @@
-import { mount } from '@/__tests__/render'
+import { mount, flushPromises } from '@/__tests__/render'
 import { describe, expect, it, vi } from 'vitest'
 import { defineComponent } from 'vue'
 import OpsErrorDistributionChart from '../OpsErrorDistributionChart.vue'
@@ -76,13 +76,14 @@ const EmptyStateStub = defineComponent({
 
 const globalStubs = {
   stubs: {
+    Panel: { template: '<section><slot /></section>' },
     HelpTooltip: HelpTooltipStub,
     EmptyState: EmptyStateStub,
   },
 }
 
 describe('Ops SLA-scoped error charts', () => {
-  it('错误分布图按 SLA 错误数统计，不把业务限制错误算进请求错误分布', () => {
+  it('错误分布图按 SLA 错误数统计，不把业务限制错误算进请求错误分布', async () => {
     const wrapper = mount(OpsErrorDistributionChart, {
       props: {
         loading: false,
@@ -97,6 +98,7 @@ describe('Ops SLA-scoped error charts', () => {
       global: globalStubs,
     })
 
+    await flushPromises()
     const doughnut = wrapper.findComponent({ name: 'Doughnut' })
     expect(doughnut.exists()).toBe(true)
     expect(doughnut.props('data')).toMatchObject({
