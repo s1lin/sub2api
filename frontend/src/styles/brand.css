@@ -58,7 +58,6 @@ body { font-family: var(--brand-font); }
 .skip-link:focus { transform: translateY(0); }
 .app-shell { font-variant-numeric: tabular-nums; }
 .app-shell main { overflow-wrap: anywhere; }
-.empty-ascii { font: 500 13px/1.2 var(--brand-mono); letter-spacing: 0; white-space: pre; user-select: none; }
 .workspace-intro { display: flex; align-items: center; justify-content: space-between; gap: 32px; min-height: 136px; padding: 8px 0 24px; border-bottom: 1px solid var(--brand-line); }
 .workspace-intro h2 { font-size: clamp(24px, 2.8vw, 34px); font-weight: 550; letter-spacing: -.045em; line-height: 1.2; }
 .workspace-intro p { max-width: 540px; margin-top: 12px; color: var(--brand-muted); font-size: 14px; line-height: 1.6; }

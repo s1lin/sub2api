@@ -3,7 +3,7 @@
     <template #icon>
       <slot name="icon">
         <component v-if="icon" :is="icon" class="empty-state-icon h-10 w-10" aria-hidden="true" />
-        <pre v-else class="empty-ascii" aria-hidden="true">{{ emptyArtwork }}</pre>
+        <Icon v-else name="inbox" size="xl" class="empty-state-icon" aria-hidden="true" />
       </slot>
     </template>
     <slot v-if="actionText || $slots.action" name="action">
@@ -28,13 +28,6 @@ import type { Component } from 'vue'
 import Icon from '@/components/icons/Icon.vue'
 
 const { t } = useI18n()
-const emptyArtwork = `   . . .
-  +-----+
- /     /|
-+-----+ |
-|  :  | +
-|     |/
-+-----+`
 
 interface Props {
   icon?: Component | string
