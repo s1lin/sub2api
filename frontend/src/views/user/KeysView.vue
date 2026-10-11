@@ -443,31 +443,22 @@
             <KumoRadio :value="provider.value" :checked="createProvider === provider.value" :disabled="provider.count === 0" @change="selectCreateProvider(provider.value)" appearance="card"
               v-for="provider in createProviderOptions"
               :key="provider.value"
-              class="relative min-w-0"
-              :class="provider.count === 0 ? 'cursor-not-allowed' : 'cursor-pointer'"
+              class="min-w-0"
+              :class="provider.count === 0 ? 'cursor-not-allowed opacity-60' : 'cursor-pointer'"
             >
-
-              <span
-                class="flex h-full flex-col items-center gap-2 text-center"
-              >
-                <span class="flex h-8 items-center justify-center gap-1.5" aria-hidden="true">
+              <!-- Kumo's card draws the radio control at the end; keep content left-aligned beside it. -->
+              <span class="flex min-w-0 flex-col items-start gap-2">
+                <span class="flex h-7 items-center gap-1" aria-hidden="true">
                   <span
                     v-for="platform in KEY_GROUP_PROVIDER_ICONS[provider.value]"
                     :key="platform"
-                    class="flex h-8 w-8 items-center justify-center rounded-lg"
+                    class="flex h-7 w-7 items-center justify-center rounded-md"
                     :class="platformBadgeLightClass(platform)"
                   >
-                    <PlatformIcon :platform="platform" size="lg" />
+                    <PlatformIcon :platform="platform" size="md" />
                   </span>
                 </span>
-                <span class="text-sm font-semibold text-gray-800 dark:text-gray-100">{{ provider.label }}</span>
-              </span>
-              <span
-                v-if="createProvider === provider.value"
-                class="absolute right-1.5 top-1.5 flex h-4 w-4 items-center justify-center rounded-full bg-primary-500 text-white"
-                aria-hidden="true"
-              >
-                <Icon name="check" size="xs" :stroke-width="3" />
+                <span class="w-full truncate whitespace-nowrap text-sm font-semibold text-gray-800 dark:text-gray-100">{{ provider.label }}</span>
               </span>
             </KumoRadio>
           </div>
@@ -992,7 +983,6 @@ import { KumoButton, KumoCheckbox, KumoInput, KumoLabel, KumoLoader, KumoMeter, 
 	import { ref, reactive, computed, watch, onMounted, onUnmounted } from 'vue'
 	import { useI18n } from 'vue-i18n'
 	import { useAppStore } from '@/stores/app'
-	import { useOnboardingStore } from '@/stores/onboarding'
 	import { useClipboard } from '@/composables/useClipboard'
 import { getPersistedPageSize } from '@/composables/usePersistedPageSize'
 
@@ -1049,7 +1039,6 @@ interface GroupOption {
 }
 
 const appStore = useAppStore()
-const onboardingStore = useOnboardingStore()
 const { copyToClipboard: clipboardCopy } = useClipboard()
 
 const allColumns = computed<Column[]>(() => [
@@ -1312,10 +1301,18 @@ const formGroupOptions = computed(() => showEditModal.value
   : groupOptions.value.filter((group) => getKeyGroupProvider(group.platform) === createProvider.value)
 )
 
+// When a provider offers exactly one group, choose it so the form is ready to submit.
+const selectOnlyCreateGroup = () => {
+  if (!showEditModal.value && formData.value.group_id === null && formGroupOptions.value.length === 1) {
+    formData.value.group_id = formGroupOptions.value[0].value
+  }
+}
+
 const selectCreateProvider = (provider: KeyGroupProvider) => {
   if (createProvider.value === provider) return
   createProvider.value = provider
   formData.value.group_id = null
+  selectOnlyCreateGroup()
 }
 
 // Also handles groups arriving after the create dialog has already opened.
@@ -1327,6 +1324,7 @@ watch([showCreateModal, createProviderOptions], ([isOpen, providers], [wasOpen])
   if (!formGroupOptions.value.some((group) => group.value === formData.value.group_id)) {
     formData.value.group_id = null
   }
+  selectOnlyCreateGroup()
 })
 
 
@@ -1599,10 +1597,6 @@ const handleSubmit = async () => {
         rateLimitData
       )
       appStore.showSuccess(t('keys.keyCreatedSuccess'))
-      // Only advance tour if active, on submit step, and creation succeeded
-      if (onboardingStore.isCurrentStep('[data-tour="key-form-submit"]')) {
-        onboardingStore.nextStep(500)
-      }
     }
     closeModals()
     loadApiKeys()

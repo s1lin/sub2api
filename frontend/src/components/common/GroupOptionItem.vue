@@ -22,7 +22,7 @@
       </span>
     </div>
 
-    <!-- Right: rate pill + checkmark (vertically centered to first row) -->
+    <!-- Right: rate pill (+ optional checkmark), vertically centered to first row -->
     <div class="flex shrink-0 items-center gap-2 pt-0.5">
       <div class="flex shrink-0 flex-col items-end gap-1">
         <!-- Rate pill (platform color) -->
@@ -86,7 +86,8 @@ interface Props {
 const props = withDefaults(defineProps<Props>(), {
   subscriptionType: 'standard',
   selected: false,
-  showCheckmark: true,
+  // Kumo Select options draw their own selected indicator.
+  showCheckmark: false,
   userRateMultiplier: null,
   peakRateEnabled: false
 })

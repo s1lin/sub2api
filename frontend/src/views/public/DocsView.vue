@@ -13,10 +13,10 @@
           <Icon name="menu" size="sm" />{{ text(docsUi.navigation) }}
         </KumoButton>
         <div id="docs-navigation" class="docs-navigation" :class="{ 'is-open': menuOpen }">
-          <KumoLabel class="docs-search">
-            <Icon name="search" size="sm" />
+          <div class="docs-search">
+            <Icon name="search" size="sm" class="docs-search-icon" aria-hidden="true" />
             <KumoInput v-model="query" type="search" :placeholder="text(docsUi.search)" :aria-label="text(docsUi.search)" />
-          </KumoLabel>
+          </div>
           <nav :aria-label="text(docsUi.navigation)">
             <div v-for="group in filteredGroups" :key="group.id" class="docs-nav-group">
               <h2>{{ text(group.title) }}</h2>
@@ -82,7 +82,7 @@
 </template>
 
 <script setup lang="ts">
-import { KumoButton, KumoInput, KumoLabel, KumoLink, KumoTable, KumoTableBody, KumoTableCell, KumoTableHead, KumoTableHeader, KumoTableRow } from '@/components/kumo'
+import { KumoButton, KumoInput, KumoLink, KumoTable, KumoTableBody, KumoTableCell, KumoTableHead, KumoTableHeader, KumoTableRow } from '@/components/kumo'
 
 import { computed, nextTick, ref, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
@@ -128,9 +128,12 @@ watch([slug, locale], async () => {
 .docs-layout { display: grid; grid-template-columns: 210px minmax(0, 1fr) 160px; gap: 48px; align-items: start; padding-block: 40px 64px; }
 .docs-sidebar { position: sticky; top: 24px; max-height: calc(100dvh - 48px); overflow-y: auto; }
 .docs-mobile-menu { display: none; }
-.docs-search { display: flex; align-items: center; gap: 8px; padding: 9px 10px; border: 1px solid var(--brand-line); border-radius: 8px; background: var(--brand-surface); color: var(--brand-muted); }
-.docs-search input { min-width: 0; width: 100%; border: 0; background: transparent; color: var(--brand-ink); font-size: 12px; }
-.docs-search input::placeholder { color: var(--brand-muted); }
+/* KumoInput is rendered by React, so its <input> is only reachable through :deep(); Kumo draws the field box itself. */
+.docs-search { position: relative; }
+.docs-search-icon { position: absolute; top: 50%; left: 11px; z-index: 1; transform: translateY(-50%); color: var(--brand-muted); pointer-events: none; }
+.docs-search :deep(input) { width: 100%; min-width: 0; padding-left: 32px; font-size: 13px; }
+.docs-search :deep(input::placeholder) { color: var(--brand-muted); }
+.docs-search :deep(input::-webkit-search-cancel-button) { -webkit-appearance: none; appearance: none; }
 .docs-nav-group { margin-top: 26px; }
 .docs-nav-group h2, .docs-toc h2 { margin: 0 0 10px; font-size: 12px; font-weight: 650; }
 .docs-nav-group a { display: block; padding: 8px 12px; margin: 2px 0; border-radius: 6px; font-size: 13px; line-height: 1.5; color: var(--brand-muted); }

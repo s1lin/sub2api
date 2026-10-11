@@ -12,10 +12,7 @@
       <!-- Enable toggle -->
       <div class="flex items-center justify-between">
         <KumoLabel class="input-label mb-0">{{ t('profile.balanceNotify.enabled') }}</KumoLabel>
-        <KumoLabel class="relative inline-flex items-center cursor-pointer">
-          <KumoCheckbox :aria-label="t('profile.balanceNotify.enabled')" type="checkbox" v-model="notifyEnabled" @change="handleToggle" class="sr-only peer" />
-          <div class="w-11 h-6 peer-focus:outline-none peer peer-checked:after:translate-x-full after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:h-5 after:w-5 after:transition-all peer-checked:bg-primary-600 panel-section"></div>
-        </KumoLabel>
+        <KumoSwitch :aria-label="t('profile.balanceNotify.enabled')" :checked="notifyEnabled" @update:model-value="(value: boolean) => { notifyEnabled = value; handleToggle() }" />
       </div>
 
       <template v-if="notifyEnabled">
@@ -55,10 +52,7 @@
             <div v-for="(entry, idx) in emailEntries" :key="idx"
               class="flex items-center justify-between px-3 py-2 panel-section">
               <div class="flex items-center gap-2 min-w-0 flex-1">
-                <KumoLabel class="relative inline-flex items-center cursor-pointer shrink-0">
-                  <KumoCheckbox :aria-label="t('profile.balanceNotify.title') + ' — ' + entry.email" type="checkbox" :checked="!entry.disabled" @change="handleEmailToggle(entry)" class="sr-only peer" />
-                  <div class="w-9 h-5 peer-focus:outline-none peer peer-checked:after:translate-x-full after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:h-4 after:w-4 after:transition-all peer-checked:bg-primary-600 panel-section"></div>
-                </KumoLabel>
+                <KumoSwitch :aria-label="t('profile.balanceNotify.title') + ' — ' + entry.email" :checked="!entry.disabled" @update:model-value="handleEmailToggle(entry)" />
                 <span class="text-sm text-gray-700 dark:text-gray-300 truncate">{{ entry.email }}</span>
               </div>
               <div class="flex items-center gap-2 shrink-0">
@@ -158,7 +152,7 @@
 
 <script setup lang="ts">
 import Panel from '@/components/common/Panel.vue'
-import { KumoButton, KumoCheckbox, KumoInput, KumoLabel } from '@/components/kumo'
+import { KumoButton, KumoInput, KumoLabel, KumoSwitch } from '@/components/kumo'
 
 import { ref, computed, watch, onMounted, onUnmounted } from 'vue'
 import { useI18n } from 'vue-i18n'

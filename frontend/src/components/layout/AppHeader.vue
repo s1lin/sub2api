@@ -50,6 +50,16 @@
         <!-- Language Switcher -->
         <LocaleSwitcher text-only />
 
+        <!-- Theme Toggle -->
+        <KumoButton
+          @click="toggleTheme"
+          class="platform-nav-control btn-ghost btn-icon"
+          :aria-label="isDark ? t('nav.lightMode') : t('nav.darkMode')"
+          :title="isDark ? t('nav.lightMode') : t('nav.darkMode')"
+        >
+          <Icon :name="isDark ? 'sun' : 'moon'" size="md" />
+        </KumoButton>
+
         <!-- Subscription Progress (for users with active subscriptions; not mounted at all when the feature is off) -->
         <SubscriptionProgressMini v-if="user && subscriptionFeatureEnabled" />
 
@@ -192,16 +202,6 @@
                 </div>
               </div>
 
-              <div v-if="showOnboardingButton" class="border-t border-[var(--brand-line)] py-1">
-                <KumoDropdownItem @click="handleReplayGuide" class="dropdown-item w-full">
-                  <svg class="h-4 w-4" fill="currentColor" viewBox="0 0 24 24">
-                    <path
-                      d="M12 2a10 10 0 100 20 10 10 0 000-20zm0 14a1 1 0 110 2 1 1 0 010-2zm1.07-7.75c0-.6-.49-1.25-1.32-1.25-.7 0-1.22.4-1.43 1.02a1 1 0 11-1.9-.62A3.41 3.41 0 0111.8 5c2.02 0 3.25 1.4 3.25 2.9 0 2-1.83 2.55-2.43 3.12-.43.4-.47.75-.47 1.23a1 1 0 01-2 0c0-1 .16-1.82 1.1-2.7.69-.64 1.82-1.05 1.82-2.06z"
-                    />
-                  </svg>
-                  {{ $t('onboarding.restartTour') }}
-                </KumoDropdownItem>
-              </div>
 
               <div class="border-t border-[var(--brand-line)] py-1">
                 <KumoDropdownItem
@@ -238,9 +238,10 @@ import { KumoButton, KumoDropdown, KumoDropdownContent, KumoDropdownItem, KumoDr
 import { ref, computed } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
 import { useI18n } from 'vue-i18n'
-import { useAppStore, useAuthStore, useOnboardingStore } from '@/stores'
+import { useAppStore, useAuthStore } from '@/stores'
 import { useAdminSettingsStore } from '@/stores/adminSettings'
 import LocaleSwitcher from '@/components/common/LocaleSwitcher.vue'
+import { useTheme } from '@/composables/useTheme'
 import SubscriptionProgressMini from '@/components/common/SubscriptionProgressMini.vue'
 import AnnouncementBell from '@/components/common/AnnouncementBell.vue'
 import Icon from '@/components/icons/Icon.vue'
@@ -252,10 +253,10 @@ import { resolveSiteBillingMode } from '@/utils/siteBillingMode'
 const router = useRouter()
 const route = useRoute()
 const { t } = useI18n()
+const { isDark, toggleTheme } = useTheme()
 const appStore = useAppStore()
 const authStore = useAuthStore()
 const adminSettingsStore = useAdminSettingsStore()
-const onboardingStore = useOnboardingStore()
 
 const user = computed(() => authStore.user)
 const dropdownOpen = ref(false)
@@ -270,11 +271,6 @@ const balanceAvailableText = computed(() => t('common.availableBalance') === 'co
 const balanceFrozenText = computed(() => t('common.frozenBalance') === 'common.frozenBalance' ? '冻结金额' : t('common.frozenBalance'))
 const balanceTotalText = computed(() => t('common.totalBalance') === 'common.totalBalance' ? '总余额' : t('common.totalBalance'))
 const balanceFrozenLabel = computed(() => `${balanceFrozenText.value} ${formatHeaderMoney(frozenBalance.value)}`)
-
-// 只在标准模式的管理员下显示新手引导按钮
-const showOnboardingButton = computed(() => {
-  return !authStore.isSimpleMode && user.value?.role === 'admin'
-})
 
 const userInitials = computed(() => {
   if (!user.value) return ''
@@ -337,11 +333,6 @@ async function handleLogout() {
     console.error('Logout error:', error)
   }
   await router.push('/login')
-}
-
-function handleReplayGuide() {
-  closeDropdown()
-  onboardingStore.replay()
 }
 
 function formatHeaderMoney(value: number) {

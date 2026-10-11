@@ -8570,19 +8570,7 @@
                     :key="index"
                     class="flex items-center gap-2"
                   >
-                    <KumoLabel
-                      class="relative inline-flex items-center cursor-pointer shrink-0"
-                    >
-                      <KumoCheckbox :aria-label="t('admin.settings.quotaNotify.title') + ' — ' + entry.email"
-                        type="checkbox"
-                        :checked="!entry.disabled"
-                        @change="entry.disabled = !entry.disabled"
-                        class="sr-only peer"
-                      />
-                      <div
-                        class="w-9 h-5 peer-focus:outline-none peer peer-checked:after:translate-x-full after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:h-4 after:w-4 after:transition-all peer-checked:bg-primary-600 panel-section"
-                      ></div>
-                    </KumoLabel>
+                    <KumoSwitch :aria-label="t('admin.settings.quotaNotify.title') + ' — ' + entry.email" :checked="!entry.disabled" @update:model-value="entry.disabled = !$event" />
                     <KumoInput :aria-label="t('admin.settings.quotaNotify.emailPlaceholder')"
                       v-model="entry.email"
                       type="email"
