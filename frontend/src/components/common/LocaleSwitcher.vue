@@ -3,7 +3,7 @@
     :disabled="switching"
     :aria-label="label"
     :title="label"
-    class="platform-nav-control btn-ghost flex items-center gap-1.5 rounded-lg px-2 py-1.5 text-gray-600 transition-colors hover:bg-[var(--brand-hover)] dark:text-gray-300"
+    class="platform-nav-control btn-ghost flex items-center"
     @click="toggleLocale"
   >
     <!-- Like the theme toggle, the button shows what a click switches to. -->

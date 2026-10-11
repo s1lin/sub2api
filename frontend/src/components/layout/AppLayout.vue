@@ -14,7 +14,7 @@
       <AppHeader />
 
       <!-- Main Content -->
-      <main id="main-content" tabindex="-1" class="platform-content min-w-0">
+      <main id="main-content" tabindex="-1" class="platform-content platform-sheet min-w-0">
         <PageHeader v-if="!hidePageHeader" :title="title" :description="description">
           <template v-if="$slots.actions" #actions><slot name="actions" /></template>
         </PageHeader>

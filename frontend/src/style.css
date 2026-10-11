@@ -540,7 +540,7 @@
   }
 
   .sidebar-header {
-    @apply h-16 px-6;
+    @apply h-12 px-6;
     @apply flex items-center gap-3;
     transition:
       padding 0.2s ease,

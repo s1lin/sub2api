@@ -1,6 +1,6 @@
 <template>
   <header class="platform-header sticky top-0 z-30">
-    <div class="platform-header-inner flex h-16 items-center justify-between gap-2">
+    <div class="platform-header-inner flex items-center justify-between gap-2">
       <!-- Left: Mobile Menu Toggle + Page Title -->
       <div class="flex min-w-0 flex-1 items-center gap-2 sm:gap-4">
         <KumoButton
@@ -19,7 +19,7 @@
       </div>
 
       <!-- Right: Announcements + Docs + Language + Subscriptions + Balance + User Dropdown -->
-      <div class="flex shrink-0 items-center gap-1 sm:gap-3">
+      <div class="platform-header-actions flex shrink-0 items-center">
         <!-- Announcement Bell -->
         <AnnouncementBell v-if="user" />
 
@@ -61,10 +61,12 @@
         </KumoButton>
 
         <!-- Subscription Progress (for users with active subscriptions; not mounted at all when the feature is off) -->
+        <span v-if="user" class="platform-nav-divider hidden sm:block" aria-hidden="true"></span>
+
         <SubscriptionProgressMini v-if="user && subscriptionFeatureEnabled" />
 
         <!-- Balance Display -->
-        <div v-if="user" class="hidden sm:block"><KumoTooltip :label="t('common.balance')" class="w-56" trigger-class="platform-nav-control flex items-center gap-2 rounded-lg bg-primary-50 px-3 py-1.5 dark:bg-primary-900/20"><template #trigger><svg
+        <div v-if="user" class="hidden sm:block"><KumoTooltip :label="t('common.balance')" class="w-56" trigger-class="platform-nav-control platform-nav-balance flex items-center"><template #trigger><svg
             class="h-4 w-4 text-primary-600 dark:text-primary-400"
             fill="none"
             viewBox="0 0 24 24"
@@ -76,7 +78,7 @@
               stroke-linejoin="round"
               d="M2.25 18.75a60.07 60.07 0 0115.797 2.101c.727.198 1.453-.342 1.453-1.096V18.75M3.75 4.5v.75A.75.75 0 013 6h-.75m0 0v-.375c0-.621.504-1.125 1.125-1.125H20.25M2.25 6v9m18-10.5v.75c0 .414.336.75.75.75h.75m-1.5-1.5h.375c.621 0 1.125.504 1.125 1.125v9.75c0 .621-.504 1.125-1.125 1.125h-.375m1.5-1.5H21a.75.75 0 00-.75.75v.75m0 0H3.75m0 0h-.375a1.125 1.125 0 01-1.125-1.125V15m1.5 1.5v-.75A.75.75 0 003 15h-.75M15 10.5a3 3 0 11-6 0 3 3 0 016 0zm3 0h.008v.008H18V10.5zm-12 0h.008v.008H6V10.5z"
             />
-          </svg><span class="text-primary-700 dark:text-primary-300">
+          </svg><span>
             {{ formatHeaderMoney(availableBalance) }}
           </span><span
             v-if="frozenBalance > 0"
@@ -99,10 +101,10 @@
         <!-- User Dropdown -->
         <KumoDropdown v-model="dropdownOpen" v-if="user">
           <KumoDropdownTrigger
-            class="platform-nav-control flex items-center gap-2 rounded-lg p-1.5 transition-colors hover:bg-[var(--brand-hover)]"
+            class="platform-nav-control platform-nav-user flex items-center"
             :aria-label="t('common.userMenu')"
           >
-            <div class="flex h-8 w-8 items-center justify-center overflow-hidden rounded-lg bg-primary-600 text-sm font-medium text-white dark:bg-primary-400 dark:text-dark-950">
+            <div class="platform-nav-avatar flex items-center justify-center overflow-hidden rounded-full bg-primary-600 font-medium text-white dark:bg-primary-400 dark:text-dark-950">
               <img
                 v-if="avatarUrl"
                 :src="avatarUrl"
@@ -111,14 +113,7 @@
               >
               <span v-else>{{ userInitials }}</span>
             </div>
-            <div class="hidden text-left md:block">
-              <div class="text-sm font-medium text-gray-900 dark:text-white">
-                {{ displayName }}
-              </div>
-              <div class="text-xs text-gray-500 dark:text-dark-400">
-                {{ t('admin.users.roles.' + user.role) }}
-              </div>
-            </div>
+            <span class="platform-nav-user-name hidden md:block">{{ displayName }}</span>
             <Icon name="chevronDown" size="sm" class="platform-nav-chevron hidden text-gray-400 md:block" />
           </KumoDropdownTrigger>
 
@@ -131,6 +126,7 @@
                   {{ displayName }}
                 </div>
                 <div class="text-xs text-gray-500 dark:text-dark-400">{{ user.email }}</div>
+                <div class="mt-1 text-xs text-gray-500 dark:text-dark-400">{{ t('admin.users.roles.' + user.role) }}</div>
               </div>
 
               <!-- Balance (mobile only) -->

@@ -12942,11 +12942,11 @@ watch(
 .default-sub-group-select :deep(.select-trigger), .default-sub-delete-btn { min-height: 36px; }
 .settings-tabs-shell {
   position: sticky;
-  top: 4rem;
+  top: var(--platform-header-height);
   z-index: 20;
   overflow-x: auto;
   border-bottom: 1px solid var(--brand-line);
-  background: var(--brand-canvas);
+  background: var(--brand-panel);
 }
 /* Kumo's underline list caps height at 30px and draws its own border; the shell owns the hairline. */
 .settings-tabs-shell :deep(.kumo-tabs-list) { height: auto; gap: 1.25rem; padding-bottom: 0; border-bottom: 0; }

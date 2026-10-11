@@ -54,7 +54,7 @@ onUnmounted(() => {
 .table-page-layout {
   @apply flex flex-col;
   gap: var(--platform-section-gap);
-  height: calc(100dvh - 64px - 2 * var(--platform-page-padding));
+  height: calc(100dvh - var(--platform-header-height) - 2 * var(--platform-page-padding) - 1px);
 }
 
 .layout-section-fixed {

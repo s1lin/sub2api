@@ -2,6 +2,7 @@
 :root, .dark, [data-mode="light"], [data-mode="dark"] {
   --platform-section-gap: 1rem;
   --platform-page-padding: 1rem;
+  --platform-header-height: 3rem;
   --platform-body-size: .875rem;
   --platform-body-line: 1.25rem;
   --platform-metric-size: 1.25rem;
@@ -305,10 +306,41 @@ div:has(> .kumo-popover-popup) { z-index: 60; }
   --color-kumo-overlay: var(--brand-panel);
   --color-kumo-tint: var(--brand-hover);
 }
-/* The content side is the panel color; only the sidebar keeps the canvas tone.
-   Controls inside it sit on a gray fill so they read as inputs, not cards. */
-.brand-page.app-shell, .platform-header { background: var(--brand-panel); }
-.app-shell .sidebar { background: var(--brand-canvas); }
+/* App frame: sidebar and navbar share the canvas tone; content is a white sheet set
+   into the frame. Controls inside the sheet sit on a gray fill so they read as inputs. */
+.brand-page.app-shell, .platform-header, .app-shell .sidebar { background: var(--brand-canvas); }
+.platform-sheet {
+  min-height: calc(100dvh - var(--platform-header-height));
+  background: var(--brand-panel);
+  border-top: 1px solid var(--brand-line);
+}
+@media (min-width: 1024px) {
+  .platform-sheet { border-left: 1px solid var(--brand-line); border-top-left-radius: 12px; }
+}
+
+/* Navbar: one 32px ghost control style, 13px text and 16px icons. */
+.platform-header-inner { height: var(--platform-header-height); }
+.platform-header-actions { gap: .25rem; }
+.platform-header .platform-nav-control {
+  height: 2rem; min-height: 2rem; min-width: 2rem; padding: 0 .5rem; gap: .375rem;
+  border: 0; border-radius: var(--brand-control-radius); background: transparent; box-shadow: none;
+  color: var(--brand-muted); font-size: .8125rem; line-height: 1.25rem; font-weight: 500;
+  transition: background-color .15s ease, color .15s ease;
+}
+.platform-header .platform-nav-control:hover { background: var(--brand-hover); color: var(--brand-ink); }
+.platform-header .platform-nav-control.btn-icon { width: 2rem; padding: 0; justify-content: center; }
+.platform-header .platform-nav-control svg { width: 1rem; height: 1rem; }
+.platform-header .platform-nav-control svg.platform-nav-chevron { width: .875rem; height: .875rem; }
+.platform-nav-divider { width: 1px; height: 1rem; margin-inline: .375rem; background: var(--brand-line); }
+.platform-header .platform-nav-control.platform-nav-balance {
+  border: 1px solid var(--brand-line); background: var(--brand-panel); color: var(--brand-ink);
+  font-variant-numeric: tabular-nums;
+}
+.platform-header .platform-nav-control.platform-nav-balance:hover { background: var(--brand-panel); border-color: var(--brand-muted); }
+.platform-nav-balance svg { color: var(--brand-accent); }
+.platform-header .platform-nav-control.platform-nav-user { padding: 0 .375rem 0 .25rem; color: var(--brand-ink); }
+.platform-nav-avatar { width: 1.5rem; height: 1.5rem; font-size: .6875rem; line-height: 1; }
+.platform-nav-user-name { max-width: 10rem; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .platform-breadcrumb { display: flex; align-items: center; gap: .75rem; min-width: 0; font-size: .8125rem; color: var(--brand-muted); }
 .platform-breadcrumb [aria-current] { color: var(--brand-ink); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .platform-breadcrumb a:hover { color: var(--brand-accent); }
@@ -440,7 +472,7 @@ div:has(> .kumo-popover-popup) { z-index: 60; }
   font-size: var(--platform-body-size);
   line-height: var(--platform-body-line);
 }
-:is(.app-shell, .platform-dialog, .kumo-popover-popup, .platform-dropdown-popup) :is(.text-base, label, [data-kumo-component="Button"], [data-kumo-component="LinkButton"], [data-kumo-component="Popover"]):not([data-ui-branded] *, :is(.platform-table, .platform-data-cards, .platform-pagination, .sidebar) *, .btn-stripe, .btn-wxpay, .btn-alipay, .btn-airwallex, .text-xs, .text-sm, .btn-sm, .btn-xs, .text-\[11px\], .text-\[10px\], .h-5, .h-6\.5) {
+:is(.app-shell, .platform-dialog, .kumo-popover-popup, .platform-dropdown-popup) :is(.text-base, label, [data-kumo-component="Button"], [data-kumo-component="LinkButton"], [data-kumo-component="Popover"]):not([data-ui-branded] *, :is(.platform-table, .platform-data-cards, .platform-pagination, .sidebar, .platform-header) *, .btn-stripe, .btn-wxpay, .btn-alipay, .btn-airwallex, .text-xs, .text-sm, .btn-sm, .btn-xs, .text-\[11px\], .text-\[10px\], .h-5, .h-6\.5) {
   font-size: var(--platform-body-size);
   line-height: var(--platform-body-line);
 }

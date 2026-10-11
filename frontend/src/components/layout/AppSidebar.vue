@@ -21,7 +21,7 @@
       <!-- Custom Logo or Default Logo -->
       <router-link
         :to="homePath"
-        class="sidebar-logo flex h-9 w-9 items-center justify-center overflow-hidden rounded-lg transition-opacity hover:opacity-80"
+        class="sidebar-logo flex h-7 w-7 items-center justify-center overflow-hidden rounded-lg transition-opacity hover:opacity-80"
         @click="handleMenuItemClick()"
       >
         <img v-if="settingsLoaded" :src="siteLogo || '/logo.svg'" alt="Logo" class="h-full w-full object-contain" />
@@ -29,7 +29,7 @@
       <div class="sidebar-brand" :class="{ 'sidebar-brand-collapsed': sidebarCollapsed }" :aria-hidden="sidebarCollapsed ? 'true' : 'false'">
         <router-link
           :to="homePath"
-          class="sidebar-brand-title text-xl font-semibold tracking-[-0.05em] text-gray-900 transition-colors hover:text-primary-600 dark:text-white dark:hover:text-primary-400"
+          class="sidebar-brand-title text-lg font-semibold tracking-[-0.05em] text-gray-900 transition-colors hover:text-primary-600 dark:text-white dark:hover:text-primary-400"
           @click="handleMenuItemClick()"
         >
           {{ siteName }}
@@ -911,14 +911,14 @@ onBeforeUnmount(() => {
 
 <style scoped>
 .sidebar-logo {
-  flex: 0 0 2.25rem;
-  min-width: 2.25rem;
+  flex: 0 0 1.75rem;
+  min-width: 1.75rem;
 }
 
 .sidebar-header-collapsed {
   gap: 0;
-  padding-left: 0.875rem;
-  padding-right: 0.875rem;
+  padding-left: 1.125rem;
+  padding-right: 1.125rem;
 }
 
 .sidebar-brand {

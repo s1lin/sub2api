@@ -448,7 +448,7 @@ onUnmounted(() => {
 <style scoped>
 .custom-page-layout {
   @apply flex flex-col;
-  height: calc(100vh - 64px - 4rem);
+  height: calc(100vh - var(--platform-header-height) - 4rem);
 }
 
 .toc-sidebar {

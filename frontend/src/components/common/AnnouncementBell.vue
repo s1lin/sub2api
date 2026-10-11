@@ -3,7 +3,7 @@
     <!-- 铃铛按钮 -->
     <KumoButton
       @click="openModal"
-      class="platform-nav-control relative flex h-9 w-9 items-center justify-center rounded-lg text-gray-600 transition-all hover:bg-[var(--brand-hover)] hover:scale-105 dark:text-gray-400"
+      class="platform-nav-control btn-icon relative flex items-center justify-center text-gray-600 dark:text-gray-400"
       :class="{ 'text-blue-600 dark:text-blue-400': unreadCount > 0 }"
       :aria-label="t('announcements.title')"
     >

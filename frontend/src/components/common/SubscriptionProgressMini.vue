@@ -1,7 +1,7 @@
 <template><KumoPopoverRoot v-if="subscriptionFeatureEnabled && hasActiveSubscriptions" v-model="tooltipOpen">
     <!-- Mini Progress Display -->
     <KumoPopoverTrigger
-      class="platform-nav-control flex cursor-pointer items-center gap-2 rounded-lg bg-purple-50 px-3 py-1.5 transition-colors hover:bg-purple-100 dark:bg-purple-900/20 dark:hover:bg-purple-900/30"
+      class="platform-nav-control flex cursor-pointer items-center"
       :title="t('subscriptionProgress.viewDetails')"
     >
       <Icon name="creditCard" size="sm" class="text-purple-600 dark:text-purple-400" />
