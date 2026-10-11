@@ -16,7 +16,7 @@
     </div>
 
     <form class="mt-5 grid gap-3 sm:grid-cols-2 lg:grid-cols-4 xl:grid-cols-5" @submit.prevent="applyFilters">
-      <KumoLabel class="text-xs text-gray-600 dark:text-dark-200">
+      <KumoLabel class="flex flex-col items-stretch text-xs text-gray-600 dark:text-dark-200">
         <span>{{ t('admin.promptAudit.events.decision') }}</span>
         <KumoNativeSelect v-model="localFilters.decision" class="input mt-1 w-full" :aria-label="t('admin.promptAudit.events.decision')" @change="filtersChanged">
           <option value="">{{ t('common.all') }}</option>
@@ -25,7 +25,7 @@
           <option value="critical">{{ t('admin.promptAudit.decisions.critical') }}</option>
         </KumoNativeSelect>
       </KumoLabel>
-      <KumoLabel class="text-xs text-gray-600 dark:text-dark-200">
+      <KumoLabel class="flex flex-col items-stretch text-xs text-gray-600 dark:text-dark-200">
         <span>{{ t('admin.promptAudit.events.risk') }}</span>
         <KumoNativeSelect v-model="localFilters.risk_level" class="input mt-1 w-full" :aria-label="t('admin.promptAudit.events.risk')" @change="filtersChanged">
           <option value="">{{ t('common.all') }}</option>
@@ -42,11 +42,11 @@
       <FilterInput v-model="localFilters.request_id" :label="t('admin.promptAudit.events.requestId')" @change="filtersChanged" />
       <FilterInput v-model="localFilters.prompt_hash" :label="t('admin.promptAudit.events.promptHash')" @change="filtersChanged" />
       <FilterInput v-model="localFilters.keyword" :label="t('admin.promptAudit.events.keyword')" @change="filtersChanged" />
-      <KumoLabel class="text-xs text-gray-600 dark:text-dark-200">
+      <KumoLabel class="flex flex-col items-stretch text-xs text-gray-600 dark:text-dark-200">
         <span>{{ t('admin.promptAudit.events.startAt') }}</span>
         <KumoInput v-model="localFilters.start_at" type="datetime-local" class="input mt-1 w-full" :aria-label="t('admin.promptAudit.events.startAt')" @change="filtersChanged" />
       </KumoLabel>
-      <KumoLabel class="text-xs text-gray-600 dark:text-dark-200">
+      <KumoLabel class="flex flex-col items-stretch text-xs text-gray-600 dark:text-dark-200">
         <span>{{ t('admin.promptAudit.events.endAt') }}</span>
         <KumoInput v-model="localFilters.end_at" type="datetime-local" class="input mt-1 w-full" :aria-label="t('admin.promptAudit.events.endAt')" @change="filtersChanged" />
       </KumoLabel>

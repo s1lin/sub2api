@@ -25,7 +25,7 @@
       </KumoLabel>
     </div>
     <div class="flex justify-end px-3 pb-3">
-      <KumoButton variant="primary" class="date-picker-apply" :disabled="!localStartDate || !localEndDate || localStartDate > localEndDate" @click="apply">{{ t('dates.apply') }}</KumoButton>
+      <KumoButton variant="primary" class="btn btn-primary date-picker-apply" :disabled="!localStartDate || !localEndDate || localStartDate > localEndDate" @click="apply">{{ t('dates.apply') }}</KumoButton>
     </div>
   </KumoPopover>
 </template>

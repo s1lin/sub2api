@@ -89,6 +89,7 @@
       'actions-expanded': actionsExpanded,
       'is-scrollable': isScrollable
     }"
+    :style="wrapperVisibleWidth ? { '--table-visible-width': wrapperVisibleWidth + 'px' } : undefined"
   >
     <KumoTable class="w-full min-w-max divide-y divide-gray-200 dark:divide-dark-700">
       <KumoTableHeader class="table-header">
@@ -175,9 +176,11 @@
             :colspan="tableColumnCount"
             class="text-center text-gray-500 dark:text-dark-400"
           >
-            <slot name="empty">
-              <EmptyState :title="t('empty.noData')" class="!py-4" />
-            </slot>
+            <div class="table-empty-state">
+              <slot name="empty">
+                <EmptyState :title="t('empty.noData')" class="!py-4" />
+              </slot>
+            </div>
           </KumoTableCell>
         </KumoTableRow>
 
@@ -269,6 +272,8 @@ const emit = defineEmits<{
 // 表格容器引用
 const tableWrapperRef = ref<HTMLElement | null>(null)
 const isScrollable = ref(false)
+// Visible width of the scroller, so an empty state stays in view on tables wider than it.
+const wrapperVisibleWidth = ref(0)
 const actionsColumnNeedsExpanding = ref(false)
 
 // --- 虚拟滚动「整表空白」根治 ---
@@ -296,6 +301,7 @@ const observeElementRectNonZero = (
 const checkScrollable = () => {
   if (tableWrapperRef.value) {
     isScrollable.value = tableWrapperRef.value.scrollWidth > tableWrapperRef.value.clientWidth
+    wrapperVisibleWidth.value = tableWrapperRef.value.clientWidth
   }
 }
 
@@ -927,6 +933,14 @@ defineExpose({
   flex: 1;
   min-height: 0;
   isolation: isolate;
+}
+
+/* Empty state pinned to the visible part of a horizontally scrollable table. */
+.table-wrapper :deep(.table-empty-state) {
+  position: sticky;
+  left: .75rem;
+  width: calc(var(--table-visible-width, 100%) - 1.5rem);
+  max-width: 100%;
 }
 
 /* 表头容器，确保在滚动时覆盖表体内容 */

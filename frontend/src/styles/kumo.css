@@ -61,7 +61,13 @@
   height: 100%;
   min-width: 0;
 }
-[data-platform-variant="primary"] { color: var(--brand-on-accent) !important; }
+/* Kumo's primary variant sets !text-white inside its utilities layer, which outranks any
+   unlayered !important. Important declarations in an earlier layer win, so declare the
+   on-accent ink in Kumo's theme layer; Tailwind 3 leaves that layer name alone. */
+@layer theme {
+  [data-platform-control="button"][data-platform-variant="primary"],
+  :is(.app-shell, .platform-dialog, .kumo-popover-popup) .btn.btn-primary { color: var(--brand-on-accent) !important; }
+}
 /* Tailwind 3's bare ring is 3px; Kumo uses the Tailwind 4 1px definition. */
 .ring { --tw-ring-shadow: var(--tw-ring-inset,) 0 0 0 calc(1px + var(--tw-ring-offset-width, 0px)) var(--tw-ring-color, currentColor); }
 
@@ -443,7 +449,7 @@ div:has(> .kumo-popover-popup) { z-index: 60; }
   border: 1px solid var(--brand-line);
 }
 .sidebar .sidebar-link { border: 0; }
-.panel .empty-state, .platform-table .empty-state { border: 0; border-radius: 0; background: transparent; box-shadow: none; }
+:is(.panel, .card, .platform-table, .platform-data-cards, .table-scroll-container) .empty-state { border: 0; border-radius: 0; background: transparent; box-shadow: none; }
 [data-ui-branded] { --brand-surface: #fafbf8; }
 .dark [data-ui-branded] { --brand-surface: #1c221e; }
 @media (max-width: 1023px) {
@@ -477,6 +483,9 @@ div:has(> .kumo-popover-popup) { z-index: 60; }
   line-height: var(--platform-body-line);
 }
 :is(.app-shell, .platform-dialog) .modal-title { font-size: 1rem; line-height: 1.5rem; font-weight: 600; }
+
+/* Switches are fixed-size controls; never let a flex row squeeze the track. */
+:is(.app-shell, .platform-dialog) :is([role="switch"], [data-kumo-component="Switch"]) { flex-shrink: 0; }
 
 /* An unselected Select reads as a placeholder, like Kumo's Combobox. */
 .select-trigger[data-placeholder] { color: var(--brand-muted); }

@@ -8,11 +8,11 @@
     </template>
     <slot v-if="actionText || $slots.action" name="action">
       <RouterLink v-if="actionTo" :to="actionTo" custom v-slot="{ href, navigate }">
-        <KumoButton :href="href" variant="primary" @click="navigate">
+        <KumoButton :href="href" variant="primary" class="btn btn-primary" @click="navigate">
           <Icon v-if="actionIcon" name="plus" size="md" />{{ actionText }}
         </KumoButton>
       </RouterLink>
-      <KumoButton v-else variant="primary" @click="$emit('action')">
+      <KumoButton v-else variant="primary" class="btn btn-primary" @click="$emit('action')">
         <Icon v-if="actionIcon" name="plus" size="md" />{{ actionText }}
       </KumoButton>
     </slot>
