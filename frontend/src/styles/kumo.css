@@ -9,7 +9,7 @@
   --platform-nav-line-height: 1.25rem;
   --platform-nav-icon-size: 1.25rem;
   --platform-nav-chevron-size: 1rem;
-  --platform-table-font-size: .875rem;
+  --platform-table-font-size: .8125rem;
   --platform-table-line-height: 1.25rem;
   --platform-table-label-size: .75rem;
   --platform-table-icon-size: 1rem;
@@ -103,8 +103,8 @@
   line-height: 1rem;
 }
 .app-shell :is(.platform-surface, .card, .glass-card, .card-glass, .empty-state) :is(h2, h3) {
-  font-size: var(--platform-body-size);
-  line-height: var(--platform-body-line);
+  font-size: .875rem;
+  line-height: 1.25rem;
   font-weight: 600;
   letter-spacing: normal;
 }
@@ -132,6 +132,19 @@
 }
 .sidebar .sidebar-link.sidebar-link-collapsed { gap: 0; padding-inline: .875rem; }
 .sidebar .sidebar-submenu .sidebar-link { padding-block: .375rem; min-height: 2.25rem; }
+/* Compact sidebar: 32px rows, 18px icons, 13px labels. Header controls keep the shared scale. */
+.sidebar {
+  --platform-nav-font-size: .8125rem;
+  --platform-nav-icon-size: 1.125rem;
+  --platform-nav-chevron-size: .875rem;
+}
+.sidebar .sidebar-link { gap: .625rem; min-height: 2rem; padding: .375rem .625rem .375rem .8125rem; margin-bottom: .125rem; }
+.sidebar .sidebar-link.sidebar-link-collapsed { padding-inline: .9375rem; }
+.sidebar .sidebar-submenu .sidebar-link { padding-block: .25rem; min-height: 1.75rem; }
+.sidebar .sidebar-nav { padding: .75rem .5rem; }
+.sidebar .sidebar-header:not(.sidebar-header-collapsed) { padding-inline: 1.25rem; }
+.sidebar .sidebar-section { margin-bottom: 1rem; }
+.sidebar .sidebar-section-title { margin-bottom: .25rem; }
 .sidebar .sidebar-label-flex { flex: 1; }
 .sidebar .sidebar-link svg, .sidebar .sidebar-svg-icon,
 .platform-nav-control svg, .platform-nav-menu [role="menuitem"] svg {
@@ -150,7 +163,7 @@
   font-size: var(--platform-table-font-size);
   line-height: var(--platform-table-line-height);
 }
-.platform-table :is(th, td) { padding: .25rem 1rem; height: 2.5rem; }
+.platform-table :is(th, td) { padding: .25rem .75rem; height: 2.5rem; }
 /* Let each column keep readable words. Wide data stays in its existing scroller.
    Prose/log cells can still opt into wrapping with whitespace-normal/break-all. */
 .platform-table { overflow-wrap: normal; white-space: nowrap; }
@@ -223,7 +236,20 @@
 .platform-select-popup { min-width: min(200px, calc(100vw - 16px)); max-width: calc(100vw - 16px); }
 .platform-select-popup [role="option"] { white-space: normal; overflow-wrap: anywhere; }
 .kumo-option-group { padding: .5rem .75rem; font-size: .75rem; color: var(--brand-muted); font-weight: 600; }
-.platform-pagination { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 1rem; padding: 1rem; }
+/* Pagination is secondary chrome: 28px controls and 13px text, below the row actions. */
+.platform-pagination {
+  display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between;
+  gap: .75rem; padding: .5rem .75rem; font-size: .8125rem; line-height: 1.25rem;
+}
+/* Scoped like the shared body-size rule further down, so these sizes win over it. */
+:is(.app-shell, .platform-dialog) .platform-pagination :is(.text-sm, .text-base, button, [data-slot="input-group"], input) { font-size: inherit; line-height: inherit; }
+:is(.app-shell, .platform-dialog) .platform-pagination :is(button, [data-slot="input-group"]) { height: 1.75rem; }
+:is(.app-shell, .platform-dialog) .platform-pagination [data-kumo-component="Select"] { padding-inline: .625rem; border-radius: .375rem; }
+:is(.app-shell, .platform-dialog) .platform-pagination nav button { width: 1.75rem; min-width: 1.75rem; padding: 0; justify-content: center; }
+:is(.app-shell, .platform-dialog) .platform-pagination nav input { height: 1.75rem; width: 2.5rem; text-align: center; }
+:is(.app-shell, .platform-dialog) .platform-pagination nav :is(button, [data-slot="input-group"], input) { background-color: var(--brand-control); }
+:is(.app-shell, .platform-dialog) .platform-pagination nav button:not(:disabled):hover { background-color: var(--brand-hover); }
+.platform-pagination nav svg { width: .875rem; height: .875rem; }
 .platform-help { max-width: calc(100vw - 2rem); white-space: normal; overflow-wrap: anywhere; }
 /* Kumo's popover positioner has no stacking level by default. */
 div:has(> .kumo-popover-popup) { z-index: 60; }
@@ -274,14 +300,15 @@ div:has(> .kumo-popover-popup) { z-index: 60; }
 .kumo-popover-popup, .platform-select-popup {
   --brand-surface: var(--brand-panel);
   --color-kumo-base: var(--brand-panel);
-  --color-kumo-control: var(--brand-panel);
+  --color-kumo-control: var(--brand-control);
   --color-kumo-elevated: var(--brand-panel);
   --color-kumo-overlay: var(--brand-panel);
   --color-kumo-tint: var(--brand-hover);
 }
-.platform-header {
-  background: var(--brand-canvas);
-}
+/* The content side is the panel color; only the sidebar keeps the canvas tone.
+   Controls inside it sit on a gray fill so they read as inputs, not cards. */
+.brand-page.app-shell, .platform-header { background: var(--brand-panel); }
+.app-shell .sidebar { background: var(--brand-canvas); }
 .platform-breadcrumb { display: flex; align-items: center; gap: .75rem; min-width: 0; font-size: .8125rem; color: var(--brand-muted); }
 .platform-breadcrumb [aria-current] { color: var(--brand-ink); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .platform-breadcrumb a:hover { color: var(--brand-accent); }
@@ -294,13 +321,19 @@ div:has(> .kumo-popover-popup) { z-index: 60; }
 .page-heading-actions, .panel-actions { display: flex; flex-wrap: wrap; align-items: center; gap: .5rem; min-width: 0; }
 .page-heading-actions { margin-left: auto; }
 .page-heading-actions > div { gap: .5rem; }
-.table-page-layout > .page-heading { margin-bottom: 0; }
+.table-page-layout { --platform-section-gap: .75rem; }
+.table-page-layout > .page-heading { margin-bottom: 0; padding-bottom: 0; }
+.table-page-layout > .layout-section-fixed .platform-pagination { padding-block: 0; }
 .table-page-layout > .page-heading .flex-1 { flex: initial; }
 .table-page-layout > .page-heading .w-full { width: auto; }
 .panel, .app-shell :is(.card, .glass-card, .card-glass):not([data-ui-branded] *), .platform-dialog .card {
-  min-width: 0; border: 0; border-radius: var(--brand-panel-radius);
+  min-width: 0; border: 1px solid var(--brand-line); border-radius: var(--brand-panel-radius);
   background: var(--brand-panel); box-shadow: none; --tw-ring-shadow: 0 0 #0000; --tw-shadow: 0 0 #0000;
+  /* Card body text matches the sidebar and tables (13px); headings keep their own scale. */
+  --platform-body-size: .8125rem;
+  font-size: var(--platform-body-size);
 }
+:is(.panel, .card, .glass-card, .card-glass, .platform-table, .platform-data-cards):not([data-ui-branded] *) .text-sm { font-size: .8125rem; }
 .panel-header { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: .75rem; padding: 1rem; border-bottom: 1px solid var(--brand-line); }
 .panel-header h2 { font-size: .875rem; font-weight: 600; }
 .panel-description { margin-top: .25rem; color: var(--brand-muted); font-size: .8125rem; }
@@ -309,7 +342,7 @@ div:has(> .kumo-popover-popup) { z-index: 60; }
 .panel-section { border: 0; border-top: 1px solid var(--brand-line); border-radius: 0; background: transparent; box-shadow: none; }
 .panel-section:first-child { border-top: 0; }
 .panel-section + .panel-section { margin-top: 1rem; padding-top: 1rem; }
-.metric-strip { display: grid; grid-template-columns: repeat(var(--metric-columns, 4), minmax(0, 1fr)); gap: 1px; overflow: hidden; border: 0; border-radius: var(--brand-panel-radius); background: var(--brand-line); }
+.metric-strip { display: grid; grid-template-columns: repeat(var(--metric-columns, 4), minmax(0, 1fr)); gap: 1px; overflow: hidden; border: 1px solid var(--brand-line); border-radius: var(--brand-panel-radius); background: var(--brand-line); }
 .metric-strip > :not([hidden]) { min-width: 0; padding: 1rem; border: 0; border-radius: 0; box-shadow: none; background: var(--brand-panel); }
 .metric-strip > :first-child { border-left: 0; }
 .panel .metric-strip, .card .metric-strip { border: 0; border-radius: 0; }
@@ -367,12 +400,14 @@ div:has(> .kumo-popover-popup) { z-index: 60; }
 :is(.app-shell, .platform-dialog) :is([data-platform-control="input"], [data-platform-control="textarea"]):not([data-ui-branded] *, [type="hidden"], [type="range"]) {
   border: 1px solid var(--brand-line);
   box-shadow: none;
-  background: var(--brand-panel);
+  background: var(--brand-control);
 }
+:is(.app-shell, .platform-dialog) :is(.btn-secondary, .input, .select-trigger, .date-picker-trigger):not([data-ui-branded] *) { background-color: var(--brand-control); }
+:is(.app-shell, .platform-dialog) :is(.btn-secondary, .select-trigger, .date-picker-trigger):not([data-ui-branded] *):hover { background-color: var(--brand-hover); }
 :is(.app-shell, .platform-dialog) :is([data-kumo-component="Button"], [data-kumo-component="LinkButton"]):not([data-ui-branded] *, .btn-stripe, .btn-wxpay, .btn-alipay, .btn-airwallex) > span[aria-hidden="true"].absolute {
   display: none;
 }
-:is(.app-shell, .platform-dialog) :is(.btn-secondary, [data-platform-variant="secondary"], .select-trigger, .date-picker-trigger, .platform-dropdown-trigger:not(.sidebar-link)):not([data-ui-branded] *) {
+:is(.app-shell, .platform-dialog) :is(.btn-secondary, [data-platform-variant="secondary"], .select-trigger, .date-picker-trigger, .platform-dropdown-trigger:not(.sidebar-link)):not([data-ui-branded] *, .platform-header *) {
   border: 1px solid var(--brand-line);
 }
 .sidebar .sidebar-link { border: 0; }
@@ -405,7 +440,7 @@ div:has(> .kumo-popover-popup) { z-index: 60; }
   font-size: var(--platform-body-size);
   line-height: var(--platform-body-line);
 }
-:is(.app-shell, .platform-dialog, .kumo-popover-popup, .platform-dropdown-popup) :is(.text-base, label, [data-kumo-component="Button"], [data-kumo-component="LinkButton"], [data-kumo-component="Popover"]):not([data-ui-branded] *, :is(.platform-table, .platform-data-cards) *, .btn-stripe, .btn-wxpay, .btn-alipay, .btn-airwallex, .text-xs, .text-sm, .btn-sm, .btn-xs, .text-\[11px\], .text-\[10px\], .h-5, .h-6\.5) {
+:is(.app-shell, .platform-dialog, .kumo-popover-popup, .platform-dropdown-popup) :is(.text-base, label, [data-kumo-component="Button"], [data-kumo-component="LinkButton"], [data-kumo-component="Popover"]):not([data-ui-branded] *, :is(.platform-table, .platform-data-cards, .platform-pagination, .sidebar) *, .btn-stripe, .btn-wxpay, .btn-alipay, .btn-airwallex, .text-xs, .text-sm, .btn-sm, .btn-xs, .text-\[11px\], .text-\[10px\], .h-5, .h-6\.5) {
   font-size: var(--platform-body-size);
   line-height: var(--platform-body-line);
 }

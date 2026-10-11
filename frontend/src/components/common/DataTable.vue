@@ -920,7 +920,7 @@ defineExpose({
 <style scoped>
 /* 表格横向滚动 */
 .table-wrapper {
-  --select-col-width: 48px; /* Shared 16px cell padding + 16px selection control. */
+  --select-col-width: 40px; /* Shared 12px cell padding + 16px selection control. */
   position: relative;
   overflow-x: auto;
   overflow-y: auto;

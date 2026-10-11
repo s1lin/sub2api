@@ -32,6 +32,7 @@
   --brand-panel-radius: 8px;
   --brand-panel: #ffffff;
   --brand-hover: #e9ece7;
+  --brand-control: #f2f4f1;
   --brand-overlay-shadow: 0 4px 16px rgb(32 37 34 / 10%);
 }
 
@@ -47,7 +48,8 @@
   --brand-on-accent: #141816;
   --brand-accent-soft: #15302b;
   --brand-panel: #1c221e;
-  --brand-hover: #262e28;
+  --brand-hover: #2a332c;
+  --brand-control: #232a25;
   --brand-overlay-shadow: 0 4px 16px rgb(0 0 0 / 20%);
 }
 

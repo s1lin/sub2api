@@ -36,6 +36,18 @@ describe('HelpTooltip', () => {
     await portal().trigger('mousemove', { clientX: 1000, clientY: 1000 })
     await vi.waitFor(() => expect(tooltip()).toBeNull())
   })
+  it('renders a custom trigger at its own size instead of inside the square icon button', async () => {
+    const wrapper = mount(HelpTooltip, {
+      attachTo: document.body,
+      props: { content: 'https://upstream.example' },
+      slots: { trigger: '<a href="https://upstream.example">Long account name</a>' },
+    })
+    const link = wrapper.get('a')
+    expect(link.element.closest('button')).toBeNull()
+    expect(link.element.parentElement?.tagName).toBe('SPAN')
+    link.element.focus()
+    await vi.waitFor(() => expect(tooltip()?.textContent).toContain('https://upstream.example'))
+  })
   it('supports a persistent click popover, explicit close and outside dismissal', async () => {
     const wrapper = mount(HelpTooltip, { attachTo: document.body, props: { content: 'Click details', trigger: 'click' } })
     await wrapper.get('button').trigger('click')

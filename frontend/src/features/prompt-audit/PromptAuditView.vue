@@ -71,7 +71,7 @@
       </template>
     </div>
 
-    <div v-if="draft && activeTab === 'config'" class="fixed inset-x-0 bottom-0 z-30 border-t border-[var(--brand-line)] bg-white/95 px-4 py-3 dark:bg-dark-900/95 lg:left-64">
+    <div v-if="draft && activeTab === 'config'" class="fixed inset-x-0 bottom-0 z-30 border-t border-[var(--brand-line)] bg-white/95 px-4 py-3 dark:bg-dark-900/95 lg:left-52">
       <div class="mx-auto flex max-w-[1600px] flex-wrap items-center justify-between gap-3">
         <div class="flex flex-wrap items-center gap-x-5 gap-y-2">
           <SaveToggle :label="t('admin.promptAudit.saveBar.enabled')" :model-value="draft.enabled" data-test="enabled-toggle" @update:model-value="setEnabled" />

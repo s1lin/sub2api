@@ -69,6 +69,7 @@ onUnmounted(() => {
 .table-scroll-container {
   @apply flex flex-col overflow-hidden h-full;
   background: var(--brand-panel);
+  border: 1px solid var(--brand-line);
   border-radius: var(--brand-panel-radius);
 }
 

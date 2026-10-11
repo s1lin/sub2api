@@ -190,14 +190,22 @@ function HelpControl(props: ControlProps) {
     ...Object.fromEntries(Object.entries(props).filter(([name]) => name === 'id' || name.startsWith('data-') || name.startsWith('aria-'))),
     className: props.className, ref: props.nativeRef, variant: 'ghost' as const, shape: 'square' as const, size: 'sm' as const, 'aria-label': props.label,
   }
-  const render = el(Button, triggerProps)
+  // A custom trigger (link, badge, button) sizes itself; the square icon button would clip
+  // and center it, and would nest interactive content inside a <button>.
+  const renderTrigger = (extra: Record<string, unknown> = {}) => props.triggerContent
+    ? el('span', {
+      ...Object.fromEntries(Object.entries(triggerProps).filter(([name]) => !['variant', 'shape', 'size', 'className'].includes(name))),
+      ...extra, className: `inline-flex max-w-full min-w-0 ${props.className ?? ''}`, tabIndex: 0,
+    })
+    : el(Button, { ...triggerProps, ...extra })
+  const render = renderTrigger()
   if (props.trigger === 'click') return el(Popover, {},
     el(Popover.Trigger, { render }, trigger),
     el(Popover.Content, { className: `platform-help ${props.widthClass ?? ''}`, side: 'top' }, content,
       el(Popover.Close, { render: el(Button, { variant: 'ghost', size: 'sm', shape: 'square', icon: XIcon, 'aria-label': props.closeLabel }) })))
   return el(Tooltip, {
     content: el('div', { id: tooltipId, role: 'tooltip', className: `platform-help ${props.widthClass ?? ''}` }, content),
-    render: el(Button, { ...triggerProps, 'aria-describedby': tooltipId }),
+    render: renderTrigger({ 'aria-describedby': tooltipId }),
     delay: 150, closeDelay: 120,
   }, trigger)
 }

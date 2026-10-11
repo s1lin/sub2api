@@ -78,9 +78,9 @@ async function checkSidebarAlignment(page, errors, state) {
     return { iconX: icon.x - rect.x, iconY: icon.y - rect.y, labelX: label.x - rect.x, height: rect.height, collapsed: row.classList.contains('sidebar-link-collapsed') }
   }))
   if (!geometry.length) errors.push(`Sidebar is missing (${state})`)
-  if (geometry.some(row => Math.abs(row.iconX - (row.collapsed ? 14 : 17)) > .1 || Math.abs(row.iconY - 10) > .1 || row.height !== 40 || (!row.collapsed && Math.abs(row.labelX - 49) > .1))) errors.push(`Sidebar icons or labels are misaligned (${state})`)
+  if (geometry.some(row => Math.abs(row.iconX - (row.collapsed ? 15 : 13)) > .1 || Math.abs(row.iconY - 7) > .1 || row.height !== 32 || (!row.collapsed && Math.abs(row.labelX - 41) > .1))) errors.push(`Sidebar icons or labels are misaligned (${state})`)
   // Measure against the nav because Veaury wraps group buttons in display:contents.
-  const childrenAligned = await page.locator('.sidebar-submenu .sidebar-link').evaluateAll(rows => rows.every(row => Math.abs(row.querySelector('svg').getBoundingClientRect().x - row.closest('.sidebar-nav').getBoundingClientRect().x - 54) < .1))
+  const childrenAligned = await page.locator('.sidebar-submenu .sidebar-link').evaluateAll(rows => rows.every(row => Math.abs(row.querySelector('svg').getBoundingClientRect().x - row.closest('.sidebar-nav').getBoundingClientRect().x - 46) < .1))
   if (!childrenAligned) errors.push(`Sidebar child indentation differs (${state})`)
 }
 
@@ -217,8 +217,6 @@ try {
       if (entry.auth) {
         localStorage.setItem('auth_token', 'visual-fixture-only')
         localStorage.setItem('auth_user', JSON.stringify({ ...user, role: entry.admin ? 'admin' : 'user' }))
-        localStorage.setItem('admin_guide_9001_admin_v4_interactive', 'true')
-        localStorage.setItem('user_guide_9001_user_v4_interactive', 'true')
       }
     }, { entry, user })
     const page = await context.newPage()
@@ -327,7 +325,7 @@ try {
           gaps: rows.slice(1).map((row, i) => Math.round(row.top - rows[i].bottom)),
           nav: [...document.querySelectorAll('.sidebar-link, .platform-nav-control')].filter(el => el.getBoundingClientRect().width).map(el => {
             const style = getComputedStyle(el)
-            return { text: el.textContent.trim(), font: style.fontFamily, size: style.fontSize, weight: style.fontWeight, lineHeight: style.lineHeight, icons: [...el.querySelectorAll('svg')].filter(icon => icon.getBoundingClientRect().width).map(icon => ({ size: icon.getBoundingClientRect().width, chevron: !!icon.closest('.sidebar-label') || icon.classList.contains('platform-nav-chevron') })) }
+            return { text: el.textContent.trim(), sidebar: !!el.closest('.sidebar'), font: style.fontFamily, size: style.fontSize, weight: style.fontWeight, lineHeight: style.lineHeight, icons: [...el.querySelectorAll('svg')].filter(icon => icon.getBoundingClientRect().width).map(icon => ({ size: icon.getBoundingClientRect().width, chevron: !!icon.closest('.sidebar-label') || icon.classList.contains('platform-nav-chevron') })) }
           }),
           sidebarRows: [...document.querySelectorAll('.sidebar-link:has(.sidebar-label)')].map(el => {
             const rect = el.getBoundingClientRect(), icon = el.querySelector('svg')?.getBoundingClientRect(), label = el.querySelector('.sidebar-label')?.getBoundingClientRect()
@@ -350,10 +348,10 @@ try {
       if (layout.sidebarBrand != null && layout.sidebarBrand !== settings.site_name) errors.push('Sidebar includes content beyond the brand name')
       if (layout.borders.some(border => parseFloat(border.width) > 1 || (border.shadow.match(/-?[\d.]+px/g) || []).some(value => parseFloat(value) !== 0))) errors.push('Card has a doubled outline')
       if (['dashboard', 'admin-dashboard'].some(name => entry.name.startsWith(name + '-')) && layout.gaps.some(gap => Math.abs(gap - 16) > 1)) errors.push('Dashboard section gaps differ: ' + layout.gaps.join(', '))
-      if (layout.nav.some(item => item.size !== '14px' || item.weight !== '500' || item.lineHeight !== '20px') || new Set(layout.nav.map(item => item.font)).size > 1) errors.push('Navigation typography is inconsistent')
-      if (layout.nav.some(item => item.icons.some(icon => Math.abs(icon.size - (icon.chevron ? 16 : 20)) > 0.1))) errors.push('Navigation icon sizes are inconsistent')
+      if (layout.nav.some(item => item.size !== (item.sidebar ? '13px' : '14px') || item.weight !== '500' || item.lineHeight !== '20px') || new Set(layout.nav.map(item => item.font)).size > 1) errors.push('Navigation typography is inconsistent')
+      if (layout.nav.some(item => item.icons.some(icon => Math.abs(icon.size - (item.sidebar ? (icon.chevron ? 14 : 18) : (icon.chevron ? 16 : 20))) > 0.1))) errors.push('Navigation icon sizes are inconsistent')
       if ([...layout.tables.flatMap(table => table.headings), ...layout.mobileHeadings].some(heading => heading.size !== '12px' || heading.weight !== '500' || heading.line !== '16px')) errors.push('Table heading typography is inconsistent')
-      if ([...layout.tables.filter(table => !table.compact).flatMap(table => table.cells).filter(cell => !cell.actions), ...layout.mobileCells].some(cell => cell.size !== '14px' || cell.line !== '20px')) errors.push('Table body typography is inconsistent')
+      if ([...layout.tables.filter(table => !table.compact).flatMap(table => table.cells).filter(cell => !cell.actions), ...layout.mobileCells].some(cell => cell.size !== '13px' || cell.line !== '20px')) errors.push('Table body typography is inconsistent')
       if (layout.actions.some(action => action.size !== '12px' || action.line !== '16px' || action.direction !== 'row' || action.height < 32 || action.overflow || action.icons.some(icon => icon.size !== 16 || icon.height !== 16))) errors.push('Table action icons, text, or alignment are inconsistent')
       if (layout.tables.some(table => table.selection && Math.abs(table.selection.width - parseFloat(table.selection.offset)) > .1)) errors.push('Table selection column and sticky offset differ')
       if (entry.name.startsWith('admin-accounts-') && await page.locator('main').innerText().then(text => text.includes('class="relative'))) errors.push('Account group cell contains stray markup')
